@@ -17,6 +17,7 @@ import Header from './components/page/Header';
 import Page from './components/page/Page';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
+import Reservations from './components/reservations/Reservations';
 
 const headerLinks: RouteObject[] = [
   {
@@ -51,6 +52,13 @@ const headerLinks: RouteObject[] = [
 
 const routes: RouteObject[] = [
   ...headerLinks,
+  {
+    path: '/reservations',
+    element: <Reservations />,
+    handle: {
+      name: 'Reservations'
+    }
+  },
   {
     path: '/weather',
     element: <Weather />,
