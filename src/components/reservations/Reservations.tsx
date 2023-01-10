@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import { theme } from '../../styles/styles';
 import AccordionDropdown from './AccordionDropdown';
 
 function Reservations() {
@@ -53,19 +54,23 @@ function Reservations() {
 
   return (
     <Container>
-      <h1>Reservations</h1>
+      <Title>My Reservations</Title>
       <ListContainer>
-        <AccordionDropdown
+        <StyledAccordionDropdown
           label="Current"
           isOpen={true}
           content={fakeContent}
         />
-        <AccordionDropdown
+        <StyledAccordionDropdown
           label="Upcoming"
           isOpen={true}
           content={fakeContent}
         />
-        <AccordionDropdown label="Past" isOpen={true} content={fakeContent} />
+        <StyledAccordionDropdown
+          label="Past"
+          isOpen={true}
+          content={fakeContent}
+        />
       </ListContainer>
     </Container>
   );
@@ -77,16 +82,24 @@ const Container = styled.div`
   align-items: center;
   width: 85%;
 
-  @media only screen and (max-width: 700px) {
+  ${theme.screen.small} {
     width: 100%;
   }
+`;
+
+const Title = styled.h1`
+  ${theme.font.displayLarge}
 `;
 
 const ListContainer = styled.div`
   display: flex;
   flex-direction: column;
-  row-gap: 16px;
+  row-gap: 10px;
   width: 85%;
+`;
+
+const StyledAccordionDropdown = styled(AccordionDropdown)`
+  ${theme.font.body}
 `;
 
 export default Reservations;

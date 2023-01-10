@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import { Link, RouteObject } from 'react-router-dom';
+import { theme } from '../../styles/styles';
 import HamburgerMenu from './HamburgerMenu';
 import Navbar from './Navbar';
 
@@ -53,7 +54,7 @@ const Logo = styled(Link)`
     background-color: #4fb94f;
   }
 
-  @media only screen and (max-width: 700px) {
+  ${theme.screen.small} {
     position: static;
   }
 `;
@@ -61,7 +62,7 @@ const Logo = styled(Link)`
 const Menu = styled(HamburgerMenu)`
   display: none;
 
-  @media only screen and (max-width: 700px) {
+  ${theme.screen.small} {
     display: block;
     position: absolute;
     left: 20px;
@@ -69,7 +70,7 @@ const Menu = styled(HamburgerMenu)`
 `;
 
 const Nav = styled(Navbar)`
-  @media only screen and (max-width: 700px) {
+  ${theme.screen.small} {
     display: none;
   }
 `;

@@ -18,25 +18,23 @@ function AccordionDropdown({
   const [open, setOpen] = useState<boolean>(isOpen);
 
   return (
-    <Container className={className}>
+    <div className={className}>
       <Header
         type="button"
         onClick={() => {
           setOpen(!open);
         }}
       >
-        <Label>{label}</Label>
+        <div>{label}</div>
         <Line />
         <ChevronWrapper open={open}>
           <ChevronDown />
         </ChevronWrapper>
       </Header>
       <DropdownContent open={open}>{content}</DropdownContent>
-    </Container>
+    </div>
   );
 }
-
-const Container = styled.div``;
 
 const Header = styled.button`
   display: flex;
@@ -47,19 +45,15 @@ const Header = styled.button`
   width: 100%;
   background-color: transparent;
   cursor: pointer;
+  font: inherit;
 
   :hover {
     background-color: whitesmoke;
   }
 `;
 
-const Label = styled.div`
-  font-weight: bold;
-  font-size: medium;
-`;
-
 const Line = styled.hr`
-  border-top: 2px solid black;
+  border-top: 1px solid black;
   flex-grow: 1;
   margin: auto 4px;
 `;

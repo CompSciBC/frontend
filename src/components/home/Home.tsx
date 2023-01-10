@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import { theme } from '../../styles/styles';
 
 interface HomeProps {
   logo: string;
@@ -47,7 +48,7 @@ const Container = styled.div`
 const Logo = styled.img`
   width: 512px;
 
-  @media only screen and (max-width: 700px) {
+  ${theme.screen.small} {
     width: 256px;
   }
 `;
@@ -62,7 +63,7 @@ const Description = styled.div`
 
   width: 50%;
 
-  @media only screen and (max-width: 700px) {
+  ${theme.screen.small} {
     width: 85vw;
   }
 `;
