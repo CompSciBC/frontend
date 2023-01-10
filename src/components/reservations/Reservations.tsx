@@ -1,56 +1,106 @@
 import styled from '@emotion/styled';
-import { theme } from '../../styles/styles';
+import { Property, Reservation } from '../../utils/dtos';
+import { theme } from '../../utils/styles';
 import AccordionDropdown from './AccordionDropdown';
+import ReservationCard from './ReservationCard';
 
 function Reservations() {
   // TODO: replace with real data
-  const fakeReservations = [
+  const fakeProperties: Property[] = [
     {
-      id: 1234,
-      property: 'Seattle Loft',
+      id: 1,
+      hostId: 10,
+      name: 'Seattle Loft',
       address: '129 Warren Avenue N Unit 19, Seattle, WA 98109',
-      host: 'Bob Ross',
-      dates: '11/23 - 11/31/2022',
       image: 'images/seattle-loft.jpg'
     },
     {
-      id: 2345,
-      property: 'Downtown Apartment',
+      id: 2,
+      hostId: 10,
+      name: 'Downtown Apartment',
       address: '100 W 57th St Unit 4JK, New York, NY 10019',
-      host: 'Roger Rabbit',
-      dates: '11/30 - 12/5/2022',
       image: 'images/downtown-apartment.jpg'
     },
     {
-      id: 3456,
-      property: 'House on the Beach',
+      id: 3,
+      hostId: 10,
+      name: 'House on the Beach',
       address: '2303 E Ocean Blvd, Long Beach, CA 90803',
-      host: 'Zack Morris',
-      dates: '12/1 - 12/6/2022',
       image: 'images/beach-house.jpg'
     },
     {
-      id: 4567,
-      property: 'Mountain Retreat',
+      id: 4,
+      hostId: 10,
+      name: 'Mountain Retreat',
       address: '27 Timber Ridge Ln, Snowmass Village, CO 81615',
-      host: 'Raven Baxter',
-      dates: '1/4 - 1/7/2022',
       image: 'images/mountain-cabin.jpg'
     }
   ];
 
+  const fakeReservations: Reservation[] = [
+    {
+      id: 1000,
+      propertyId: 1,
+      guestId: 100,
+      numGuests: 1,
+      startDate: new Date('11/23/22'),
+      endDate: new Date('11/30/22'),
+      checkInTime: '12:00pm',
+      checkOutTime: '12:00pm',
+      reasonForStay: 'Anniversary'
+    },
+    {
+      id: 1001,
+      propertyId: 2,
+      guestId: 101,
+      numGuests: 2,
+      startDate: new Date('11/30/22'),
+      endDate: new Date('12/5/22'),
+      checkInTime: '12:00pm',
+      checkOutTime: '12:00pm',
+      reasonForStay: 'Holiday'
+    },
+    {
+      id: 1002,
+      propertyId: 3,
+      guestId: 102,
+      numGuests: 3,
+      startDate: new Date('12/1/22'),
+      endDate: new Date('12/6/22'),
+      checkInTime: '12:00pm',
+      checkOutTime: '12:00pm',
+      reasonForStay: 'Business'
+    },
+    {
+      id: 1003,
+      propertyId: 4,
+      guestId: 103,
+      numGuests: 4,
+      startDate: new Date('1/4/23'),
+      endDate: new Date('1/7/23'),
+      checkInTime: '12:00pm',
+      checkOutTime: '12:00pm',
+      reasonForStay: 'n/a'
+    }
+  ];
+
   // TODO: replace with card
-  const fakeContent = fakeReservations.map((res) => {
-    return (
-      <div key={res.id}>
-        <img src={res.image} width="64px" />
-        <div>{res.property}</div>
-        <div>{res.host}</div>
-        <div>{res.dates}</div>
-        <div>{res.address}</div>
-      </div>
-    );
-  });
+  const fakeContent = (
+    <DropdownContent>
+      {fakeReservations.map((reservation) => {
+        const property = fakeProperties.find(
+          (property) => property.id === reservation.propertyId
+        );
+        return (
+          <ReservationCard
+            key={reservation.id}
+            reservation={reservation}
+            property={property!}
+          />
+        );
+      })}
+    </DropdownContent>
+  );
 
   return (
     <Container>
@@ -95,11 +145,23 @@ const ListContainer = styled.div`
   display: flex;
   flex-direction: column;
   row-gap: 10px;
-  width: 85%;
+  width: 50%;
+  min-width: 512px;
+
+  ${theme.screen.small} {
+    width: 85%;
+    min-width: auto;
+  }
 `;
 
 const StyledAccordionDropdown = styled(AccordionDropdown)`
   ${theme.font.body}
+`;
+
+const DropdownContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  row-gap: 10px;
 `;
 
 export default Reservations;

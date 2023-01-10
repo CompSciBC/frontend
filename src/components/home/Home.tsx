@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { theme } from '../../styles/styles';
+import { theme } from '../../utils/styles';
 
 interface HomeProps {
   logo: string;

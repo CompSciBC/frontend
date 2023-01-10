@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import { Link, RouteObject } from 'react-router-dom';
-import { theme } from '../../styles/styles';
+import { theme } from '../../utils/styles';
 import HamburgerMenu from './HamburgerMenu';
 import Navbar from './Navbar';
 
