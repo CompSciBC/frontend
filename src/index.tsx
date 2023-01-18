@@ -18,6 +18,7 @@ import Page from './components/page/Page';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
 import Reservations from './components/reservations/Reservations';
+import ReservationLoader from './components/reservations/ReservationLoader';
 
 const headerLinks: RouteObject[] = [
   {
@@ -57,7 +58,8 @@ const routes: RouteObject[] = [
     element: <Reservations />,
     handle: {
       name: 'Reservations'
-    }
+    },
+    loader: ReservationLoader
   },
   {
     path: '/weather',
@@ -94,6 +96,7 @@ const router = createBrowserRouter(
     return {
       path: route.path,
       handle: route.handle?.name,
+      loader: route.loader,
       element: (
         <Page
           header={

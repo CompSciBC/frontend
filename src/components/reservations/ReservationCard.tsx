@@ -1,31 +1,33 @@
 import styled from '@emotion/styled';
-import { Property, Reservation } from '../../utils/dtos';
+import { ReservationProperty } from '../../utils/dtos';
 import { theme } from '../../utils/styles';
 
 interface ReservationCardProps {
   className?: string;
-  reservation: Reservation;
-  property: Property;
+  reservationProperty: ReservationProperty;
 }
 
 function ReservationCard({
   className,
-  reservation,
-  property
+  reservationProperty
 }: ReservationCardProps) {
-  const { startDate, checkInTime } = reservation;
-  const { address, image } = property;
+  const { checkIn, address, image } = reservationProperty;
+
+  const checkInDate = new Date(checkIn).toLocaleDateString('default', {
+    weekday: 'short',
+    month: 'short',
+    day: 'numeric'
+  });
+
+  const checkInTime = new Date(checkIn).toLocaleTimeString('default', {
+    timeStyle: 'short'
+  });
 
   return (
-    <Wrapper className={className} image={image}>
+    <Wrapper className={className} image={image ?? ''}>
       <Container>
         <CheckInInfoBox>
-          <CheckInDate>
-            {`Check In : ${startDate.toLocaleString('default', {
-              month: 'short',
-              day: 'numeric'
-            })}`}
-          </CheckInDate>
+          <CheckInDate>{`Check In : ${checkInDate}`}</CheckInDate>
           <CheckInTime>{checkInTime}</CheckInTime>
         </CheckInInfoBox>
         <AddressInfoBox>
