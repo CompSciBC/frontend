@@ -34,7 +34,7 @@ const headerLinks: RouteObject[] = [
     }
   },
   {
-    path: '/chat',
+    path: '/chat/:resId',
     element: <Chat />,
     handle: {
       name: 'Chat'
