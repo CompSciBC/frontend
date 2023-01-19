@@ -9,11 +9,13 @@ import AccordionDropdown from './AccordionDropdown';
 import ReservationCard from './ReservationCard';
 
 function Reservations() {
-  const reservationProperties = useLoaderData() as SortedReservationPropertySet;
+  const resProps = useLoaderData() as SortedReservationPropertySet;
 
+  // maps the reservation/property objects into a list of reservation cards to be
+  // rendered on the screen
   const getCards = (status: ReservationStatus) => (
     <DropdownContent>
-      {reservationProperties?.[status].map((resProp) => (
+      {resProps?.[status].map((resProp) => (
         <ReservationCard key={resProp.id} reservationProperty={resProp} />
       ))}
     </DropdownContent>

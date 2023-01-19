@@ -1,4 +1,6 @@
 import styled from '@emotion/styled';
+import { Link } from 'react-router-dom';
+import { routes } from '../../index';
 import { ReservationProperty } from '../../utils/dtos';
 import { theme } from '../../utils/styles';
 
@@ -24,7 +26,7 @@ function ReservationCard({
   });
 
   return (
-    <Wrapper className={className} image={image ?? ''}>
+    <Wrapper className={className} image={image ?? ''} to={routes.dashboard}>
       <Container>
         <CheckInInfoBox>
           <CheckInDate>{`Check In : ${checkInDate}`}</CheckInDate>
@@ -38,10 +40,11 @@ function ReservationCard({
   );
 }
 
-const Wrapper = styled.div<{ image: string }>`
+const Wrapper = styled(Link)<{ image: string }>`
   padding: 12px;
   border-radius: 12px;
   background-image: ${(props) => `url(${props.image})`};
+  text-decoration: none;
 `;
 
 const Container = styled.div`

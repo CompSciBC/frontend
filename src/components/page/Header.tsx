@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import { Link, RouteObject } from 'react-router-dom';
+import { routes } from '../../index';
 import { theme } from '../../utils/styles';
 import HamburgerMenu from './HamburgerMenu';
 import Navbar from './Navbar';
@@ -14,7 +15,7 @@ function Header({ className, logo, navLinks }: HeaderProps) {
   return (
     <Container className={className}>
       {logo && (
-        <Logo to="/">
+        <Logo to={routes.home}>
           <img src={logo} alt="logo" />
         </Logo>
       )}
