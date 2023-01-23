@@ -1,5 +1,7 @@
 import styled from '@emotion/styled';
 import { Link, RouteObject } from 'react-router-dom';
+import { routes } from '../../index';
+import { theme } from '../../utils/styles';
 import HamburgerMenu from './HamburgerMenu';
 import Navbar from './Navbar';
 
@@ -13,7 +15,7 @@ function Header({ className, logo, navLinks }: HeaderProps) {
   return (
     <Container className={className}>
       {logo && (
-        <Logo to="/">
+        <Logo to={routes.home}>
           <img src={logo} alt="logo" />
         </Logo>
       )}
@@ -53,7 +55,7 @@ const Logo = styled(Link)`
     background-color: #4fb94f;
   }
 
-  @media only screen and (max-width: 700px) {
+  ${theme.screen.small} {
     position: static;
   }
 `;
@@ -61,7 +63,7 @@ const Logo = styled(Link)`
 const Menu = styled(HamburgerMenu)`
   display: none;
 
-  @media only screen and (max-width: 700px) {
+  ${theme.screen.small} {
     display: block;
     position: absolute;
     left: 20px;
@@ -69,7 +71,7 @@ const Menu = styled(HamburgerMenu)`
 `;
 
 const Nav = styled(Navbar)`
-  @media only screen and (max-width: 700px) {
+  ${theme.screen.small} {
     display: none;
   }
 `;

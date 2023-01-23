@@ -17,31 +17,41 @@ import Header from './components/page/Header';
 import Page from './components/page/Page';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
+import Reservations from './components/reservations/Reservations';
+import ReservationLoader from './components/reservations/ReservationLoader';
 
-const headerLinks: RouteObject[] = [
+/**
+ * Contains the base route urls of the various pages in the app
+ */
+export const routes = {
+  home: '/',
+  dashboard: '/dashboard',
+  chat: '/chat',
+  profile: '/profile',
+  reservations: '/reservations',
+  weather: '/weather',
+  restaurants: '/restaurants',
+  eventsAndPlaces: '/eventsandplaces',
+  map: '/map'
+};
+
+const headerRoutes: RouteObject[] = [
   {
-    path: '/',
+    path: routes.home,
     element: <Home logo="images/bmg-logo-black.png" />,
     handle: {
       name: 'Home'
     }
   },
   {
-    path: '/dashboard',
-    element: <Dashboard />,
-    handle: {
-      name: 'Dashboard'
-    }
-  },
-  {
-    path: '/chat',
+    path: routes.chat,
     element: <Chat />,
     handle: {
       name: 'Chat'
     }
   },
   {
-    path: '/profile',
+    path: routes.profile,
     element: <Profile />,
     handle: {
       name: 'Profile'
@@ -49,31 +59,46 @@ const headerLinks: RouteObject[] = [
   }
 ];
 
-const routes: RouteObject[] = [
-  ...headerLinks,
+const allRoutes: RouteObject[] = [
+  ...headerRoutes,
   {
-    path: '/weather',
+    path: routes.reservations,
+    element: <Reservations />,
+    handle: {
+      name: 'Reservations'
+    },
+    loader: ReservationLoader
+  },
+  {
+    path: routes.dashboard,
+    element: <Dashboard />,
+    handle: {
+      name: 'Dashboard'
+    }
+  },
+  {
+    path: routes.weather,
     element: <Weather />,
     handle: {
       name: 'Weather'
     }
   },
   {
-    path: '/restaurants',
+    path: routes.restaurants,
     element: <Restaurants />,
     handle: {
       name: 'Restaurants'
     }
   },
   {
-    path: '/eventsandplaces',
+    path: routes.eventsAndPlaces,
     element: <EventsAndPlaces />,
     handle: {
       name: 'Events and Places'
     }
   },
   {
-    path: '/map',
+    path: routes.map,
     element: <Map />,
     handle: {
       name: 'Map'
@@ -82,14 +107,15 @@ const routes: RouteObject[] = [
 ];
 
 const router = createBrowserRouter(
-  routes.map((route) => {
+  allRoutes.map((route) => {
     return {
       path: route.path,
       handle: route.handle?.name,
+      loader: route.loader,
       element: (
         <Page
           header={
-            <Header logo="images/bmg-logo-white.png" navLinks={headerLinks} />
+            <Header logo="images/bmg-logo-white.png" navLinks={headerRoutes} />
           }
           content={route.element}
         />
