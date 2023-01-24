@@ -2,21 +2,21 @@ import styled from '@emotion/styled';
 import { useLoaderData } from 'react-router-dom';
 import {
   ReservationStatus,
-  SortedReservationPropertySet
+  SortedReservationDetailSet
 } from '../../utils/dtos';
 import { theme } from '../../utils/styles';
 import AccordionDropdown from './AccordionDropdown';
 import ReservationCard from './ReservationCard';
 
 function Reservations() {
-  const resProps = useLoaderData() as SortedReservationPropertySet;
+  const resDetails = useLoaderData() as SortedReservationDetailSet;
 
   // maps the reservation/property objects into a list of reservation cards to be
   // rendered on the screen
   const getCards = (status: ReservationStatus) => (
     <DropdownContent>
-      {resProps?.[status].map((resProp) => (
-        <ReservationCard key={resProp.id} reservationProperty={resProp} />
+      {resDetails?.[status].map((resProp) => (
+        <ReservationCard key={resProp.id} reservationDetail={resProp} />
       ))}
     </DropdownContent>
   );

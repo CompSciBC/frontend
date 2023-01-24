@@ -1,19 +1,21 @@
 import styled from '@emotion/styled';
 import { Link } from 'react-router-dom';
 import { routes } from '../../index';
-import { ReservationProperty } from '../../utils/dtos';
+import { ReservationDetail } from '../../utils/dtos';
 import { theme } from '../../utils/styles';
 
 interface ReservationCardProps {
   className?: string;
-  reservationProperty: ReservationProperty;
+  reservationDetail: ReservationDetail;
 }
 
 function ReservationCard({
   className,
-  reservationProperty
+  reservationDetail
 }: ReservationCardProps) {
-  const { checkIn, address, image } = reservationProperty;
+  const { checkIn, address, image } = reservationDetail;
+
+  const streetAddress: string = address.split(',')[0];
 
   const checkInDate = new Date(checkIn).toLocaleDateString('default', {
     weekday: 'short',
@@ -33,7 +35,7 @@ function ReservationCard({
           <CheckInTime>{checkInTime}</CheckInTime>
         </CheckInInfoBox>
         <AddressInfoBox>
-          <div>{`YOUR RENTAL : ${address.split(',')[0]}`}</div>
+          <div>{`YOUR RENTAL : ${streetAddress}`}</div>
         </AddressInfoBox>
       </Container>
     </Wrapper>
