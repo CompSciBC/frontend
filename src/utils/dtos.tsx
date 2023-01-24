@@ -28,8 +28,8 @@ export interface Reservation {
 /**
  * A reservation object containing additional details about its associated property
  */
-export interface ReservationProperty extends Reservation {
-  name: string;
+export interface ReservationDetail extends Reservation {
+  propertyName: string;
   address: string;
   image?: string;
 }
@@ -44,17 +44,9 @@ export interface ReservationProperty extends Reservation {
 export type ReservationStatus = 'current' | 'upcoming' | 'past';
 
 /**
- * An object containing reservations grouped by status type
- * (current, upcoming, past), (matching SortedReservationSet.java)
- */
-export type SortedReservationSet = {
-  [key in ReservationStatus]: Reservation[];
-};
-
-/**
  * An object containing reservation/property objects grouped by status type
  * (current, upcoming, past)
  */
-export type SortedReservationPropertySet = {
-  [key in ReservationStatus]: ReservationProperty[];
+export type SortedReservationDetailSet = {
+  [key in ReservationStatus]: ReservationDetail[];
 };
