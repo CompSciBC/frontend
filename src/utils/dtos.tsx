@@ -19,12 +19,13 @@ export interface GuidebookDto {
   propertyName: string;
   propertyType?: 'Cabin' | 'City' | 'Beach' | 'Mountain';
   capacity: number;
-  amenities?: string[];
   pets: 'Allowed' | 'Not Allowed';
+  amenities?: string[];
   propertyBio: string;
   faq?: Array<{Question:string; Answer:string}>; 
+  // faq?: string[];
   policies?: string[];
-  hostRecommended?: any; // change later from type any to HostRecommended object
+  hostRecommended?: string[]; // change later from type any to HostRecommended object
   hostServices?: string[];
   propertySpecificQ?: any; // change later to Hieu's Survey object
   checkininstr?: string[];

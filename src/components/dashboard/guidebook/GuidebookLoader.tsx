@@ -13,6 +13,12 @@ function GuidebookLoader() : GuidebookDto {
     faq: [{
       Question: "Hand towels?",
       Answer: "No"
+    },{
+      Question: "Whatever",
+      Answer: "No"
+    },{
+      Question: "Code",
+      Answer: "No"
     }],
     policies: ["Must wash hands"],
     hostServices: [],
