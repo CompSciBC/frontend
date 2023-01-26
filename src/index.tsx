@@ -9,7 +9,7 @@ import Home from './components/home/Home';
 import Dashboard from './components/dashboard/Dashboard';
 import Chat from './components/chat/Chat';
 import Profile from './components/profile/Profile';
-import Guidebook from './components/dashboard/Guidebook';
+import Guidebook from './components/dashboard/guidebook/Guidebook';
 import Weather from './components/dashboard/Weather';
 import Restaurants from './components/dashboard/Restaurants';
 import EventsAndPlaces from './components/dashboard/EventsAndPlaces';
@@ -20,6 +20,7 @@ import './index.css';
 import reportWebVitals from './reportWebVitals';
 import Reservations from './components/reservations/Reservations';
 import ReservationLoader from './components/reservations/ReservationLoader';
+import GuidebookLoader from './components/dashboard/guidebook/GuidebookLoader';
 
 /**
  * Contains the base route urls of the various pages in the app
@@ -110,7 +111,8 @@ const allRoutes: RouteObject[] = [
     element: <Guidebook />,
     handle: {
       name: 'Guidebook'
-    }
+    },
+    loader : GuidebookLoader
   }
 ];
 
