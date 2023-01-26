@@ -11,6 +11,27 @@ export interface Property {
 }
 
 /**
+ * 
+ * 
+ */
+export interface Guidebook {
+  propertyID: string;
+  propertyName: string;
+  propertyType: 'Cabin' | 'City' | 'Beach' | 'Mountain';
+  capacity: number;
+  amenities: string[];
+  pets: 'Allowed' | 'Not Allowed';
+  propertyBio: string;
+  faq: string;
+  policies: string;
+  hostRecommended: any; // change later from type any to HostRecommended object
+  hostServices: string[];
+  propertySpecificQ: any; // change later to Hieu's Survey object
+  checkininstr: string[];
+  checkoutinstr: string[];
+}
+
+/**
  * Represents a contract agreement between a host and a guest to rent a property
  * for a specified period of time (matching Reservation.java)
  */

@@ -9,6 +9,7 @@ import Home from './components/home/Home';
 import Dashboard from './components/dashboard/Dashboard';
 import Chat from './components/chat/Chat';
 import Profile from './components/profile/Profile';
+import Guidebook from './components/dashboard/Guidebook';
 import Weather from './components/dashboard/Weather';
 import Restaurants from './components/dashboard/Restaurants';
 import EventsAndPlaces from './components/dashboard/EventsAndPlaces';
@@ -28,6 +29,7 @@ export const routes = {
   dashboard: '/dashboard',
   chat: '/chat',
   profile: '/profile',
+  guidebook: '/guidebook',
   reservations: '/reservations',
   weather: '/weather',
   restaurants: '/restaurants',
@@ -102,6 +104,12 @@ const allRoutes: RouteObject[] = [
     element: <Map />,
     handle: {
       name: 'Map'
+    }
+  }, {
+    path: routes.guidebook,
+    element: <Guidebook />,
+    handle: {
+      name: 'Guidebook'
     }
   }
 ];
