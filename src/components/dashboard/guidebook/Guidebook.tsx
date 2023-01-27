@@ -1,13 +1,15 @@
 import styled from "@emotion/styled";
 import { useLoaderData } from "react-router-dom";
 import { GuidebookDto } from "../../../utils/dtos";
+import Gallery from "./Gallery";
 
 function Guidebook() {
   const guidebookDetails = useLoaderData() as GuidebookDto;
 
-
   return <Container>
+    <Gallery />
     <h1>Guidebook Page Beginning</h1>
+
     <ImageCarousel >Image carousel</ImageCarousel>
 
     
@@ -40,6 +42,7 @@ function Guidebook() {
 
 
   </Container>;
+
 }
 
 const Faq = styled.ol` 
