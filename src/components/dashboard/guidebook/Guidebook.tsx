@@ -1,18 +1,16 @@
 import styled from "@emotion/styled";
 import { useLoaderData } from "react-router-dom";
 import { GuidebookDto } from "../../../utils/dtos";
-import Gallery from "./Gallery";
+import { theme } from "../../../utils/styles";
+import LightFadeCarousel from "./PhotoCarousel";
 
 function Guidebook() {
   const guidebookDetails = useLoaderData() as GuidebookDto;
 
   return <Container>
-    <Gallery />
-    <h1>Guidebook Page Beginning</h1>
+    <LightFadeCarousel />
+    <DisplayText>Guidebook Page Beginning</DisplayText>
 
-    <ImageCarousel >Image carousel</ImageCarousel>
-
-    
     <h2>{guidebookDetails.propertyName}</h2>
     <Faq>
       {guidebookDetails.faq?.map((faq) => {
@@ -40,9 +38,7 @@ function Guidebook() {
     })
   */}
 
-
   </Container>;
-
 }
 
 const Faq = styled.ol` 
@@ -51,12 +47,15 @@ const Faq = styled.ol`
   row-gap: 20px;
 `;
 
-const ImageCarousel = styled.div` 
-  height: 256px;
-  width: 100%;
-  background-color: #00ff6e;
-`;
+// const ImageCarousel = styled.div` 
+//   height: 256px;
+//   width: 100%;
+//   background-color: #00ff6e;
+// `;
 
+const DisplayText = styled.h1` 
+  font: ${props => theme.font.displayXL};
+`;
 
 const Container = styled.div` 
   width: 100%;
