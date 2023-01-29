@@ -1,0 +1,11 @@
+/**
+ * Loads data for the invite page
+ * 
+ * @returns A URL to access an invite QR code 
+ */
+export default async function InviteLoader(): Promise<string> {
+  const resId = 'test-res'; // TODO: replace hard coded resId
+  const response = await fetch(`/api/invites/${resId}`);
+  const body = await response.json();
+  return body.data[0];
+}
