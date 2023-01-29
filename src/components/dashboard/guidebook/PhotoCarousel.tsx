@@ -31,10 +31,9 @@ function LightFadeCarousel() {
 }
 
 const Container = styled.div` 
+  align-items: center;
   justify-content: center;
-  /* max-width: 80%; */
   margin: 20px;
-
 `;
 
 export default LightFadeCarousel;

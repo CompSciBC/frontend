@@ -7,13 +7,21 @@ interface AccordionDropdownProps {
   label: string;
   isOpen: boolean;
   content?: any;
+  guidebook?: boolean;
+}
+
+function isGuidebookAccordion( guidebook: boolean) {
+  if (guidebook) {
+    return <Line smallLine />;
+  }
 }
 
 function AccordionDropdown({
   className,
   label,
   isOpen,
-  content
+  content,
+  guidebook
 }: AccordionDropdownProps) {
   const [open, setOpen] = useState<boolean>(isOpen);
 
@@ -25,6 +33,7 @@ function AccordionDropdown({
           setOpen(!open);
         }}
       >
+        {isGuidebookAccordion(guidebook!)}
         <div>{label}</div>
         <Line />
         <ChevronWrapper open={open}>
@@ -52,10 +61,11 @@ const Header = styled.button`
   }
 `;
 
-const Line = styled.hr`
+const Line = styled.hr<{ smallLine?: boolean }>`
   border-top: 1px solid black;
   flex-grow: 1;
   margin: auto 4px;
+  max-width: ${(props) => (props.smallLine ? '1%' : '100%')};
 `;
 
 const ChevronWrapper = styled.div<{ open: boolean }>`
