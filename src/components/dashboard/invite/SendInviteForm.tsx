@@ -105,6 +105,16 @@ function SendInviteForm({ className, onClose }: SendInviteFormProps) {
     }
   };
 
+  /**
+   * Removes the required class if input has value
+   *
+   * @param event The triggering event
+   */
+  const handleBlur = (event: any) => {
+    if ((event.target as HTMLInputElement).value)
+      document.getElementById(recipientsInputId)?.classList.remove('required');
+  };
+
   return (
     <Container className={className}>
       <Title>Invite Your Friends</Title>
@@ -114,6 +124,7 @@ function SendInviteForm({ className, onClose }: SendInviteFormProps) {
           id={recipientsInputId}
           type="email"
           placeholder="Enter multiple separated with commas"
+          onBlur={handleBlur}
         />
       </Field>
       <Field>
@@ -150,6 +161,7 @@ const Container = styled.div`
   ${theme.screen.small} {
     width: 100%;
     height: 100%;
+    border-radius: 0;
     justify-content: start;
   }
 `;
@@ -186,6 +198,25 @@ const Field = styled.div`
 
   .required {
     border: 1px solid red;
+    animation: horizontal-shaking 0.15s;
+
+    @keyframes horizontal-shaking {
+      0% {
+        transform: translateX(0);
+      }
+      25% {
+        transform: translateX(5px);
+      }
+      50% {
+        transform: translateX(-5px);
+      }
+      75% {
+        transform: translateX(5px);
+      }
+      100% {
+        transform: translateX(0);
+      }
+    }
   }
 `;
 
