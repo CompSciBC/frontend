@@ -1,11 +1,19 @@
 import styled from '@emotion/styled';
 import { theme } from '../../utils/styles';
+import { useNavigate } from 'react-router-dom';
+
 
 interface HomeProps {
   logo: string;
 }
 
 function Home({ logo }: HomeProps) {
+  const navigate = useNavigate();
+  // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression
+  const navigateToGuestLanding = () => navigate('/guestLanding');
+  // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression
+  const navigateToHostLanding = () => navigate('/hostLanding');
+
   return (
     <Container>
       <h1>Welcome to</h1>
@@ -32,6 +40,8 @@ function Home({ logo }: HomeProps) {
         </p>
       </Description>
       <CallToActionButton>Get Started</CallToActionButton>
+      <CallToActionButton onClick={navigateToGuestLanding}>I am a Guest</CallToActionButton>
+      <CallToActionButton onClick={navigateToHostLanding}>I am a Host</CallToActionButton>
     </Container>
   );
 }

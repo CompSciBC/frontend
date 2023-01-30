@@ -6,6 +6,8 @@ import {
   RouterProvider
 } from 'react-router-dom';
 import Home from './components/home/Home';
+import HostLanding from './components/home/HostLanding';
+import GuestLanding from './components/home/GuestLanding';
 import Dashboard from './components/dashboard/Dashboard';
 import Chat from './components/chat/Chat';
 import Profile from './components/profile/Profile';
@@ -20,11 +22,18 @@ import reportWebVitals from './reportWebVitals';
 import Reservations from './components/reservations/Reservations';
 import ReservationLoader from './components/reservations/ReservationLoader';
 
+// Configure React project with Amplify resources
+import { Amplify } from 'aws-amplify';
+import config from './aws-exports';
+Amplify.configure(config);
+
 /**
  * Contains the base route urls of the various pages in the app
  */
 export const routes = {
   home: '/',
+  hostLanding: '/hostLanding',
+  guestLanding: '/guestLanding',
   dashboard: '/dashboard',
   chat: '/chat',
   profile: '/profile',
@@ -61,6 +70,20 @@ const headerRoutes: RouteObject[] = [
 
 const allRoutes: RouteObject[] = [
   ...headerRoutes,
+  {
+    path: routes.hostLanding,
+    element: <HostLanding />,
+    handle: {
+      name: 'Host Landing'
+    }
+  },
+  {
+    path: routes.guestLanding,
+    element: <GuestLanding />,
+    handle: {
+      name: 'Guest Landing'
+    }
+  },
   {
     path: routes.reservations,
     element: <Reservations />,
