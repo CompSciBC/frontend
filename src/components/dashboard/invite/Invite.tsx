@@ -1,25 +1,43 @@
 import styled from '@emotion/styled';
+import { useState } from 'react';
 import { useLoaderData } from 'react-router-dom';
 import { theme } from '../../../utils/styles';
+import Modal from '../../Modal';
+import SendInviteForm from './SendInviteForm';
 
 export interface InviteProps {
   className?: string;
 }
 
+/**
+ * A page for sending invitations to other guests
+ *
+ * @param props {@link InviteProps}
+ * @returns A JSX element
+ */
 function Invite({ className }: InviteProps) {
   const qrCodeUrl = useLoaderData() as string;
+  const [emailFormOpen, setEmailFormOpen] = useState(false);
 
   return (
-    <Container className={className} id="hello">
+    <Container className={className}>
       <Title>Invite Others</Title>
       <QRCode src={qrCodeUrl} />
       <ButtonContainer>
         <TextCode>
           <div>Invite Code</div>
-          <span>F7URJ372JE75</span>
+          <span>F7URJ372JE75</span> {/* TODO: replace hard coded value */}
         </TextCode>
-        <InviteButton type="button">Send via Email</InviteButton>
+        <InviteButton type="button" onClick={() => setEmailFormOpen(true)}>
+          Send via Email
+        </InviteButton>
         <InviteButton type="button">Send via SMS</InviteButton>
+        {emailFormOpen && (
+          <Modal
+            content={<SendInviteForm onClose={() => setEmailFormOpen(false)} />}
+            blur={true}
+          />
+        )}
       </ButtonContainer>
     </Container>
   );

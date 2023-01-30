@@ -50,3 +50,13 @@ export type ReservationStatus = 'current' | 'upcoming' | 'past';
 export type SortedReservationDetailSet = {
   [key in ReservationStatus]: ReservationDetail[];
 };
+
+/**
+ * Represents an email message (matching Email.java)
+ */
+export interface Email {
+  from: string;
+  to: string;
+  subject: string;
+  body: string;
+}
