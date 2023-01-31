@@ -52,11 +52,10 @@ export type SortedReservationDetailSet = {
 };
 
 /**
- * Represents an email message (matching Email.java)
+ * Represents an invitation to join a reservation (matching Invitation.java)
  */
-export interface Email {
-  from: string;
-  to: string;
-  subject: string;
-  body: string;
+export interface Invitation {
+  recipients: string[];
+  guestName: string;
+  message?: string;
 }

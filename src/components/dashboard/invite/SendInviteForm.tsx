@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { Email } from '../../../utils/dtos';
+import { Invitation } from '../../../utils/dtos';
 import { theme } from '../../../utils/styles';
 
 export interface SendInviteFormProps {
@@ -8,7 +8,7 @@ export interface SendInviteFormProps {
 }
 
 /**
- * A user form for sending an email
+ * A user form for sending an invitation
  *
  * @param props {@link SendInviteFormProps}
  * @returns A JSX element
@@ -17,43 +17,24 @@ function SendInviteForm({ className, onClose }: SendInviteFormProps) {
   // TODO: replace hardcoded values
   const guestName = 'GUEST NAME';
   const resId = 'test-res';
-  const senderEmail = 'pradodje@gmail.com';
 
   const recipientsInputId = 'invite-recipients';
   const messageInputId = 'invite-message';
-  const inviteLink = `localhost:3000/reservations/add/${resId}`;
 
   /**
-   * Creates the email message body
+   * Sends an invitation email message via the api
    *
-   * @param optionalMessage A user provided message
-   * @returns An email message body
+   * @param invite An {@link Invitation}
+   * @returns True if the invitation was sent successfully, or false otherwise
    */
-  const emailBody = (optionalMessage: string) => {
-    let body = '';
-
-    if (optionalMessage) {
-      body += optionalMessage;
-    } else {
-      body += `${guestName} has invited you to join BeMyGuest.`;
-    }
-    return body + '\n\n' + inviteLink;
-  };
-
-  /**
-   * Sends an email message via the api
-   *
-   * @param email An {@link Email}
-   * @returns True if the message send was successful, or false otherwise
-   */
-  const sendEmail = async (email: Email): Promise<boolean> => {
+  const sendInvitations = async (invite: Invitation): Promise<boolean> => {
     const send = async () => {
-      const response = await fetch('/api/email/send', {
+      const response = await fetch(`/api/invites/${resId}/send-email`, {
         method: 'post',
         headers: {
           'content-type': 'application/json'
         },
-        body: JSON.stringify(email)
+        body: JSON.stringify(invite)
       });
       return await response.json();
     };
@@ -80,28 +61,24 @@ function SendInviteForm({ className, onClose }: SendInviteFormProps) {
     } else {
       recipientsInput.classList.remove('required');
 
-      // for each recipient, send an email
-      for (const recipient of recipients.split(',')) {
-        const email: Email = {
-          from: senderEmail,
-          to: recipient.trim(),
-          subject: "You're invited to BeMyGuest!",
-          body: emailBody(messageInput?.value)
-        };
+      const invite: Invitation = {
+        recipients: recipients.split(','),
+        guestName,
+        message: messageInput?.value
+      };
 
-        // send email and close form if successful
-        (async function () {
-          const success = await sendEmail(email);
+      // send email and close form if successful
+      (async function () {
+        const success = await sendInvitations(invite);
 
-          // TODO: replace alert with custom notification
-          if (success) {
-            onClose();
-            window.alert('Email sent successfully');
-          } else {
-            window.alert('Failed to send email.');
-          }
-        })();
-      }
+        // TODO: replace alert with custom notification
+        if (success) {
+          onClose();
+          window.alert('Invitation sent successfully.');
+        } else {
+          window.alert('Failed to send invitation.');
+        }
+      })();
     }
   };
 
