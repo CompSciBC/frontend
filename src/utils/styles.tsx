@@ -17,7 +17,8 @@ export const theme = {
   },
   color: {
     black: '#000000',
-    white: '#ffffff'
+    white: '#ffffff',
+    blue: '#2E7CF6'
   },
   screen: {
     small: '@media only screen and (max-width: 700px)'

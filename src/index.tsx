@@ -19,6 +19,8 @@ import './index.css';
 import reportWebVitals from './reportWebVitals';
 import Reservations from './components/reservations/Reservations';
 import ReservationLoader from './components/reservations/ReservationLoader';
+import Invite from './components/dashboard/invite/Invite';
+import InviteLoader from './components/dashboard/invite/InviteLoader';
 
 /**
  * Contains the base route urls of the various pages in the app
@@ -26,6 +28,7 @@ import ReservationLoader from './components/reservations/ReservationLoader';
 export const routes = {
   home: '/',
   dashboard: '/dashboard',
+  invite: '/invite',
   chat: '/chat',
   profile: '/profile',
   reservations: '/reservations',
@@ -75,6 +78,14 @@ const allRoutes: RouteObject[] = [
     handle: {
       name: 'Dashboard'
     }
+  },
+  {
+    path: routes.invite,
+    element: <Invite />,
+    handle: {
+      name: 'Invite'
+    },
+    loader: InviteLoader
   },
   {
     path: routes.weather,

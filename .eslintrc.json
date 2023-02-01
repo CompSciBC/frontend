@@ -30,6 +30,7 @@
         "@typescript-eslint/indent": ["error", 2],
         "@typescript-eslint/member-delimiter-style": "off",
         "@typescript-eslint/no-non-null-assertion": "off",
-        "@typescript-eslint/consistent-indexed-object-style": "off"
+        "@typescript-eslint/consistent-indexed-object-style": "off",
+        "@typescript-eslint/no-confusing-void-expression": "off"
     }
 }
