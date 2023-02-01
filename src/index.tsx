@@ -21,6 +21,8 @@ import './index.css';
 import reportWebVitals from './reportWebVitals';
 import Reservations from './components/reservations/Reservations';
 import ReservationLoader from './components/reservations/ReservationLoader';
+import Invite from './components/dashboard/invite/Invite';
+import InviteLoader from './components/dashboard/invite/InviteLoader';
 
 // Configure React project with Amplify resources
 import { Amplify } from 'aws-amplify';
@@ -35,6 +37,7 @@ export const routes = {
   hostLanding: '/hostLanding',
   guestLanding: '/guestLanding',
   dashboard: '/dashboard',
+  invite: '/invite',
   chat: '/chat',
   profile: '/profile',
   reservations: '/reservations',
@@ -98,6 +101,14 @@ const allRoutes: RouteObject[] = [
     handle: {
       name: 'Dashboard'
     }
+  },
+  {
+    path: routes.invite,
+    element: <Invite />,
+    handle: {
+      name: 'Invite'
+    },
+    loader: InviteLoader
   },
   {
     path: routes.weather,
