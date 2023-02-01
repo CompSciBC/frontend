@@ -58,3 +58,5 @@ export type SortedReservationSet = {
 export type SortedReservationPropertySet = {
   [key in ReservationStatus]: ReservationProperty[];
 };
+
+
