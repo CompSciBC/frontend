@@ -23,7 +23,6 @@ function GuidebookLoader() : GuidebookDto {
     policies: ["Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam feugiat justo eu pharetra interdum. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Fusce egestas, diam ac semper consequat, lacus odio suscipit lacus, venenatis commodo sem erat a nibh. Fusce sapien elit, ullamcorper nec purus quis, pharetra fermentum nibh. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Mauris pharetra metus non rutrum scelerisque. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Sed aliquam in est vel lacinia. Proin eu sapien porttitor purus viverra consectetur ac sed tortor. Integer elementum dui sit amet bibendum suscipit."],
     hostServices: [],
     propertySpecificQ: [], // change later to Hieu's Survey object
-    checkininstr: [],
   };
 }
   

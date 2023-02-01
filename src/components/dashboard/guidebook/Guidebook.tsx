@@ -30,18 +30,16 @@ function Guidebook() {
           }</AboutSectionContainer>
 
           <AboutSectionContainer>Pets: <AboutSectionItem>{guidebookDetails.pets}</AboutSectionItem></AboutSectionContainer>
-
           <AboutSectionContainer>Capacity: <AboutSectionItem>{guidebookDetails.capacity}</AboutSectionItem></AboutSectionContainer>
 
-          {/* <AboutSectionContainer>Check-In Instructions: <AboutSectionItem>{guidebookDetails.capacity}</AboutSectionItem></AboutSectionContainer>
+          {guidebookDetails.checkininstr && <AboutSectionContainer>Check-In Instructions: <AboutSectionItem>{guidebookDetails.checkininstr}</AboutSectionItem></AboutSectionContainer>}
 
-          <AboutSectionContainer>Check-Out Instructions: <AboutSectionItem>{guidebookDetails.capacity}</AboutSectionItem></AboutSectionContainer> */}
-
-
+          {guidebookDetails.checkoutinstr && <AboutSectionContainer>Check-Out Instructions: <AboutSectionItem>{guidebookDetails.checkoutinstr}</AboutSectionItem></AboutSectionContainer>}
         </div>
         }
-        guidebook={true}
+        smallLineStyling={true}
       />
+
       <StyledAccordionDropdown
         label="•GUEST FAQ•"
         isOpen={true}
@@ -56,29 +54,29 @@ function Guidebook() {
           })
           }
         </Faq>}
-        guidebook={true}
+        smallLineStyling={true}
       />
       <StyledAccordionDropdown
         label="•POLICIES•"
         isOpen={true}
         content={<BodyText>{guidebookDetails.policies}</BodyText>}
-        guidebook={true}
+        smallLineStyling={true}
       />
       <StyledAccordionDropdown
         label="•YOUR HOST•"
         isOpen={true}
         content={<BodyText>{guidebookDetails.policies}</BodyText>}
-        guidebook={true}
+        smallLineStyling={true}
       />
       <StyledAccordionDropdown
         label="•SERVICES AND SUPPORT•"
         isOpen={true}
         content={<BodyText>{guidebookDetails.policies}</BodyText>}
-        guidebook={true}
+        smallLineStyling={true}
       />
     </ListContainer>
 
-    {/* <Faq>
+    {/* <Faq>                                         // Code below commented out -> For reference !
       {guidebookDetails.faq?.map((faq) => {
         return (
           <li key={faq.Question}>
@@ -142,7 +140,7 @@ const Container = styled.div`
   width: 100%;
 `;
 
-const StyledAccordionDropdown = styled(AccordionDropdown)` // This is duplicated
+const StyledAccordionDropdown = styled(AccordionDropdown)` 
   ${theme.font.body}
 `;
 
