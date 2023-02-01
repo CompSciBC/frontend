@@ -1,3 +1,4 @@
+import jwt from 'jwt-decode';
 export function assignUserToRole(username : any, currentRole : string, assignedRole: string) {
   const jsonData = {
     username, 
@@ -11,3 +12,15 @@ export function assignUserToRole(username : any, currentRole : string, assignedR
   });
 }
 
+export function getUserGroup(user : any): any {
+  const token = user.getSignInUserSession()?.getIdToken().getJwtToken();
+  
+  let userGroup;
+  if (token) {
+    const decoded = jwt(token);
+    if (decoded) {
+      userGroup = Object.entries(decoded)[1][1];
+    }
+  }
+  return userGroup;
+}

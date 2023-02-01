@@ -3,10 +3,8 @@ import {
   withAuthenticator,
   useAuthenticator
 } from '@aws-amplify/ui-react';
-import jwt from 'jwt-decode';
 import { useNavigate } from 'react-router-dom';
-import { assignUserToRole } from '../home/AuthUtils';
-
+import { assignUserToRole, getUserGroup } from '../home/AuthUtils';
 
 function GuestLanding() {
   const { signOut, user } = useAuthenticator();
@@ -14,21 +12,11 @@ function GuestLanding() {
   const navigate = useNavigate();
   // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression
   const navigateToHostLanding = () => navigate('/hostLanding');
-
-  // https://stackoverflow.com/questions/41828359/how-do-i-access-the-group-for-a-cognito-user-account=
-  const token = user.getSignInUserSession()?.getIdToken().getJwtToken();
   
-  let userGroup;
-  if (token) {
-    const decoded = jwt(token);
-    if (decoded) {
-      userGroup = Object.entries(decoded)[1][1];
-      if (typeof userGroup === 'boolean') {
-        userGroup = 'unassigned';
-        assignUserToRole(user.username, 'unassigned', 'guest');
-      };
-    };
-  }
+  const userGroup = getUserGroup(user);
+  if (typeof userGroup === 'boolean') {
+    assignUserToRole(user.username, 'unassigned', 'guest');
+  };
 
   if (userGroup[0] === 'host'){
     return (
@@ -41,7 +29,7 @@ function GuestLanding() {
     return (
       <>
         <h1>WELCOME TO THE GUEST LANDING PAGE!</h1>
-        <p> User Group = { userGroup }</p>
+        <p> role = {userGroup[0]}</p>
         <p> User Name = { user.username }</p>
         <button onClick={signOut}>Sign out</button>
       </>
