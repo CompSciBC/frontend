@@ -16,8 +16,9 @@ export const theme = {
       'font: normal normal 400 13px/20px "Reem Kufi", sans-serif; text-decoration: underline;'
   },
   color: {
-    black: 'color: #000000',
-    white: 'color: #ffffff'
+    black: '#000000',
+    white: '#ffffff',
+    blue: '#2E7CF6'
   },
   screen: {
     small: '@media only screen and (max-width: 700px)'

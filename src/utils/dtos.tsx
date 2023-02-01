@@ -90,3 +90,12 @@ export type ReservationStatus = 'current' | 'upcoming' | 'past';
 export type SortedReservationDetailSet = {
   [key in ReservationStatus]: ReservationDetail[];
 };
+
+/**
+ * Represents an invitation to join a reservation (matching Invitation.java)
+ */
+export interface Invitation {
+  recipients: string[];
+  guestName: string;
+  message?: string;
+}
