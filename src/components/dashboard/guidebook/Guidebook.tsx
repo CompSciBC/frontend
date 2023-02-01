@@ -22,25 +22,25 @@ function Guidebook() {
           
           <BodyText>{guidebookDetails.propertyBio}</BodyText>
 
-          <AboutSectionContainer>Amenities: {guidebookDetails.amenities?.map((amen) => {
+          {guidebookDetails.amenities && <AboutSectionContainer>Amenities: {guidebookDetails.amenities?.map((amen) => {
             return (
               <AboutSectionItem key={amen}>{amen}</AboutSectionItem>
             );
           })
-          }</AboutSectionContainer>
+          }</AboutSectionContainer>}
 
           <AboutSectionContainer>Pets: <AboutSectionItem>{guidebookDetails.pets}</AboutSectionItem></AboutSectionContainer>
           <AboutSectionContainer>Capacity: <AboutSectionItem>{guidebookDetails.capacity}</AboutSectionItem></AboutSectionContainer>
 
           {guidebookDetails.checkininstr && <AboutSectionContainer>Check-In Instructions: <AboutSectionItem>{guidebookDetails.checkininstr}</AboutSectionItem></AboutSectionContainer>}
-
           {guidebookDetails.checkoutinstr && <AboutSectionContainer>Check-Out Instructions: <AboutSectionItem>{guidebookDetails.checkoutinstr}</AboutSectionItem></AboutSectionContainer>}
+          {guidebookDetails.propertyType && <AboutSectionContainer>Property Type: <AboutSectionItem>{guidebookDetails.propertyType}</AboutSectionItem></AboutSectionContainer>}
         </div>
         }
         smallLineStyling={true}
       />
 
-      <StyledAccordionDropdown
+      {guidebookDetails.faq && <StyledAccordionDropdown
         label="•GUEST FAQ•"
         isOpen={true}
         content={<Faq>
@@ -55,7 +55,7 @@ function Guidebook() {
           }
         </Faq>}
         smallLineStyling={true}
-      />
+      />}
       <StyledAccordionDropdown
         label="•POLICIES•"
         isOpen={true}

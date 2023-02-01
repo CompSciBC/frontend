@@ -17,20 +17,19 @@ export interface Property {
 export interface GuidebookDto {
   propertyID: string;
   propertyName: string;
-  propertyType?: 'Cabin' | 'City' | 'Beach' | 'Mountain'| null;
+  propertyType?: 'Cabin' | 'City' | 'Beach' | 'Mountain';
   capacity: number;
   pets: 'Allowed' | 'Not Allowed';
-  amenities?: string[]| null| null;
+  amenities?: string[];
   propertyBio: string;
-  faq?: Array<{Question:string; Answer:string}>| null;
+  faq?: Array<{Question:string; Answer:string}>; 
   // faq?: string[];
-  policies?: string[]| null;
-  hostRecommended?: string[]| null; // change later from type any to HostRecommended object
-  hostServices?: string[]| null;
+  policies?: string[];
+  hostRecommended?: string[]; // change later from type any to HostRecommended object
+  hostServices?: string[];
   propertySpecificQ?: any; // change later to Hieu's Survey object
-  checkininstr?: string[] | null;
-  checkoutinstr?: string[] | null;
-  checkoutinstru?: string[] | null;
+  checkininstr?: string[];
+  checkoutinstr?: string[];
 }
 
 // test
