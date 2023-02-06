@@ -3,17 +3,17 @@
   "name": "BeMyGuest App",
   "icons": [
     {
-      "src": "bmg-branding/BMG-favicon.svg",
+      "src": "bmg-branding/BMG-favicon-refined.svg",
       "sizes": "64x64 32x32 24x24 16x16",
       "type": "image/x-icon"
     },
     {
-      "src": "bmg-branding/BMG-favicon.svg",
+      "src": "bmg-branding/BMG-favicon-refined.svg",
       "type": "image/png",
       "sizes": "192x192"
     },
     {
-      "src": "bmg-branding/BMG-favicon.svg",
+      "src": "bmg-branding/BMG-favicon-refined.svg",
       "type": "image/png",
       "sizes": "512x512"
     }
