@@ -21,7 +21,6 @@ import reportWebVitals from './reportWebVitals';
 import Reservations from './components/reservations/Reservations';
 import ReservationLoader from './components/reservations/ReservationLoader';
 import GuidebookLoader from './components/dashboard/guidebook/GuidebookLoader';
-
 import Invite from './components/dashboard/invite/Invite';
 import InviteLoader from './components/dashboard/invite/InviteLoader';
 
@@ -44,11 +43,12 @@ export const routes = {
 
 const headerRoutes: RouteObject[] = [
   {
-    path: routes.home,
-    element: <Home logo="images/bmg-logo-black.png" />,
+    path: routes.reservations,
+    element: <Reservations />,
     handle: {
-      name: 'Home'
-    }
+      name: 'Reservations'
+    },
+    loader: ReservationLoader
   },
   {
     path: routes.chat,
@@ -69,12 +69,11 @@ const headerRoutes: RouteObject[] = [
 const allRoutes: RouteObject[] = [
   ...headerRoutes,
   {
-    path: routes.reservations,
-    element: <Reservations />,
+    path: routes.home,
+    element: <Home logo="images/bmg-logo-black.png" />,
     handle: {
-      name: 'Reservations'
-    },
-    loader: ReservationLoader
+      name: 'Home'
+    }
   },
   {
     path: routes.dashboard,
@@ -137,7 +136,7 @@ const router = createBrowserRouter(
       element: (
         <Page
           header={
-            <Header logo="images/bmg-logo-white.png" navLinks={headerRoutes} />
+            <Header logo="bmg-branding/BMG-favicon.svg" navLinks={headerRoutes} />
           }
           content={route.element}
         />

@@ -24,15 +24,14 @@ const Container = styled.nav`
 `;
 
 const NavLink = styled(Link)`
-  padding: 8px;
-  text-decoration: none;
+  padding: 30px;
   font-weight: bold;
-  color: white;
+  color: #000000;
   border-radius: 4px;
-
   :hover {
-    background-color: #4fb94f;
+    color: #54c2ee;
   }
 `;
+//  #a1d7ec;
 
 export default Navbar;

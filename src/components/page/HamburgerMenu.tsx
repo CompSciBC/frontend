@@ -9,7 +9,7 @@ interface HamburgerMenuProps {
 function HamburgerMenu({
   className,
   width = 32,
-  color = 'white'
+  color = 'black'
 }: HamburgerMenuProps) {
   return (
     <SVG
