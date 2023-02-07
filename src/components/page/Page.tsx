@@ -1,13 +1,13 @@
 import styled from '@emotion/styled';
+import { Outlet } from 'react-router-dom';
 
 interface PageProps {
   className?: string;
   header?: JSX.Element;
-  content: React.ReactNode;
   footer?: JSX.Element;
 }
 
-function Page({ className, header, content, footer }: PageProps) {
+function Page({ className, header, footer }: PageProps) {
   return (
     <Container className={className}>
       {header && (
@@ -17,7 +17,7 @@ function Page({ className, header, content, footer }: PageProps) {
             TODO: replace this with a better solution
             Since the header is position: fixed, this spacer
             servers to push the content down below the header.
-            This is not  ideal as it creates a duplicate header
+            This is not ideal as it creates a duplicate header
             (i.e., extra html that is unused) but the other easy
             solution I can think of is to add a padding-top to the
             header component of 64px, but that leads to the size
@@ -26,7 +26,9 @@ function Page({ className, header, content, footer }: PageProps) {
           <HeaderSpacer>{header}</HeaderSpacer>
         </>
       )}
-      <Main>{content}</Main>
+      <Main>
+        <Outlet />
+      </Main>
       {footer && <FooterWrapper>{footer}</FooterWrapper>}
     </Container>
   );

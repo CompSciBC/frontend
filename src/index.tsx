@@ -2,6 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import {
   createBrowserRouter,
+  createRoutesFromElements,
+  Route,
   RouteObject,
   RouterProvider
 } from 'react-router-dom';
@@ -118,21 +120,27 @@ const allRoutes: RouteObject[] = [
 ];
 
 const router = createBrowserRouter(
-  allRoutes.map((route) => {
-    return {
-      path: route.path,
-      handle: route.handle?.name,
-      loader: route.loader,
-      element: (
+  createRoutesFromElements(
+    <Route
+      element={
         <Page
           header={
             <Header logo="images/bmg-logo-white.png" navLinks={headerRoutes} />
           }
-          content={route.element}
         />
-      )
-    };
-  })
+      }
+    >
+      {allRoutes.map((route) =>
+        <Route
+          key={route.path}
+          path={route.path}
+          handle={route.handle?.name}
+          loader={route.loader}
+          element={route.element}
+        />
+      )}
+    </Route>
+  )
 );
 
 const root = ReactDOM.createRoot(
