@@ -2,25 +2,28 @@ import styled from '@emotion/styled';
 import { Link, RouteObject } from 'react-router-dom';
 import { routes } from '../../index';
 import { theme } from '../../utils/styles';
-import HamburgerMenu from './HamburgerMenu';
+// import HamburgerMenu from './HamburgerMenu';
 import Navbar from './Navbar';
 
 interface HeaderProps {
   className?: string;
   logo?: string;
+  menu?: string;
   navLinks?: RouteObject[];
 }
 
-function Header({ className, logo, navLinks }: HeaderProps) {
+function Header({ className, logo, menu, navLinks }: HeaderProps) {
   return (<div className={className}>
     <NavParentFrame>
       <IconHomeLinkFrame>
         <Logo to={routes.home}>
           <img src={logo} alt="logo" />
         </Logo>
+        
       </IconHomeLinkFrame>
+      
       <NavLinksFrame >
-        <Menu />
+        <Menu2 ><img src={menu} alt="Hamb. Menu" /></Menu2>
         {navLinks && <Nav navLinks={navLinks} />}
       </NavLinksFrame>
     </NavParentFrame>
@@ -68,6 +71,9 @@ height: 39.1px; */
 flex: none;
 order: 0;
 flex-grow: 0;
+${theme.screen.small} {
+  display: none;
+  }
 `;
 
 const NavLinksFrame = styled.div`
@@ -129,13 +135,28 @@ const Logo = styled(Link)`
     background-color: #4fb94f;
   }  */
 
-  ${theme.screen.small} {
-    position: static;
-  }
+  /* ${theme.screen.small} {
+  display: none;
+  } */
 `;
 
-const Menu = styled(HamburgerMenu)`
+// const Menu = styled(HamburgerMenu)`
+//   display: none;
+
+//   ${theme.screen.small} {
+//     display: block;
+//     position: absolute;
+//     left: 20px;
+//   }
+// `;
+
+const Menu2 = styled.div`
   display: none;
+
+  img {
+    height: 55px;
+    padding: 4px;
+  }
 
   ${theme.screen.small} {
     display: block;

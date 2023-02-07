@@ -136,7 +136,7 @@ const router = createBrowserRouter(
       element: (
         <Page
           header={
-            <Header logo="bmg-branding/BMG-favicon-refined.svg" navLinks={headerRoutes} />
+            <Header logo="bmg-branding/BMG-favicon-refined.svg" menu="bmg-branding/menu.svg" navLinks={headerRoutes} />
           }
           content={route.element}
         />
