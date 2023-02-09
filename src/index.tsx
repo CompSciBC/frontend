@@ -70,7 +70,7 @@ const allRoutes: RouteObject[] = [
   ...headerRoutes,
   {
     path: routes.home,
-    element: <Home logo="images/bmg-logo-black.png" />,
+    element: <Home logo="bmg-branding/BMG-Script-RdHrt.svg" />,
     handle: {
       name: 'Home'
     }
@@ -136,7 +136,7 @@ const router = createBrowserRouter(
       element: (
         <Page
           header={
-            <Header logo="bmg-branding/BMG-favicon-refined.svg" menu="bmg-branding/menu.svg" navLinks={headerRoutes} />
+            <Header logo="bmg-branding/BMG-favicon-refined.svg" navLinks={headerRoutes} />
           }
           content={route.element}
         />
