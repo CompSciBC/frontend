@@ -9,6 +9,7 @@ import Home from './components/home/Home';
 import Dashboard from './components/dashboard/Dashboard';
 import Chat from './components/chat/Chat';
 import Profile from './components/profile/Profile';
+import About from './components/about/About';
 import Guidebook from './components/dashboard/guidebook/Guidebook';
 import Weather from './components/dashboard/Weather';
 import Restaurants from './components/dashboard/Restaurants';
@@ -30,6 +31,7 @@ import InviteLoader from './components/dashboard/invite/InviteLoader';
 export const routes = {
   home: '/',
   dashboard: '/dashboard',
+  about: '/about',
   invite: '/invite',
   chat: '/chat',
   profile: '/profile',
@@ -55,6 +57,13 @@ const headerRoutes: RouteObject[] = [
     element: <Chat />,
     handle: {
       name: 'Chat'
+    }
+  },
+  {
+    path: routes.about,
+    element: <About />,
+    handle: {
+      name: 'About'
     }
   },
   {

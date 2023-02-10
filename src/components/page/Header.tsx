@@ -46,7 +46,7 @@ background-color: white;
 
 /* position: absolute; */
 width: 100%;
-height: 50px;
+height: 60px;
 /* box-shadow: 2px 2px; */
 box-shadow: 1px 1px 5px #aaaaaa;
 `;
@@ -69,7 +69,7 @@ height: 39.1px; */
 /* Inside auto layout */
 
 /* flex:1 1 200px; */
-flex: 1 66%;
+flex: 1 61%;
 padding: .4%;
 
 order: 0;
@@ -98,7 +98,7 @@ align-items: center;
 
 position: relative;
 overflow: hidden;
-height: 50px;
+height: 60px;
 
 background: linear-gradient(180deg, rgba(250, 206, 214, 0.69) 1.56%, rgba(249, 250, 206, 0.523639) 17.19%, rgba(206, 250, 231, 0.69) 45.31%, rgba(206, 242, 250, 0.327031) 71.35%);
 /* border-radius: 17px; */
@@ -124,7 +124,7 @@ const Logo = styled(Link)`
   }
 
   img {
-    height: 100%;
+    height:40px;
     /* padding: 7px; */
   }
 
