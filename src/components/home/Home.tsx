@@ -1,6 +1,5 @@
 import styled from '@emotion/styled';
 import { theme } from '../../utils/styles';
-
 interface HomeProps {
   logo?: string;
 }
@@ -37,6 +36,7 @@ function Home({ logo }: HomeProps) {
 }
 
 const Container = styled.div`
+  padding-top: 10px;
   display: flex;
   flex-direction: column;
   align-items: center;
