@@ -1,26 +1,16 @@
 import '@aws-amplify/ui-react/styles.css';
-import {
-  withAuthenticator,
-  useAuthenticator
-} from '@aws-amplify/ui-react';
-// import jwt from 'jwt-decode';
-import { useNavigate } from 'react-router-dom';
+import { withAuthenticator, useAuthenticator } from '@aws-amplify/ui-react';
+import { useNavigate, Link } from 'react-router-dom';
 import { assignUserToRole, getUserGroup } from '../home/AuthUtils';
 
 function HostLanding() {
-  const { 
-    signOut, 
-    user } = useAuthenticator();
+  const { signOut, user } = useAuthenticator();
   const navigate = useNavigate();
-  // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression
-  const navigateToGuestLanding = () => navigate('/guestLanding');
-
+  
   function handleSignOut(){
-    
-    window.localStorage.removeItem('username');
-    window.localStorage.removeItem('role');  
-    setTimeout(signOut, 1000);
-    user.signOut();
+    window.localStorage.clear();
+    signOut();
+    navigate("/");
   }
 
   let userGroup = getUserGroup(user);
@@ -35,8 +25,9 @@ function HostLanding() {
     return (
       <>
         <h1>You have logged in with Guest Credentials</h1>
-        <p> User Name = { user.username }</p>
-        <button onClick={navigateToGuestLanding}>Go to Guest Landing Page</button>
+        <Link to="/guestLanding">
+          <button>Go to Guest Landing Page</button>
+        </Link>
       </>
     );
   } else {

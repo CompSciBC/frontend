@@ -1,5 +1,5 @@
 function Weather() {
-  return <>Map</>;
+  return <>Weather</>;
 }
 
 export default Weather;
