@@ -2,7 +2,9 @@ import styled from '@emotion/styled';
 
 function Profile() {
   if (localStorage.getItem('username') === null) {
-    return(<h1> This should be inaccessible to an unauthenticated user, but is exposed via the nav bar. What should we do? </h1>);
+    return(
+      <h1> This should be inaccessible to an unauthenticated user, but there is nothing stopping them from click on the nav bar link. What should we do? </h1>
+    );
   };
   return (
     <Container>
