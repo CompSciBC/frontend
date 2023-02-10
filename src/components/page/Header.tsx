@@ -29,82 +29,46 @@ function Header({ className, logo, navLinks }: HeaderProps) {
 }
 
 const NavParentFrame = styled.div`
-  /* NAVBAR */
-
-
-/* Auto layout */
-//////////////////////////////////////////
 display: flex;
 flex-direction: row;
 align-items: flex-start;
-//////////////////////////////////////////
-/* justify-content: center; */
-/* padding: 10px 17px; */
-/* gap: 10px; */
 overflow: hidden;
 background-color: white;
-
-/* position: absolute; */
 width: 100%;
 height: 60px;
-/* box-shadow: 2px 2px; */
 box-shadow: 1px 1px 5px #aaaaaa;
 `;
 
 const IconHomeLinkFrame = styled.div`
-  /* Frame 11 */
-/* Auto layout */
-//////////////////////////////////////////
 display: flex;
 flex-direction: row;
 align-items: flex-start;
 padding: 0px;
 gap: 10px;
 overflow: hidden;
-//////////////////////////////////////////
-/* width: 27.73px;
-height: 39.1px; */
-
-
-/* Inside auto layout */
-
-/* flex:1 1 200px; */
 flex: 1 61%;
 padding: .4%;
-
 order: 0;
 flex-grow: 0;
 `;
 
 const NavLinksFrame = styled.div`
-/* display: flex; */
 justify-content: flex-end;
 align-items: right;
 display: inline-block;
 text-align: center;
-/* padding: 14px; */
 color: rgb(0, 0, 0);
 text-decoration: none;
 `;
 
 const NavFrame = styled.div`
-  /* Frame 10 */
-/* Auto layout */
-
 display: flex;
 flex-direction: row;
-/* justify-content: flex-end; */
 align-items: center;
-
 position: relative;
 overflow: hidden;
 height: 60px;
-
 background: linear-gradient(180deg, rgba(250, 206, 214, 0.69) 1.56%, rgba(249, 250, 206, 0.523639) 17.19%, rgba(206, 250, 231, 0.69) 45.31%, rgba(206, 242, 250, 0.327031) 71.35%);
-/* border-radius: 17px; */
-
-/* Inside auto layout */
-
 flex: none;
 order: 1;
 align-self: stretch;
@@ -112,30 +76,14 @@ flex-grow: 1;
 `;
 
 const Logo = styled(Link)`
-  /* position: absolute;
-  left: 20px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-  border-radius: 4px; */
+
   ${theme.screen.small} {
   display: none;
   }
 
   img {
-    height:40px;
-    /* padding: 7px; */
+    height: 40px;
   }
-
-  /* :hover {
-    cursor: pointer;
-    background-color: #4fb94f;
-  }  */
-
-  /* ${theme.screen.small} {
-  display: none;
-  } */
 `;
 
 const Menu = styled.div`
