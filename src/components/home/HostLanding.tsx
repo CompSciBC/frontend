@@ -13,12 +13,21 @@ function HostLanding() {
   // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression
   const navigateToGuestLanding = () => navigate('/guestLanding');
 
-  const userGroup = getUserGroup(user);
+  function handleSignOut(){
+    signOut();
+    localStorage.removeItem('username');
+    localStorage.removeItem('role');
+  }
+
+  let userGroup = getUserGroup(user);
   if (typeof userGroup === 'boolean') {
+    userGroup = ['host'];
     assignUserToRole(user.username, 'unassigned', 'host');
   };
   
-  if (userGroup[0] === 'guest'){
+  localStorage.setItem('role', userGroup[0]);
+
+  if (localStorage.getItem('role') === 'guest'){
     return (
       <>
         <h1>You have logged in with Guest Credentials</h1>
@@ -27,11 +36,13 @@ function HostLanding() {
       </>
     );
   } else {
+    localStorage.setItem('username', user.username!);
     return (
       <>
         <h1>WELCOME TO THE HOST LANDING PAGE!</h1>
-        <p> User Name = { user.username }</p>
-        <button onClick={signOut}>Sign out</button>
+        <p> role = { localStorage.getItem('role') }</p>
+        <p> User Name = { localStorage.getItem('username') }</p>
+        <button onClick={handleSignOut}>Sign out</button>
       </>
     );
   }

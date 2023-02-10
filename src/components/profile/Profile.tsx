@@ -4,7 +4,8 @@ function Profile() {
   return (
     <Container>
       <h1>Profile</h1>
-
+      <p> role = { localStorage.getItem('role') }</p>
+      <p> User Name = { localStorage.getItem('username') }</p>
     </Container>
   );
 }
