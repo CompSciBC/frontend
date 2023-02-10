@@ -8,15 +8,19 @@ import { useNavigate } from 'react-router-dom';
 import { assignUserToRole, getUserGroup } from '../home/AuthUtils';
 
 function HostLanding() {
-  const { signOut, user } = useAuthenticator();
+  const { 
+    signOut, 
+    user } = useAuthenticator();
   const navigate = useNavigate();
   // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression
   const navigateToGuestLanding = () => navigate('/guestLanding');
 
   function handleSignOut(){
-    signOut();
-    localStorage.removeItem('username');
-    localStorage.removeItem('role');
+    
+    window.localStorage.removeItem('username');
+    window.localStorage.removeItem('role');  
+    setTimeout(signOut, 1000);
+    user.signOut();
   }
 
   let userGroup = getUserGroup(user);

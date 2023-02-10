@@ -2,6 +2,8 @@ import '@aws-amplify/ui-react/styles.css';
 import { withAuthenticator, useAuthenticator } from '@aws-amplify/ui-react';
 import { useNavigate } from 'react-router-dom';
 import { assignUserToRole, getUserGroup } from '../home/AuthUtils';
+// import {} from 'react-router-dom';
+
 
 function GuestLanding() {
   const { signOut, user } = useAuthenticator();
@@ -10,12 +12,14 @@ function GuestLanding() {
   // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression
   const navigateToHostLanding = () => navigate('/hostLanding');
   
+  
   function handleSignOut(){
+    window.localStorage.clear();
     signOut();
-    localStorage.removeItem('username');
-    localStorage.removeItem('role');
+    navigate("/");
   }
 
+  
   let userGroup = getUserGroup(user);
   if (typeof userGroup === 'boolean') {
     userGroup = ['guest'];

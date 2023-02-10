@@ -1,11 +1,15 @@
 import styled from '@emotion/styled';
 
 function Profile() {
+  if (localStorage.getItem('username') === null) {
+    return(<h1>This should be locked</h1>);
+  };
   return (
     <Container>
       <h1>Profile</h1>
       <p> role = { localStorage.getItem('role') }</p>
       <p> User Name = { localStorage.getItem('username') }</p>
+      <p> localStorageInfo = { localStorage.length }</p>
     </Container>
   );
 }
