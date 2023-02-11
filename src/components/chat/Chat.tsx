@@ -1,72 +1,114 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { over } from 'stompjs';
 import SockJS from 'sockjs-client';
 import { useParams } from 'react-router-dom';
 import styled from '@emotion/styled';
 import { theme } from '../../utils/styles';
 
-
 let stompClient: any = null;
+const hostUserName: string = "Host";
+const groupChatName: string = "Group";
+
+interface Message {
+  reservationId: String;
+  timestamp: Number;
+  senderName: String;
+  message: String;
+  receiverName: String | undefined;
+}
+
+interface ChatsServerResponse { 
+  [id: string]: Message[]; 
+}
 
 function Chat() {
   const { resId } = useParams() as {resId: string};
+  // const { guestId } = useParams() as {guestId: string};
+
+  
   const [userData, setUserData] = useState({
     username: '',
+    isHost: false,
     receivername: '',
     connected: false,
     message: ''  
   });
 
-  /* use a map on=bject where key is a receiver and value is a message
+  const messageEndRef = useRef<null | HTMLDivElement>(null); 
+  
+
+  /* scrol till the latest message. The latest message is popped up aitomatically
   */
-  const [privateChats, setPrivateChats] = useState(new Map());
+  useEffect( () => {
+    messageEndRef.current?.scrollIntoView();
+
+  }, [userData.message, userData.connected]); 
+  
+
+  /* use a map object where key is a receiver and value is a message
+  */
+  const [privateChats, setPrivateChats] = useState(new Map<string, Message[]>());
+  const [groupChat, setGroupChat] = useState(new Array<Message>());
   /* set as a string
   */
-  const [tab, setTab] = useState('');
+  const [tab, setTab] = useState(groupChatName);
 
   const connect = () => {
-    fetch('/api/chat/private-message/' + resId, {
+    const loadUrl:string = userData.isHost ? 
+      `/api/chat/load/host/${resId}`:
+      `/api/chat/load/guest/${resId}/${userData.username}`;
+    fetch(loadUrl, {
       method: 'GET',
       headers: { 'Content-Type': 'application/json' }
     })
       .then(async response => await response.json())
-      .then (messages => {
+      .then ((chats:ChatsServerResponse) => {
         const Sock = new SockJS('http://localhost:8080/ws');
         stompClient = over(Sock);
-        stompClient.connect({}, () => {onConnected(messages);}, onError);
+        stompClient.connect({}, () => {onConnected(chats);}, onError);
       });
   };
-  /* set a key for private chat map object: guest or hust depending who signs in
+  /* set a key for private chat map object: guest or host depending who signs in
   */
-  const onConnected = (messages: []) => {
+  const onConnected = (chats: ChatsServerResponse) => {
     setUserData({ ...userData, connected: true });
-    stompClient.subscribe('/user/' + userData.username + resId + '/private', onPrivateMessage);
-    if (userData.username === 'Guest') {
-      const list: never[] = messages;
-      privateChats.set('Host', list);
-      setPrivateChats(new Map(privateChats));
-      setTab('Host');
-    } else {
-      const list: never[] = messages;
-      privateChats.set('Guest', list);
-      setPrivateChats(new Map(privateChats));
-      setTab('Guest');
+    stompClient.subscribe(`/group/${resId}`, onGroupMessage);
+    // TODO subscribe to private message
+    const groupMesages = chats[resId];
+    groupChat.push(...groupMesages);
+    setGroupChat([...groupChat]);
+    
+    for(const chatId in chats) {
+      if (chatId === resId) {
+        continue;
+      }
+      const receiver = userData.isHost ? chatId.split("_")[1] : hostUserName;
+      const messages = chats[chatId];
+      privateChats.set(receiver, messages);
     }
+    
+    setPrivateChats(privateChats);
   };
 
-  const onPrivateMessage = (payload: any) => {
-    console.log(payload);
+  const onGroupMessage = (payload: any) => {
     const payloadData = JSON.parse(payload.body);
-    if (privateChats.get(payloadData.senderName)) {
-      privateChats.get(payloadData.senderName).push(payloadData);
-      setPrivateChats(new Map(privateChats));
-    } else {
-      const list = [];
-      list.push(payloadData);
-      privateChats.set(payloadData.senderName, list);
-      setPrivateChats(new Map(privateChats));
-    }
+    groupChat.push(payloadData as never);
+    setGroupChat([...groupChat]);
   };
+
+  // const onPrivateMessage = (payload: any) => {
+  //   console.log(payload);
+  //   const payloadData = JSON.parse(payload.body);
+  //   if (privateChats.get(payloadData.senderName)) {
+  //     privateChats.get(payloadData.senderName).push(payloadData);
+  //     setPrivateChats(new Map(privateChats));
+  //   } else {
+  //     const list = [];
+  //     list.push(payloadData);
+  //     privateChats.set(payloadData.senderName, list);
+  //     setPrivateChats(new Map(privateChats));
+  //   }
+  // };
 
   const onError = (err: any) => {
     console.log(err);
@@ -76,28 +118,53 @@ function Chat() {
     const { value } = event.target;
     setUserData({ ...userData, message: value });
   };
-  const sendPrivateValue = () => {
-    if (stompClient) {
-      const chatMessage = {
-        senderName: userData.username,
-        receiverName: tab,
-        reservationId: resId,
-        message: userData.message                     
-      };
 
-      if (userData.username !== tab) {
-        privateChats.get(tab).push(chatMessage);
-        setPrivateChats(new Map(privateChats));
+  const sendMessage=()=>{
+    if (stompClient) {
+      const chatMessage:Message = {
+        senderName: userData.username,
+        message: userData.message,
+        reservationId: resId,
+        timestamp: new Date().getTime(),
+        receiverName: tab === groupChatName ? undefined : (userData.isHost ? tab : hostUserName)
+      };
+     
+      console.log(chatMessage);
+
+      if (tab === groupChatName) {
+        groupChat.push(chatMessage);
+        stompClient.send("/app/group-message", {}, JSON.stringify(chatMessage));
+      } else {
+        privateChats.get(tab)!.push(chatMessage);
+        stompClient.send("/app/private-message", {}, JSON.stringify(chatMessage));
       }
 
-      stompClient.send(`/app/private-message`, {}, JSON.stringify(chatMessage));
-      setUserData({ ...userData, message: '' });
+      setUserData({...userData,"message": ""});
     }
   };
 
+  // const sendPrivateValue = () => {
+  //   if (stompClient) {
+  //     const chatMessage = {
+  //       senderName: userData.username,
+  //       // receiverName: tab,
+  //       reservationId: resId,
+  //       message: userData.message                     
+  //     };
+
+  //     if (userData.username !== tab) {
+  //       privateChats.get(tab).push(chatMessage);
+  //       setPrivateChats(new Map(privateChats));
+  //     }
+
+  //     stompClient.send(`/app/group-message`, {}, JSON.stringify(chatMessage));
+  //     setUserData({ ...userData, message: '' });
+  //   }
+  // };
+
   const handleUsername = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
-    setUserData({ ...userData, username: value });
+    setUserData({ ...userData, username: value, isHost: value === hostUserName });
   };
 
   const registerUser = () => {
@@ -107,21 +174,30 @@ function Chat() {
     <Container id='container'>
       {userData.connected
         ? <><ChatBox id='chat-box'>
-          {<ChatContent id='chat-content'>
+          <ChatListContainer>
+            <ChatList  onClick={()=>{setTab("Group");}}> Group Chat </ChatList>
+            {Array.from(privateChats.keys()).map((chatName,index)=>(
+              <ChatList onClick={()=>{setTab(chatName);}} key={index}>{chatName}</ChatList>
+            ))}
+          </ChatListContainer>
+          
+          {<ChatContent id='chat-content'>            
             <ChatMessages id='chat-messages'>
-              {[...privateChats.get(tab)].map((chat, index) => (
-                <Message id='message' self={chat.senderName === userData.username} key={index}>
-                  {chat.senderName !== userData.username && <Avatar>{chat.senderName}</Avatar>}.
-                  <MessageData id='message-data'>{chat.message}</MessageData>
-                  {chat.senderName === userData.username && <AvatarSelf>{chat.senderName}</AvatarSelf>}
-                </Message>
-              ))}
+              {(tab === groupChatName ? [...groupChat] : [...(privateChats.get(tab)!)]).map((message:any, index) => (
+                <MessageBlock id='message' self={message.senderName === userData.username} key={index}>
+                  {message.senderName !== userData.username && <Avatar>{message.senderName}</Avatar>}.
+                  <MessageData id='message-data'>{message.message}</MessageData>
+                  {message.senderName === userData.username && <AvatarSelf>{message.senderName}</AvatarSelf>}
+                </MessageBlock>
+              ))}             
+              <LastMessage id='last-message' ref={messageEndRef}></LastMessage>
             </ChatMessages>
           </ChatContent>}
         </ChatBox>
+
         <SendMessage id='send-message'>
-          <Input id='input' userType={userData.username} placeholder="enter the message" value={userData.message} onChange={handleMessage} />
-          <SendButton onClick={sendPrivateValue}>send</SendButton>
+          <Input id='input' userType={userData.username} placeholder="enter the message" value={userData.message} onChange={handleMessage} />          
+          <SendButton onClick={sendMessage}>send</SendButton>
         </SendMessage></>
         : <Register id='register'>
           <InputRegister 
@@ -143,8 +219,8 @@ const Container = styled.div`
   align-items: flex-start; 
   align-content: center;  
   justify-content: center;
-  height: 100%; 
-  width: 85%;  
+  height: 90%; 
+  width: 75%;  
   ${theme.screen.small} {
     width: 100%;
   }
@@ -153,8 +229,16 @@ const ChatBox = styled.div`
   display: flex; 
   align-items: center;
   width: 100%;
-  height: 80%;
-  //padding: 8px;  
+  height: 80%;   
+`;
+const ChatListContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+const ChatList = styled.div`
+  display: flex;
+  cursor: pointer;
 `;
 const ChatContent = styled.div`
   display: flex; 
@@ -164,22 +248,24 @@ const ChatContent = styled.div`
   flex-direction: column; 
   justify-content: center;  
 `;
-const ChatMessages = styled.ul`
+const ChatMessages = styled.div`
   height: 90%;
-  width: 75%;
-  padding-left: 0;
-  border: 0px solid #000;
-  overflow: scroll;  
+  width: 75%;  
+  padding-left: 5; 
+  overflow-y: scroll;
+  ::-webkit-scrollbar{
+    display: none;
+  }  
   ${theme.screen.small} {
   width: 90%;
 }  
 `;
-const Message = styled.li <{ self: boolean }>`
+const MessageBlock = styled.div <{ self: boolean }>`
 justify-content: ${(props) => props.self ? 'end' : ''};
 padding:5px;
 display: flex;
 flex-direction: row;
-box-shadow: 0 3px 5px rgb(59 26 85 / 0.2);
+box-shadow: 0 3px 3px rgb(59 26 85 / 0.2);
 margin: 10px;
 ${theme.screen.small} {
   width: 90%;
@@ -191,10 +277,7 @@ const Input = styled.input<{ userType: string }>`
 `;
 const Avatar = styled.div`
 display: flex;
-  background-color: cornflowerblue;
-  padding: 3px 5px;
-  border-radius: 5px;
-  color:#fff;
+  color: red;
   ${theme.screen.small} {
     width: 100%;
   }
@@ -202,9 +285,8 @@ display: flex;
 
 const AvatarSelf = styled.div`
   display: flex;
-  color:#000;
-  background-color: #47a347;
-  ${theme.screen.small} {
+  color: green;
+    ${theme.screen.small} {
     width: 100%;
   }
 `;
@@ -255,6 +337,13 @@ const Button = styled.button`
   background: green;
   color:#fff;    
   ${theme.font.button} 
+`;
+
+const LastMessage = styled.div`
+  padding:3px;
+  ${theme.screen.small} {
+    width: 100%;
+  }
 `;
 
 
