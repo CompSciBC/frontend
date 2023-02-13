@@ -6,13 +6,13 @@ import Navbar from './Navbar';
 
 interface HeaderProps {
   className?: string;
-  logo?: string;
+  logo: string;
   navLinks?: RouteObject[];
 }
 
 function Header({ className, logo, navLinks }: HeaderProps) {
-  return (<div className={className}>
-    <NavParentFrame>
+  return (
+    <NavParentFrame className={className}>
       <NavFrame ><IconHomeLinkFrame>
         <Logo to={routes.home}>
           <img src={logo} alt="logo" />
@@ -24,7 +24,6 @@ function Header({ className, logo, navLinks }: HeaderProps) {
       </NavLinksFrame>
       </NavFrame>
     </NavParentFrame>
-  </div>
   );
 }
 
@@ -102,10 +101,7 @@ const Nav = styled(Navbar)`
   ${theme.screen.small} {
     display: none;
   }
-  ${theme.font.bodyLink} {
-    display: none;
-    color: #000000;
-  }
+  ${theme.font.bodyLink} 
   text-align: center;
   text-decoration-line: underline;
   text-transform: uppercase;
