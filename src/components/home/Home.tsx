@@ -1,5 +1,8 @@
 import styled from '@emotion/styled';
 import { theme } from '../../utils/styles';
+import { Link } from 'react-router-dom';
+
+
 interface HomeProps {
   logo?: string;
 }
@@ -31,6 +34,12 @@ function Home({ logo }: HomeProps) {
         </p>
       </Description>
       <CallToActionButton>Get Started</CallToActionButton>
+      <Link to="/guestLanding">
+        <CallToActionButton>I am a Guest</CallToActionButton>
+      </Link>
+      <Link to="/hostLanding">
+        <CallToActionButton>I am a Host</CallToActionButton>
+      </Link>
     </Container>
   );
 }

@@ -2,10 +2,14 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import {
   createBrowserRouter,
+  createRoutesFromElements,
+  Route,
   RouteObject,
   RouterProvider
 } from 'react-router-dom';
 import Home from './components/home/Home';
+import HostLanding from './components/home/HostLanding';
+import GuestLanding from './components/home/GuestLanding';
 import Dashboard from './components/dashboard/Dashboard';
 import Chat from './components/chat/Chat';
 import Profile from './components/profile/Profile';
@@ -25,11 +29,18 @@ import GuidebookLoader from './components/dashboard/guidebook/GuidebookLoader';
 import Invite from './components/dashboard/invite/Invite';
 import InviteLoader from './components/dashboard/invite/InviteLoader';
 
+// Configure React project with Amplify resources
+import { Amplify } from 'aws-amplify';
+import config from './aws-exports';
+Amplify.configure(config);
+
 /**
  * Contains the base route urls of the various pages in the app
  */
 export const routes = {
   home: '/',
+  hostLanding: '/hostLanding',
+  guestLanding: '/guestLanding',
   dashboard: '/dashboard',
   about: '/about',
   invite: '/invite',
@@ -83,6 +94,27 @@ const allRoutes: RouteObject[] = [
     handle: {
       name: 'Home'
     }
+  },{
+    path: routes.hostLanding,
+    element: <HostLanding />,
+    handle: {
+      name: 'Host Landing'
+    }
+  },
+  {
+    path: routes.guestLanding,
+    element: <GuestLanding />,
+    handle: {
+      name: 'Guest Landing'
+    }
+  },
+  {
+    path: routes.reservations,
+    element: <Reservations />,
+    handle: {
+      name: 'Reservations'
+    },
+    loader: ReservationLoader
   },
   {
     path: routes.dashboard,
@@ -137,21 +169,27 @@ const allRoutes: RouteObject[] = [
 ];
 
 const router = createBrowserRouter(
-  allRoutes.map((route) => {
-    return {
-      path: route.path,
-      handle: route.handle?.name,
-      loader: route.loader,
-      element: (
+  createRoutesFromElements(
+    <Route
+      element={
         <Page
           header={
             <Header logo="bmg-branding/BMG-favicon-refined.svg" navLinks={headerRoutes} />
           }
-          content={route.element}
         />
-      )
-    };
-  })
+      }
+    >
+      {allRoutes.map((route) =>
+        <Route
+          key={route.path}
+          path={route.path}
+          handle={route.handle?.name}
+          loader={route.loader}
+          element={route.element}
+        />
+      )}
+    </Route>
+  )
 );
 
 const root = ReactDOM.createRoot(
