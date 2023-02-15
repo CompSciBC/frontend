@@ -27,7 +27,7 @@
         "@typescript-eslint/no-floating-promises": "off",
         "@typescript-eslint/strict-boolean-expressions": "off",
         "@typescript-eslint/triple-slash-reference": "off",
-        "@typescript-eslint/indent": ["error", 2],
+        // "@typescript-eslint/indent": ["error", 2], // conflicting with prettier
         "@typescript-eslint/member-delimiter-style": "off",
         "@typescript-eslint/no-non-null-assertion": "off",
         "@typescript-eslint/consistent-indexed-object-style": "off",
