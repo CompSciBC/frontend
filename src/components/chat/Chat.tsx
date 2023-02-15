@@ -15,6 +15,7 @@ interface Message {
   senderName: String;
   message: String;
   receiverName: String | undefined;
+  chatId: String;
 }
 
 interface ChatsServerResponse { 
@@ -73,7 +74,9 @@ function Chat() {
   const onConnected = (chats: ChatsServerResponse) => {
     setUserData({ ...userData, connected: true });
     stompClient.subscribe(`/group/${resId}`, onGroupMessage);
-    // TODO subscribe to private message
+    // subscribe to private message 
+    stompClient.subscribe(`/user/${userData.username}/private/${resId}`, onPrivateMessage);    
+    
     const groupMesages = chats[resId];
     groupChat.push(...groupMesages);
     setGroupChat([...groupChat]);
@@ -82,11 +85,10 @@ function Chat() {
       if (chatId === resId) {
         continue;
       }
-      const receiver = userData.isHost ? chatId.split("_")[1] : hostUserName;
+      const chatName = userData.isHost ? chatId.split("_")[1] : hostUserName;
       const messages = chats[chatId];
-      privateChats.set(receiver, messages);
-    }
-    
+      privateChats.set(chatName, messages);
+    }    
     setPrivateChats(privateChats);
   };
 
@@ -96,19 +98,14 @@ function Chat() {
     setGroupChat([...groupChat]);
   };
 
-  // const onPrivateMessage = (payload: any) => {
-  //   console.log(payload);
-  //   const payloadData = JSON.parse(payload.body);
-  //   if (privateChats.get(payloadData.senderName)) {
-  //     privateChats.get(payloadData.senderName).push(payloadData);
-  //     setPrivateChats(new Map(privateChats));
-  //   } else {
-  //     const list = [];
-  //     list.push(payloadData);
-  //     privateChats.set(payloadData.senderName, list);
-  //     setPrivateChats(new Map(privateChats));
-  //   }
-  // };
+  const onPrivateMessage = (payload: any) => {
+    const payloadData:Message = JSON.parse(payload.body);
+    const chatId = payloadData.chatId;
+    const chatName = userData.isHost ? chatId.split("_")[1] : hostUserName;
+
+    privateChats.get(chatName)!.push(payloadData);
+    setPrivateChats(new Map (privateChats));  
+  };
 
   const onError = (err: any) => {
     console.log(err);
@@ -120,13 +117,31 @@ function Chat() {
   };
 
   const sendMessage=()=>{
+    let chatId: string = "";
+    let receiverName: string | undefined;
+
+    if (tab === groupChatName) {
+      chatId = resId; // Group chat Id is Reservation id.
+      receiverName = undefined; // No message receiver for a group chat
+    } else { // private chat
+      if (userData.isHost) {
+        // For a host, Tab is the receiver guest.
+        chatId = `${resId}_${tab}`;
+        receiverName = tab; 
+      } else {
+        chatId = `${resId}_${userData.username}`;
+        receiverName = hostUserName;
+      }
+    }
+
     if (stompClient) {
       const chatMessage:Message = {
         senderName: userData.username,
         message: userData.message,
         reservationId: resId,
         timestamp: new Date().getTime(),
-        receiverName: tab === groupChatName ? undefined : (userData.isHost ? tab : hostUserName)
+        receiverName,
+        chatId,
       };
      
       console.log(chatMessage);
@@ -142,26 +157,7 @@ function Chat() {
       setUserData({...userData,"message": ""});
     }
   };
-
-  // const sendPrivateValue = () => {
-  //   if (stompClient) {
-  //     const chatMessage = {
-  //       senderName: userData.username,
-  //       // receiverName: tab,
-  //       reservationId: resId,
-  //       message: userData.message                     
-  //     };
-
-  //     if (userData.username !== tab) {
-  //       privateChats.get(tab).push(chatMessage);
-  //       setPrivateChats(new Map(privateChats));
-  //     }
-
-  //     stompClient.send(`/app/group-message`, {}, JSON.stringify(chatMessage));
-  //     setUserData({ ...userData, message: '' });
-  //   }
-  // };
-
+  
   const handleUsername = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
     setUserData({ ...userData, username: value, isHost: value === hostUserName });
@@ -236,9 +232,17 @@ const ChatListContainer = styled.div`
   flex-direction: column;
 `;
 
-const ChatList = styled.div`
+const ChatList = styled.button`
   display: flex;
   cursor: pointer;
+  padding: 10px;
+  margin: 5px;
+  border-radius:20px;
+  background: green;
+  color:#fff;   
+  
+  ${theme.font.button} 
+  
 `;
 const ChatContent = styled.div`
   display: flex; 
@@ -345,9 +349,5 @@ const LastMessage = styled.div`
     width: 100%;
   }
 `;
-
-
-
-
 
 export default Chat;
