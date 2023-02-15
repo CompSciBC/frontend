@@ -175,11 +175,12 @@ const ContainerCarousel = styled.div`
   display: flex;
   flex-direction: column;
   row-gap: 10px;
-  width: 56%; // was 76%
-  align-items: center;
-  justify-content: center;
+  width: 66%; // was 76%
   margin-left: auto;
   margin-right: auto;
+  ${theme.screen.small} {
+    width: 100%
+  }
 `;
 
   
