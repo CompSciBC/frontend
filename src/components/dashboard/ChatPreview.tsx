@@ -1,29 +1,22 @@
 import styled from '@emotion/styled';
 import { Link } from 'react-router-dom';
 import { routes } from '../..';
+import { Message } from '../../utils/dtos';
 import { theme } from '../../utils/styles';
 import ChevronDown from '../reservations/ChevronDown';
 
 export interface ChatPreviewProps {
   className?: string;
+  messages: Message[];
 }
 
-function ChatPreview({ className }: ChatPreviewProps) {
-  const messages = [
-    {
-      name: 'JP',
-      me: false,
-      time: new Date(),
-      message: 'Lorem ipsum dolor.'
-    },
-    {
-      name: 'EO',
-      me: true,
-      time: new Date(),
-      message:
-        'Lorem ipsum dolor sit amet consectetur adipisicing elit. Commodi, hic. Perspiciatis placeat eos ipsum vero totam temporibus officiis voluptatibus eligendi molestiae? Animi qui quos expedita, dolorum nulla error quae labore?'
-    }
-  ];
+/**
+ * Displays a list of chat messages
+ *
+ * @param props {@link ChatPreviewProps}
+ * @returns A JSX element
+ */
+function ChatPreview({ className, messages }: ChatPreviewProps) {
   return (
     <Container className={className}>
       <Header>
@@ -37,12 +30,12 @@ function ChatPreview({ className }: ChatPreviewProps) {
           <div>. . .</div>
         </Ellipses>
         {messages.map((message, i) => (
-          <Message key={i} me={message.me}>
+          <MessageContainer key={i} me={message.me}>
             <div>
               <div>{message.name}</div>
             </div>
             {message.message}
-          </Message>
+          </MessageContainer>
         ))}
       </Body>
     </Container>
@@ -92,8 +85,7 @@ const GoToChatButton = styled(Link)`
 const Body = styled.div`
   display: flex;
   flex-direction: column;
-  row-gap: 8px;
-  height: 100%;
+  row-gap: 4px;
   padding: 4px;
   border-bottom-left-radius: 8px;
   border-bottom-right-radius: 8px;
@@ -115,7 +107,7 @@ const Ellipses = styled.div`
   color: ${theme.color.gray};
 `;
 
-const Message = styled.div<{ me: boolean }>`
+const MessageContainer = styled.div<{ me: boolean }>`
   display: flex;
   align-items: center;
   column-gap: 8px;

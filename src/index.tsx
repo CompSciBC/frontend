@@ -25,6 +25,7 @@ import Reservations from './components/reservations/Reservations';
 import ReservationLoader from './components/reservations/ReservationLoader';
 import Invite from './components/dashboard/invite/Invite';
 import InviteLoader from './components/dashboard/invite/InviteLoader';
+import DashboardLoader from './components/dashboard/DashboardLoader';
 
 // Configure React project with Amplify resources
 import { Amplify } from 'aws-amplify';
@@ -102,7 +103,8 @@ const allRoutes: RouteObject[] = [
     element: <Dashboard />,
     handle: {
       name: 'Dashboard'
-    }
+    },
+    loader: DashboardLoader
   },
   {
     path: routes.invite,
@@ -153,7 +155,7 @@ const router = createBrowserRouter(
         />
       }
     >
-      {allRoutes.map((route) =>
+      {allRoutes.map((route) => (
         <Route
           key={route.path}
           path={route.path}
@@ -161,7 +163,7 @@ const router = createBrowserRouter(
           loader={route.loader}
           element={route.element}
         />
-      )}
+      ))}
     </Route>
   )
 );

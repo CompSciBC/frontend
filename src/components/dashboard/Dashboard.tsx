@@ -1,36 +1,34 @@
 import styled from '@emotion/styled';
-import { Fragment } from 'react';
-import { Link } from 'react-router-dom';
+import { useEffect, useMemo, useState } from 'react';
+import { Link, useLoaderData } from 'react-router-dom';
 import { routes } from '../..';
-import { ReservationDetail } from '../../utils/dtos';
+import {
+  EventOrPlace,
+  Forecast,
+  Message,
+  ReservationDetail,
+  Restaurant
+} from '../../utils/dtos';
 import { theme } from '../../utils/styles';
 import ChatPreview from './ChatPreview';
 import ImagePreview from './ImagePreview';
-import WeatherForecastTile, { weatherTypes } from './WeatherForecastTile';
+import WeatherForecastTile from './WeatherForecastTile';
+
+export interface DashboardData {
+  reservation: ReservationDetail;
+  forecast: Forecast[];
+  restaurants: Restaurant[];
+  eventsAndPlaces: EventOrPlace[];
+  messages: Message[];
+}
 
 function Dashboard() {
-  // TODO: replace hard coded value
-  const reservation: ReservationDetail = {
-    id: '1234',
-    hostId: 'test-host-1',
-    propertyId: 'test-prop-1',
-    guestId: 'test-guest-1',
-    numGuests: 2,
-    checkIn: '2023-03-31T12:00',
-    checkOut: '2023-12-31T:12:00',
-    reasonForStay: 'vacation',
-    propertyName: 'Cabin in the Woods',
-    address: '12331 23rd Ave NE, Seattle, WA 98125'
-  };
+  const { reservation, forecast, restaurants, eventsAndPlaces, messages } =
+    useLoaderData() as DashboardData;
 
   const { checkIn, checkOut, address } = reservation;
 
-  /**
-   * Gets the check-in/out date/time as a formatted string
-   *
-   * @param event in for checkIn, or out for checkOut
-   * @returns Check-in/out time string in the format: MMM D @ H:MM A/PM
-   */
+  // Gets the check-in/out date/time as a formatted string
   const getFormattedCheckInOut = (event: 'in' | 'out'): string => {
     const eventType = event === 'in' ? checkIn : checkOut;
 
@@ -46,96 +44,211 @@ function Dashboard() {
     return `${date} @ ${time}`;
   };
 
-  // TODO: replace this with real forecast data from the API
-  /**
-   * Generates a random weather forecast tile
-   * @param time A time period
-   * @returns A weather forecast tile
-   */
-  const randomForecast = (time: string) => {
-    return (
-      <WeatherForecastTile
-        time={time}
-        weather={weatherTypes[Math.floor(Math.random() * weatherTypes.length)]}
-        temp={Math.floor(Math.random() * 110)}
-      />
-    );
-  };
+  const infoCell = useMemo(() => <InfoCell>{address}</InfoCell>, []);
 
-  return (
-    <Container>
-      <InfoCell>{address}</InfoCell>
+  const checkInCell = useMemo(
+    () => (
       <CheckInCell>
         Check-in
         <div>{getFormattedCheckInOut('in')}</div>
       </CheckInCell>
+    ),
+    []
+  );
+
+  const guidebookCell = useMemo(
+    () => (
       <GuidebookCell>
         {/* TODO: guidebook route on matthew's branch */}
         <StyledLink to={routes.home}>Guidebook</StyledLink>
       </GuidebookCell>
+    ),
+    []
+  );
+
+  const inviteCell = useMemo(
+    () => (
       <InviteCell>
         <StyledLink to={routes.invite}>Invite</StyledLink>
       </InviteCell>
+    ),
+    []
+  );
+
+  const weatherCell = useMemo(
+    () => (
       <WeatherCell>
         <StyledLink to={routes.weather}>
-          {/* TODO: replace with actual forecast from api */}
-          {['Now', '4pm', '5pm', '6pm', '7pm'].map((time) => (
-            <Fragment key={time}>{randomForecast(time)}</Fragment>
+          {forecast.map((f) => (
+            <WeatherForecastTile
+              key={f.timestamp}
+              time={f.timestamp}
+              weather={f.weather}
+              temp={f.temp}
+            />
           ))}
         </StyledLink>
       </WeatherCell>
+    ),
+    []
+  );
+
+  const restaurantsCell = useMemo(
+    () => (
       <RestaurantsCell>
         <ImagePreview
           title="Nearby Restaurants"
           viewMoreLink={routes.restaurants}
-          previewSlides={[
-            {
-              // image: '/images/national-fast-food-day.webp',
-              // link: '/'
-            },
-            {
-              image: '/images/pizza-with-pineapple-and-thin-crust.webp',
-              link: '/'
-            }
-          ]}
+          previewSlides={restaurants.map((r) => {
+            return {
+              image: r.imageUrl,
+              link: r.url
+            };
+          })}
         />
       </RestaurantsCell>
+    ),
+    []
+  );
+
+  const eventsCell = useMemo(
+    () => (
       <EventsCell>
         <ImagePreview
           title="Events and Places"
           viewMoreLink={routes.eventsAndPlaces}
-          previewSlides={[
-            {
-              image: '/images/national-fast-food-day.webp',
-              link: '/'
-            },
-            {
-              image: '/images/pizza-with-pineapple-and-thin-crust.webp',
-              link: '/'
-            }
-          ]}
+          previewSlides={eventsAndPlaces.map((e) => {
+            return {
+              image: e.imageUrl,
+              link: e.url
+            };
+          })}
         />
       </EventsCell>
+    ),
+    []
+  );
+
+  const chatCell = useMemo(
+    () => (
       <ChatCell>
         <StyledLink to={routes.chat}>Chat</StyledLink>
       </ChatCell>
-      <LargeChatCell>
-        <ChatPreview />
-      </LargeChatCell>
-      {/* TODO: replace image with dynamic map based on address */}
+    ),
+    []
+  );
+
+  const chatPreviewCell = useMemo(
+    () => (
+      <ChatPreviewCell>
+        <ChatPreview messages={messages} />
+      </ChatPreviewCell>
+    ),
+    [] // TODO: this should update whenever new messages arrive
+  );
+
+  const mapCell = useMemo(
+    () => (
+      // TODO: replace image with dynamic map based on address
       <MapCell img="/images/maps-button.png">
         <StyledLink to={routes.map} />
       </MapCell>
+    ),
+    []
+  );
+
+  const reviewCell = useMemo(
+    () => (
       <ReviewCell>
-        {/* TODO: review route from hieu's branch */}
+        {/* TODO: replace with route from hieu's branch */}
         <StyledLink to={routes.home}>Review</StyledLink>
       </ReviewCell>
-    </Container>
+    ),
+    []
   );
+
+  const [width, setWidth] = useState(window.innerWidth);
+
+  // updates the screen width variable
+  useEffect(() => {
+    let subscribed = true;
+
+    const updateWidth = () => {
+      subscribed && setWidth(window.innerWidth);
+    };
+
+    window.addEventListener('resize', updateWidth);
+
+    return () => {
+      subscribed = false;
+      window.removeEventListener('resize', updateWidth);
+    };
+  });
+
+  // choose layout according to screen width
+  const layout = useMemo(() => {
+    let container: JSX.Element;
+
+    if (width <= 700) {
+      container = (
+        <SmallScreenContainer>
+          {infoCell}
+          {inviteCell}
+          {guidebookCell}
+          {chatCell}
+          {checkInCell}
+          {mapCell}
+          {weatherCell}
+          {restaurantsCell}
+          {eventsCell}
+          {reviewCell}
+        </SmallScreenContainer>
+      );
+    } else if (width <= 1024) {
+      container = (
+        <MediumScreenContainer>
+          {infoCell}
+          {checkInCell}
+          {guidebookCell}
+          {inviteCell}
+          {weatherCell}
+          {chatPreviewCell}
+          {mapCell}
+          {restaurantsCell}
+          {eventsCell}
+          {reviewCell}
+        </MediumScreenContainer>
+      );
+    } else {
+      container = (
+        <LargeScreenContainer>
+          <div>
+            {infoCell}
+            {checkInCell}
+            {guidebookCell}
+            {inviteCell}
+            {weatherCell}
+            {restaurantsCell}
+            {eventsCell}
+          </div>
+          <div>
+            {chatPreviewCell}
+            {mapCell}
+            {reviewCell}
+          </div>
+        </LargeScreenContainer>
+      );
+    }
+
+    return container;
+  }, [width]);
+
+  return layout;
 }
 
 const GridCellWrapper = styled.div`
   display: flex;
+  width: 100%;
   height: 100%;
   border-radius: 8px;
   ${theme.font.body}
@@ -230,7 +343,7 @@ const ChatCell = styled(GridCellClickable)`
   }
 `;
 
-const LargeChatCell = styled(GridCellWrapper)`
+const ChatPreviewCell = styled(GridCellWrapper)`
   grid-area: ${chat};
 
   ${theme.screen.small} {
@@ -252,71 +365,77 @@ const ReviewCell = styled(GridCellClickable)`
   background-color: ${theme.color.green};
 `;
 
-const Container = styled.div`
+const SmallScreenContainer = styled.div`
   display: grid;
   align-items: center;
+  width: 100%;
+  padding: 16px;
+  gap: 16px;
+  grid-template-columns: repeat(7, 1fr);
+  grid-template-rows: 64px 112px 112px 112px 140px 140px 64px;
+  grid-template-areas:
+    '${info}    ${info}    ${info}    ${info}    ${invite}  ${invite}  ${invite}'
+    '${guide}   ${guide}   ${guide}   ${guide}   ${chat}    ${chat}    ${chat}'
+    '${check}   ${check}   ${check}   ${map}     ${map}     ${map}     ${map}'
+    '${weather} ${weather} ${weather} ${weather} ${weather} ${weather} ${weather}'
+    '${rest}    ${rest}    ${rest}    ${rest}    ${rest}    ${rest}    ${rest}'
+    '${event}   ${event}   ${event}   ${event}   ${event}   ${event}   ${event}'
+    '${review}  ${review}  ${review}  ${review}  ${review}  ${review}  ${review}';
+`;
+
+const MediumScreenContainer = styled.div`
+  display: grid;
+  align-items: center;
+  width: 100%;
+  padding: 16px;
+  gap: 16px;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: 64px 80px 144px 1fr 256px 192px 192px 64px;
+  grid-template-areas:
+    '${info}    ${info}    ${info}'
+    '${check}   ${guide}   ${invite}'
+    '${weather} ${weather} ${weather}'
+    '${chat}    ${chat}    ${chat}'
+    '${map}     ${map}     ${map}'
+    '${rest}    ${rest}    ${rest}'
+    '${event}   ${event}   ${event}'
+    '${review}  ${review}  ${review}';
+`;
+
+const LargeScreenContainer = styled.div`
+  display: flex;
+  column-gap: 32px;
   width: 85%;
   padding: 32px 0;
-  row-gap: 32px;
-  column-gap: 16px;
-  grid-template-columns: repeat(3, 1fr) 0px 3fr;
-  grid-template-rows: 80px 96px 72px 72px 72px 72px 72px 72px;
-  grid-template-areas:
-    '${info}    ${info}    ${info}    . ${chat}   ${chat}   ${chat}'
-    '${check}   ${guide}   ${invite}  . ${chat}   ${chat}   ${chat}'
-    '${weather} ${weather} ${weather} . ${chat}   ${chat}   ${chat}'
-    '${weather} ${weather} ${weather} . ${map}    ${map}    ${map}'
-    '${rest}    ${rest}    ${rest}    . ${map}    ${map}    ${map}'
-    '${rest}    ${rest}    ${rest}    . ${map}    ${map}    ${map}'
-    '${event}   ${event}   ${event}   . ${map}    ${map}    ${map}'
-    '${event}   ${event}   ${event}   . ${review} ${review} ${review}';
 
-  ${theme.screen.medium} {
-    width: 100%;
-    padding: 16px;
-    gap: 16px;
+  // left column
+  > div:nth-of-type(1) {
+    width: 50%;
+    display: grid;
+    align-items: center;
+    row-gap: 32px;
+    column-gap: 16px;
     grid-template-columns: repeat(3, 1fr);
-    grid-template-rows: 64px 80px 144px 320px 320px 192px 192px 64px;
+    grid-template-rows: 80px 96px 144px 192px 192px;
     grid-template-areas:
       '${info}    ${info}    ${info}'
       '${check}   ${guide}   ${invite}'
       '${weather} ${weather} ${weather}'
-      '${chat}    ${chat}    ${chat}'
-      '${map}     ${map}     ${map}'
       '${rest}    ${rest}    ${rest}'
-      '${event}   ${event}   ${event}'
-      '${review}  ${review}  ${review}';
+      '${event}   ${event}   ${event}';
   }
-  /* ${theme.screen.medium} {
-    width: 100%;
-    padding: 16px;
-    gap: 16px;
-    grid-template-columns: repeat(6, 1fr);
-    grid-template-rows: 64px 96px 144px 320px 192px 192px 64px;
-    grid-template-areas:
-      '${info}    ${info}    ${info}    ${info}    ${info}    ${info}'
-      '${check}   ${check}   ${guide}   ${guide}   ${invite}  ${invite}'
-      '${weather} ${weather} ${weather} ${weather} ${weather} ${weather}'
-      '${chat}    ${chat}    ${chat}    ${map}     ${map}     ${map}'
-      '${rest}    ${rest}    ${rest}    ${rest}    ${rest}    ${rest}'
-      '${event}   ${event}   ${event}   ${event}   ${event}   ${event}'
-      '${review}  ${review}  ${review}  ${review}  ${review}  ${review}';
-  } */
 
-  ${theme.screen.small} {
-    width: 100%;
-    padding: 16px;
-    gap: 16px;
-    grid-template-columns: repeat(7, 1fr);
-    grid-template-rows: 64px 112px 112px 112px 140px 140px 64px;
+  // right column
+  > div:nth-of-type(2) {
+    width: 50%;
+    height: fit-content;
+    display: grid;
+    row-gap: 32px;
+    grid-template-rows: 1fr 320px 64px;
     grid-template-areas:
-      '${info}    ${info}    ${info}    ${info}    ${invite}  ${invite}  ${invite}'
-      '${guide}   ${guide}   ${guide}   ${guide}   ${chat}    ${chat}    ${chat}'
-      '${check}   ${check}   ${check}   ${map}     ${map}     ${map}     ${map}'
-      '${weather} ${weather} ${weather} ${weather} ${weather} ${weather} ${weather}'
-      '${rest}    ${rest}    ${rest}    ${rest}    ${rest}    ${rest}    ${rest}'
-      '${event}   ${event}   ${event}   ${event}   ${event}   ${event}   ${event}'
-      '${review}  ${review}  ${review}  ${review}  ${review}  ${review}  ${review}';
+      '${chat}'
+      '${map}'
+      '${review}';
   }
 `;
 
