@@ -7,7 +7,7 @@ function GuidebookLoader() : GuidebookDto {
     propertyName: 'Waterfront Dream House',
     propertyType: 'Beach',
     capacity: 7,
-    amenities: ["Washer", "Dryer", "Hottub", "Patio"],
+    amenities: ["Washer", "Dryer", "Hottub", "Patio", "Garden", "BBQ", "Fully-stocked Pantry"],
     pets: 'Allowed',
     propertyBio: "Take in the views at the Waterfront Dream House. This tranquil, get-away for seven provides everything you'll need for a relaxing stay: private beach access, unobstructed water views, and easy access to many of the Island's best outdoor adventures. This newly renovated cabin features a stocked kitchen, indoor/outdoor dining and seating, and a spacious bedroom. We hope to make your stay as relaxing as possible with soft sheets, toiletries, Nespresso coffee machine, and memory foam mattress!",
     faq: [{

@@ -21,20 +21,26 @@ function Guidebook() {
         content={<div>
           
           <BodyText>{guidebookDetails.propertyBio}</BodyText>
+          <EnableTableScroll>
+            <AboutSectionContainerTable>
+              <tbody>
+                {guidebookDetails.amenities && <AboutSectionContainerRow><AboutSectionItem>Amenities: </AboutSectionItem>{guidebookDetails.amenities?.map((amen) => {
+                  return (
+                    <AboutSectionItem key={amen}>{amen}</AboutSectionItem>
+                  );
+                })
+                }</AboutSectionContainerRow>}
 
-          {guidebookDetails.amenities && <AboutSectionContainer>Amenities: {guidebookDetails.amenities?.map((amen) => {
-            return (
-              <AboutSectionItem key={amen}>{amen}</AboutSectionItem>
-            );
-          })
-          }</AboutSectionContainer>}
+                <AboutSectionContainerRow><AboutSectionItem>Pets: </AboutSectionItem><AboutSectionItem>{guidebookDetails.pets}</AboutSectionItem></AboutSectionContainerRow>
+                <AboutSectionContainerRow><AboutSectionItem>Capacity: </AboutSectionItem><AboutSectionItem>{guidebookDetails.capacity}</AboutSectionItem></AboutSectionContainerRow>
 
-          <AboutSectionContainer>Pets: <AboutSectionItem>{guidebookDetails.pets}</AboutSectionItem></AboutSectionContainer>
-          <AboutSectionContainer>Capacity: <AboutSectionItem>{guidebookDetails.capacity}</AboutSectionItem></AboutSectionContainer>
-
-          {guidebookDetails.checkininstr && <AboutSectionContainer>Check-In Instructions: <AboutSectionItem>{guidebookDetails.checkininstr}</AboutSectionItem></AboutSectionContainer>}
-          {guidebookDetails.checkoutinstr && <AboutSectionContainer>Check-Out Instructions: <AboutSectionItem>{guidebookDetails.checkoutinstr}</AboutSectionItem></AboutSectionContainer>}
-          {guidebookDetails.propertyType && <AboutSectionContainer>Property Type: <AboutSectionItem>{guidebookDetails.propertyType}</AboutSectionItem></AboutSectionContainer>}
+                {guidebookDetails.checkininstr && <AboutSectionContainerRow><AboutSectionItem>Check-In Instructions: </AboutSectionItem><AboutSectionItem>{guidebookDetails.checkininstr}</AboutSectionItem></AboutSectionContainerRow>}
+                {guidebookDetails.checkoutinstr && <AboutSectionContainerRow><AboutSectionItem>Check-Out Instructions: </AboutSectionItem><AboutSectionItem>{guidebookDetails.checkoutinstr}</AboutSectionItem></AboutSectionContainerRow>}
+                {guidebookDetails.propertyType && <AboutSectionContainerRow><AboutSectionItem>Property Type: </AboutSectionItem><AboutSectionItem>{guidebookDetails.propertyType}</AboutSectionItem></AboutSectionContainerRow>}
+              </tbody>
+            </AboutSectionContainerTable>
+          </EnableTableScroll>
+          
         </div>
         }
         smallLineStyling={true}
@@ -124,20 +130,32 @@ const DisplayText = styled.h1`
   margin: 20px 0 15px 20px;
 `;
 
-const AboutSectionContainer = styled.div` 
-  ${theme.font.body};
-  display: flex;
-  flex-direction: row;
-  column-gap: 10px;
-  margin-left: 20px;
+const EnableTableScroll = styled.div` 
+  overflow-x:auto;
+  overflow-y:auto;
 `;
 
-const AboutSectionItem = styled.ul` 
-  font-weight: bold;
+const AboutSectionContainerTable = styled.table` 
+  ${theme.font.body};
+  margin-left: 20px;
+  width: 98%;
+  border: 1px solid;
+  border-color: #d1d1d1;
+`;
+
+const AboutSectionContainerRow = styled.tr` 
+  border: 1px solid;
+  border-color: #d1d1d1;
+`;
+
+const AboutSectionItem = styled.td` 
+  padding: 14px 20px;
+  border: 1px solid;
+  border-color: #d1d1d1;
 `;
 
 const Container = styled.div` 
-  width: 100%;
+  width: 100%; 
 `;
 
 const StyledAccordionDropdown = styled(AccordionDropdown)` 
@@ -157,7 +175,7 @@ const ContainerCarousel = styled.div`
   display: flex;
   flex-direction: column;
   row-gap: 10px;
-  width: 76%;
+  width: 56%; // was 76%
   align-items: center;
   justify-content: center;
   margin-left: auto;
