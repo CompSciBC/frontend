@@ -24,19 +24,38 @@ function Guidebook() {
           <EnableTableScroll>
             <AboutSectionContainerTable>
               <tbody>
-                {guidebookDetails.amenities && <AboutSectionContainerRow><AboutSectionItem>Amenities: </AboutSectionItem>{guidebookDetails.amenities?.map((amen) => {
-                  return (
-                    <AboutSectionItem key={amen}>{amen}</AboutSectionItem>
-                  );
-                })
-                }</AboutSectionContainerRow>}
+                {guidebookDetails.amenities && <AboutSectionContainerRow>
+                  <AboutSectionItem>Amenities: </AboutSectionItem>{guidebookDetails.amenities?.map((amen) => {
+                    return (
+                      <AboutSectionItem key={amen}>{amen}</AboutSectionItem>
+                    );
+                  })
+                  }</AboutSectionContainerRow>}
 
-                <AboutSectionContainerRow><AboutSectionItem>Pets: </AboutSectionItem><AboutSectionItem>{guidebookDetails.pets}</AboutSectionItem></AboutSectionContainerRow>
-                <AboutSectionContainerRow><AboutSectionItem>Capacity: </AboutSectionItem><AboutSectionItem>{guidebookDetails.capacity}</AboutSectionItem></AboutSectionContainerRow>
+                <AboutSectionContainerRow>
+                  <AboutSectionItem>Pets: </AboutSectionItem>
+                  <AboutSectionItem>{guidebookDetails.pets}</AboutSectionItem>
+                </AboutSectionContainerRow>
 
-                {guidebookDetails.checkininstr && <AboutSectionContainerRow><AboutSectionItem>Check-In Instructions: </AboutSectionItem><AboutSectionItem>{guidebookDetails.checkininstr}</AboutSectionItem></AboutSectionContainerRow>}
-                {guidebookDetails.checkoutinstr && <AboutSectionContainerRow><AboutSectionItem>Check-Out Instructions: </AboutSectionItem><AboutSectionItem>{guidebookDetails.checkoutinstr}</AboutSectionItem></AboutSectionContainerRow>}
-                {guidebookDetails.propertyType && <AboutSectionContainerRow><AboutSectionItem>Property Type: </AboutSectionItem><AboutSectionItem>{guidebookDetails.propertyType}</AboutSectionItem></AboutSectionContainerRow>}
+                <AboutSectionContainerRow>
+                  <AboutSectionItem>Capacity: </AboutSectionItem>
+                  <AboutSectionItem>{guidebookDetails.capacity}</AboutSectionItem>
+                </AboutSectionContainerRow>
+
+                {guidebookDetails.checkininstr && <AboutSectionContainerRow>
+                  <AboutSectionItem>Check-In Instructions: </AboutSectionItem>
+                  <AboutSectionItem>{guidebookDetails.checkininstr}</AboutSectionItem>
+                </AboutSectionContainerRow>}
+
+                {guidebookDetails.checkoutinstr && <AboutSectionContainerRow>
+                  <AboutSectionItem>Check-Out Instructions: </AboutSectionItem>
+                  <AboutSectionItem>{guidebookDetails.checkoutinstr}</AboutSectionItem>
+                </AboutSectionContainerRow>}
+
+                {guidebookDetails.propertyType && <AboutSectionContainerRow>
+                  <AboutSectionItem>Property Type: </AboutSectionItem>
+                  <AboutSectionItem>{guidebookDetails.propertyType}</AboutSectionItem>
+                </AboutSectionContainerRow>}
               </tbody>
             </AboutSectionContainerTable>
           </EnableTableScroll>
