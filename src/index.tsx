@@ -179,7 +179,7 @@ const router = createBrowserRouter(
         />
       }
     >
-      {allRoutes.map((route) =>
+      {allRoutes.map((route) => (
         <Route
           key={route.path}
           path={route.path}
@@ -187,7 +187,7 @@ const router = createBrowserRouter(
           loader={route.loader}
           element={route.element}
         />
-      )}
+      ))}
     </Route>
   )
 );
