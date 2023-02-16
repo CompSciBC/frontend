@@ -8,9 +8,13 @@ import {
   RouterProvider
 } from 'react-router-dom';
 import Home from './components/home/Home';
+import HostLanding from './components/home/HostLanding';
+import GuestLanding from './components/home/GuestLanding';
 import Dashboard from './components/dashboard/Dashboard';
 import Chat from './components/chat/Chat';
 import Profile from './components/profile/Profile';
+import About from './components/about/About';
+import Guidebook from './components/dashboard/guidebook/Guidebook';
 import Weather from './components/dashboard/Weather';
 import Restaurants from './components/dashboard/Restaurants';
 import EventsAndPlaces from './components/dashboard/EventsAndPlaces';
@@ -21,18 +25,28 @@ import './index.css';
 import reportWebVitals from './reportWebVitals';
 import Reservations from './components/reservations/Reservations';
 import ReservationLoader from './components/reservations/ReservationLoader';
+import GuidebookLoader from './components/dashboard/guidebook/GuidebookLoader';
 import Invite from './components/dashboard/invite/Invite';
 import InviteLoader from './components/dashboard/invite/InviteLoader';
+
+// Configure React project with Amplify resources
+import { Amplify } from 'aws-amplify';
+import config from './aws-exports';
+Amplify.configure(config);
 
 /**
  * Contains the base route urls of the various pages in the app
  */
 export const routes = {
   home: '/',
+  hostLanding: '/hostLanding',
+  guestLanding: '/guestLanding',
   dashboard: '/dashboard',
+  about: '/about',
   invite: '/invite',
   chat: '/chat',
   profile: '/profile',
+  guidebook: '/guidebook',
   reservations: '/reservations',
   weather: '/weather',
   restaurants: '/restaurants',
@@ -42,17 +56,25 @@ export const routes = {
 
 const headerRoutes: RouteObject[] = [
   {
-    path: routes.home,
-    element: <Home logo="images/bmg-logo-black.png" />,
+    path: routes.reservations,
+    element: <Reservations />,
     handle: {
-      name: 'Home'
-    }
+      name: 'Reservations'
+    },
+    loader: ReservationLoader
   },
   {
     path: routes.chat,
     element: <Chat />,
     handle: {
       name: 'Chat'
+    }
+  },
+  {
+    path: routes.about,
+    element: <About />,
+    handle: {
+      name: 'About'
     }
   },
   {
@@ -66,6 +88,26 @@ const headerRoutes: RouteObject[] = [
 
 const allRoutes: RouteObject[] = [
   ...headerRoutes,
+  {
+    path: routes.home,
+    element: <Home logo="bmg-branding/BMG-Script-RdHrt.svg" />,
+    handle: {
+      name: 'Home'
+    }
+  },{
+    path: routes.hostLanding,
+    element: <HostLanding />,
+    handle: {
+      name: 'Host Landing'
+    }
+  },
+  {
+    path: routes.guestLanding,
+    element: <GuestLanding />,
+    handle: {
+      name: 'Guest Landing'
+    }
+  },
   {
     path: routes.reservations,
     element: <Reservations />,
@@ -116,6 +158,13 @@ const allRoutes: RouteObject[] = [
     handle: {
       name: 'Map'
     }
+  }, {
+    path: routes.guidebook,
+    element: <Guidebook />,
+    handle: {
+      name: 'Guidebook'
+    },
+    loader : GuidebookLoader
   }
 ];
 
@@ -125,12 +174,12 @@ const router = createBrowserRouter(
       element={
         <Page
           header={
-            <Header logo="images/bmg-logo-white.png" navLinks={headerRoutes} />
+            <Header logo="bmg-branding/BMG-favicon-refined.svg" navLinks={headerRoutes} />
           }
         />
       }
     >
-      {allRoutes.map((route) =>
+      {allRoutes.map((route) => (
         <Route
           key={route.path}
           path={route.path}
@@ -138,7 +187,7 @@ const router = createBrowserRouter(
           loader={route.loader}
           element={route.element}
         />
-      )}
+      ))}
     </Route>
   )
 );

@@ -1,8 +1,9 @@
 import styled from '@emotion/styled';
 import { theme } from '../../utils/styles';
+import { Link } from 'react-router-dom';
 
 interface HomeProps {
-  logo: string;
+  logo?: string;
 }
 
 function Home({ logo }: HomeProps) {
@@ -32,11 +33,18 @@ function Home({ logo }: HomeProps) {
         </p>
       </Description>
       <CallToActionButton>Get Started</CallToActionButton>
+      <Link to="/guestLanding">
+        <CallToActionButton>I am a Guest</CallToActionButton>
+      </Link>
+      <Link to="/hostLanding">
+        <CallToActionButton>I am a Host</CallToActionButton>
+      </Link>
     </Container>
   );
 }
 
 const Container = styled.div`
+  padding-top: 10px;
   display: flex;
   flex-direction: column;
   align-items: center;
