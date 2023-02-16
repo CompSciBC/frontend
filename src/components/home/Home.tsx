@@ -3,7 +3,7 @@ import { theme } from '../../utils/styles';
 import { Link } from 'react-router-dom';
 
 interface HomeProps {
-  logo: string;
+  logo?: string;
 }
 
 function Home({ logo }: HomeProps) {
@@ -44,6 +44,7 @@ function Home({ logo }: HomeProps) {
 }
 
 const Container = styled.div`
+  padding-top: 10px;
   display: flex;
   flex-direction: column;
   align-items: center;

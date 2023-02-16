@@ -11,6 +11,28 @@ export interface Property {
 }
 
 /**
+ * Represents a guidebook json object that is used to save information from the Host
+ * and displays to guests.
+ */
+export interface GuidebookDto {
+  propertyID: string;
+  propertyName: string;
+  propertyType?: 'Cabin' | 'City' | 'Beach' | 'Mountain';
+  capacity: number;
+  pets: 'Allowed' | 'Not Allowed';
+  amenities?: string[];
+  propertyBio: string;
+  faq?: Array<{Question:string; Answer:string}>; 
+  // faq?: string[];
+  policies?: string[];
+  hostRecommended?: string[]; // change later from type any to HostRecommended object
+  hostServices?: string[];
+  propertySpecificQ?: any; // change later to Hieu's Survey object
+  checkininstr?: string[];
+  checkoutinstr?: string[];
+}
+
+/**
  * Represents a contract agreement between a host and a guest to rent a property
  * for a specified period of time (matching Reservation.java)
  */
