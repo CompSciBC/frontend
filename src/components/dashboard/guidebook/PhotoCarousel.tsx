@@ -36,20 +36,4 @@ const Container = styled.div`
   margin: 20px;
 `;
 
-// const StyledCarousel = styled(Carousel)` 
-//   height: 600px;
-//   width: auto;
-//   overflow: hidden;
-// `;
-
-// const StyledCaroItem = styled(Carousel.Item)` 
-//   height: 100%;
-//   width: auto;
-// `;
-
-// const StyledImg = styled.img` 
-//   height: 400px;
-//   width: auto;
-// `;
-
 export default LightFadeCarousel;

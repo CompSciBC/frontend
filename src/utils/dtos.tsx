@@ -11,8 +11,8 @@ export interface Property {
 }
 
 /**
- * 
- * 
+ * Represents a guidebook json object that is used to save information from the Host
+ * and displays to guests.
  */
 export interface GuidebookDto {
   propertyID: string;
@@ -31,24 +31,6 @@ export interface GuidebookDto {
   checkininstr?: string[];
   checkoutinstr?: string[];
 }
-
-// test
-// export interface GuidebookDto {
-//   propertyID: string;
-//   propertyName: string;
-//   propertyType?: string;
-//   capacity: string;
-//   amenities?: string;
-//   pets: string;
-//   propertyBio: string;
-//   faq?: string;
-//   policies?: string;
-//   hostRecommended?: string; // change later from type any to HostRecommended object
-//   hostServices?: string;
-//   propertySpecificQ?:string; // change later to Hieu's Survey object
-//   checkininstr?:string;
-//   checkoutinstr?: string;
-// }
 
 /**
  * Represents a contract agreement between a host and a guest to rent a property
