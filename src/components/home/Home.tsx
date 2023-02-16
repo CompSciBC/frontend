@@ -2,7 +2,6 @@ import styled from '@emotion/styled';
 import { theme } from '../../utils/styles';
 import { Link } from 'react-router-dom';
 
-
 interface HomeProps {
   logo: string;
 }

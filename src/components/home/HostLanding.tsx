@@ -6,22 +6,22 @@ import { assignUserToRole, getUserGroup } from '../home/AuthUtils';
 function HostLanding() {
   const { signOut, user } = useAuthenticator();
   const navigate = useNavigate();
-  
-  function handleSignOut(){
+
+  function handleSignOut() {
     window.localStorage.clear();
     signOut();
-    navigate("/");
+    navigate('/');
   }
 
   let userGroup = getUserGroup(user);
   if (typeof userGroup === 'boolean') {
     userGroup = ['host'];
     assignUserToRole(user.username, 'unassigned', 'host');
-  };
-  
+  }
+
   localStorage.setItem('role', userGroup[0]);
 
-  if (localStorage.getItem('role') === 'guest'){
+  if (localStorage.getItem('role') === 'guest') {
     return (
       <>
         <h1>You have logged in with Guest Credentials</h1>
@@ -35,8 +35,8 @@ function HostLanding() {
     return (
       <>
         <h1>WELCOME TO THE HOST LANDING PAGE!</h1>
-        <p> role = { localStorage.getItem('role') }</p>
-        <p> User Name = { localStorage.getItem('username') }</p>
+        <p> role = {localStorage.getItem('role')}</p>
+        <p> User Name = {localStorage.getItem('username')}</p>
         <button onClick={handleSignOut}>Sign out</button>
       </>
     );
