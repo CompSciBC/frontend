@@ -18,7 +18,7 @@ function App({
     <Page
       header={
         <Header
-          logo="images/bmg-logo-white.png"
+          logo="bmg-branding/BMG-favicon-refined.svg"
           navLinks={
             authenticated
               ? authenticatedHeaderRoutes
