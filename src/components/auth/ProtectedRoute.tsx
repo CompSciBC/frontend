@@ -9,7 +9,7 @@ export interface ProtectedRouteProps {
 }
 
 function ProtectedRoute({
-  redirect = routes.home,
+  redirect = routes.login,
   route
 }: ProtectedRouteProps) {
   const { authenticated } = useContext(AppContext);

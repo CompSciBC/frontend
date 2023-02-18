@@ -1,3 +1,16 @@
+export type UserRole = 'guest' | 'host' | undefined;
+
+/**
+ * Represents a user of the application
+ */
+export interface User {
+  userId: string;
+  username: string;
+  email: string;
+  role: UserRole;
+  joinedOn?: Date;
+}
+
 /**
  * Represents a real estate property owned and/or operated by a host for rental to a guest
  * (matching Property.java)
@@ -22,7 +35,7 @@ export interface GuidebookDto {
   pets: 'Allowed' | 'Not Allowed';
   amenities?: string[];
   propertyBio: string;
-  faq?: Array<{Question:string; Answer:string}>; 
+  faq?: Array<{ Question: string; Answer: string }>;
   // faq?: string[];
   policies?: string[];
   hostRecommended?: string[]; // change later from type any to HostRecommended object
