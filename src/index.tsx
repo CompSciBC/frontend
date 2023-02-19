@@ -32,6 +32,7 @@ import ProtectedRoute from './components/auth/ProtectedRoute';
 import Logout from './components/auth/Logout';
 import Login from './components/auth/Login';
 import SignUp from './components/auth/SignUp';
+import DashboardLoader from './components/dashboard/DashboardLoader';
 
 // Configure React project with Amplify resources
 import { Amplify } from 'aws-amplify';
@@ -161,7 +162,8 @@ const allRoutes: RouteObject[] = [
     element: <ProtectedRoute route={<Dashboard />} />,
     handle: {
       name: 'Dashboard'
-    }
+    },
+    loader: DashboardLoader
   },
   {
     path: routes.invite,

@@ -18,9 +18,19 @@ export const theme = {
   color: {
     black: '#000000',
     white: '#ffffff',
-    blue: '#2E7CF6'
+    blue: '#2E7CF6',
+    purple: '#A281CE',
+    red: '#FF6058',
+    green: '#27CA40',
+    orange: '#FFC130',
+    yellow: '#F4FF47',
+    teal: '#3EA0AF',
+    lightBlue: '#2EC7F6',
+    lightGray: '#E9E9E9',
+    gray: '#646464'
   },
   screen: {
-    small: '@media only screen and (max-width: 700px)'
+    small: '@media only screen and (max-width: 700px)',
+    medium: '@media only screen and (max-width: 1024px)'
   }
 };
