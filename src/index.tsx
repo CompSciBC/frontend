@@ -28,6 +28,7 @@ import ReservationLoader from './components/reservations/ReservationLoader';
 import GuidebookLoader from './components/dashboard/guidebook/GuidebookLoader';
 import Invite from './components/dashboard/invite/Invite';
 import InviteLoader from './components/dashboard/invite/InviteLoader';
+import DashboardLoader from './components/dashboard/DashboardLoader';
 
 // Configure React project with Amplify resources
 import { Amplify } from 'aws-amplify';
@@ -121,7 +122,8 @@ const allRoutes: RouteObject[] = [
     element: <Dashboard />,
     handle: {
       name: 'Dashboard'
-    }
+    },
+    loader: DashboardLoader
   },
   {
     path: routes.invite,

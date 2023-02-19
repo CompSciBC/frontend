@@ -11,8 +11,8 @@ import {
  */
 export default async function ReservationLoader() {
   // TODO: index and id should be determined by the current user
-  const index = 'host';
-  const id = 'h1';
+  const index = 'guest';
+  const id = 'test-guest-1';
 
   // gets a sorted reservation detail set
   const response = await fetch(
