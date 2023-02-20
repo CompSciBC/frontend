@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import { theme } from '../../utils/styles';
 
 /**
  * Gets the value of the named radio input element
@@ -58,6 +59,12 @@ const Container = styled.div<{ direction: 'row' | 'column' }>`
   align-items: ${(props) =>
     props.direction === 'column' ? 'start' : 'center'};
   column-gap: 8px;
+
+  input {
+    :focus {
+      outline: 1px solid ${theme.color.blue};
+    }
+  }
 
   div {
     display: flex;

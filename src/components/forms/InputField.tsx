@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import { theme } from '../../utils/styles';
 
 /**
  * Gets the value of the named input element
@@ -131,6 +132,10 @@ const Container = styled.div`
     ::placeholder {
       color: lightgray;
     }
+
+    :focus {
+      outline: 1px solid ${theme.color.blue};
+    }
   }
 
   div {
@@ -140,8 +145,8 @@ const Container = styled.div`
     gap: 8px;
     width: 100%;
 
+    // tel inputs only
     input {
-      padding: 4px;
       width: 1px;
       flex-grow: 1;
       text-align: center;

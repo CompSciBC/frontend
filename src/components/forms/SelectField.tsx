@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import { theme } from '../../utils/styles';
 
 /**
  * Gets the value of the named select element
@@ -54,6 +55,10 @@ const Container = styled.div`
     padding: 8px;
     border: 1px solid lightgray;
     border-radius: 4px;
+
+    :focus {
+      outline: 1px solid ${theme.color.blue};
+    }
   }
 `;
 

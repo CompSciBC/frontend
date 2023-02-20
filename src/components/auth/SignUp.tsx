@@ -261,6 +261,10 @@ const ConfirmContainer = styled.form`
   align-items: center;
   text-align: center;
   row-gap: 32px;
+
+  div {
+    justify-content: center;
+  }
 `;
 
 const SubmitButton = styled.button`
