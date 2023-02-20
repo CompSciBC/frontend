@@ -1,171 +1,63 @@
 import styled from '@emotion/styled';
-import { useEffect, useMemo, useState } from 'react';
-import { Link, useLoaderData } from 'react-router-dom';
-import { routes } from '../..';
-import {
-  EventOrPlace,
-  Forecast,
-  Message,
-  ReservationDetail,
-  Restaurant
-} from '../../utils/dtos';
-import { theme } from '../../utils/styles';
-import ChatPreview from './ChatPreview';
-import ImagePreview from './ImagePreview';
-import WeatherForecastTile from './WeatherForecastTile';
+import { useEffect, useMemo, useState, useContext } from 'react';
+import AppContext from '../../context/AppContext';
+import { Address, ReservationDetail } from '../../utils/dtos';
+import InfoCell from './InfoCell';
+import CheckInCell from './checkIn/CheckInCell';
+import GuidebookCell from './guidebook/GuidebookCell';
+import InviteCell from './invite/InviteCell';
+import WeatherCell from './weather/WeatherCell';
+import RestaurantsCell from './restaurants/RestaurantsCell';
+import EventsAndPlacesCell from './eventsAndPlaces/EventsAndPlacesCell';
+import ChatCell from './chat/ChatCell';
+import ChatPreview from './chat/ChatPreview';
+import MapCell from './map/MapCell';
+import ReviewCell from './review/ReviewCell';
 
-export interface DashboardData {
-  reservation: ReservationDetail;
-  forecast: Forecast[];
-  restaurants: Restaurant[];
-  eventsAndPlaces: EventOrPlace[];
-  messages: Message[];
+export interface DashboardCellProps {
+  className?: string;
+  cell: string;
 }
 
+const info = 'info';
+const check = 'check';
+const guide = 'guide';
+const invite = 'invite';
+const weather = 'weather';
+const rest = 'rest';
+const event = 'event';
+const chat = 'chat';
+const map = 'map';
+const review = 'review';
+
 function Dashboard() {
-  const { reservation, forecast, restaurants, eventsAndPlaces, messages } =
-    useLoaderData() as DashboardData;
+  const { reservationDetail } = useContext(AppContext);
+  const { checkIn, checkOut, address } = reservationDetail as ReservationDetail;
 
-  const { checkIn, checkOut, address } = reservation;
-
-  // Gets the check-in/out date/time as a formatted string
-  const getFormattedCheckInOut = (event: 'in' | 'out'): string => {
-    const eventType = event === 'in' ? checkIn : checkOut;
-
-    const date = new Date(eventType).toLocaleDateString('default', {
-      month: 'short',
-      day: 'numeric'
-    });
-
-    const time = new Date(eventType).toLocaleTimeString('default', {
-      timeStyle: 'short'
-    });
-
-    return `${date} @ ${time}`;
+  // TODO: get from reservation object (which should have an Address type field instead of string)
+  const fakeAddress: Address = {
+    line1: '12331 23rd Ave NE',
+    city: 'Seattle',
+    stateProvince: 'WA',
+    postalCode: '98155',
+    country: 'USA'
   };
 
-  const infoCell = useMemo(() => <InfoCell>{address}</InfoCell>, []);
-
-  const checkInCell = useMemo(
-    () => (
-      <CheckInCell>
-        Check-in
-        <div>{getFormattedCheckInOut('in')}</div>
-      </CheckInCell>
-    ),
-    []
+  const infoCell = <InfoCell address={address} cell={info} />;
+  const checkCell = (
+    <CheckInCell checkIn={checkIn} checkOut={checkOut} cell={check} />
   );
-
-  const guidebookCell = useMemo(
-    () => (
-      <GuidebookCell>
-        {/* TODO: guidebook route on matthew's branch */}
-        <StyledLink to={routes.home}>Guidebook</StyledLink>
-      </GuidebookCell>
-    ),
-    []
+  const guideCell = <GuidebookCell cell={guide} />;
+  const inviteCell = <InviteCell cell={invite} />;
+  const weatherCell = <WeatherCell cell={weather} />;
+  const restCell = <RestaurantsCell address={fakeAddress} n={2} cell={rest} />;
+  const eventCell = (
+    <EventsAndPlacesCell address={fakeAddress} n={2} cell={event} />
   );
-
-  const inviteCell = useMemo(
-    () => (
-      <InviteCell>
-        <StyledLink to={routes.invite}>Invite</StyledLink>
-      </InviteCell>
-    ),
-    []
-  );
-
-  const weatherCell = useMemo(
-    () => (
-      <WeatherCell>
-        <StyledLink to={routes.weather}>
-          {forecast.map((f) => (
-            <WeatherForecastTile
-              key={f.timestamp}
-              time={f.timestamp}
-              weather={f.weather}
-              temp={f.temp}
-            />
-          ))}
-        </StyledLink>
-      </WeatherCell>
-    ),
-    []
-  );
-
-  const restaurantsCell = useMemo(
-    () => (
-      <RestaurantsCell>
-        <ImagePreview
-          title="Nearby Restaurants"
-          viewMoreLink={routes.restaurants}
-          previewSlides={restaurants.map((r) => {
-            return {
-              image: r.imageUrl,
-              link: r.url
-            };
-          })}
-        />
-      </RestaurantsCell>
-    ),
-    []
-  );
-
-  const eventsCell = useMemo(
-    () => (
-      <EventsCell>
-        <ImagePreview
-          title="Events and Places"
-          viewMoreLink={routes.eventsAndPlaces}
-          previewSlides={eventsAndPlaces.map((e) => {
-            return {
-              image: e.imageUrl,
-              link: e.url
-            };
-          })}
-        />
-      </EventsCell>
-    ),
-    []
-  );
-
-  const chatCell = useMemo(
-    () => (
-      <ChatCell>
-        <StyledLink to={routes.chat}>Chat</StyledLink>
-      </ChatCell>
-    ),
-    []
-  );
-
-  const chatPreviewCell = useMemo(
-    () => (
-      <ChatPreviewCell>
-        <ChatPreview messages={messages} />
-      </ChatPreviewCell>
-    ),
-    [] // TODO: this should update whenever new messages arrive
-  );
-
-  const mapCell = useMemo(
-    () => (
-      // TODO: replace image with dynamic map based on address
-      <MapCell img="/images/maps-button.png">
-        <StyledLink to={routes.map} />
-      </MapCell>
-    ),
-    []
-  );
-
-  const reviewCell = useMemo(
-    () => (
-      <ReviewCell>
-        {/* TODO: replace with route from hieu's branch */}
-        <StyledLink to={routes.home}>Review</StyledLink>
-      </ReviewCell>
-    ),
-    []
-  );
+  const chatCell = <ChatCell cell={chat} />;
+  const chatPreviewCell = <ChatPreview n={3} cell={chat} />;
+  const mapCell = <MapCell cell={map} />;
+  const reviewCell = <ReviewCell cell={review} />;
 
   const [width, setWidth] = useState(window.innerWidth);
 
@@ -194,13 +86,13 @@ function Dashboard() {
         <SmallScreenContainer>
           {infoCell}
           {inviteCell}
-          {guidebookCell}
+          {guideCell}
           {chatCell}
-          {checkInCell}
+          {checkCell}
           {mapCell}
           {weatherCell}
-          {restaurantsCell}
-          {eventsCell}
+          {restCell}
+          {eventCell}
           {reviewCell}
         </SmallScreenContainer>
       );
@@ -208,14 +100,14 @@ function Dashboard() {
       container = (
         <MediumScreenContainer>
           {infoCell}
-          {checkInCell}
-          {guidebookCell}
+          {checkCell}
+          {guideCell}
           {inviteCell}
           {weatherCell}
           {chatPreviewCell}
           {mapCell}
-          {restaurantsCell}
-          {eventsCell}
+          {restCell}
+          {eventCell}
           {reviewCell}
         </MediumScreenContainer>
       );
@@ -224,12 +116,12 @@ function Dashboard() {
         <LargeScreenContainer>
           <div>
             {infoCell}
-            {checkInCell}
-            {guidebookCell}
+            {checkCell}
+            {guideCell}
             {inviteCell}
             {weatherCell}
-            {restaurantsCell}
-            {eventsCell}
+            {restCell}
+            {eventCell}
           </div>
           <div>
             {chatPreviewCell}
@@ -245,125 +137,6 @@ function Dashboard() {
 
   return layout;
 }
-
-const GridCellWrapper = styled.div`
-  display: flex;
-  width: 100%;
-  height: 100%;
-  border-radius: 8px;
-  ${theme.font.body}
-`;
-
-const GridCellClickable = styled(GridCellWrapper)`
-  align-items: center;
-  justify-content: center;
-  min-width: fit-content;
-  padding: 8px;
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  font-size: 24px;
-  color: ${theme.color.white};
-`;
-
-const StyledLink = styled(Link)`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-  width: 100%;
-  text-decoration: none;
-  color: inherit;
-`;
-
-const info = 'info';
-const InfoCell = styled(GridCellWrapper)`
-  grid-area: ${info};
-  padding: 8px;
-  background-color: white;
-  border: 1px solid black;
-`;
-
-const check = 'check';
-const CheckInCell = styled(GridCellClickable)`
-  grid-area: ${check};
-  flex-direction: column;
-  row-gap: 8px;
-  background-color: ${theme.color.teal};
-
-  div {
-    font-size: 14px;
-    text-align: center;
-  }
-`;
-
-const guide = 'guide';
-const GuidebookCell = styled(GridCellClickable)`
-  grid-area: ${guide};
-  background-color: ${theme.color.red};
-`;
-
-const invite = 'invite';
-const InviteCell = styled(GridCellClickable)`
-  grid-area: ${invite};
-  background-color: ${theme.color.purple};
-`;
-
-const weather = 'weather';
-const WeatherCell = styled(GridCellWrapper)`
-  grid-area: ${weather};
-
-  // entire cell is one link
-  a {
-    justify-content: space-between;
-    column-gap: 8px;
-
-    div {
-      flex-grow: 1;
-    }
-  }
-`;
-
-const rest = 'rest';
-const RestaurantsCell = styled(GridCellWrapper)`
-  grid-area: ${rest};
-`;
-
-const event = 'event';
-const EventsCell = styled(GridCellWrapper)`
-  grid-area: ${event};
-`;
-
-const chat = 'chat';
-const ChatCell = styled(GridCellClickable)`
-  grid-area: ${chat};
-  background-color: ${theme.color.orange};
-  display: none;
-
-  ${theme.screen.small} {
-    display: flex;
-  }
-`;
-
-const ChatPreviewCell = styled(GridCellWrapper)`
-  grid-area: ${chat};
-
-  ${theme.screen.small} {
-    display: none;
-  }
-`;
-
-const map = 'map';
-const MapCell = styled(GridCellClickable)<{ img: string }>`
-  grid-area: ${map};
-  background-image: ${(props) => `url(${props.img})`};
-  background-size: cover;
-  background-position: center;
-`;
-
-const review = 'review';
-const ReviewCell = styled(GridCellClickable)`
-  grid-area: ${review};
-  background-color: ${theme.color.green};
-`;
 
 const SmallScreenContainer = styled.div`
   display: grid;

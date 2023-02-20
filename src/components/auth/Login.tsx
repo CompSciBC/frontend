@@ -139,26 +139,23 @@ const Container = styled.div`
 `;
 
 const Logo = styled.img`
-  width: 384px;
+  width: 256px;
   margin-top: 32px;
-
-  ${theme.screen.small} {
-    width: 256px;
-  }
 `;
 
 const FormContainer = styled.form`
   display: grid;
   grid-template-columns: max-content 1fr;
+  grid-template-rows: auto repeat(4, 1fr);
   gap: 8px 32px;
   align-items: center;
 `;
 
 const SubmitButton = styled.button`
+  height: 100%;
   border: none;
   padding: 8px;
   border-radius: 4px;
-  margin-bottom: 8px;
   box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
   ${theme.font.button};
 

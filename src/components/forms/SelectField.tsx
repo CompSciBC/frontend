@@ -47,9 +47,13 @@ function SelectField({
 
 const Container = styled.div`
   display: flex;
+  align-items: center;
+  column-gap: 8px;
 
-  input {
-    padding: 4px;
+  select {
+    padding: 8px;
+    border: 1px solid lightgray;
+    border-radius: 4px;
   }
 `;
 

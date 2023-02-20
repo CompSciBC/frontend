@@ -120,9 +120,17 @@ function InputField({
 const Container = styled.div`
   display: flex;
   width: 100%;
+  align-items: center;
+  column-gap: 8px;
 
   input {
-    padding: 4px;
+    padding: 8px;
+    border: 1px solid lightgray;
+    border-radius: 4px;
+
+    ::placeholder {
+      color: lightgray;
+    }
   }
 
   div {

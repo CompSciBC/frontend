@@ -53,8 +53,11 @@ function RadioField({
   );
 }
 
-const Container = styled.div<{ direction: string }>`
+const Container = styled.div<{ direction: 'row' | 'column' }>`
   display: flex;
+  align-items: ${(props) =>
+    props.direction === 'column' ? 'start' : 'center'};
+  column-gap: 8px;
 
   div {
     display: flex;
@@ -65,7 +68,7 @@ const Container = styled.div<{ direction: string }>`
     }
 
     label:not(:first-of-type) input {
-      margin: 0 2px 0 8px;
+      margin: ${(props) => `0 2px 0 ${props.direction === 'row' ? 8 : 0}px`};
     }
   }
 `;

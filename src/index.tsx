@@ -1,38 +1,31 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import {
-  createBrowserRouter,
-  createRoutesFromElements,
-  Route,
-  RouteObject,
-  RouterProvider
-} from 'react-router-dom';
-import Home from './components/home/Home';
-import HostLanding from './components/home/HostLanding';
-import GuestLanding from './components/home/GuestLanding';
-import Dashboard from './components/dashboard/Dashboard';
-import Chat from './components/chat/Chat';
-import Profile from './components/profile/Profile';
-import About from './components/about/About';
-import Guidebook from './components/dashboard/guidebook/Guidebook';
-import Weather from './components/dashboard/Weather';
-import Restaurants from './components/dashboard/Restaurants';
-import EventsAndPlaces from './components/dashboard/EventsAndPlaces';
-import Map from './components/dashboard/Map';
-import './index.css';
-import reportWebVitals from './reportWebVitals';
-import Reservations from './components/reservations/Reservations';
-import ReservationLoader from './components/reservations/ReservationLoader';
-import GuidebookLoader from './components/dashboard/guidebook/GuidebookLoader';
-import Invite from './components/dashboard/invite/Invite';
-import InviteLoader from './components/dashboard/invite/InviteLoader';
-import App from './components/App';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { AppContextProvider } from './context/AppContext';
-import ProtectedRoute from './components/auth/ProtectedRoute';
-import Logout from './components/auth/Logout';
+import { NavbarLink } from './components/page/Navbar';
+import App from './components/App';
+import Home from './components/home/Home';
+import About from './components/about/About';
 import Login from './components/auth/Login';
 import SignUp from './components/auth/SignUp';
-import DashboardLoader from './components/dashboard/DashboardLoader';
+import Logout from './components/auth/Logout';
+import ProtectedRoute from './components/auth/ProtectedRoute';
+import HostLanding from './components/home/HostLanding';
+import GuestLanding from './components/home/GuestLanding';
+import Profile from './components/profile/Profile';
+import Reservations from './components/reservations/Reservations';
+import Dashboard from './components/dashboard/Dashboard';
+import Guidebook from './components/dashboard/guidebook/Guidebook';
+import GuidebookLoader from './components/dashboard/guidebook/GuidebookLoader';
+import Invite from './components/dashboard/invite/Invite';
+import Chat from './components/chat/Chat';
+import Weather from './components/dashboard/weather/Weather';
+import Restaurants from './components/dashboard/restaurants/Restaurants';
+import EventsAndPlaces from './components/dashboard/eventsAndPlaces/EventsAndPlaces';
+import Map from './components/dashboard/map/Map';
+import './index.css';
+import reportWebVitals from './reportWebVitals';
+import AppTestMode from './components/AppTestMode';
 
 // Configure React project with Amplify resources
 import { Amplify } from 'aws-amplify';
@@ -44,22 +37,22 @@ Amplify.configure(config);
  */
 export const routes = {
   home: '/',
+  about: '/about',
+  login: '/login',
+  signUp: '/signUp',
+  logout: '/logout',
   hostLanding: '/hostLanding',
   guestLanding: '/guestLanding',
-  login: '/login',
-  logout: '/logout',
-  signUp: '/signUp',
-  dashboard: '/dashboard',
-  about: '/about',
-  invite: '/invite',
-  chat: '/chat',
   profile: '/profile',
-  guidebook: '/guidebook',
   reservations: '/reservations',
-  weather: '/weather',
-  restaurants: '/restaurants',
-  eventsAndPlaces: '/eventsandplaces',
-  map: '/map'
+  dashboard: '/reservations/:resId/dashboard',
+  guidebook: '/reservations/:resId/guidebook',
+  invite: '/reservations/:resId/invite',
+  chat: '/reservations/:resId/chat',
+  weather: '/reservations/:resId/weather',
+  restaurants: '/reservations/:resId/restaurants',
+  eventsAndPlaces: '/reservations/:resId/eventsAndPlaces',
+  map: '/reservations/:resId/map'
 };
 
 /**
@@ -69,172 +62,137 @@ export const routes = {
  * @param params A variable number of parameters
  * @returns The given route with path variables replaced
  */
-export const parameterizedRoute = (route: string, ...params: string[]) => {
+export const paramRoute = (
+  route: string,
+  ...params: Array<string | undefined>
+) => {
   let path = route;
   const regex = /:\w+/g;
   const variables = Array.from(route.matchAll(regex), (match) => match[0]);
-  params.forEach((param, i) => (path = path.replace(variables[i], param)));
+  params.forEach(
+    (param, i) => (path = path.replace(variables[i], param ?? ''))
+  );
   return path;
 };
 
-const unauthenticatedHeaderRoutes: RouteObject[] = [
+const noAuthNavLinks: NavbarLink[] = [
   {
-    path: routes.about,
-    element: <About />,
-    handle: {
-      name: 'About'
-    }
+    name: 'About',
+    path: routes.about
   },
   {
-    path: routes.login,
-    element: <Login />,
-    handle: {
-      name: 'Login'
-    }
+    name: 'Login',
+    path: routes.login
   }
 ];
 
-const authenticatedHeaderRoutes: RouteObject[] = [
+const authNavLinks: NavbarLink[] = [
   {
-    path: routes.reservations,
-    element: <ProtectedRoute route={<Reservations />} />,
-    handle: {
-      name: 'Reservations'
-    },
-    loader: ReservationLoader
+    name: 'Reservations',
+    path: routes.reservations
   },
   {
-    path: routes.chat,
-    element: <ProtectedRoute route={<Chat />} />,
-    handle: {
-      name: 'Chat'
-    }
+    name: 'Chat',
+    path: routes.chat
   },
   {
-    path: routes.profile,
-    element: <ProtectedRoute route={<Profile />} />,
-    handle: {
-      name: 'Profile'
-    }
+    name: 'Profile',
+    path: routes.profile
   },
   {
-    path: routes.logout,
-    element: <ProtectedRoute route={<Logout />} />,
-    handle: {
-      name: 'Logout'
-    }
+    name: 'Logout',
+    path: routes.logout
   }
 ];
 
-const allRoutes: RouteObject[] = [
-  ...unauthenticatedHeaderRoutes,
-  ...authenticatedHeaderRoutes,
+const router = createBrowserRouter([
   {
-    path: routes.signUp,
-    element: <SignUp />,
-    handle: {
-      name: 'Sign Up'
-    }
-  },
-  {
-    path: routes.home,
-    element: <Home logo="bmg-branding/BMG-Script-RdHrt.svg" />,
-    handle: {
-      name: 'Home'
-    }
-  },
-  {
-    path: routes.hostLanding,
-    element: <ProtectedRoute route={<HostLanding />} />,
-    handle: {
-      name: 'Host Landing'
-    }
-  },
-  {
-    path: routes.guestLanding,
-    element: <ProtectedRoute route={<GuestLanding />} />,
-    handle: {
-      name: 'Guest Landing'
-    }
-  },
-  {
-    path: routes.dashboard,
-    element: <ProtectedRoute route={<Dashboard />} />,
-    handle: {
-      name: 'Dashboard'
-    },
-    loader: DashboardLoader
-  },
-  {
-    path: routes.invite,
-    element: <ProtectedRoute route={<Invite />} />,
-    handle: {
-      name: 'Invite'
-    },
-    loader: InviteLoader
-  },
-  {
-    path: routes.weather,
-    element: <ProtectedRoute route={<Weather />} />,
-    handle: {
-      name: 'Weather'
-    }
-  },
-  {
-    path: routes.restaurants,
-    element: <ProtectedRoute route={<Restaurants />} />,
-    handle: {
-      name: 'Restaurants'
-    }
-  },
-  {
-    path: routes.eventsAndPlaces,
-    element: <ProtectedRoute route={<EventsAndPlaces />} />,
-    handle: {
-      name: 'Events and Places'
-    }
-  },
-  {
-    path: routes.map,
-    element: <ProtectedRoute route={<Map />} />,
-    handle: {
-      name: 'Map'
-    }
-  },
-  {
-    path: routes.guidebook,
-    element: <ProtectedRoute route={<Guidebook />} />,
-    handle: {
-      name: 'Guidebook'
-    },
-    loader: GuidebookLoader
-  }
-];
-
-const router = createBrowserRouter(
-  createRoutesFromElements(
-    <Route
-      element={
-        <AppContextProvider>
-          <App
-            authenticatedHeaderRoutes={authenticatedHeaderRoutes}
-            unauthenticatedHeaderRoutes={unauthenticatedHeaderRoutes}
-          />
-        </AppContextProvider>
+    element: (
+      <AppContextProvider>
+        <App noAuthNavLinks={noAuthNavLinks} authNavLinks={authNavLinks} />
+        <AppTestMode />
+      </AppContextProvider>
+    ),
+    errorElement: <>Error Page</>, // TODO: create error page
+    children: [
+      {
+        path: routes.home,
+        element: <Home logo="/bmg-branding/BMG-Script-RdHrt.svg" />,
+        index: true
+      },
+      {
+        path: routes.about,
+        element: <About />
+      },
+      {
+        path: routes.login,
+        element: <Login />
+      },
+      {
+        path: routes.signUp,
+        element: <SignUp />
+      },
+      {
+        element: <ProtectedRoute />,
+        children: [
+          {
+            path: routes.logout,
+            element: <Logout />
+          },
+          {
+            path: routes.hostLanding,
+            element: <HostLanding />
+          },
+          {
+            path: routes.guestLanding,
+            element: <GuestLanding />
+          },
+          {
+            path: routes.profile,
+            element: <Profile />
+          },
+          {
+            path: routes.reservations,
+            element: <Reservations />
+          },
+          {
+            path: routes.dashboard,
+            element: <Dashboard />
+          },
+          {
+            path: routes.guidebook,
+            element: <Guidebook />,
+            loader: GuidebookLoader
+          },
+          {
+            path: routes.invite,
+            element: <Invite />
+          },
+          {
+            path: routes.chat,
+            element: <Chat />
+          },
+          {
+            path: routes.weather,
+            element: <Weather />
+          },
+          {
+            path: routes.restaurants,
+            element: <Restaurants />
+          },
+          {
+            path: routes.eventsAndPlaces,
+            element: <EventsAndPlaces />
+          },
+          {
+            path: routes.map,
+            element: <Map />
+          }
+        ]
       }
-    >
-      {allRoutes.map((route) => (
-        <Route
-          key={route.path}
-          path={route.path}
-          handle={route.handle?.name}
-          loader={route.loader}
-          element={route.element}
-        />
-      ))}
-    </Route>
-  )
-);
+    ]
+  }
+]);
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement

@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
-import { useState } from 'react';
-import { useLoaderData } from 'react-router-dom';
+import { useEffect, useState, useContext } from 'react';
+import { useParams } from 'react-router-dom';
+import AppContext from '../../../context/AppContext';
 import { theme } from '../../../utils/styles';
 import Modal from '../../Modal';
 import SendInviteForm from './SendInviteForm';
@@ -16,8 +17,27 @@ export interface InviteProps {
  * @returns A JSX element
  */
 function Invite({ className }: InviteProps) {
-  const qrCodeUrl = useLoaderData() as string;
+  const { resId } = useParams();
+  const { user } = useContext(AppContext);
+  const [qrCodeUrl, setQrCodeUrl] = useState('');
   const [emailFormOpen, setEmailFormOpen] = useState(false);
+
+  useEffect(() => {
+    let subscribed = true;
+
+    (async function () {
+      if (resId) {
+        const response = await fetch(`/api/invites/${resId}/qr-code`);
+        const body = await response.json();
+
+        subscribed && setQrCodeUrl(body.data[0]);
+      }
+    })();
+
+    return () => {
+      subscribed = false;
+    };
+  }, [resId]);
 
   return (
     <Container className={className}>
@@ -34,7 +54,13 @@ function Invite({ className }: InviteProps) {
         <InviteButton type="button">Send via SMS</InviteButton>
         {emailFormOpen && (
           <Modal
-            content={<SendInviteForm onClose={() => setEmailFormOpen(false)} />}
+            content={
+              <SendInviteForm
+                onClose={() => setEmailFormOpen(false)}
+                resId={resId!}
+                userName={user?.username ?? 'Your friend'}
+              />
+            }
             blur={true}
           />
         )}

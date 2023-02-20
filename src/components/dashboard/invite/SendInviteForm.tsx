@@ -4,6 +4,8 @@ import { theme } from '../../../utils/styles';
 
 export interface SendInviteFormProps {
   className?: string;
+  resId: string;
+  userName: string;
   onClose: CallableFunction;
 }
 
@@ -13,11 +15,12 @@ export interface SendInviteFormProps {
  * @param props {@link SendInviteFormProps}
  * @returns A JSX element
  */
-function SendInviteForm({ className, onClose }: SendInviteFormProps) {
-  // TODO: replace hardcoded values
-  const guestName = 'GUEST NAME';
-  const resId = 'test-res';
-
+function SendInviteForm({
+  className,
+  resId,
+  userName,
+  onClose
+}: SendInviteFormProps) {
   const recipientsInputId = 'invite-recipients';
   const messageInputId = 'invite-message';
 
@@ -63,7 +66,7 @@ function SendInviteForm({ className, onClose }: SendInviteFormProps) {
 
       const invite: Invitation = {
         recipients: recipients.split(','),
-        guestName,
+        guestName: userName,
         message: messageInput?.value
       };
 

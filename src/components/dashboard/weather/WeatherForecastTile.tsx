@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { theme } from '../../utils/styles';
+import { theme } from '../../../utils/styles';
 
 export const weatherTypes = [
   'clear-day',
@@ -44,7 +44,7 @@ function WeatherForecastTile({
   return (
     <Container className={className}>
       <Time>{time}</Time>
-      <Icon src={`images/weather/${weather}.png`} />
+      <Icon src={`/images/weather/${weather}.png`} />
       <Temperature>{temp}</Temperature>
     </Container>
   );

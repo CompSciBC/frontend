@@ -55,17 +55,22 @@ function CheckboxField({
   );
 }
 
-const Container = styled.div<{ direction: string }>`
+const Container = styled.div<{ direction: 'row' | 'column' }>`
   display: flex;
+  align-items: ${(props) =>
+    props.direction === 'column' ? 'start' : 'center'};
+  column-gap: 8px;
 
   div {
     display: flex;
     flex-direction: ${(props) => props.direction};
 
-    label {
-      input {
-        margin: 0 2px 0 8px;
-      }
+    label:first-of-type input {
+      margin-right: 2px;
+    }
+
+    label:not(:first-of-type) input {
+      margin: ${(props) => `0 2px 0 ${props.direction === 'row' ? 8 : 0}px`};
     }
   }
 `;

@@ -1,4 +1,4 @@
-import { WeatherType } from '../components/dashboard/WeatherForecastTile';
+import { WeatherType } from '../components/dashboard/weather/WeatherForecastTile';
 
 export type UserRole = 'guest' | 'host' | undefined;
 
@@ -72,7 +72,7 @@ export interface GuidebookDto {
  * for a specified period of time (matching Reservation.java)
  */
 export interface Reservation {
-  id?: string;
+  id: string;
   hostId: string;
   propertyId: string;
   guestId: string;
@@ -84,6 +84,7 @@ export interface Reservation {
 
 /**
  * A reservation object containing additional details about its associated property
+ * (matching ReservationDetail.java)
  */
 export interface ReservationDetail extends Reservation {
   propertyName: string;
