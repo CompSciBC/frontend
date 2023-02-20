@@ -43,7 +43,7 @@ export default function AppTestMode() {
 }
 
 const TestSetting = styled(SelectField)`
-  position: absolute;
+  position: fixed;
   left: 48px;
   top: 14px;
   z-index: 100;
