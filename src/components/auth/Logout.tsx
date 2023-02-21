@@ -1,11 +1,10 @@
-import { useAuthenticator, withAuthenticator } from '@aws-amplify/ui-react';
+import { Auth } from '@aws-amplify/auth';
 import { useNavigate } from 'react-router-dom';
 import { useContext, useEffect } from 'react';
 import AppContext from '../../context/AppContext';
 import { routes } from '../..';
 
 function Logout() {
-  const { signOut } = useAuthenticator();
   const { clearAppContext } = useContext(AppContext);
   const navigate = useNavigate();
 
@@ -13,7 +12,7 @@ function Logout() {
     let subscribed = true;
 
     subscribed && clearAppContext();
-    signOut();
+    Auth.signOut();
     navigate(routes.home);
 
     return () => {
@@ -24,4 +23,4 @@ function Logout() {
   return <>Goodbye</>;
 }
 
-export default withAuthenticator(Logout);
+export default Logout;
