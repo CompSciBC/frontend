@@ -53,19 +53,19 @@ function Login({ className }: LoginProps) {
         assignUserToRole(authUser.getUsername(), role);
       }
 
-      const getAttribute = async (name: string) => {
-        const userAttributes = await Auth.userAttributes(authUser);
-        return userAttributes.find((a) => a.getName() === name)?.getValue();
-      };
+      const userAttributes = await Auth.userAttributes(authUser);
 
-      const userId = await getAttribute('sub'); // sub = userId assigned by cognito
-      const firstName = await getAttribute('given_name');
-      const lastName = await getAttribute('family_name');
-      const email = await getAttribute('email');
-      const phone = await getAttribute('phone_number');
+      const getAttribute = (name: string) =>
+        userAttributes.find((a) => a.getName() === name)?.getValue() ?? '';
+
+      const userId = getAttribute('sub'); // sub = userId assigned by cognito
+      const firstName = getAttribute('given_name');
+      const lastName = getAttribute('family_name');
+      const email = getAttribute('email');
+      const phone = getAttribute('phone_number');
       const username = authUser.getUsername();
 
-      if (userId && username && firstName && lastName && email && phone) {
+      if (userId) {
         setUser({
           userId,
           username,
