@@ -8,7 +8,10 @@ export type UserRole = 'guest' | 'host' | undefined;
 export interface User {
   userId: string;
   username: string;
+  firstName: string;
+  lastName: string;
   email: string;
+  phone: string;
   role: UserRole;
   joinedOn?: Date;
 }

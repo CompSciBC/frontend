@@ -59,14 +59,20 @@ function Login({ className }: LoginProps) {
       };
 
       const userId = await getAttribute('sub'); // sub = userId assigned by cognito
+      const firstName = await getAttribute('given_name');
+      const lastName = await getAttribute('family_name');
       const email = await getAttribute('email');
+      const phone = await getAttribute('phone_number');
       const username = authUser.getUsername();
 
-      if (userId && email && username) {
+      if (userId && username && firstName && lastName && email && phone) {
         setUser({
           userId,
-          email,
           username,
+          firstName,
+          lastName,
+          email,
+          phone,
           role: userGroup[0]
         });
         setAuthenticated(true);

@@ -89,7 +89,10 @@ export function AppContextProvider({ children }: { children: ReactNode }) {
   const testUser: User = {
     userId: 'test-guest-1',
     username: 'Test Guest',
+    firstName: 'Ricky',
+    lastName: 'Bobby',
     email: 'test@email.com',
+    phone: '123-456-7890',
     role: 'guest'
   };
   const savedUserKey = 'savedUser';

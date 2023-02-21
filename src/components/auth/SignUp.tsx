@@ -87,8 +87,11 @@ function SignUp({ className }: SignUpProps) {
 
         setUser({
           userId: signUpResult.userSub,
+          firstName: enteredFirstName,
+          lastName: enteredLastName,
           username: enteredUsername,
           email: enteredEmail,
+          phone: enteredPhone,
           role: enteredRole as UserRole
         });
       } catch (error) {
