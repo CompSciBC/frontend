@@ -10,7 +10,7 @@ interface AccordionDropdownProps {
   smallLineStyling?: boolean;
 }
 
-function isLineStyledAccordion( smallLineBool: boolean) {
+function isLineStyledAccordion(smallLineBool: boolean) {
   if (smallLineBool) {
     return <Line smallLine />;
   }
@@ -65,7 +65,10 @@ const Line = styled.hr<{ smallLine?: boolean }>`
   border-top: 1px solid black;
   flex-grow: 1;
   margin: auto 4px;
-  max-width: ${(props) => (props.smallLine ? '1%' : '100%')}; // Conditional rendering if we want to add line styling. 
+  max-width: ${(props) =>
+    props.smallLine
+      ? '1%'
+      : '100%'}; // Conditional rendering if we want to add line styling.
 `;
 
 const ChevronWrapper = styled.div<{ open: boolean }>`

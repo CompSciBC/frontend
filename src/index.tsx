@@ -25,7 +25,6 @@ import './index.css';
 import reportWebVitals from './reportWebVitals';
 import Reservations from './components/reservations/Reservations';
 import ReservationLoader from './components/reservations/ReservationLoader';
-import GuidebookLoader from './components/dashboard/guidebook/GuidebookLoader';
 import Invite from './components/dashboard/invite/Invite';
 import InviteLoader from './components/dashboard/invite/InviteLoader';
 import DashboardLoader from './components/dashboard/DashboardLoader';
@@ -95,7 +94,8 @@ const allRoutes: RouteObject[] = [
     handle: {
       name: 'Home'
     }
-  },{
+  },
+  {
     path: routes.hostLanding,
     element: <HostLanding />,
     handle: {
@@ -160,13 +160,13 @@ const allRoutes: RouteObject[] = [
     handle: {
       name: 'Map'
     }
-  }, {
+  },
+  {
     path: routes.guidebook,
     element: <Guidebook />,
     handle: {
       name: 'Guidebook'
-    },
-    loader : GuidebookLoader
+    }
   }
 ];
 
@@ -176,7 +176,10 @@ const router = createBrowserRouter(
       element={
         <Page
           header={
-            <Header logo="bmg-branding/BMG-favicon-refined.svg" navLinks={headerRoutes} />
+            <Header
+              logo="bmg-branding/BMG-favicon-refined.svg"
+              navLinks={headerRoutes}
+            />
           }
         />
       }
