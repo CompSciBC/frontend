@@ -1,12 +1,8 @@
 import jwt from 'jwt-decode';
-export function assignUserToRole(
-  username: any,
-  currentRole: string,
-  assignedRole: string
-) {
+import { UserRole } from '../../utils/dtos';
+export function assignUserToRole(username: any, assignedRole: UserRole) {
   const jsonData = {
     username,
-    currentRole,
     assignedRole
   };
   fetch(

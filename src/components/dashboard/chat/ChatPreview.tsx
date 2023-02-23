@@ -1,13 +1,16 @@
 import styled from '@emotion/styled';
-import { Link } from 'react-router-dom';
-import { routes } from '../..';
-import { Message } from '../../utils/dtos';
-import { theme } from '../../utils/styles';
-import ChevronDown from '../reservations/ChevronDown';
+import { memo, useEffect, useState } from 'react';
+import { Link, useParams } from 'react-router-dom';
+import { paramRoute, routes } from '../../..';
+import { Message } from '../../../utils/dtos';
+import { theme } from '../../../utils/styles';
+import ChevronDown from '../../reservations/ChevronDown';
+import { DashboardCellProps } from '../Dashboard';
+import DashboardCellWrapper from '../DashboardCellWrapper';
+import getMessages from './getChatMessages';
 
-export interface ChatPreviewProps {
-  className?: string;
-  messages: Message[];
+export interface ChatPreviewProps extends DashboardCellProps {
+  n: number;
 }
 
 /**
@@ -16,33 +19,58 @@ export interface ChatPreviewProps {
  * @param props {@link ChatPreviewProps}
  * @returns A JSX element
  */
-function ChatPreview({ className, messages }: ChatPreviewProps) {
+function ChatPreview({ className, cell, n }: ChatPreviewProps) {
+  const { resId } = useParams();
+  const [messages, setMessages] = useState<Message[]>([]);
+
+  useEffect(() => {
+    let subscribed = true;
+
+    (async function () {
+      subscribed && setMessages(await getMessages(resId!, n));
+    })();
+
+    return () => {
+      subscribed = false;
+    };
+  }, [resId]); // TODO: this should update whenever new messages arrive
+
   return (
-    <Container className={className}>
-      <Header>
-        <div>Chat</div>
-        <GoToChatButton to={routes.chat}>
-          <ChevronDown fill="white" width={24} />
-        </GoToChatButton>
-      </Header>
-      <Body>
-        <Ellipses>
-          <div>. . .</div>
-        </Ellipses>
-        {messages.map((message, i) => (
-          <MessageContainer key={i} me={message.me}>
-            <div>
-              <div>{message.name}</div>
-            </div>
-            {message.message}
-          </MessageContainer>
-        ))}
-      </Body>
-    </Container>
+    <Container
+      className={className}
+      cell={cell}
+      child={
+        <>
+          <Header>
+            <div>Chat</div>
+            <GoToChatButton to={paramRoute(routes.chat, resId)}>
+              <ChevronDown fill="white" width={24} />
+            </GoToChatButton>
+          </Header>
+          <Body>
+            <Ellipses>
+              <div>. . .</div>
+            </Ellipses>
+            {messages.map((message, i) => (
+              <MessageContainer key={i} me={message.me}>
+                <div>
+                  <div>{message.name}</div>
+                </div>
+                {message.message}
+              </MessageContainer>
+            ))}
+          </Body>
+        </>
+      }
+    />
   );
 }
 
-const Container = styled.div`
+const Container = styled(DashboardCellWrapper)`
+  ${theme.screen.small} {
+    display: none;
+  }
+
   position: relative;
   display: flex;
   flex-direction: column;
@@ -136,4 +164,4 @@ const MessageContainer = styled.div<{ me: boolean }>`
   }
 `;
 
-export default ChatPreview;
+export default memo(ChatPreview);

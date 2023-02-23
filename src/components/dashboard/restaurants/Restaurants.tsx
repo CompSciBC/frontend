@@ -1,5 +1,5 @@
 function Restaurants() {
-  return <>Map</>;
+  return <>Restaurants</>;
 }
 
 export default Restaurants;

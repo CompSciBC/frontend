@@ -1,6 +1,8 @@
 import styled from '@emotion/styled';
+import { useContext } from 'react';
 import { Link } from 'react-router-dom';
-import { routes } from '../../index';
+import AppContext from '../../context/AppContext';
+import { paramRoute, routes } from '../../index';
 import { ReservationDetail } from '../../utils/dtos';
 import { theme } from '../../utils/styles';
 
@@ -13,8 +15,8 @@ function ReservationCard({
   className,
   reservationDetail
 }: ReservationCardProps) {
-  const { checkIn, address, image } = reservationDetail;
-
+  const { setReservationDetail } = useContext(AppContext);
+  const { id, checkIn, address, image } = reservationDetail;
   const streetAddress: string = address.split(',')[0];
 
   const checkInDate = new Date(checkIn).toLocaleDateString('default', {
@@ -28,7 +30,12 @@ function ReservationCard({
   });
 
   return (
-    <Wrapper className={className} image={image ?? ''} to={routes.dashboard}>
+    <Wrapper
+      className={className}
+      image={image ?? ''}
+      to={paramRoute(routes.dashboard, id)}
+      onClick={() => setReservationDetail(reservationDetail)}
+    >
       <Container>
         <CheckInInfoBox>
           <CheckInDate>{`Check In : ${checkInDate}`}</CheckInDate>
