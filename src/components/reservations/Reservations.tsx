@@ -1,22 +1,70 @@
 import styled from '@emotion/styled';
-import { useLoaderData } from 'react-router-dom';
+import { useContext, useEffect, useState } from 'react';
+import AppContext from '../../context/AppContext';
 import {
   ReservationStatus,
-  SortedReservationPropertySet
+  SortedReservationDetailSet
 } from '../../utils/dtos';
 import { theme } from '../../utils/styles';
 import AccordionDropdown from './AccordionDropdown';
 import ReservationCard from './ReservationCard';
 
 function Reservations() {
-  const resProps = useLoaderData() as SortedReservationPropertySet;
+  const { user } = useContext(AppContext);
+
+  const [resDetails, setResDetails] = useState<SortedReservationDetailSet>({
+    current: [],
+    upcoming: [],
+    past: []
+  });
+
+  useEffect(() => {
+    let subscribed = true;
+
+    (async function () {
+      if (user) {
+        const index = user.role;
+        const id = user.userId;
+
+        // gets a sorted reservation detail set
+        const response = await fetch(
+          `/api/reservations-by-status?index=${index!}&id=${id}`
+        );
+        const body = await response.json();
+        const data: SortedReservationDetailSet = body.data[0];
+
+        // TODO: images need to be pulled from the backend
+        let randomImage = 0;
+        const images = [
+          'images/seattle-loft.jpg',
+          'images/downtown-apartment.jpg',
+          'images/beach-house.jpg',
+          'images/mountain-cabin.jpg'
+        ];
+
+        // for each status type and each reservation within, add a random image
+        for (const statusName of Object.keys(data)) {
+          const status = statusName as ReservationStatus;
+
+          for (const reservation of data[status])
+            reservation.image = images[randomImage++ % images.length];
+        }
+
+        subscribed && setResDetails(data);
+      }
+    })();
+
+    return () => {
+      subscribed = false;
+    };
+  }, [user]);
 
   // maps the reservation/property objects into a list of reservation cards to be
   // rendered on the screen
   const getCards = (status: ReservationStatus) => (
     <DropdownContent>
-      {resProps?.[status].map((resProp) => (
-        <ReservationCard key={resProp.id} reservationProperty={resProp} />
+      {resDetails?.[status].map((resProp) => (
+        <ReservationCard key={resProp.id} reservationDetail={resProp} />
       ))}
     </DropdownContent>
   );

@@ -2,7 +2,7 @@ import styled from '@emotion/styled';
 import { theme } from '../../utils/styles';
 
 interface HomeProps {
-  logo: string;
+  logo?: string;
 }
 
 function Home({ logo }: HomeProps) {
@@ -31,18 +31,18 @@ function Home({ logo }: HomeProps) {
           allows hosts to easily communicate with their guests.
         </p>
       </Description>
-      <CallToActionButton>Get Started</CallToActionButton>
     </Container>
   );
 }
 
 const Container = styled.div`
+  padding-top: 10px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  height: 100%;
   row-gap: 32px;
   font-size: 18px;
+  padding-bottom: 32px;
 `;
 
 const Logo = styled.img`
@@ -65,21 +65,6 @@ const Description = styled.div`
 
   ${theme.screen.small} {
     width: 85vw;
-  }
-`;
-
-const CallToActionButton = styled.button`
-  background-color: #47a347;
-  border: 1px solid transparent;
-  border-radius: 12px;
-  padding: 16px;
-  font-size: 32px;
-  color: white;
-  box-shadow: 0 4px 4px grey;
-
-  :hover {
-    background-color: #4fb94f;
-    cursor: pointer;
   }
 `;
 

@@ -1,135 +1,198 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import {
-  createBrowserRouter,
-  RouteObject,
-  RouterProvider
-} from 'react-router-dom';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { AppContextProvider } from './context/AppContext';
+import { NavbarLink } from './components/page/Navbar';
+import App from './components/App';
 import Home from './components/home/Home';
-import Dashboard from './components/dashboard/Dashboard';
-import Chat from './components/chat/Chat';
+import About from './components/about/About';
+import Login from './components/auth/Login';
+import SignUp from './components/auth/SignUp';
+import Logout from './components/auth/Logout';
+import ProtectedRoute from './components/auth/ProtectedRoute';
+import HostLanding from './components/home/HostLanding';
+import GuestLanding from './components/home/GuestLanding';
 import Profile from './components/profile/Profile';
-import Weather from './components/dashboard/Weather';
-import Restaurants from './components/dashboard/Restaurants';
-import EventsAndPlaces from './components/dashboard/EventsAndPlaces';
-import Map from './components/dashboard/Map';
-import Header from './components/page/Header';
-import Page from './components/page/Page';
+import Reservations from './components/reservations/Reservations';
+import Dashboard from './components/dashboard/Dashboard';
+import Guidebook from './components/dashboard/guidebook/Guidebook';
+import GuidebookLoader from './components/dashboard/guidebook/GuidebookLoader';
+import Invite from './components/dashboard/invite/Invite';
+import Chat from './components/chat/Chat';
+import Weather from './components/dashboard/weather/Weather';
+import Restaurants from './components/dashboard/restaurants/Restaurants';
+import EventsAndPlaces from './components/dashboard/eventsAndPlaces/EventsAndPlaces';
+import Map from './components/dashboard/map/Map';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
-import Reservations from './components/reservations/Reservations';
-import ReservationLoader from './components/reservations/ReservationLoader';
+import AppTestMode from './components/AppTestMode';
+
+// Configure React project with Amplify resources
+import { Amplify } from 'aws-amplify';
+import config from './aws-exports';
+Amplify.configure(config);
 
 /**
  * Contains the base route urls of the various pages in the app
  */
 export const routes = {
   home: '/',
-  dashboard: '/dashboard',
-  chat: '/chat',
+  about: '/about',
+  login: '/login',
+  signUp: '/signUp',
+  logout: '/logout',
+  hostLanding: '/hostLanding',
+  guestLanding: '/guestLanding',
   profile: '/profile',
   reservations: '/reservations',
-  weather: '/weather',
-  restaurants: '/restaurants',
-  eventsAndPlaces: '/eventsandplaces',
-  map: '/map'
+  dashboard: '/reservations/:resId/dashboard',
+  guidebook: '/reservations/:resId/guidebook',
+  invite: '/reservations/:resId/invite',
+  chat: '/reservations/:resId/chat',
+  weather: '/reservations/:resId/weather',
+  restaurants: '/reservations/:resId/restaurants',
+  eventsAndPlaces: '/reservations/:resId/eventsAndPlaces',
+  map: '/reservations/:resId/map'
 };
 
-const headerRoutes: RouteObject[] = [
+/**
+ * Replaces the path variables in a route with the given parameters
+ *
+ * @param route A route containing at least one path variable (e.g., /login/:role, where :role is the variable)
+ * @param params A variable number of parameters
+ * @returns The given route with path variables replaced
+ */
+export const paramRoute = (
+  route: string,
+  ...params: Array<string | undefined>
+) => {
+  let path = route;
+  const regex = /:\w+/g;
+  const variables = Array.from(route.matchAll(regex), (match) => match[0]);
+  params.forEach(
+    (param, i) => (path = path.replace(variables[i], param ?? ''))
+  );
+  return path;
+};
+
+const noAuthNavLinks: NavbarLink[] = [
   {
-    path: routes.home,
-    element: <Home logo="images/bmg-logo-black.png" />,
-    handle: {
-      name: 'Home'
-    }
+    name: 'About',
+    path: routes.about
   },
   {
-    path: '/dashboard',
-    element: <Dashboard />,
-    handle: {
-      name: 'Dashboard'
-    }
-  },
-  {
-    path: '/chat/:resId',
-    element: <Chat />,
-    handle: {
-      name: 'Chat'
-    }
-  },
-  {
-    path: routes.profile,
-    element: <Profile />,
-    handle: {
-      name: 'Profile'
-    }
+    name: 'Login',
+    path: routes.login
   }
 ];
 
-const allRoutes: RouteObject[] = [
-  ...headerRoutes,
+const authNavLinks: NavbarLink[] = [
   {
-    path: routes.reservations,
-    element: <Reservations />,
-    handle: {
-      name: 'Reservations'
-    },
-    loader: ReservationLoader
+    name: 'Reservations',
+    path: routes.reservations
   },
   {
-    path: routes.dashboard,
-    element: <Dashboard />,
-    handle: {
-      name: 'Dashboard'
-    }
+    name: 'Chat',
+    path: routes.chat
   },
   {
-    path: routes.weather,
-    element: <Weather />,
-    handle: {
-      name: 'Weather'
-    }
+    name: 'Profile',
+    path: routes.profile
   },
   {
-    path: routes.restaurants,
-    element: <Restaurants />,
-    handle: {
-      name: 'Restaurants'
-    }
-  },
-  {
-    path: routes.eventsAndPlaces,
-    element: <EventsAndPlaces />,
-    handle: {
-      name: 'Events and Places'
-    }
-  },
-  {
-    path: routes.map,
-    element: <Map />,
-    handle: {
-      name: 'Map'
-    }
+    name: 'Logout',
+    path: routes.logout
   }
 ];
 
-const router = createBrowserRouter(
-  allRoutes.map((route) => {
-    return {
-      path: route.path,
-      handle: route.handle?.name,
-      loader: route.loader,
-      element: (
-        <Page
-          header={
-            <Header logo="images/bmg-logo-white.png" navLinks={headerRoutes} />
+const router = createBrowserRouter([
+  {
+    element: (
+      <AppContextProvider>
+        <App noAuthNavLinks={noAuthNavLinks} authNavLinks={authNavLinks} />
+        <AppTestMode />
+      </AppContextProvider>
+    ),
+    errorElement: <>Error Page</>, // TODO: create error page
+    children: [
+      {
+        path: routes.home,
+        element: <Home logo="/bmg-branding/BMG-Script-RdHrt.svg" />,
+        index: true
+      },
+      {
+        path: routes.about,
+        element: <About />
+      },
+      {
+        path: routes.login,
+        element: <Login />
+      },
+      {
+        path: routes.signUp,
+        element: <SignUp />
+      },
+      {
+        element: <ProtectedRoute />,
+        children: [
+          {
+            path: routes.logout,
+            element: <Logout />
+          },
+          {
+            path: routes.hostLanding,
+            element: <HostLanding />
+          },
+          {
+            path: routes.guestLanding,
+            element: <GuestLanding />
+          },
+          {
+            path: routes.profile,
+            element: <Profile />
+          },
+          {
+            path: routes.reservations,
+            element: <Reservations />
+          },
+          {
+            path: routes.dashboard,
+            element: <Dashboard />
+          },
+          {
+            path: routes.guidebook,
+            element: <Guidebook />,
+            loader: GuidebookLoader
+          },
+          {
+            path: routes.invite,
+            element: <Invite />
+          },
+          {
+            path: routes.chat,
+            element: <Chat />
+          },
+          {
+            path: routes.weather,
+            element: <Weather />
+          },
+          {
+            path: routes.restaurants,
+            element: <Restaurants />
+          },
+          {
+            path: routes.eventsAndPlaces,
+            element: <EventsAndPlaces />
+          },
+          {
+            path: routes.map,
+            element: <Map />
           }
-          content={route.element}
-        />
-      )
-    };
-  })
-);
+        ]
+      }
+    ]
+  }
+]);
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement

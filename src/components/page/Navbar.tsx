@@ -1,18 +1,22 @@
 import styled from '@emotion/styled';
-import { Link, RouteObject } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+
+export interface NavbarLink {
+  name: string;
+  path: string;
+}
 
 interface NavBarProps {
   className?: string;
-  navLinks: RouteObject[];
+  navLinks: NavbarLink[];
 }
 
 function Navbar({ className, navLinks }: NavBarProps) {
   return (
     <Container className={className}>
       {navLinks.map((link) => (
-        // TODO: Replace the ! with better solution that handles undefined path
-        <NavLink key={link.handle?.name} to={link.path!}>
-          {link.handle?.name}
+        <NavLink key={link.name} to={link.path}>
+          {link.name}
         </NavLink>
       ))}
     </Container>
@@ -24,15 +28,13 @@ const Container = styled.nav`
 `;
 
 const NavLink = styled(Link)`
-  padding: 8px;
-  text-decoration: none;
+  padding: 30px;
   font-weight: bold;
-  color: white;
-  border-radius: 4px;
-
+  color: #000000;
   :hover {
-    background-color: #4fb94f;
+    color: #54c2ee;
   }
 `;
+//  #a1d7ec;
 
 export default Navbar;
