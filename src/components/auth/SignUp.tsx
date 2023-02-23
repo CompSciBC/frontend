@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import { Auth } from '@aws-amplify/auth';
 import { FormEvent, useContext, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { routes } from '../..';
 import AppContext from '../../context/AppContext';
 import { theme } from '../../utils/styles';
@@ -19,6 +19,7 @@ export interface SignUpProps {
 
 function SignUp({ className }: SignUpProps) {
   const navigate = useNavigate();
+  const location = useLocation();
   const { authenticated, setAuthenticated, user, setUser } =
     useContext(AppContext);
 
@@ -145,20 +146,28 @@ function SignUp({ className }: SignUpProps) {
     };
   }, [confirmed]);
 
-  // redirect to landing page
   useEffect(() => {
     if (authenticated) {
-      switch (user?.role) {
-        case 'guest':
-          navigate(routes.guestLanding);
-          break;
+      let path: string = '/';
 
-        case 'host':
-          navigate(routes.hostLanding);
-          break;
+      if (location.state) {
+        // redirect to a specific path set in state if it exists
+        path = location.state;
+      } else {
+        // otherwise redirect to one of the landing pages
+        switch (user?.role) {
+          case 'guest':
+            path = routes.guestLanding;
+            break;
+
+          case 'host':
+            path = routes.hostLanding;
+            break;
+        }
       }
+      navigate(path, { replace: true });
     }
-  }, [authenticated]);
+  }, [authenticated, location]);
 
   return (
     <Container className={className}>
@@ -267,6 +276,10 @@ const ConfirmContainer = styled.form`
 
   div {
     justify-content: center;
+
+    input {
+      text-align: center;
+    }
   }
 `;
 

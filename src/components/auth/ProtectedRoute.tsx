@@ -14,7 +14,9 @@ function ProtectedRoute() {
   // if no variable was passed and a resId is available in context, navigate there
   useEffect(() => {
     if (resId === ':resId' && reservationDetail?.id) {
-      navigate(paramRoute(location.pathname, reservationDetail.id));
+      navigate(paramRoute(location.pathname, reservationDetail.id), {
+        replace: true
+      });
     } // TODO: else go to error page
   }, [location]);
 

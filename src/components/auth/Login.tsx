@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import { Auth, CognitoUser } from '@aws-amplify/auth';
 import { FormEvent, useContext, useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { routes } from '../..';
 import AppContext from '../../context/AppContext';
 import { theme } from '../../utils/styles';
@@ -16,6 +16,7 @@ export interface LoginProps {
 
 function Login({ className }: LoginProps) {
   const navigate = useNavigate();
+  const location = useLocation();
   const { authenticated, setAuthenticated, setUser } = useContext(AppContext);
 
   // the role selected via the radio button
@@ -80,21 +81,32 @@ function Login({ className }: LoginProps) {
     }
   };
 
-  // redirect to landing page
   useEffect(() => {
-    if (authenticated) {
+    // redirect to a landing if at the literal login route
+    if (authenticated && location.pathname === routes.login) {
+      let path: string = '/';
+
       // the role selected by the radio button
       switch (role) {
         case 'guest':
-          navigate(routes.guestLanding);
+          path = routes.guestLanding;
           break;
 
         case 'host':
-          navigate(routes.hostLanding);
+          path = routes.hostLanding;
           break;
       }
+      navigate(path, { replace: true });
     }
-  }, [authenticated]);
+  }, [authenticated, location]);
+
+  // navigates to the given path and stores the current path for future redirect
+  // if the current path is not the literal login path
+  const navigateTo = (path: string) => {
+    const redirect =
+      location.pathname !== routes.login ? location.pathname : undefined;
+    navigate(path, { state: redirect });
+  };
 
   return (
     <Container className={className}>
@@ -118,8 +130,12 @@ function Login({ className }: LoginProps) {
         />
         <div />
         <SubmitButton type="submit">Login</SubmitButton>
-        <StyledLink to={routes.signUp}>Sign Up</StyledLink>
-        <StyledLink to="/forgot">Forgot Username / Password</StyledLink>
+        <Button type="button" onClick={() => navigateTo(routes.signUp)}>
+          Sign Up
+        </Button>
+        <Button type="button" onClick={() => navigateTo('/forgotPassword')}>
+          Forgot Username / Password
+        </Button>
       </FormContainer>
       {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
     </Container>
@@ -173,7 +189,11 @@ const SubmitButton = styled.button`
   }
 `;
 
-const StyledLink = styled(Link)`
+const Button = styled.button`
+  background-color: transparent;
+  padding: 0;
+  border: none;
+  width: fit-content;
   ${theme.font.bodyLink}
   font-size: smaller;
   color: ${theme.color.blue};
