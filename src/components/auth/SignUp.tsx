@@ -2,16 +2,19 @@ import styled from '@emotion/styled';
 import { Auth } from '@aws-amplify/auth';
 import { FormEvent, useContext, useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { routes } from '../..';
 import AppContext from '../../context/AppContext';
-import { theme } from '../../utils/styles';
 import InputField, {
   getInputValue,
   getTelephoneValue
 } from '../forms/InputField';
 import RadioField, { getRadioValue } from '../forms/RadioField';
-import { assignUserToRole } from './AuthUtils';
+import { assignUserToRole, redirectAfterLogin } from './AuthUtils';
 import { UserRole } from '../../utils/dtos';
+import AuthForm, {
+  OneColumnFormContainer,
+  SubmitButton,
+  TwoColumnFormContainer
+} from './AuthForm';
 
 export interface SignUpProps {
   className?: string;
@@ -25,8 +28,6 @@ function SignUp({ className }: SignUpProps) {
 
   // displays the confirmation code form when set to true
   const [confirming, setConfirming] = useState(false);
-  // set to true after confirmation code accepted
-  const [confirmed, setConfirmed] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
   const roleField = 'role';
@@ -85,7 +86,11 @@ function SignUp({ className }: SignUpProps) {
         });
 
         setErrorMessage('');
+      } catch (error) {
+        setErrorMessage(String(error));
+      }
 
+      if (signUpResult) {
         setUser({
           userId: signUpResult.userSub,
           firstName: enteredFirstName,
@@ -95,23 +100,10 @@ function SignUp({ className }: SignUpProps) {
           phone: enteredPhone,
           role: enteredRole as UserRole
         });
-      } catch (error) {
-        console.log('Error signing up: ', error);
-        setErrorMessage(String(error));
+        setConfirming(true);
       }
     }
   };
-
-  // displays sign up confirmation code form
-  useEffect(() => {
-    let subscribed = true;
-
-    subscribed && user && setConfirming(true);
-
-    return () => {
-      subscribed = false;
-    };
-  }, [user]);
 
   // handles confirmation code form submission
   const handleConfirm = async (e: FormEvent<HTMLFormElement>) => {
@@ -123,186 +115,95 @@ function SignUp({ className }: SignUpProps) {
           user.username,
           getInputValue(confirmationCodeField)
         );
-        setConfirmed(true);
+        setAuthenticated(true);
       } catch (error) {
-        console.log('Error when confirming: ', error);
         setErrorMessage(String(error));
       }
     }
   };
 
-  // assigns role to newly confirmed user
   useEffect(() => {
-    let subscribed = true;
-
-    if (user && confirmed) {
+    if (user && authenticated) {
+      // assign role to newly confirmed user
       assignUserToRole(user.username, user.role);
-      subscribed && setUser(user);
-      subscribed && setAuthenticated(true);
-    }
-
-    return () => {
-      subscribed = false;
-    };
-  }, [confirmed]);
-
-  useEffect(() => {
-    if (authenticated) {
-      let path: string = '/';
-
-      if (location.state) {
-        // redirect to a specific path set in state if it exists
-        path = location.state;
-      } else {
-        // otherwise redirect to one of the landing pages
-        switch (user?.role) {
-          case 'guest':
-            path = routes.guestLanding;
-            break;
-
-          case 'host':
-            path = routes.hostLanding;
-            break;
-        }
-      }
-      navigate(path, { replace: true });
+      redirectAfterLogin(location, navigate, user.role);
     }
   }, [authenticated, location]);
 
   return (
-    <Container className={className}>
-      <Logo src="/bmg-branding/BMG-Script-RdHrt.svg" />
-      <h1>Sign Up</h1>
-      {!confirming ? (
-        // eslint-disable-next-line @typescript-eslint/no-misused-promises
-        <FormContainer onSubmit={handleSubmit}>
-          <label>I am a...</label>
-          <RadioField
-            name={roleField}
-            options={['Guest', 'Host']}
-            defaultChecked="Guest"
-          />
-          <label>First Name</label>
-          <InputField
-            type="text"
-            name={firstNameField}
-            autoComplete="given-name"
-          />
-          <label>Last Name</label>
-          <InputField
-            type="text"
-            name={lastNameField}
-            autoComplete="family-name"
-          />
-          <label>Username</label>
-          <InputField
-            type="text"
-            name={usernameField}
-            autoComplete="username"
-          />
-          <label>Email</label>
-          <InputField type="email" name={emailField} autoComplete="email" />
-          <label>Password</label>
-          <InputField
-            type="password"
-            name={passwordField}
-            autoComplete="new-password"
-          />
-          <label>Confirm Password</label>
-          <InputField
-            type="password"
-            name={confirmPasswordField}
-            autoComplete="new-password"
-          />
-          <label>Phone</label>
-          <InputField type="tel" name={phoneField} />
-          <div />
-          <SubmitButton type="submit">Sign Up</SubmitButton>
-        </FormContainer>
-      ) : (
-        // eslint-disable-next-line @typescript-eslint/no-misused-promises
-        <ConfirmContainer onSubmit={handleConfirm}>
-          <div>
-            A confirmation code was sent to {user?.email ?? '[EMAIL]'}.
-            <br />
-            Enter the code here.
-          </div>
-          <InputField type="text" name={confirmationCodeField} />
-          <SubmitButton type="submit">Confirm</SubmitButton>
-        </ConfirmContainer>
-      )}
-      {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
-    </Container>
+    <AuthForm
+      className={className}
+      logo="/bmg-branding/BMG-Script-RdHrt.svg"
+      title="Sign Up"
+      errorMessage={errorMessage}
+      form={
+        <>
+          {!confirming ? (
+            // eslint-disable-next-line @typescript-eslint/no-misused-promises
+            <StyledTwoColumnFormContainer onSubmit={handleSubmit}>
+              <label>I am a...</label>
+              <RadioField
+                name={roleField}
+                options={['Guest', 'Host']}
+                defaultChecked="Guest"
+              />
+              <label>First Name</label>
+              <InputField
+                type="text"
+                name={firstNameField}
+                autoComplete="given-name"
+              />
+              <label>Last Name</label>
+              <InputField
+                type="text"
+                name={lastNameField}
+                autoComplete="family-name"
+              />
+              <label>Username</label>
+              <InputField
+                type="text"
+                name={usernameField}
+                autoComplete="username"
+              />
+              <label>Email</label>
+              <InputField type="email" name={emailField} autoComplete="email" />
+              <label>Password</label>
+              <InputField
+                type="password"
+                name={passwordField}
+                autoComplete="new-password"
+              />
+              <label>Confirm Password</label>
+              <InputField
+                type="password"
+                name={confirmPasswordField}
+                autoComplete="new-password"
+              />
+              <label>Phone</label>
+              <InputField type="tel" name={phoneField} />
+              <div />
+              <SubmitButton type="submit">Sign Up</SubmitButton>
+            </StyledTwoColumnFormContainer>
+          ) : (
+            // eslint-disable-next-line @typescript-eslint/no-misused-promises
+            <OneColumnFormContainer onSubmit={handleConfirm}>
+              <div>
+                A confirmation code was sent to {user?.email ?? '[EMAIL]'}.
+                <br />
+                Enter the code here.
+              </div>
+              <InputField type="text" name={confirmationCodeField} />
+              <SubmitButton type="submit">Confirm</SubmitButton>
+            </OneColumnFormContainer>
+          )}
+        </>
+      }
+    />
   );
 }
 
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 85%;
-  height: 100%;
-  ${theme.font.body}
-
-  h1 {
-    ${theme.font.displayXL}
-    margin-bottom: 32px;
-  }
-
-  ${theme.screen.small} {
-    width: 100%;
-  }
-`;
-
-const Logo = styled.img`
-  width: 256px;
-  margin-top: 32px;
-`;
-
-const FormContainer = styled.form`
-  display: grid;
-  grid-template-columns: max-content 1fr;
+const StyledTwoColumnFormContainer = styled(TwoColumnFormContainer)`
   grid-template-rows: auto repeat(8, 1fr);
-  gap: 8px 32px;
-  align-items: center;
-`;
-
-const ConfirmContainer = styled.form`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  row-gap: 32px;
-
-  div {
-    justify-content: center;
-
-    input {
-      text-align: center;
-    }
-  }
-`;
-
-const SubmitButton = styled.button`
-  height: 100%;
-  border: none;
-  padding: 8px;
-  border-radius: 4px;
-  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
-  ${theme.font.button};
-
-  background-color: ${theme.color.blue};
-  color: white;
-
-  :hover {
-    cursor: pointer;
-  }
-`;
-
-const ErrorMessage = styled.div`
-  color: red;
-  font-size: smaller;
-  margin-top: 16px;
 `;
 
 export default SignUp;
