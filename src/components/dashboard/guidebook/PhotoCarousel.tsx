@@ -1,4 +1,4 @@
-import styled from "@emotion/styled";
+import styled from '@emotion/styled';
 import Carousel from 'react-bootstrap/Carousel';
 function LightFadeCarousel() {
   return (
@@ -30,7 +30,7 @@ function LightFadeCarousel() {
   );
 }
 
-const Container = styled.div` 
+const Container = styled.div`
   align-items: center;
   justify-content: center;
   margin: 20px;

@@ -22,7 +22,7 @@ export interface GuidebookDto {
   pets: 'Allowed' | 'Not Allowed';
   amenities?: string[];
   propertyBio: string;
-  faq?: Array<{Question:string; Answer:string}>; 
+  faq?: Array<{ Question: string; Answer: string }>;
   // faq?: string[];
   policies?: string[];
   hostRecommended?: string[]; // change later from type any to HostRecommended object
