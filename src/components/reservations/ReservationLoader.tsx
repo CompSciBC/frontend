@@ -2,6 +2,7 @@ import {
   ReservationStatus,
   SortedReservationDetailSet
 } from '../../utils/dtos';
+import { server } from '../../index';
 
 /**
  * Loads reservation data for the current user
@@ -16,8 +17,9 @@ export default async function ReservationLoader() {
 
   // gets a sorted reservation detail set
   const response = await fetch(
-    `/api/reservations-by-status?index=${index}&id=${id}`
+    `${server!}/api/reservations-by-status?index=${index}&id=${id}`
   );
+
   const body = await response.json();
   const data: SortedReservationDetailSet = body.data[0];
 

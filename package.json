@@ -14,6 +14,7 @@
     "@types/react-dom": "^18.0.10",
     "aws-amplify": "^5.0.11",
     "axios": "^0.24.0",
+    "env-cmd": "^10.1.0",
     "http-proxy-middleware": "^2.0.6",
     "jwt-decode": "^3.1.2",
     "react": "^18.2.0",
@@ -27,7 +28,8 @@
     "lint": "eslint --fix --ext .ts,.tsx ./src",
     "format": "prettier --write \"{src,public}/**/*.{js,jsx,ts,tsx,html,css,json}\"",
     "start": "npm run lint && npm run format && react-scripts start",
-    "build": "npm run lint && npm run format && react-scripts build",
+    "build:development": "npm run lint && npm run format && env-cmd -f .env.development react-scripts build",
+    "build": "npm run lint && npm run format && env-cmd -f .env.production react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

@@ -10,7 +10,6 @@ function Home({ logo }: HomeProps) {
   console.log(process.env.REACT_APP_BUILD_ENV === 'prod');
   return (
     <Container>
-      <h1> Environment variable : {process.env.REACT_APP_BUILD_ENV}</h1>
       <h1>Welcome to</h1>
       <Logo src={logo} />
       <Description>

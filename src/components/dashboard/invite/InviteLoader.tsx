@@ -1,3 +1,4 @@
+import { server } from '../../../index';
 /**
  * Loads data for the invite page
  *
@@ -5,7 +6,7 @@
  */
 export default async function InviteLoader(): Promise<string> {
   const resId = 'test-res-1'; // TODO: replace hard coded resId
-  const response = await fetch(`/api/invites/${resId}/qr-code`);
+  const response = await fetch(`${server!}/api/invites/${resId}/qr-code`);
   const body = await response.json();
   return body.data[0];
 }

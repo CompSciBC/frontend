@@ -35,6 +35,11 @@ import config from './aws-exports';
 Amplify.configure(config);
 
 /**
+ * Backend API endpoint
+ */
+export const server = process.env.REACT_APP_BACKEND_API;
+
+/**
  * Contains the base route urls of the various pages in the app
  */
 export const routes = {
