@@ -7,7 +7,6 @@ interface HomeProps {
 }
 
 function Home({ logo }: HomeProps) {
-  console.log(process.env.REACT_APP_BUILD_ENV === 'prod');
   return (
     <Container>
       <h1>Welcome to</h1>
