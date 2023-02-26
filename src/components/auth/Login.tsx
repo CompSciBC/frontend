@@ -4,11 +4,19 @@ import { FormEvent, useContext, useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { routes } from '../..';
 import AppContext from '../../context/AppContext';
-import { theme } from '../../utils/styles';
 import InputField, { getInputValue } from '../forms/InputField';
 import RadioField, { getRadioValue } from '../forms/RadioField';
-import { assignUserToRole, getUserGroup } from './AuthUtils';
+import {
+  assignUserToRole,
+  getUserGroup,
+  redirectAfterLogin
+} from './AuthUtils';
 import { UserRole } from '../../utils/dtos';
+import AuthForm, {
+  LinkButton,
+  SubmitButton,
+  TwoColumnFormContainer
+} from './AuthForm';
 
 export interface LoginProps {
   className?: string;
@@ -41,17 +49,17 @@ function Login({ className }: LoginProps) {
       );
       setErrorMessage('');
     } catch (error) {
-      console.log('Error signing in: ', error);
       setErrorMessage('The username or password is incorrect.');
     }
 
     if (authUser) {
-      setRole(getRadioValue(roleField).toLowerCase() as UserRole);
+      const selectedRole = getRadioValue(roleField).toLowerCase() as UserRole;
+      setRole(selectedRole);
 
       let userGroup = getUserGroup(authUser);
       if (typeof userGroup === 'boolean') {
-        userGroup = [role];
-        assignUserToRole(authUser.getUsername(), role);
+        userGroup = selectedRole;
+        assignUserToRole(authUser.getUsername(), userGroup);
       }
 
       const userAttributes = await Auth.userAttributes(authUser);
@@ -59,45 +67,22 @@ function Login({ className }: LoginProps) {
       const getAttribute = (name: string) =>
         userAttributes.find((a) => a.getName() === name)?.getValue() ?? '';
 
-      const userId = getAttribute('sub'); // sub = userId assigned by cognito
-      const firstName = getAttribute('given_name');
-      const lastName = getAttribute('family_name');
-      const email = getAttribute('email');
-      const phone = getAttribute('phone_number');
-      const username = authUser.getUsername();
-
-      if (userId) {
-        setUser({
-          userId,
-          username,
-          firstName,
-          lastName,
-          email,
-          phone,
-          role: userGroup[0]
-        });
-        setAuthenticated(true);
-      }
+      setUser({
+        userId: getAttribute('sub'), // sub = userId assigned by cognito
+        username: authUser.getUsername(),
+        firstName: getAttribute('given_name'),
+        lastName: getAttribute('family_name'),
+        email: getAttribute('email'),
+        phone: getAttribute('phone_number'),
+        role: userGroup
+      });
+      setAuthenticated(true);
     }
   };
 
+  // redirect after successful login
   useEffect(() => {
-    // redirect to a landing if at the literal login route
-    if (authenticated && location.pathname === routes.login) {
-      let path: string = '/';
-
-      // the role selected by the radio button
-      switch (role) {
-        case 'guest':
-          path = routes.guestLanding;
-          break;
-
-        case 'host':
-          path = routes.hostLanding;
-          break;
-      }
-      navigate(path, { replace: true });
-    }
+    if (authenticated) redirectAfterLogin(location, navigate, role);
   }, [authenticated, location]);
 
   // navigates to the given path and stores the current path for future redirect
@@ -109,101 +94,53 @@ function Login({ className }: LoginProps) {
   };
 
   return (
-    <Container className={className}>
-      <Logo src="/bmg-branding/BMG-Script-RdHrt.svg" />
-      <h1>Login</h1>
-      {/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}
-      <FormContainer onSubmit={handleSubmit}>
-        <div />
-        <RadioField
-          name={roleField}
-          options={['Guest', 'Host']}
-          defaultChecked="Guest"
-        />
-        <label>Username</label>
-        <InputField type="text" name={usernameField} autoComplete="username" />
-        <label>Password</label>
-        <InputField
-          type="password"
-          name={passwordField}
-          autoComplete="current-password"
-        />
-        <div />
-        <SubmitButton type="submit">Login</SubmitButton>
-        <Button type="button" onClick={() => navigateTo(routes.signUp)}>
-          Sign Up
-        </Button>
-        <Button type="button" onClick={() => navigateTo('/forgotPassword')}>
-          Forgot Username / Password
-        </Button>
-      </FormContainer>
-      {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
-    </Container>
+    <AuthForm
+      className={className}
+      logo="/bmg-branding/BMG-Script-RdHrt.svg"
+      title="Login"
+      errorMessage={errorMessage}
+      form={
+        <>
+          {/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}
+          <StyledTwoColumnFormContainer onSubmit={handleSubmit}>
+            <div />
+            <RadioField
+              name={roleField}
+              options={['Guest', 'Host']}
+              defaultChecked="Guest"
+            />
+            <label>Username</label>
+            <InputField
+              type="text"
+              name={usernameField}
+              autoComplete="username"
+            />
+            <label>Password</label>
+            <InputField
+              type="password"
+              name={passwordField}
+              autoComplete="current-password"
+            />
+            <div />
+            <SubmitButton type="submit">Login</SubmitButton>
+            <LinkButton type="button" onClick={() => navigateTo(routes.signUp)}>
+              Sign Up
+            </LinkButton>
+            <LinkButton
+              type="button"
+              onClick={() => navigateTo(routes.forgotPassword)}
+            >
+              Forgot Username / Password
+            </LinkButton>
+          </StyledTwoColumnFormContainer>
+        </>
+      }
+    />
   );
 }
 
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 85%;
-  height: 100%;
-  ${theme.font.body}
-
-  h1 {
-    ${theme.font.displayXL}
-    margin-bottom: 32px;
-  }
-
-  ${theme.screen.small} {
-    width: 100%;
-  }
-`;
-
-const Logo = styled.img`
-  width: 256px;
-  margin-top: 32px;
-`;
-
-const FormContainer = styled.form`
-  display: grid;
-  grid-template-columns: max-content 1fr;
+const StyledTwoColumnFormContainer = styled(TwoColumnFormContainer)`
   grid-template-rows: auto repeat(4, 1fr);
-  gap: 8px 32px;
-  align-items: center;
-`;
-
-const SubmitButton = styled.button`
-  height: 100%;
-  border: none;
-  padding: 8px;
-  border-radius: 4px;
-  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
-  ${theme.font.button};
-
-  background-color: ${theme.color.blue};
-  color: white;
-
-  :hover {
-    cursor: pointer;
-  }
-`;
-
-const Button = styled.button`
-  background-color: transparent;
-  padding: 0;
-  border: none;
-  width: fit-content;
-  ${theme.font.bodyLink}
-  font-size: smaller;
-  color: ${theme.color.blue};
-  text-decoration: none;
-`;
-
-const ErrorMessage = styled.div`
-  color: red;
-  font-size: smaller;
-  margin-top: 16px;
 `;
 
 export default Login;
