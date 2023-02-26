@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 import { Invitation } from '../../../utils/dtos';
 import { theme } from '../../../utils/styles';
+
 import { server } from '../../../index';
 
 export interface SendInviteFormProps {

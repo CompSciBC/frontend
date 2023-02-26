@@ -39,6 +39,11 @@ function Home({ logo }: HomeProps) {
       <Link to="/hostLanding">
         <CallToActionButton>I am a Host</CallToActionButton>
       </Link>
+      <Link to="/restaurants">
+        <CallToActionButton>
+          View Restaurants to show that backend connection works
+        </CallToActionButton>
+      </Link>
     </Container>
   );
 }
