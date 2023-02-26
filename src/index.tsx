@@ -8,6 +8,7 @@ import Home from './components/home/Home';
 import About from './components/about/About';
 import Login from './components/auth/Login';
 import SignUp from './components/auth/SignUp';
+import ForgotPassword from './components/auth/ForgotPassword';
 import Logout from './components/auth/Logout';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 import HostLanding from './components/home/HostLanding';
@@ -43,6 +44,7 @@ export const routes = {
   about: '/about',
   login: '/login',
   signUp: '/signUp',
+  forgotPassword: '/forgotPassword',
   logout: '/logout',
   hostLanding: '/hostLanding',
   guestLanding: '/guestLanding',
@@ -135,6 +137,10 @@ const router = createBrowserRouter([
       {
         path: routes.signUp,
         element: <SignUp />
+      },
+      {
+        path: routes.forgotPassword,
+        element: <ForgotPassword />
       },
       {
         element: <ProtectedRoute />,
