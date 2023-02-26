@@ -1,37 +1,35 @@
-import { memo, useEffect, useState } from 'react';
-import { useParams } from 'react-router';
+import { memo, useContext, useEffect, useState } from 'react';
+import AppContext from '../../../context/AppContext';
 import { paramRoute, routes } from '../../..';
-import { Address, EventOrPlace } from '../../../utils/dtos';
+import { EventOrPlace } from '../../../utils/dtos';
 import { DashboardCellProps } from '../Dashboard';
 import DashboardCellWrapper from '../DashboardCellWrapper';
 import ImagePreview from '../ImagePreview';
 import getEventsAndPlaces from './getEventsAndPlaces';
 
 export interface EventsAndPlacesCellProps extends DashboardCellProps {
-  address: Address;
   n: number;
 }
 
-function EventsAndPlacesCell({
-  className,
-  cell,
-  address,
-  n
-}: EventsAndPlacesCellProps) {
-  const { resId } = useParams();
+function EventsAndPlacesCell({ className, cell, n }: EventsAndPlacesCellProps) {
+  const { reservationDetail } = useContext(AppContext);
   const [eventsAndPlaces, setEventsAndPlaces] = useState<EventOrPlace[]>([]);
 
   useEffect(() => {
     let subscribed = true;
 
     (async function () {
-      subscribed && setEventsAndPlaces(await getEventsAndPlaces(address, n));
+      subscribed &&
+        reservationDetail &&
+        setEventsAndPlaces(
+          await getEventsAndPlaces(reservationDetail.property.address, n)
+        );
     })();
 
     return () => {
       subscribed = false;
     };
-  }, [resId]);
+  }, [reservationDetail]);
 
   return (
     <DashboardCellWrapper
@@ -40,7 +38,10 @@ function EventsAndPlacesCell({
       child={
         <ImagePreview
           title="Events and Places"
-          viewMoreLink={paramRoute(routes.eventsAndPlaces, resId)}
+          viewMoreLink={paramRoute(
+            routes.eventsAndPlaces,
+            reservationDetail?.id
+          )}
           previewSlides={eventsAndPlaces.map((e) => {
             return {
               image: e.imageUrl,

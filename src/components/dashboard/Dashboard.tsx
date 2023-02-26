@@ -1,7 +1,6 @@
 import styled from '@emotion/styled';
 import { useEffect, useMemo, useState, useContext } from 'react';
 import AppContext from '../../context/AppContext';
-import { Address, ReservationDetail } from '../../utils/dtos';
 import InfoCell from './InfoCell';
 import CheckInCell from './checkIn/CheckInCell';
 import GuidebookCell from './guidebook/GuidebookCell';
@@ -32,28 +31,14 @@ const review = 'review';
 
 function Dashboard() {
   const { reservationDetail } = useContext(AppContext);
-  const { checkIn, checkOut, address } = reservationDetail as ReservationDetail;
 
-  // TODO: get from reservation object (which should have an Address type field instead of string)
-  const fakeAddress: Address = {
-    line1: '12331 23rd Ave NE',
-    city: 'Seattle',
-    stateProvince: 'WA',
-    postalCode: '98155',
-    country: 'USA'
-  };
-
-  const infoCell = <InfoCell address={address} cell={info} />;
-  const checkCell = (
-    <CheckInCell checkIn={checkIn} checkOut={checkOut} cell={check} />
-  );
+  const infoCell = <InfoCell cell={info} />;
+  const checkCell = <CheckInCell cell={check} />;
   const guideCell = <GuidebookCell cell={guide} />;
   const inviteCell = <InviteCell cell={invite} />;
   const weatherCell = <WeatherCell cell={weather} />;
-  const restCell = <RestaurantsCell address={fakeAddress} n={2} cell={rest} />;
-  const eventCell = (
-    <EventsAndPlacesCell address={fakeAddress} n={2} cell={event} />
-  );
+  const restCell = <RestaurantsCell n={2} cell={rest} />;
+  const eventCell = <EventsAndPlacesCell n={2} cell={event} />;
   const chatCell = <ChatCell cell={chat} />;
   const chatPreviewCell = <ChatPreview n={3} cell={chat} />;
   const mapCell = <MapCell cell={map} />;
@@ -133,7 +118,7 @@ function Dashboard() {
     }
 
     return container;
-  }, [width]);
+  }, [width, reservationDetail]);
 
   return layout;
 }

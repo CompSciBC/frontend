@@ -1,26 +1,31 @@
-import { useContext, useEffect } from 'react';
-import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom';
-import { paramRoute } from '../..';
+import { useContext, useEffect, useState } from 'react';
+import { Outlet, useParams } from 'react-router-dom';
 import AppContext from '../../context/AppContext';
+import ErrorPage from '../ErrorPage';
 import Login from './Login';
 
 function ProtectedRoute() {
   const { authenticated, reservationDetail } = useContext(AppContext);
   const { resId } = useParams();
-  const location = useLocation();
-  const navigate = useNavigate();
+  const [element, setElement] = useState<JSX.Element>(<></>);
 
-  // checks if no path variable was passed to a :resId parameterized route
-  // if no variable was passed and a resId is available in context, navigate there
   useEffect(() => {
-    if (resId === ':resId' && reservationDetail?.id) {
-      navigate(paramRoute(location.pathname, reservationDetail.id), {
-        replace: true
-      });
-    } // TODO: else go to error page
-  }, [location]);
+    let subscribed = true;
 
-  return authenticated ? <Outlet /> : <Login />;
+    if (!authenticated) {
+      subscribed && setElement(<Login />);
+    } else if (!resId || reservationDetail?.id === resId) {
+      subscribed && setElement(<Outlet />);
+    } else {
+      subscribed && setElement(<ErrorPage />);
+    }
+
+    return () => {
+      subscribed = false;
+    };
+  }, [authenticated, resId, reservationDetail]);
+
+  return element;
 }
 
 export default ProtectedRoute;
