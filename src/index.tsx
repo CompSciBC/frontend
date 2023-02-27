@@ -36,6 +36,17 @@ import ErrorPage from './components/ErrorPage';
 Amplify.configure(config);
 
 /**
+ * Configure Backend API endpoint
+ */
+let endpoint;
+if (process.env.REACT_APP_ENV === 'prod') {
+  endpoint = 'https://bmgalb-1523887164.us-west-2.elb.amazonaws.com:8080';
+} else {
+  endpoint = 'http://localhost:8080';
+}
+export const server = endpoint;
+
+/**
  * Contains the base route urls of the various pages in the app
  */
 export const routes = {
