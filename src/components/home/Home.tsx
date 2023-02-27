@@ -8,6 +8,7 @@ interface HomeProps {
 function Home({ logo }: HomeProps) {
   return (
     <Container>
+      <h1>process.env.REACT_APP_ENV === {process.env.REACT_APP_ENV}</h1>
       <h1>Welcome to</h1>
       <Logo src={logo} />
       <Description>
