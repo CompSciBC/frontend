@@ -8,6 +8,7 @@ import {
 import { theme } from '../../utils/styles';
 import AccordionDropdown from './AccordionDropdown';
 import ReservationCard from './ReservationCard';
+import { server } from '../../index';
 
 function Reservations() {
   const { user } = useContext(AppContext);
@@ -28,7 +29,7 @@ function Reservations() {
 
         // gets a sorted reservation detail set
         const response = await fetch(
-          `/api/reservations-by-status?index=${index!}&id=${id}`
+          `${server}/api/reservations-by-status?index=${index!}&id=${id}`
         );
         const body = await response.json();
         const data: SortedReservationDetailSet = body.data[0];
