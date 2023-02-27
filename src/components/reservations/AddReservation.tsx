@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from 'react';
 import AppContext from '../../context/AppContext';
-import { useNavigate, useParams } from 'react-router';
+import { useNavigate, useParams } from 'react-router-dom';
 import { paramRoute, routes } from '../..';
 import { Reservation } from '../../utils/dtos';
 

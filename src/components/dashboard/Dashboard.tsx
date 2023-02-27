@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 import { useEffect, useMemo, useState, useContext } from 'react';
 import AppContext from '../../context/AppContext';
+import { useParams } from 'react-router-dom';
 import InfoCell from './InfoCell';
 import CheckInCell from './checkIn/CheckInCell';
 import GuidebookCell from './guidebook/GuidebookCell';
@@ -30,6 +31,7 @@ const map = 'map';
 const review = 'review';
 
 function Dashboard() {
+  const { resId } = useParams();
   const { reservationDetail } = useContext(AppContext);
 
   const infoCell = <InfoCell cell={info} />;
@@ -66,7 +68,11 @@ function Dashboard() {
   const layout = useMemo(() => {
     let container: JSX.Element;
 
-    if (width <= 700) {
+    if (reservationDetail?.id !== resId) {
+      // prevent split-second flash of dashboard components while reservationDetail loads;
+      // i.e., display a blank screen
+      container = <></>;
+    } else if (width <= 700) {
       container = (
         <SmallScreenContainer>
           {infoCell}
@@ -118,7 +124,7 @@ function Dashboard() {
     }
 
     return container;
-  }, [width, reservationDetail]);
+  }, [width, resId, reservationDetail]);
 
   return layout;
 }
