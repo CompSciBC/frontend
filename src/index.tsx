@@ -25,6 +25,7 @@ import Weather from './components/dashboard/weather/Weather';
 import Restaurants from './components/dashboard/restaurants/Restaurants';
 import EventsAndPlaces from './components/dashboard/eventsAndPlaces/EventsAndPlaces';
 import Map from './components/dashboard/map/Map';
+import SurveyView from './components/dashboard/review/SurveyComponent';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
 import AppTestMode from './components/AppTestMode';
@@ -202,6 +203,10 @@ const router = createBrowserRouter([
           {
             path: routes.map,
             element: <Map />
+          },
+          {
+            path: routes.review,
+            element: <SurveyView />
           }
         ]
       }

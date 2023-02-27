@@ -1,10 +1,6 @@
 export const guestSurveyJson = {
   title: 'Guest Experience Feedback Survey',
   description: 'Your opinion matters to us!',
-  logo: 'images/bmg-logo-black.png',
-  logoFit: 'cover',
-  logoPosition: 'right',
-  logoHeight: '100px',
   elements: [
     {
       type: 'panel',
