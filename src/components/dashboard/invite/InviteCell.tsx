@@ -1,0 +1,26 @@
+import styled from '@emotion/styled';
+import { theme } from '../../../utils/styles';
+import { memo, useContext } from 'react';
+import AppContext from '../../../context/AppContext';
+import { paramRoute, routes } from '../../..';
+import { DashboardCellProps } from '../Dashboard';
+import DashboardCellClickable from '../DashboardCellClickable';
+
+function InviteCell({ className, cell }: DashboardCellProps) {
+  const { reservationDetail } = useContext(AppContext);
+
+  return (
+    <Container
+      className={className}
+      cell={cell}
+      to={paramRoute(routes.invite, reservationDetail?.id)}
+      child={'Invite'}
+    />
+  );
+}
+
+const Container = styled(DashboardCellClickable)`
+  background-color: ${theme.color.purple};
+`;
+
+export default memo(InviteCell);

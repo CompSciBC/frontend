@@ -1,13 +1,13 @@
 import styled from '@emotion/styled';
-import { Link, RouteObject } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { routes } from '../../index';
 import { theme } from '../../utils/styles';
-import Navbar from './Navbar';
+import Navbar, { NavbarLink } from './Navbar';
 
 interface HeaderProps {
   className?: string;
   logo: string;
-  navLinks?: RouteObject[];
+  navLinks?: NavbarLink[];
 }
 
 function Header({ className, logo, navLinks }: HeaderProps) {
@@ -19,7 +19,7 @@ function Header({ className, logo, navLinks }: HeaderProps) {
             <img src={logo} alt="logo" />
           </Logo>
           <Menu className="Menu">
-            <img src="bmg-branding/Menu.svg" alt="Hamb. Menu" />
+            <img src="/bmg-branding/Menu.svg" alt="Hamb. Menu" />
           </Menu>
         </IconHomeLinkFrame>
 

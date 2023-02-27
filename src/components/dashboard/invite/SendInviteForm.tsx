@@ -1,11 +1,12 @@
 import styled from '@emotion/styled';
 import { Invitation } from '../../../utils/dtos';
 import { theme } from '../../../utils/styles';
-
 import { server } from '../../../index';
 
 export interface SendInviteFormProps {
   className?: string;
+  resId: string;
+  userName: string;
   onClose: CallableFunction;
 }
 
@@ -15,11 +16,12 @@ export interface SendInviteFormProps {
  * @param props {@link SendInviteFormProps}
  * @returns A JSX element
  */
-function SendInviteForm({ className, onClose }: SendInviteFormProps) {
-  // TODO: replace hardcoded values
-  const guestName = 'GUEST NAME';
-  const resId = 'test-res';
-
+function SendInviteForm({
+  className,
+  resId,
+  userName,
+  onClose
+}: SendInviteFormProps) {
   const recipientsInputId = 'invite-recipients';
   const messageInputId = 'invite-message';
 
@@ -32,7 +34,7 @@ function SendInviteForm({ className, onClose }: SendInviteFormProps) {
   const sendInvitations = async (invite: Invitation): Promise<boolean> => {
     const send = async () => {
       const response = await fetch(
-        `${server!}/api/invites/${resId}/send-email`,
+        `${server}/api/invites/${resId}/send-email`,
         {
           method: 'post',
           headers: {
@@ -68,7 +70,7 @@ function SendInviteForm({ className, onClose }: SendInviteFormProps) {
 
       const invite: Invitation = {
         recipients: recipients.split(','),
-        guestName,
+        guestName: userName,
         message: messageInput?.value
       };
 
