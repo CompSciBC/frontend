@@ -15,6 +15,7 @@ import HostLanding from './components/home/HostLanding';
 import GuestLanding from './components/home/GuestLanding';
 import Profile from './components/profile/Profile';
 import Reservations from './components/reservations/Reservations';
+import AddReservation from './components/reservations/AddReservation';
 import Dashboard from './components/dashboard/Dashboard';
 import Guidebook from './components/dashboard/guidebook/Guidebook';
 import GuidebookLoader from './components/dashboard/guidebook/GuidebookLoader';
@@ -31,6 +32,7 @@ import AppTestMode from './components/AppTestMode';
 // Configure React project with Amplify resources
 import { Amplify } from 'aws-amplify';
 import config from './aws-exports';
+import ErrorPage from './components/ErrorPage';
 Amplify.configure(config);
 
 /**
@@ -38,6 +40,7 @@ Amplify.configure(config);
  */
 export const routes = {
   home: '/',
+  error: '/error',
   about: '/about',
   login: '/login',
   signUp: '/signUp',
@@ -47,6 +50,7 @@ export const routes = {
   guestLanding: '/guestLanding',
   profile: '/profile',
   reservations: '/reservations',
+  addReservation: '/reservations/add/:resId',
   dashboard: '/reservations/:resId/dashboard',
   guidebook: '/reservations/:resId/guidebook',
   invite: '/reservations/:resId/invite',
@@ -115,7 +119,7 @@ const router = createBrowserRouter([
         <AppTestMode />
       </AppContextProvider>
     ),
-    errorElement: <>Error Page</>, // TODO: create error page
+    errorElement: <ErrorPage />,
     children: [
       {
         path: routes.home,
@@ -160,6 +164,10 @@ const router = createBrowserRouter([
           {
             path: routes.reservations,
             element: <Reservations />
+          },
+          {
+            path: routes.addReservation,
+            element: <AddReservation />
           },
           {
             path: routes.dashboard,

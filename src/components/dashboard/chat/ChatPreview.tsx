@@ -1,12 +1,13 @@
 import styled from '@emotion/styled';
-import { memo, useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { theme } from '../../../utils/styles';
+import { memo, useContext, useEffect, useState } from 'react';
+import AppContext from '../../../context/AppContext';
+import { Link } from 'react-router-dom';
 import { paramRoute, routes } from '../../..';
 import { Message } from '../../../utils/dtos';
-import { theme } from '../../../utils/styles';
-import ChevronDown from '../../reservations/ChevronDown';
 import { DashboardCellProps } from '../Dashboard';
 import DashboardCellWrapper from '../DashboardCellWrapper';
+import ChevronDown from '../../reservations/ChevronDown';
 import getMessages from './getChatMessages';
 
 export interface ChatPreviewProps extends DashboardCellProps {
@@ -20,20 +21,22 @@ export interface ChatPreviewProps extends DashboardCellProps {
  * @returns A JSX element
  */
 function ChatPreview({ className, cell, n }: ChatPreviewProps) {
-  const { resId } = useParams();
+  const { reservationDetail } = useContext(AppContext);
   const [messages, setMessages] = useState<Message[]>([]);
 
   useEffect(() => {
     let subscribed = true;
 
     (async function () {
-      subscribed && setMessages(await getMessages(resId!, n));
+      subscribed &&
+        reservationDetail &&
+        setMessages(await getMessages(reservationDetail.id, n));
     })();
 
     return () => {
       subscribed = false;
     };
-  }, [resId]); // TODO: this should update whenever new messages arrive
+  }, [reservationDetail]); // TODO: this should update whenever new messages arrive
 
   return (
     <Container
@@ -43,7 +46,7 @@ function ChatPreview({ className, cell, n }: ChatPreviewProps) {
         <>
           <Header>
             <div>Chat</div>
-            <GoToChatButton to={paramRoute(routes.chat, resId)}>
+            <GoToChatButton to={paramRoute(routes.chat, reservationDetail?.id)}>
               <ChevronDown fill="white" width={24} />
             </GoToChatButton>
           </Header>

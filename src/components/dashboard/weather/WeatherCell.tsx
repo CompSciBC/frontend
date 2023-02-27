@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
-import { memo, useEffect, useState } from 'react';
-import { useParams } from 'react-router';
+import { memo, useContext, useEffect, useState } from 'react';
+import AppContext from '../../../context/AppContext';
 import { paramRoute, routes } from '../../..';
 import { Forecast } from '../../../utils/dtos';
 import { DashboardCellProps } from '../Dashboard';
@@ -10,7 +10,7 @@ import getWeatherForecast from './getWeatherForecast';
 import WeatherForecastTile from './WeatherForecastTile';
 
 function WeatherCell({ className, cell }: DashboardCellProps) {
-  const { resId } = useParams();
+  const { reservationDetail } = useContext(AppContext);
   const [forecast, setForecast] = useState<Forecast[]>([]);
 
   useEffect(() => {
@@ -23,14 +23,16 @@ function WeatherCell({ className, cell }: DashboardCellProps) {
     return () => {
       subscribed = false;
     };
-  }, [resId]);
+  }, [reservationDetail]);
 
   return (
     <Container
       className={className}
       cell={cell}
       child={
-        <DashboardCellLink to={paramRoute(routes.weather, resId)}>
+        <DashboardCellLink
+          to={paramRoute(routes.weather, reservationDetail?.id)}
+        >
           {forecast.map((f) => (
             <WeatherForecastTile
               key={f.timestamp}

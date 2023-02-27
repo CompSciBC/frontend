@@ -1,18 +1,18 @@
 import styled from '@emotion/styled';
-import { memo } from 'react';
-import { useParams } from 'react-router';
+import { memo, useContext } from 'react';
+import AppContext from '../../../context/AppContext';
 import { paramRoute, routes } from '../../..';
 import { DashboardCellProps } from '../Dashboard';
 import DashboardCellClickable from '../DashboardCellClickable';
 
 function MapCell({ className, cell }: DashboardCellProps) {
-  const { resId } = useParams();
+  const { reservationDetail } = useContext(AppContext);
 
   return (
     <Container
       className={className}
       cell={cell}
-      to={paramRoute(routes.map, resId)}
+      to={paramRoute(routes.map, reservationDetail?.id)}
       img={'/images/maps-button.png'}
     />
   );

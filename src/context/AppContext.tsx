@@ -1,5 +1,6 @@
 import { createContext, ReactNode, useEffect, useState } from 'react';
-import { ReservationDetail, User } from '../utils/dtos';
+import { useParams } from 'react-router-dom';
+import { Property, Reservation, ReservationDetail, User } from '../utils/dtos';
 
 export interface AppContextType {
   authenticated: boolean;
@@ -75,6 +76,46 @@ export function AppContextProvider({ children }: { children: ReactNode }) {
       JSON.stringify(reservationDetail)
     );
   }, [reservationDetail]);
+
+  const { resId } = useParams();
+  useEffect(() => {
+    let subscribed = true;
+
+    if (resId && resId !== ':resId') {
+      (async function () {
+        if (!reservationDetail || reservationDetail.id !== resId) {
+          let reservation: Reservation | null = null;
+          let property: Property | null = null;
+
+          reservation = await fetch(`/api/reservations/${resId}?primary=true`)
+            .then(async (r) => await r.json())
+            .then((r) => r.data[0])
+            .catch(() => null);
+
+          if (reservation) {
+            property = await fetch(`/api/properties/${reservation.propertyId}`)
+              .then(async (p) => await p.json())
+              .then((p) => p.data[0])
+              .catch(() => null);
+          }
+
+          if (reservation && property) {
+            subscribed &&
+              setReservationDetail({
+                ...reservation,
+                property
+              });
+          } else {
+            subscribed && setReservationDetail(null);
+          }
+        }
+      })();
+    }
+
+    return () => {
+      subscribed = true;
+    };
+  }, [resId]);
 
   // purge all saved state (triggers useEffects to update local storage as well)
   const clearAppContext = () => {

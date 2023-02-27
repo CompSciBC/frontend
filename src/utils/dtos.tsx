@@ -44,7 +44,7 @@ export interface Property {
   id?: string;
   hostId: string;
   name: string;
-  address: string; // TODO: convert to Address type
+  address: Address;
   image?: string; // TODO: add to backend
 }
 
@@ -90,8 +90,7 @@ export interface Reservation {
  * (matching ReservationDetail.java)
  */
 export interface ReservationDetail extends Reservation {
-  propertyName: string;
-  address: string; // TODO: convert to Address type
+  property: Property;
   image?: string;
 }
 

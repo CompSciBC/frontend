@@ -1,20 +1,51 @@
 import styled from '@emotion/styled';
-import { memo } from 'react';
+import { theme } from '../../utils/styles';
+import { memo, useContext } from 'react';
+import AppContext from '../../context/AppContext';
 import { DashboardCellProps } from './Dashboard';
 import DashboardCellWrapper from './DashboardCellWrapper';
 
-export interface InfoCellProps extends DashboardCellProps {
-  address: string;
-}
+function InfoCell({ className, cell }: DashboardCellProps) {
+  const { reservationDetail } = useContext(AppContext);
 
-function ReviewCell({ className, cell, address }: InfoCellProps) {
-  return <Container className={className} cell={cell} child={address} />;
+  return (
+    <Container
+      className={className}
+      cell={cell}
+      child={
+        reservationDetail && (
+          <>
+            <PropertyName>{reservationDetail.property.name}</PropertyName>
+            <PropertyAddress>
+              {reservationDetail.property.address.line1}{' '}
+              {reservationDetail.property.address.line2}
+            </PropertyAddress>
+          </>
+        )
+      }
+    />
+  );
 }
 
 const Container = styled(DashboardCellWrapper)`
+  flex-direction: column;
   padding: 8px;
   background-color: white;
   border: 1px solid black;
 `;
 
-export default memo(ReviewCell);
+const TextBox = styled.div`
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+`;
+
+const PropertyName = styled(TextBox)`
+  ${theme.font.displayLarge}
+`;
+
+const PropertyAddress = styled(TextBox)`
+  ${theme.font.displaySmall}
+`;
+
+export default memo(InfoCell);

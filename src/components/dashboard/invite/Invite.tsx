@@ -1,8 +1,7 @@
 import styled from '@emotion/styled';
-import { useEffect, useState, useContext } from 'react';
-import { useParams } from 'react-router-dom';
-import AppContext from '../../../context/AppContext';
 import { theme } from '../../../utils/styles';
+import { useEffect, useState, useContext } from 'react';
+import AppContext from '../../../context/AppContext';
 import Modal from '../../Modal';
 import SendInviteForm from './SendInviteForm';
 
@@ -17,8 +16,7 @@ export interface InviteProps {
  * @returns A JSX element
  */
 function Invite({ className }: InviteProps) {
-  const { resId } = useParams();
-  const { user } = useContext(AppContext);
+  const { user, reservationDetail } = useContext(AppContext);
   const [qrCodeUrl, setQrCodeUrl] = useState('');
   const [emailFormOpen, setEmailFormOpen] = useState(false);
 
@@ -26,8 +24,10 @@ function Invite({ className }: InviteProps) {
     let subscribed = true;
 
     (async function () {
-      if (resId) {
-        const response = await fetch(`/api/invites/${resId}/qr-code`);
+      if (reservationDetail) {
+        const response = await fetch(
+          `/api/invites/${reservationDetail.id}/qr-code`
+        );
         const body = await response.json();
 
         subscribed && setQrCodeUrl(body.data[0]);
@@ -37,7 +37,7 @@ function Invite({ className }: InviteProps) {
     return () => {
       subscribed = false;
     };
-  }, [resId]);
+  }, [reservationDetail]);
 
   return (
     <Container className={className}>
@@ -52,12 +52,12 @@ function Invite({ className }: InviteProps) {
           Send via Email
         </InviteButton>
         <InviteButton type="button">Send via SMS</InviteButton>
-        {emailFormOpen && (
+        {emailFormOpen && reservationDetail && (
           <Modal
             content={
               <SendInviteForm
                 onClose={() => setEmailFormOpen(false)}
-                resId={resId!}
+                resId={reservationDetail.id}
                 userName={user?.username ?? 'Your friend'}
               />
             }

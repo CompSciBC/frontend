@@ -1,19 +1,19 @@
 import styled from '@emotion/styled';
-import { memo } from 'react';
 import { theme } from '../../../utils/styles';
-import { useParams } from 'react-router';
+import { memo, useContext } from 'react';
+import AppContext from '../../../context/AppContext';
 import { paramRoute } from '../../..';
 import { DashboardCellProps } from '../Dashboard';
 import DashboardCellClickable from '../DashboardCellClickable';
 
 function ReviewCell({ className, cell }: DashboardCellProps) {
-  const { resId } = useParams();
+  const { reservationDetail } = useContext(AppContext);
 
   return (
     <Container
       className={className}
       cell={cell}
-      to={paramRoute('/review', resId)} // TODO: replace route
+      to={paramRoute('/review', reservationDetail?.id)} // TODO: replace route
       child={'Review'}
     />
   );
