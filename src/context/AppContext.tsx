@@ -88,13 +88,17 @@ export function AppContextProvider({ children }: { children: ReactNode }) {
           let reservation: Reservation | null = null;
           let property: Property | null = null;
 
-          reservation = await fetch(`${server}/api/reservations/${resId}?primary=true`)
+          reservation = await fetch(
+            `${server}/api/reservations/${resId}?primary=true`
+          )
             .then(async (r) => await r.json())
             .then((r) => r.data[0])
             .catch(() => null);
 
           if (reservation) {
-            property = await fetch(`${server}/api/properties/${reservation.propertyId}`)
+            property = await fetch(
+              `${server}/api/properties/${reservation.propertyId}`
+            )
               .then(async (p) => await p.json())
               .then((p) => p.data[0])
               .catch(() => null);
