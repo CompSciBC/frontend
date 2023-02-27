@@ -44,28 +44,29 @@ function Dashboard() {
   const mapCell = <MapCell cell={map} />;
 
   // // If reservation is in the past, hide review button if guest did not submit a review
-  const [reviewCell, setReviewCell] = useState<JSX.Element>(<ReviewCell cell={review} />);
+  // const [reviewCell, setReviewCell] = useState<JSX.Element>();
   const reservationId = reservationDetail?.id;
   const checkInDate = reservationDetail?.checkIn;
   const checkOutDate = reservationDetail?.checkOut;
   const guestId = user?.userId;
-  useEffect(() => {
-    (async function () {
-      // If reservation is in the future, hide review button
-      if (Date.parse(checkInDate!) > Date.now()){
-        setReviewCell(<></>);
+  let reviewCell:JSX.Element;
+  // If reservation is in the past
+  if (Date.parse(checkOutDate!) < Date.now()) {
+    console.log('Reservation is in the past');
+    fetch(`/api/survey/${reservationId!}/${guestId!}/find-survey`).then((response) => {
+      if (response.status === 200){
+        console.log('Old review found');
+        reviewCell = <ReviewCell cell={review}/>;
       }
-      // Hide review button if the reservation is in the past and the user did not submit a review
-      else if (Date.parse(checkOutDate!) < Date.now()) {
-        const response = await fetch(
-          `/api/survey/${reservationId!}/${guestId!}/find-survey`
-        );
-         if (response.status === 404) {
-          setReviewCell(<></>);
-        }
-      }
-    })();
-  }, []);
+    });
+  }
+  // If reservation is in the present, display the Review Button
+  else if (Date.parse(checkInDate!) < Date.now()) {
+    console.log('Reservation is in the present');
+    reviewCell = <ReviewCell cell={review}/>;
+  } else {
+    reviewCell = <></>;
+  }
 
   const [width, setWidth] = useState(window.innerWidth);
 
