@@ -58,7 +58,8 @@ export const routes = {
   weather: '/reservations/:resId/weather',
   restaurants: '/reservations/:resId/restaurants',
   eventsAndPlaces: '/reservations/:resId/eventsAndPlaces',
-  map: '/reservations/:resId/map'
+  map: '/reservations/:resId/map',
+  review: '/reservations/:resId/:guestId/review'
 };
 
 /**
