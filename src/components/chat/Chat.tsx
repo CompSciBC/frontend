@@ -123,7 +123,6 @@ function Chat() {
 
   const onGroupMessage = (payload: any) => {
     const payloadData = JSON.parse(payload.body);
-    // groupChat.push(payloadData as never);
     groupChat.push(payloadData as never);
     setGroupChat([...groupChat]);
   };
@@ -176,10 +175,7 @@ function Chat() {
       };
 
       if (tab === groupChatName) {
-        // groupChat.push(chatMessage);
         groupChat.push(chatMessage);
-
-        // setGroupChat([...groupChat, chatMessage]);
         stompClient.send('/app/group-message', {}, JSON.stringify(chatMessage));
       } else {
         privateChats.get(tab)!.push(chatMessage);
