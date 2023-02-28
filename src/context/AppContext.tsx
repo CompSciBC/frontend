@@ -81,7 +81,7 @@ export function AppContextProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     let subscribed = true;
 
-    if (!resId || resId === ':resId') {
+    if (!authenticated || !resId || resId === ':resId') {
       subscribed && setReservationDetail(null);
     } else {
       (async function () {
@@ -117,7 +117,7 @@ export function AppContextProvider({ children }: { children: ReactNode }) {
     return () => {
       subscribed = true;
     };
-  }, [resId]);
+  }, [resId, authenticated]);
 
   // purge all saved state (triggers useEffects to update local storage as well)
   const clearAppContext = () => {

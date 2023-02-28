@@ -47,7 +47,7 @@ function AddReservation() {
     return () => {
       subscribed = false;
     };
-  }, [user]);
+  }, [user, reservationDetail]);
 
   useEffect(() => {
     success &&
@@ -55,7 +55,7 @@ function AddReservation() {
       navigate(paramRoute(routes.dashboard, reservationDetail.id));
   }, [success]);
 
-  return <>Add Reservation</>;
+  return <></>;
 }
 
 export default AddReservation;
