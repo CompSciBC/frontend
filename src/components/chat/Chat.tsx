@@ -50,7 +50,7 @@ function Chat() {
   const [privateChats, setPrivateChats] = useState(
     new Map<string, Message[]>()
   );
-  const [groupChat, setGroupChat] = useState(new Array<Message>());
+  const [groupChat, setGroupChat] = useState<Message[]>([]);
   /* set as a string
    */
   const [tab, setTab] = useState(groupChatName);
@@ -80,7 +80,7 @@ function Chat() {
           onError
         );
       });
-  }, [userData]);
+  }, []);
 
   const onConnected = (chats: ChatsServerResponse) => {
     // subscribe to group message
@@ -92,8 +92,8 @@ function Chat() {
     );
 
     const groupMesages = chats[resId];
-    groupChat.push(...groupMesages);
-    setGroupChat([...groupChat]);
+    // groupChat.push(...groupMesages);
+    setGroupChat([...groupChat, ...groupMesages]);
 
     for (const chatId in chats) {
       if (chatId === resId) {
@@ -108,8 +108,8 @@ function Chat() {
 
   const onGroupMessage = (payload: any) => {
     const payloadData = JSON.parse(payload.body);
-    groupChat.push(payloadData as never);
-    setGroupChat([...groupChat]);
+    // groupChat.push(payloadData as never);
+    setGroupChat([...groupChat, payloadData]);
   };
 
   const onPrivateMessage = (payload: any) => {
@@ -162,7 +162,8 @@ function Chat() {
       console.log(chatMessage);
 
       if (tab === groupChatName) {
-        groupChat.push(chatMessage);
+        // groupChat.push(chatMessage);
+        setGroupChat([...groupChat, chatMessage]);
         stompClient.send('/app/group-message', {}, JSON.stringify(chatMessage));
       } else {
         privateChats.get(tab)!.push(chatMessage);
@@ -238,7 +239,9 @@ function Chat() {
           value={userData.message}
           onChange={handleMessage}
         />
-        <SendButton onClick={sendMessage}>send</SendButton>
+        <SendButton type="button" onClick={sendMessage}>
+          send
+        </SendButton>
       </SendMessage>
     </Container>
   );
