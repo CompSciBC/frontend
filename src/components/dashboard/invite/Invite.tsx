@@ -4,6 +4,7 @@ import { useEffect, useState, useContext } from 'react';
 import AppContext from '../../../context/AppContext';
 import Modal from '../../Modal';
 import SendInviteForm from './SendInviteForm';
+import { server } from '../../../index';
 
 export interface InviteProps {
   className?: string;
@@ -26,7 +27,7 @@ function Invite({ className }: InviteProps) {
     (async function () {
       if (reservationDetail) {
         const response = await fetch(
-          `/api/invites/${reservationDetail.id}/qr-code`
+          `${server}/api/invites/${reservationDetail.id}/qr-code`
         );
         const body = await response.json();
 
