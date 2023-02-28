@@ -3,6 +3,7 @@ import AppContext from '../../context/AppContext';
 import { useNavigate, useParams } from 'react-router-dom';
 import { paramRoute, routes } from '../..';
 import { Reservation } from '../../utils/dtos';
+import { server } from '../../index';
 
 function AddReservation() {
   const { resId } = useParams();
@@ -15,7 +16,7 @@ function AddReservation() {
 
     // makes a post request to add a new reservation entry with the current user's id
     const postReservation = async (reservation: Reservation) => {
-      const response = await fetch('/api/reservations', {
+      const response = await fetch(`${server}/api/reservations`, {
         method: 'post',
         headers: {
           'content-type': 'application/json'

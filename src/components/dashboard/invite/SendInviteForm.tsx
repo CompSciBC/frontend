@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 import { Invitation } from '../../../utils/dtos';
 import { theme } from '../../../utils/styles';
+import { server } from '../../../index';
 
 export interface SendInviteFormProps {
   className?: string;
@@ -32,13 +33,16 @@ function SendInviteForm({
    */
   const sendInvitations = async (invite: Invitation): Promise<boolean> => {
     const send = async () => {
-      const response = await fetch(`/api/invites/${resId}/send-email`, {
-        method: 'post',
-        headers: {
-          'content-type': 'application/json'
-        },
-        body: JSON.stringify(invite)
-      });
+      const response = await fetch(
+        `${server}/api/invites/${resId}/send-email`,
+        {
+          method: 'post',
+          headers: {
+            'content-type': 'application/json'
+          },
+          body: JSON.stringify(invite)
+        }
+      );
       return await response.json();
     };
     return (await send()).status === 200; // 200 = ok
