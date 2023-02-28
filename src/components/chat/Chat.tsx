@@ -51,6 +51,11 @@ function Chat() {
     new Map<string, Message[]>()
   );
   const [groupChat, setGroupChat] = useState<Message[]>([]);
+
+  /* use this trick to prevent double loading of data. It looks like that an additional loading erases GroupChat array.
+  I have no idea why this not happened to Map. Probably, I'll put Group Chat into a Map */
+
+  const [pageState] = useState<{ loaded: boolean }>({ loaded: false });
   /* set as a string
    */
   const [tab, setTab] = useState(groupChatName);
@@ -61,6 +66,11 @@ function Chat() {
       connected: true,
       isHost: user?.role === 'host'
     });
+    // return if loading happened;
+    if (pageState.loaded) {
+      return;
+    }
+    pageState.loaded = true;
     const loadUrl: string = userData.isHost
       ? `/api/chat/load/host/${resId}`
       : `/api/chat/load/guest/${resId}/${userData.username}`;
@@ -92,8 +102,9 @@ function Chat() {
     );
 
     const groupMesages = chats[resId];
-    // groupChat.push(...groupMesages);
-    setGroupChat([...groupChat, ...groupMesages]);
+    groupChat.push(...groupMesages);
+    setGroupChat([...groupChat]);
+    // setGroupChat([...groupChat, ...groupMesages]);
 
     for (const chatId in chats) {
       if (chatId === resId) {
@@ -109,7 +120,8 @@ function Chat() {
   const onGroupMessage = (payload: any) => {
     const payloadData = JSON.parse(payload.body);
     // groupChat.push(payloadData as never);
-    setGroupChat([...groupChat, payloadData]);
+    groupChat.push(payloadData as never);
+    setGroupChat([...groupChat]);
   };
 
   const onPrivateMessage = (payload: any) => {
@@ -159,11 +171,11 @@ function Chat() {
         chatId
       };
 
-      console.log(chatMessage);
-
       if (tab === groupChatName) {
         // groupChat.push(chatMessage);
-        setGroupChat([...groupChat, chatMessage]);
+        groupChat.push(chatMessage);
+
+        // setGroupChat([...groupChat, chatMessage]);
         stompClient.send('/app/group-message', {}, JSON.stringify(chatMessage));
       } else {
         privateChats.get(tab)!.push(chatMessage);
