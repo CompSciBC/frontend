@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
 import React, { useState, useRef, useEffect, useContext } from 'react';
 import AppContext from '../../context/AppContext';
 import { over } from 'stompjs';
@@ -5,6 +6,7 @@ import SockJS from 'sockjs-client';
 import { useParams } from 'react-router-dom';
 import styled from '@emotion/styled';
 import { theme } from '../../utils/styles';
+import { server } from '../..';
 
 let stompClient: any = null;
 const hostUserName: string = 'Host Chat';
@@ -72,15 +74,17 @@ function Chat() {
     }
     pageState.loaded = true;
     const loadUrl: string = userData.isHost
-      ? `/api/chat/load/host/${resId}`
-      : `/api/chat/load/guest/${resId}/${userData.username}`;
+      ? `{server}/api/chat/load/host/${resId}`
+      : `{server}/api/chat/load/guest/${resId}/${userData.username}`;
     fetch(loadUrl, {
       method: 'GET',
       headers: { 'Content-Type': 'application/json' }
     })
       .then(async (response) => await response.json())
       .then((chats: ChatsServerResponse) => {
-        const Sock = new SockJS('http://localhost:8080/ws');
+        // const Sock = new SockJS('http://localhost:8080/ws');
+        const Sock = new SockJS(`http://${server}:${server}/ws`);
+
         stompClient = over(Sock);
         stompClient.connect(
           {},
