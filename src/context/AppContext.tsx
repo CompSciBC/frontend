@@ -82,7 +82,9 @@ export function AppContextProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     let subscribed = true;
 
-    if (resId && resId !== ':resId') {
+    if (!resId || resId === ':resId') {
+      subscribed && setReservationDetail(null);
+    } else {
       (async function () {
         if (!reservationDetail || reservationDetail.id !== resId) {
           let reservation: Reservation | null = null;

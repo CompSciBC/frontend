@@ -4,6 +4,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { AppContextProvider } from './context/AppContext';
 import { NavbarLink } from './components/page/Navbar';
 import App from './components/App';
+import ErrorPage from './components/ErrorPage';
 import Home from './components/home/Home';
 import About from './components/about/About';
 import Login from './components/auth/Login';
@@ -32,7 +33,6 @@ import AppTestMode from './components/AppTestMode';
 // Configure React project with Amplify resources
 import { Amplify } from 'aws-amplify';
 import config from './aws-exports';
-import ErrorPage from './components/ErrorPage';
 Amplify.configure(config);
 
 /**
