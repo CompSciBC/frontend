@@ -74,8 +74,8 @@ function Chat() {
     }
     pageState.loaded = true;
     const loadUrl: string = userData.isHost
-      ? `{server}/api/chat/load/host/${resId}`
-      : `{server}/api/chat/load/guest/${resId}/${userData.username}`;
+      ? `${server}/api/chat/load/host/${resId}`
+      : `S{server}/api/chat/load/guest/${resId}/${userData.username}`;
     fetch(loadUrl, {
       method: 'GET',
       headers: { 'Content-Type': 'application/json' }
@@ -83,7 +83,7 @@ function Chat() {
       .then(async (response) => await response.json())
       .then((chats: ChatsServerResponse) => {
         // const Sock = new SockJS('http://localhost:8080/ws');
-        const Sock = new SockJS(`http://${server}:${server}/ws`);
+        const Sock = new SockJS(`${server}:${server}/ws`);
 
         stompClient = over(Sock);
         stompClient.connect(
