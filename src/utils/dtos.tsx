@@ -144,6 +144,18 @@ export interface Restaurant {
 }
 
 /**
+ * Specifies filters for a restaurant search (matching RestaurantFilters.java)
+ */
+export interface RestaurantFilters {
+  address: Address;
+  radius?: number;
+  keywords?: string[];
+  maxPrice?: number;
+  openNow?: boolean;
+  numResults?: number;
+}
+
+/**
  * Represents an event or place
  */
 export interface EventOrPlace {
