@@ -72,9 +72,10 @@ function Restaurants() {
                 options: [
                   'Walking (1 mile)',
                   'Biking (2 miles)',
-                  'Driving (10 miles)'
+                  'Driving (10 miles)',
+                  'Any'
                 ],
-                defaultChecked: 'Walking (1 mile)'
+                defaultChecked: 'Any'
               },
               {
                 type: 'check',
