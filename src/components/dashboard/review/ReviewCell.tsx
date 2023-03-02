@@ -1,9 +1,8 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import styled from '@emotion/styled';
 import { theme } from '../../../utils/styles';
 import { memo, useContext, useState, useEffect } from 'react';
 import AppContext from '../../../context/AppContext';
-import { paramRoute, routes, server } from '../../..';
+import { paramRoute, routes } from '../../..';
 import { ReviewCellProps } from '../Dashboard';
 import DashboardCellClickable from '../DashboardCellClickable';
 
