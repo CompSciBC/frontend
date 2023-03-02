@@ -14,6 +14,7 @@ import ChatPreview from './chat/ChatPreview';
 import MapCell from './map/MapCell';
 import ReviewCell from './review/ReviewCell';
 import { server } from '../../';
+import { isEmpty } from '@aws-amplify/core';
 
 export interface DashboardCellProps {
   className?: string;
@@ -50,8 +51,8 @@ function Dashboard() {
   const chatPreviewCell = <ChatPreview n={3} cell={chat} />;
   const mapCell = <MapCell cell={map} />;
 
-  // // If reservation is in the past, hide review button if guest did not submit a review
-  // console.log(reservationDetail);
+  // From the day of checkin to 10 days after checkout, display a button prompting guest to submit a review if they have not.
+  // If guest has submitted a review for a property, display a button allowing them to view their response
   const [reviewCell, setReviewCell] = useState<JSX.Element>(<></>);
   useEffect(() => {
     const {
@@ -65,26 +66,17 @@ function Dashboard() {
     (async function() {
       const response = await fetch(`${server}/api/surveys/${reservationId!}/${guestId!}`);
       const body = await response.json();
-      console.log(response.status);
-      console.log(body.data);
-      if (response.status === 404) {
-        console.log(Date.parse(checkInDate!));
-        console.log(Date.now());
-        console.log(Date.parse(checkOutDate!));
-        console.log(surveyExpirationDate.getTime());
+      if (isEmpty(body.data)) {
         if (
           Date.parse(checkInDate!) < Date.now() &&
           Date.now() < surveyExpirationDate.getTime()
         ) {
-          console.log('Can still submit. Prompt them.');
           setReviewCell(<ReviewCell cell={review} />);
-        } else {
-          console.log('Should not display review');
+          console.log("Prompt guest to complete survey");
         }
-        
       } else {
-        console.log('Review found. Show result');
         setReviewCell(<ReviewCell cell={review} survey={body.data}/>);
+        console.log("Allow guest to view submitted survey response");
       }
     })();
   }, [reservationDetail]);

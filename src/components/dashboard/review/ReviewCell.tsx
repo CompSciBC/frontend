@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import styled from '@emotion/styled';
 import { theme } from '../../../utils/styles';
 import { memo, useContext, useState, useEffect } from 'react';
@@ -11,19 +12,13 @@ function ReviewCell({ className, cell, survey }: ReviewCellProps) {
   const reservationId = reservationDetail?.id;
   const guestId = user?.userId;
 
-  const [buttonText, setButtonText] = useState<String>('Hi');
+  const [buttonText, setButtonText] = useState<String>();
   useEffect(() => {
-    (async function () {
-      const response = await fetch(
-        `${server}/api/surveys/${reservationId!}/${guestId!}`
-      );
-      if (response.status === 200) {
-        setButtonText('View Review Response');
-      } else {
-        // TODO: handle 404 Not found
-        setButtonText('Review Your Rental Experience');
-      }
-    })();
+    if (survey) {
+      setButtonText('View Survey Response');
+    } else {
+      setButtonText('Review Your Rental Experience');
+    }
   }, []);
   return (
     <Container
@@ -31,10 +26,11 @@ function ReviewCell({ className, cell, survey }: ReviewCellProps) {
       cell={cell}
       to={paramRoute(
         routes.review,
-        reservationDetail?.id,
-        reservationDetail?.guestId
+        reservationId,
+        guestId
       )}
       child={buttonText}
+      state={{surveyRecord : survey}}
     />
   );
 }

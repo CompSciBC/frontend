@@ -1,15 +1,21 @@
 import { Model } from 'survey-core';
 import { Survey } from 'survey-react-ui';
 import 'survey-core/defaultV2.min.css';
+import "../../../index.css";
 import { guestSurveyJson } from './GuestSurveyJson';
 import { useContext, useEffect } from 'react';
 import AppContext from '../../../context/AppContext';
 import { server } from '../../..';
+import { useLocation, useNavigate } from 'react-router-dom';
+
 
 function SurveyComponent() {
   const { reservationDetail, user } = useContext(AppContext);
   const reservationId = reservationDetail?.id;
   const guestId = user?.userId;
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { surveyRecord } = location.state;
 
   const survey = new Model(guestSurveyJson);
   survey.onComplete.add((sender, options) => {
@@ -24,21 +30,18 @@ function SurveyComponent() {
         body: surveyResponse
       }
     );
+    setTimeout(() => {
+      navigate(`/reservations/${reservationId!}/dashboard`);
+    }, 3000);
+    
   });
 
   useEffect(() => {
-    (async function () {
-      const response = await fetch(
-        `${server}/api/surveys/${reservationId!}/${guestId!}`
-      );
-      if (response.status === 200) {
-        const responseJson = await response.json();
-        survey.data = JSON.parse(responseJson.surveyResponse);
-        survey.mode = 'display';
-      }
-      // TODO: handle 404 Not found
-    })();
-  }, []);
+    if (surveyRecord) {
+      survey.data = JSON.parse(surveyRecord[0].surveyResponse);
+      survey.mode = 'display';
+    }
+  }, [survey]);
 
   return (
     <>
