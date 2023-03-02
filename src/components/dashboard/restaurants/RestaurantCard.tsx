@@ -38,7 +38,7 @@ function RestaurantCard({ className, restaurant }: RestaurantCardProps) {
     <Container className={className} href={url} target="/">
       <CardHeader>
         <ImageWrapper>
-          <img src={imageUrl} />
+          <img src={imageUrl || '/images/no-image-available.jpeg'} />
           <IsOpen>{isOpen ? 'Open Now' : 'Closed'}</IsOpen>
           <Distance>{distanceInMiles}</Distance>
         </ImageWrapper>
