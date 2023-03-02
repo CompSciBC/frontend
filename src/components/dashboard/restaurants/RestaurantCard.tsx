@@ -44,7 +44,7 @@ function RestaurantCard({ className, restaurant }: RestaurantCardProps) {
         </ImageWrapper>
         <Stars>
           <div>{stars}</div>
-          {`${numReviews} Reviews`}
+          {`${numReviews.toLocaleString()} Reviews`}
         </Stars>
       </CardHeader>
       <CardBody>
