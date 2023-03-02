@@ -6,64 +6,106 @@ import { Restaurant, RestaurantFilters } from '../../../utils/dtos';
 import getRestaurants from './getRestaurants';
 import RestaurantCard from './RestaurantCard';
 import SearchBar from '../../search/SearchBar';
+import FilterPanel, { FilterState } from './FilterPanel';
 
 function Restaurants() {
   const { reservationDetail } = useContext(AppContext);
   const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
-  const [filters, setFilters] = useState<RestaurantFilters | null>(null);
 
-  // initialize filters to property address
+  // filters used in the query to the API
+  const [query, setQuery] = useState<RestaurantFilters>();
+
+  // filters used to filter the results from the API
+  const [, setFilterState] = useState<FilterState>({});
+
+  // initialize query with property address
   useEffect(() => {
     let subscribed = true;
 
     if (reservationDetail) {
-      subscribed &&
-        setFilters({
-          address: reservationDetail.property.address
-        });
+      const { address } = reservationDetail.property;
+      subscribed && setQuery({ address });
     }
+
     return () => {
       subscribed = false;
     };
   }, [reservationDetail]);
 
+  // query the API
   useEffect(() => {
     let subscribed = true;
 
-    (async function () {
-      subscribed &&
-        reservationDetail &&
-        setRestaurants(
-          await getRestaurants(
-            filters ?? {
-              address: reservationDetail.property.address
-            }
-          )
-        );
-    })();
+    if (reservationDetail) {
+      (async function () {
+        const { address } = reservationDetail.property;
+        subscribed &&
+          setRestaurants(await getRestaurants({ ...query, address }));
+      })();
+    }
 
     return () => {
       subscribed = false;
     };
-  }, [reservationDetail, filters]);
+  }, [reservationDetail, query]);
 
-  const keywordSearchFilters = (keywords?: string): RestaurantFilters => {
-    return {
-      address: reservationDetail!.property.address,
-      keywords: keywords?.split(',')
-    };
-  };
+  const sidebarWidth = 192;
 
   return (
     <Container>
-      <SidebarWrapper>
-        <Sidebar>Hello</Sidebar>
+      <SidebarWrapper width={sidebarWidth}>
+        <Sidebar width={sidebarWidth}>
+          <FilterPanel
+            handleChange={setFilterState}
+            groups={[
+              {
+                type: 'check',
+                name: 'openNow',
+                label: 'Open Now',
+                options: ['Open Now'],
+                defaultChecked: 'Open Now'
+              },
+              {
+                type: 'radio',
+                name: 'distance',
+                label: 'Distance',
+                options: [
+                  'Walking (1 mile)',
+                  'Biking (2 miles)',
+                  'Driving (10 miles)'
+                ],
+                defaultChecked: 'Walking (1 mile)'
+              },
+              {
+                type: 'check',
+                name: 'price',
+                label: 'Price',
+                options: ['$', '$$', '$$$', '$$$$']
+              },
+              {
+                type: 'check',
+                name: 'rating',
+                label: 'Rating',
+                options: ['☆☆☆☆', '☆☆☆', '☆☆', '☆']
+              },
+              {
+                type: 'check',
+                name: 'services',
+                label: 'Services',
+                options: ['Dine-in', 'Delivery', 'Take-out', 'Drive-thru']
+              }
+            ]}
+          />
+        </Sidebar>
       </SidebarWrapper>
       <ContentContainer>
         <h2>Nearby Restaurants</h2>
         <StyledSearchBar
           handleSubmit={(text: string) =>
-            setFilters(keywordSearchFilters(text))
+            setQuery({
+              address: reservationDetail!.property.address,
+              keywords: text?.split(',')
+            })
           }
         />
         <CardContainer>
@@ -81,9 +123,9 @@ const Container = styled.div`
   width: 100%;
 `;
 
-const SidebarWrapper = styled.div`
+const SidebarWrapper = styled.div<{ width: number }>`
   position: relative;
-  width: 256px;
+  width: ${(props) => `${props.width}px`};
   height: 100%;
   background-color: ${theme.color.lightGray};
 
@@ -92,10 +134,28 @@ const SidebarWrapper = styled.div`
   }
 `;
 
-const Sidebar = styled.div`
+const Sidebar = styled.div<{ width: number }>`
   position: fixed;
-  top: 60px;
+  top: 60px; // TODO: make dynamic based on height of header
   left: 0;
+  width: ${(props) => `${props.width}px`};
+  height: 100%;
+  overflow-y: scroll;
+
+  // hide scrollbar on chrome/safari
+  ::-webkit-scrollbar {
+    display: none;
+  }
+
+  // hide scrollbar on firefox
+  ::-moz-scrollbar {
+    display: none;
+  }
+
+  // hide scrollbar on edge/ie
+  ::-ms-scrollbar {
+    display: none;
+  }
 `;
 
 const ContentContainer = styled.div`

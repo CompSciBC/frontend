@@ -93,6 +93,10 @@ const SearchButton = styled.button<{ bgColor: string; textColor: string }>`
   padding: 8px 16px;
   background-color: ${(props) => props.bgColor};
   color: ${(props) => props.textColor};
+
+  :hover {
+    filter: contrast(2);
+  }
 `;
 
 export default SearchBar;
