@@ -13,10 +13,15 @@ import ChatCell from './chat/ChatCell';
 import ChatPreview from './chat/ChatPreview';
 import MapCell from './map/MapCell';
 import ReviewCell from './review/ReviewCell';
+import { server } from '../../';
 
 export interface DashboardCellProps {
   className?: string;
   cell: string;
+}
+
+export interface ReviewCellProps extends DashboardCellProps{
+  survey?: Response;
 }
 
 const info = 'info';
@@ -32,7 +37,7 @@ const review = 'review';
 
 function Dashboard() {
   const { resId } = useParams();
-  const { reservationDetail } = useContext(AppContext);
+  const { reservationDetail, user } = useContext(AppContext);
 
   const infoCell = <InfoCell cell={info} />;
   const checkCell = <CheckInCell cell={check} />;
@@ -46,29 +51,43 @@ function Dashboard() {
   const mapCell = <MapCell cell={map} />;
 
   // // If reservation is in the past, hide review button if guest did not submit a review
-  // const [reviewCell, setReviewCell] = useState<JSX.Element>();
-  const reservationId = reservationDetail?.id;
-  const checkInDate = reservationDetail?.checkIn;
-  const checkOutDate = reservationDetail?.checkOut;
-  const guestId = user?.userId;
-  let reviewCell:JSX.Element;
-  // If reservation is in the past
-  if (Date.parse(checkOutDate!) < Date.now()) {
-    console.log('Reservation is in the past');
-    fetch(`/api/survey/${reservationId!}/${guestId!}/find-survey`).then((response) => {
-      if (response.status === 200){
-        console.log('Old review found');
-        reviewCell = <ReviewCell cell={review}/>;
+  // console.log(reservationDetail);
+  const [reviewCell, setReviewCell] = useState<JSX.Element>(<></>);
+  useEffect(() => {
+    const {
+      id: reservationId,
+      checkIn: checkInDate,
+      checkOut: checkOutDate
+    } = reservationDetail ?? {};
+    const guestId = user?.userId;
+    const surveyExpirationDate = new Date(Date.parse(checkOutDate!));
+    surveyExpirationDate.setDate(surveyExpirationDate.getDate() + 10);
+    (async function() {
+      const response = await fetch(`${server}/api/surveys/${reservationId!}/${guestId!}`);
+      const body = await response.json();
+      console.log(response.status);
+      console.log(body.data);
+      if (response.status === 404) {
+        console.log(Date.parse(checkInDate!));
+        console.log(Date.now());
+        console.log(Date.parse(checkOutDate!));
+        console.log(surveyExpirationDate.getTime());
+        if (
+          Date.parse(checkInDate!) < Date.now() &&
+          Date.now() < surveyExpirationDate.getTime()
+        ) {
+          console.log('Can still submit. Prompt them.');
+          setReviewCell(<ReviewCell cell={review} />);
+        } else {
+          console.log('Should not display review');
+        }
+        
+      } else {
+        console.log('Review found. Show result');
+        setReviewCell(<ReviewCell cell={review} survey={body.data}/>);
       }
-    });
-  }
-  // If reservation is in the present, display the Review Button
-  else if (Date.parse(checkInDate!) < Date.now()) {
-    console.log('Reservation is in the present');
-    reviewCell = <ReviewCell cell={review}/>;
-  } else {
-    reviewCell = <></>;
-  }
+    })();
+  }, [reservationDetail]);
 
   const [width, setWidth] = useState(window.innerWidth);
 
@@ -148,7 +167,7 @@ function Dashboard() {
     }
 
     return container;
-  }, [width, resId, reservationDetail]);
+  }, [width, resId, reservationDetail, reviewCell]);
 
   return layout;
 }

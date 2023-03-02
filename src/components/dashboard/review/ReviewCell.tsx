@@ -2,20 +2,20 @@ import styled from '@emotion/styled';
 import { theme } from '../../../utils/styles';
 import { memo, useContext, useState, useEffect } from 'react';
 import AppContext from '../../../context/AppContext';
-import { paramRoute, routes } from '../../..';
-import { DashboardCellProps } from '../Dashboard';
+import { paramRoute, routes, server } from '../../..';
+import { ReviewCellProps } from '../Dashboard';
 import DashboardCellClickable from '../DashboardCellClickable';
 
-function ReviewCell({ className, cell }: DashboardCellProps) {
+function ReviewCell({ className, cell, survey }: ReviewCellProps) {
   const { reservationDetail, user } = useContext(AppContext);
   const reservationId = reservationDetail?.id;
   const guestId = user?.userId;
 
-  const [buttonText, setButtonText] = useState<String>();
+  const [buttonText, setButtonText] = useState<String>('Hi');
   useEffect(() => {
     (async function () {
       const response = await fetch(
-        `/api/survey/${reservationId!}/${guestId!}/find-survey`
+        `${server}/api/surveys/${reservationId!}/${guestId!}`
       );
       if (response.status === 200) {
         setButtonText('View Review Response');
