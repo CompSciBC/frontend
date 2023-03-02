@@ -1,6 +1,7 @@
 import { createContext, ReactNode, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Property, Reservation, ReservationDetail, User } from '../utils/dtos';
+import { server } from '../index';
 
 export interface AppContextType {
   authenticated: boolean;
@@ -81,19 +82,25 @@ export function AppContextProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     let subscribed = true;
 
-    if (resId && resId !== ':resId') {
+    if (!resId || resId === ':resId') {
+      subscribed && setReservationDetail(null);
+    } else {
       (async function () {
         if (!reservationDetail || reservationDetail.id !== resId) {
           let reservation: Reservation | null = null;
           let property: Property | null = null;
 
-          reservation = await fetch(`/api/reservations/${resId}?primary=true`)
+          reservation = await fetch(
+            `${server}/api/reservations/${resId}?primary=true`
+          )
             .then(async (r) => await r.json())
             .then((r) => r.data[0])
             .catch(() => null);
 
           if (reservation) {
-            property = await fetch(`/api/properties/${reservation.propertyId}`)
+            property = await fetch(
+              `${server}/api/properties/${reservation.propertyId}`
+            )
               .then(async (p) => await p.json())
               .then((p) => p.data[0])
               .catch(() => null);

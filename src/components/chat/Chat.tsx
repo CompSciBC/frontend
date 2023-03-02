@@ -1,12 +1,15 @@
-import React, { useState, useRef, useEffect } from 'react';
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
+import React, { useState, useRef, useEffect, useContext } from 'react';
+import AppContext from '../../context/AppContext';
 import { over } from 'stompjs';
 import SockJS from 'sockjs-client';
 import { useParams } from 'react-router-dom';
 import styled from '@emotion/styled';
 import { theme } from '../../utils/styles';
+import { server } from '../..';
 
 let stompClient: any = null;
-const hostUserName: string = 'Host';
+const hostUserName: string = 'Host Chat';
 const groupChatName: string = 'Group';
 const groupHeader: string = 'Group Chat';
 
@@ -24,10 +27,12 @@ interface ChatsServerResponse {
 }
 
 function Chat() {
+  const { user } = useContext(AppContext);
+
   const { resId } = useParams() as { resId: string };
 
   const [userData, setUserData] = useState({
-    username: '',
+    username: user!.username,
     isHost: false,
     receivername: '',
     connected: false,
@@ -47,22 +52,39 @@ function Chat() {
   const [privateChats, setPrivateChats] = useState(
     new Map<string, Message[]>()
   );
-  const [groupChat, setGroupChat] = useState(new Array<Message>());
+  const [groupChat, setGroupChat] = useState<Message[]>([]);
+
+  /* use this trick to prevent double loading of data. It looks like that an additional loading erases GroupChat array.
+  I have no idea why this not happened to Map. Probably, I'll put Group Chat into a Map */
+
+  const [pageState] = useState<{ loaded: boolean }>({ loaded: false });
   /* set as a string
    */
   const [tab, setTab] = useState(groupChatName);
 
-  const connect = () => {
+  useEffect(() => {
+    setUserData({
+      ...userData,
+      connected: true,
+      isHost: user?.role === 'host'
+    });
+    // return if loading happened;
+    if (pageState.loaded) {
+      return;
+    }
+    pageState.loaded = true;
     const loadUrl: string = userData.isHost
-      ? `/api/chat/load/host/${resId}`
-      : `/api/chat/load/guest/${resId}/${userData.username}`;
+      ? `${server}/api/chat/load/host/${resId}`
+      : `${server}/api/chat/load/guest/${resId}/${userData.username}`;
     fetch(loadUrl, {
       method: 'GET',
       headers: { 'Content-Type': 'application/json' }
     })
       .then(async (response) => await response.json())
       .then((chats: ChatsServerResponse) => {
-        const Sock = new SockJS('http://localhost:8080/ws');
+        // const Sock = new SockJS('http://localhost:8080/ws');
+        const Sock = new SockJS(`${server}/ws`);
+
         stompClient = over(Sock);
         stompClient.connect(
           {},
@@ -72,11 +94,9 @@ function Chat() {
           onError
         );
       });
-  };
-  /* set a key for private chat map object: guest or host depending who signs in
-   */
+  }, []);
+
   const onConnected = (chats: ChatsServerResponse) => {
-    setUserData({ ...userData, connected: true });
     // subscribe to group message
     stompClient.subscribe(`/group/${resId}`, onGroupMessage);
     // subscribe to private message
@@ -88,6 +108,7 @@ function Chat() {
     const groupMesages = chats[resId];
     groupChat.push(...groupMesages);
     setGroupChat([...groupChat]);
+    // setGroupChat([...groupChat, ...groupMesages]);
 
     for (const chatId in chats) {
       if (chatId === resId) {
@@ -153,8 +174,6 @@ function Chat() {
         chatId
       };
 
-      console.log(chatMessage);
-
       if (tab === groupChatName) {
         groupChat.push(chatMessage);
         stompClient.send('/app/group-message', {}, JSON.stringify(chatMessage));
@@ -171,105 +190,71 @@ function Chat() {
     }
   };
 
-  const handleUsername = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = event.target;
-    setUserData({
-      ...userData,
-      username: value,
-      isHost: value === hostUserName
-    });
-  };
-
-  const registerUser = () => {
-    connect();
-  };
   return (
     <Container id="container">
-      {userData.connected ? (
-        <>
-          <ChatBox id="chat-box">
-            <ChatListContainer>
-              <ChatList
-                onClick={() => {
-                  setTab('Group');
-                }}
-              >
-                {' '}
-                Group Chat{' '}
-              </ChatList>
-              {Array.from(privateChats.keys()).map((chatName, index) => (
-                <ChatList
-                  onClick={() => {
-                    setTab(chatName);
-                  }}
+      <ChatBox id="chat-box">
+        <ChatListContainer>
+          <ChatList
+            onClick={() => {
+              setTab('Group');
+            }}
+          >
+            {' '}
+            Group Chat{' '}
+          </ChatList>
+          {Array.from(privateChats.keys()).map((chatName, index) => (
+            <ChatList
+              onClick={() => {
+                setTab(chatName);
+              }}
+              key={index}
+            >
+              {chatName}
+            </ChatList>
+          ))}
+        </ChatListContainer>
+
+        {
+          <ChatContent id="chat-content">
+            <ChatName>{tab === groupChatName ? groupHeader : tab} </ChatName>
+            <ChatMessages id="chat-messages">
+              {(tab === groupChatName
+                ? [...groupChat]
+                : [...privateChats.get(tab)!]
+              ).map((message: any, index) => (
+                <MessageBlock
+                  id="message"
+                  self={message.senderName === userData.username}
                   key={index}
                 >
-                  {chatName}
-                </ChatList>
+                  {message.senderName !== userData.username && (
+                    <Avatar>{message.senderName}</Avatar>
+                  )}
+                  .
+                  <MessageData id="message-data">{message.message}</MessageData>
+                  {message.senderName === userData.username && (
+                    <AvatarSelf>{message.senderName}</AvatarSelf>
+                  )}
+                </MessageBlock>
               ))}
-            </ChatListContainer>
+              <LastMessage id="last-message" ref={messageEndRef}></LastMessage>
+            </ChatMessages>
+          </ChatContent>
+        }
+      </ChatBox>
 
-            {
-              <ChatContent id="chat-content">
-                <ChatName>
-                  {tab === groupChatName ? groupHeader : tab}{' '}
-                </ChatName>
-                <ChatMessages id="chat-messages">
-                  {(tab === groupChatName
-                    ? [...groupChat]
-                    : [...privateChats.get(tab)!]
-                  ).map((message: any, index) => (
-                    <MessageBlock
-                      id="message"
-                      self={message.senderName === userData.username}
-                      key={index}
-                    >
-                      {message.senderName !== userData.username && (
-                        <Avatar>{message.senderName}</Avatar>
-                      )}
-                      .
-                      <MessageData id="message-data">
-                        {message.message}
-                      </MessageData>
-                      {message.senderName === userData.username && (
-                        <AvatarSelf>{message.senderName}</AvatarSelf>
-                      )}
-                    </MessageBlock>
-                  ))}
-                  <LastMessage
-                    id="last-message"
-                    ref={messageEndRef}
-                  ></LastMessage>
-                </ChatMessages>
-              </ChatContent>
-            }
-          </ChatBox>
-
-          <SendMessage id="send-message">
-            <Input
-              id="input"
-              userType={userData.username}
-              placeholder="enter the message"
-              value={userData.message}
-              onChange={handleMessage}
-            />
-            <SendButton onClick={sendMessage}>send</SendButton>
-          </SendMessage>
-        </>
-      ) : (
-        <Register id="register">
-          <InputRegister
-            id="user-name"
-            placeholder="Enter your name"
-            name="userName"
-            value={userData.username}
-            onChange={handleUsername}
-          />
-          <Button type="button" onClick={registerUser}>
-            connect
-          </Button>
-        </Register>
-      )}
+      <SendMessage id="send-message">
+        <Input
+          id="input"
+          userType={userData.username}
+          placeholder="enter the message"
+          value={userData.message}
+          onChange={handleMessage}
+        />
+        <SendButton type="button" onClick={sendMessage}>
+          send
+        </SendButton>
+      </SendMessage>
     </Container>
   );
 }
@@ -389,32 +374,6 @@ const SendButton = styled.button`
   ${theme.screen.small} {
     width: 100%;
   }
-`;
-const Register = styled.div`
-  position: fixed;
-  padding: 10px;
-  box-shadow: 0 2.8px 2.2px rgba(0, 0, 0, 0.034),
-    0 6.7px 5.3px rgba(0, 0, 0, 0.048), 0 12.5px 10px rgba(0, 0, 0, 0.06),
-    0 22.3px 17.9px rgba(0, 0, 0, 0.072), 0 41.8px 33.4px rgba(0, 0, 0, 0.086),
-    0 100px 80px rgba(0, 0, 0, 0.12);
-  top: 35%;
-  left: 10%;
-  display: flex;
-  flex-direction: row;
-  ${theme.screen.small} {
-    width: 100%;
-  }
-`;
-const InputRegister = styled.input`
-  ${theme.font.body}
-`;
-
-const Button = styled.button`
-  border: none;
-  padding: 10px;
-  background: green;
-  color: #fff;
-  ${theme.font.button}
 `;
 
 const LastMessage = styled.div`

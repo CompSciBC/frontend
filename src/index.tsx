@@ -4,6 +4,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { AppContextProvider } from './context/AppContext';
 import { NavbarLink } from './components/page/Navbar';
 import App from './components/App';
+import ErrorPage from './components/ErrorPage';
 import Home from './components/home/Home';
 import About from './components/about/About';
 import Login from './components/auth/Login';
@@ -33,8 +34,18 @@ import AppTestMode from './components/AppTestMode';
 // Configure React project with Amplify resources
 import { Amplify } from 'aws-amplify';
 import config from './aws-exports';
-import ErrorPage from './components/ErrorPage';
 Amplify.configure(config);
+
+/**
+ * Configure Backend API endpoint
+ */
+let endpoint;
+if (process.env.REACT_APP_ENV === 'prod') {
+  endpoint = 'https://bmgalb-1523887164.us-west-2.elb.amazonaws.com:8080';
+} else {
+  endpoint = 'http://localhost:8080';
+}
+export const server = endpoint;
 
 /**
  * Contains the base route urls of the various pages in the app

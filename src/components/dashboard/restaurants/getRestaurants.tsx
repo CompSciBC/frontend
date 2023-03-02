@@ -1,4 +1,5 @@
 import { Address, Restaurant } from '../../../utils/dtos';
+import { server } from '../../../index';
 
 /**
  * Gets the top n restaurants from the given address
@@ -31,7 +32,7 @@ export default async function getRestaurants(
 
   if (queryString) queryString = `?${queryString}`;
 
-  const response = await fetch(`/api/restaurants${queryString}`);
+  const response = await fetch(`${server}/api/restaurants${queryString}`);
   const body = await response.json();
   return body.data;
 }
