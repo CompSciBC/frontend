@@ -5,8 +5,8 @@ import ErrorPage from '../ErrorPage';
 import Login from './Login';
 
 function ProtectedRoute() {
-  const { authenticated, reservationDetail } = useContext(AppContext);
-  const { resId } = useParams();
+  const { authenticated, reservationDetail, user } = useContext(AppContext);
+  const { resId, userId } = useParams();
   const [element, setElement] = useState<JSX.Element>(<></>);
 
   useEffect(() => {
@@ -14,7 +14,7 @@ function ProtectedRoute() {
 
     if (!authenticated) {
       subscribed && setElement(<Login />);
-    } else if (!resId || reservationDetail?.id === resId) {
+    } else if ((!resId || reservationDetail?.id === resId) || (!userId || user?.userId === userId)) {
       subscribed && setElement(<Outlet />);
     } else {
       subscribed && setElement(<ErrorPage />);
@@ -23,7 +23,7 @@ function ProtectedRoute() {
     return () => {
       subscribed = false;
     };
-  }, [authenticated, resId, reservationDetail]);
+  }, [authenticated, resId, reservationDetail, userId, user]);
 
   return element;
 }
