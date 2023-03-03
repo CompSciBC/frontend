@@ -24,14 +24,14 @@ export interface FilterGroup {
 
 export interface FilterPanelProps {
   className?: string;
-  title?: string;
+  title?: string | null;
   groups?: FilterGroup[];
   handleChange?: React.Dispatch<React.SetStateAction<FilterState>>;
 }
 
 function FilterPanel({
   className,
-  title = 'Filters',
+  title,
   groups,
   handleChange
 }: FilterPanelProps) {
@@ -173,7 +173,7 @@ function FilterPanel({
 
   return (
     <Container className={className}>
-      <h4>{title}</h4>
+      {title !== null && <Title>{title ?? 'Filters'}</Title>}
       {filterGroups}
     </Container>
   );
@@ -183,18 +183,26 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
+  height: 100%;
   gap: 8px;
   padding: 16px;
+`;
 
-  h4 {
-    ${theme.font.displayMedium}
-  }
+const Title = styled.h4`
+  ${theme.font.displaySmall}
+  border-bottom: 1px solid ${theme.color.gray};
+  margin: 0;
+  padding-bottom: 8px;
 `;
 
 const FilterSection = styled.div`
   width: 100%;
-  padding-top: 8px;
-  border-top: 1px solid ${theme.color.gray};
+  padding-bottom: 8px;
+  border-bottom: 1px solid ${theme.color.gray};
+
+  :last-of-type {
+    border-bottom: none;
+  }
 
   > label {
     ${theme.font.body}

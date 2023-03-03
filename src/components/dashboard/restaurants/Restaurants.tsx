@@ -1,22 +1,24 @@
 import styled from '@emotion/styled';
 import { theme } from '../../../utils/styles';
-import { useEffect, useState, useContext } from 'react';
+import { useEffect, useState, useContext, useCallback } from 'react';
 import AppContext from '../../../context/AppContext';
 import { Restaurant, RestaurantFilters } from '../../../utils/dtos';
 import getRestaurants from './getRestaurants';
 import RestaurantCard from './RestaurantCard';
 import SearchBar from '../../search/SearchBar';
-import FilterPanel, { FilterState } from './FilterPanel';
+import FilterPanel, { FilterState, FilterGroup } from './FilterPanel';
 
 function Restaurants() {
   const { reservationDetail } = useContext(AppContext);
   const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
+  const [filteredRestaurants, setFilteredRestaurants] =
+    useState<Restaurant[]>(restaurants);
 
   // filters used in the query to the API
   const [query, setQuery] = useState<RestaurantFilters>();
 
   // filters used to filter the results from the API
-  const [, setFilterState] = useState<FilterState>({});
+  const [filterState, setFilterState] = useState<FilterState>({});
 
   // initialize query with property address
   useEffect(() => {
@@ -31,6 +33,111 @@ function Restaurants() {
       subscribed = false;
     };
   }, [reservationDetail]);
+
+  const distances: { [key: string]: number } = {
+    'Walking (1 mile)': 1,
+    'Biking (2 miles)': 2,
+    'Driving (10 miles)': 3,
+    Any: 50
+  };
+
+  const groups: FilterGroup[] = [
+    {
+      type: 'check',
+      name: 'openNow',
+      label: 'Open Now',
+      options: ['Open Now'],
+      defaultChecked: 'Open Now'
+    },
+    {
+      type: 'radio',
+      name: 'distance',
+      label: 'Distance',
+      options: Object.keys(distances),
+      defaultChecked: 'Any'
+    },
+    {
+      type: 'check',
+      name: 'price',
+      label: 'Price',
+      options: ['$', '$$', '$$$', '$$$$', '$$$$$']
+    },
+    {
+      type: 'radio',
+      name: 'rating',
+      label: 'Rating',
+      options: ['☆☆☆☆', '☆☆☆', '☆☆', '☆'],
+      defaultChecked: '☆☆☆☆'
+    },
+    {
+      type: 'check',
+      name: 'services',
+      label: 'Services',
+      options: ['delivery', 'pickup']
+    }
+  ];
+
+  // initialize default filter state
+  useEffect(() => {
+    let subscribed = true;
+
+    if (reservationDetail) {
+      const defaultFilters: FilterState = {};
+
+      groups
+        .filter((g) => g.defaultChecked)
+        .forEach((g) => {
+          switch (typeof g.defaultChecked) {
+            case 'string':
+              defaultFilters[g.name] = [g.defaultChecked];
+              break;
+            case 'object':
+              defaultFilters[g.name] = g.defaultChecked;
+              break;
+          }
+        });
+
+      subscribed && setFilterState(defaultFilters);
+    }
+
+    return () => {
+      subscribed = false;
+    };
+  }, [reservationDetail]);
+
+  const filterResults = useCallback(
+    (results: Restaurant[]) => {
+      const { openNow, distance, price, rating, services } = filterState;
+      const metersToMiles = (meters: number) => 0.000621371 * meters;
+
+      return results.filter((result) => {
+        if (openNow && openNow[0] === 'Open Now' && !result.isOpen)
+          return false;
+
+        if (distance && metersToMiles(result.distance) > distances[distance[0]])
+          return false;
+
+        // price: 0 = $, price: 1 = $$, etc.
+        if (
+          price?.length &&
+          !price.map((p) => p.length).includes(result.price + 1)
+        )
+          return false;
+
+        if (rating?.length && result.rating < rating[0].length) return false;
+
+        if (
+          services?.length &&
+          services.filter((s) => result.transactions.includes(s)).length <
+            services.length
+        )
+          return false;
+
+        return true;
+      });
+    },
+    [filterState]
+  );
 
   // query the API
   useEffect(() => {
@@ -49,6 +156,19 @@ function Restaurants() {
     };
   }, [reservationDetail, query]);
 
+  // filter the restaurant query results
+  useEffect(() => {
+    let subscribed = true;
+
+    subscribed &&
+      restaurants &&
+      setFilteredRestaurants(filterResults(restaurants));
+
+    return () => {
+      subscribed = false;
+    };
+  }, [restaurants, filterState]);
+
   const sidebarWidth = 192;
 
   return (
@@ -57,45 +177,8 @@ function Restaurants() {
         <Sidebar width={sidebarWidth}>
           <FilterPanel
             handleChange={setFilterState}
-            groups={[
-              {
-                type: 'check',
-                name: 'openNow',
-                label: 'Open Now',
-                options: ['Open Now'],
-                defaultChecked: 'Open Now'
-              },
-              {
-                type: 'radio',
-                name: 'distance',
-                label: 'Distance',
-                options: [
-                  'Walking (1 mile)',
-                  'Biking (2 miles)',
-                  'Driving (10 miles)',
-                  'Any'
-                ],
-                defaultChecked: 'Any'
-              },
-              {
-                type: 'check',
-                name: 'price',
-                label: 'Price',
-                options: ['$', '$$', '$$$', '$$$$']
-              },
-              {
-                type: 'check',
-                name: 'rating',
-                label: 'Rating',
-                options: ['☆☆☆☆', '☆☆☆', '☆☆', '☆']
-              },
-              {
-                type: 'check',
-                name: 'services',
-                label: 'Services',
-                options: ['Dine-in', 'Delivery', 'Take-out', 'Drive-thru']
-              }
-            ]}
+            groups={groups}
+            title={null}
           />
         </Sidebar>
       </SidebarWrapper>
@@ -109,8 +192,9 @@ function Restaurants() {
             })
           }
         />
+        <ResultCount>{`${filteredRestaurants.length} Results`}</ResultCount>
         <CardContainer>
-          {restaurants?.map((r) => {
+          {filteredRestaurants?.map((r) => {
             return <RestaurantCard key={r.id} restaurant={r} />;
           })}
         </CardContainer>
@@ -122,13 +206,12 @@ function Restaurants() {
 const Container = styled.div`
   display: flex;
   width: 100%;
+  height: 100%;
 `;
 
 const SidebarWrapper = styled.div<{ width: number }>`
   position: relative;
   width: ${(props) => `${props.width}px`};
-  height: 100%;
-  background-color: ${theme.color.lightGray};
 
   ${theme.screen.small} {
     display: none;
@@ -137,10 +220,12 @@ const SidebarWrapper = styled.div<{ width: number }>`
 
 const Sidebar = styled.div<{ width: number }>`
   position: fixed;
-  top: 60px; // TODO: make dynamic based on height of header
+  --header-height: 60px; // TODO: make dynamic based on height of header
+  top: var(--header-height);
   left: 0;
   width: ${(props) => `${props.width}px`};
-  height: 100%;
+  height: calc(100% - var(--header-height));
+  background-color: ${theme.color.lightGray};
   overflow-y: scroll;
 
   // hide scrollbar on chrome/safari
@@ -164,6 +249,7 @@ const ContentContainer = styled.div`
   flex-direction: column;
   align-items: center;
   flex-grow: 1;
+  height: fit-content;
   padding: 32px;
 
   ${theme.screen.small} {
@@ -176,8 +262,12 @@ const ContentContainer = styled.div`
   }
 `;
 
-const StyledSearchBar = styled(SearchBar)`
-  margin-bottom: 32px;
+const StyledSearchBar = styled(SearchBar)``;
+
+const ResultCount = styled.div`
+  margin: 8px 0 16px;
+  ${theme.font.caption}
+  color: ${theme.color.gray};
 `;
 
 const CardContainer = styled.div`
