@@ -3,8 +3,12 @@ import { theme } from '../../../utils/styles';
 import { memo, useContext, useState, useEffect } from 'react';
 import AppContext from '../../../context/AppContext';
 import { paramRoute, routes } from '../../..';
-import { ReviewCellProps } from '../Dashboard';
+import { DashboardCellProps } from '../Dashboard';
 import DashboardCellClickable from '../DashboardCellClickable';
+
+interface ReviewCellProps extends DashboardCellProps {
+  survey?: Response;
+}
 
 function ReviewCell({ className, cell, survey }: ReviewCellProps) {
   const { reservationDetail, user } = useContext(AppContext);
@@ -23,13 +27,9 @@ function ReviewCell({ className, cell, survey }: ReviewCellProps) {
     <Container
       className={className}
       cell={cell}
-      to={paramRoute(
-        routes.review,
-        reservationId,
-        guestId
-      )}
+      to={paramRoute(routes.review, reservationId, guestId)}
       child={buttonText}
-      state={{surveyRecord : survey}}
+      state={{ surveyRecord: survey }}
     />
   );
 }

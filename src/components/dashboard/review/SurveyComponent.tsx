@@ -1,13 +1,12 @@
 import { Model } from 'survey-core';
 import { Survey } from 'survey-react-ui';
 import 'survey-core/defaultV2.min.css';
-import "../../../index.css";
+import '../../../index.css';
 import { guestSurveyJson } from './GuestSurveyJson';
 import { useContext, useEffect } from 'react';
 import AppContext from '../../../context/AppContext';
 import { server } from '../../..';
 import { useLocation, useNavigate } from 'react-router-dom';
-
 
 function SurveyComponent() {
   const { reservationDetail, user } = useContext(AppContext);
@@ -33,7 +32,6 @@ function SurveyComponent() {
     setTimeout(() => {
       navigate(`/reservations/${reservationId!}/dashboard`);
     }, 3000);
-    
   });
 
   useEffect(() => {

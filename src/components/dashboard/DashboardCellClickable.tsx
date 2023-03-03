@@ -21,7 +21,9 @@ function DashboardCellClickable({
 }: DashboardCellClickableProps) {
   return (
     <Container className={className} gridArea={cell}>
-      <DashboardCellLink to={to} state={state}>{child}</DashboardCellLink>
+      <DashboardCellLink to={to} state={state}>
+        {child}
+      </DashboardCellLink>
     </Container>
   );
 }

@@ -1,9 +1,9 @@
 export const guestSurveyJson = {
-  "logo": "/bmg-branding/BMG-Script-RdHrt.svg",
-  "logoWidth": "200px",
-  "logoHeight": "80px",
-  "logoFit": "cover",
-  "logoPosition": "right",
+  logo: '/bmg-branding/BMG-Script-RdHrt.svg',
+  logoWidth: '200px',
+  logoHeight: '80px',
+  logoFit: 'cover',
+  logoPosition: 'right',
   title: 'Guest Experience Feedback Survey',
   description: 'Your opinion matters to us!',
   elements: [
@@ -134,6 +134,6 @@ export const guestSurveyJson = {
   progressBarType: 'questions',
   widthMode: 'responsive',
   width: '85%',
-  completedHtml: "<p><h4>Thank you for your feedback!</h4></p><p>Navigating back to Dashboard in 3...2...1...</p>"
-
+  completedHtml:
+    '<p><h4>Thank you for your feedback!</h4></p><p>Navigating back to Dashboard in 3...2...1...</p>'
 };

@@ -14,15 +14,10 @@ import ChatPreview from './chat/ChatPreview';
 import MapCell from './map/MapCell';
 import ReviewCell from './review/ReviewCell';
 import { server } from '../../';
-import { isEmpty } from '@aws-amplify/core';
 
 export interface DashboardCellProps {
   className?: string;
   cell: string;
-}
-
-export interface ReviewCellProps extends DashboardCellProps{
-  survey?: Response;
 }
 
 const info = 'info';
@@ -63,20 +58,24 @@ function Dashboard() {
     const guestId = user?.userId;
     const surveyExpirationDate = new Date(Date.parse(checkOutDate!));
     surveyExpirationDate.setDate(surveyExpirationDate.getDate() + 10);
-    (async function() {
-      const response = await fetch(`${server}/api/surveys/${reservationId!}/${guestId!}`);
+    (async function () {
+      const response = await fetch(
+        `${server}/api/surveys/${reservationId!}/${guestId!}`
+      );
       const body = await response.json();
-      if (isEmpty(body.data)) {
+      console.log(body);
+      console.log(body.data);
+      if (body.data.length === 0) {
         if (
           Date.parse(checkInDate!) < Date.now() &&
           Date.now() < surveyExpirationDate.getTime()
         ) {
           setReviewCell(<ReviewCell cell={review} />);
-          console.log("Prompt guest to complete survey");
+          console.log('Prompt guest to complete survey');
         }
       } else {
-        setReviewCell(<ReviewCell cell={review} survey={body.data}/>);
-        console.log("Allow guest to view submitted survey response");
+        setReviewCell(<ReviewCell cell={review} survey={body.data} />);
+        console.log('Allow guest to view submitted survey response');
       }
     })();
   }, [reservationDetail]);
