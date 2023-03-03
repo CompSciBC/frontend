@@ -13,7 +13,6 @@ import ChatCell from './chat/ChatCell';
 import ChatPreview from './chat/ChatPreview';
 import MapCell from './map/MapCell';
 import ReviewCell from './review/ReviewCell';
-import { server } from '../../';
 
 export interface DashboardCellProps {
   className?: string;
@@ -33,7 +32,7 @@ const review = 'review';
 
 function Dashboard() {
   const { resId } = useParams();
-  const { reservationDetail, user } = useContext(AppContext);
+  const { reservationDetail } = useContext(AppContext);
 
   const infoCell = <InfoCell cell={info} />;
   const checkCell = <CheckInCell cell={check} />;
@@ -45,40 +44,7 @@ function Dashboard() {
   const chatCell = <ChatCell cell={chat} />;
   const chatPreviewCell = <ChatPreview n={3} cell={chat} />;
   const mapCell = <MapCell cell={map} />;
-
-  // From the day of checkin to 10 days after checkout, display a button prompting guest to submit a review if they have not.
-  // If guest has submitted a review for a property, display a button allowing them to view their response
-  const [reviewCell, setReviewCell] = useState<JSX.Element>(<></>);
-  useEffect(() => {
-    const {
-      id: reservationId,
-      checkIn: checkInDate,
-      checkOut: checkOutDate
-    } = reservationDetail ?? {};
-    const guestId = user?.userId;
-    const surveyExpirationDate = new Date(Date.parse(checkOutDate!));
-    surveyExpirationDate.setDate(surveyExpirationDate.getDate() + 10);
-    (async function () {
-      const response = await fetch(
-        `${server}/api/surveys/${reservationId!}/${guestId!}`
-      );
-      const body = await response.json();
-      console.log(body);
-      console.log(body.data);
-      if (body.data.length === 0) {
-        if (
-          Date.parse(checkInDate!) < Date.now() &&
-          Date.now() < surveyExpirationDate.getTime()
-        ) {
-          setReviewCell(<ReviewCell cell={review} />);
-          console.log('Prompt guest to complete survey');
-        }
-      } else {
-        setReviewCell(<ReviewCell cell={review} survey={body.data} />);
-        console.log('Allow guest to view submitted survey response');
-      }
-    })();
-  }, [reservationDetail]);
+  const reviewCell = <ReviewCell cell={review} />;
 
   const [width, setWidth] = useState(window.innerWidth);
 

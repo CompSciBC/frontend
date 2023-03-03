@@ -5,33 +5,61 @@ import AppContext from '../../../context/AppContext';
 import { paramRoute, routes } from '../../..';
 import { DashboardCellProps } from '../Dashboard';
 import DashboardCellClickable from '../DashboardCellClickable';
+import { server } from '../../../index';
 
-interface ReviewCellProps extends DashboardCellProps {
-  survey?: Response;
-}
-
-function ReviewCell({ className, cell, survey }: ReviewCellProps) {
+function ReviewCell({ className, cell }: DashboardCellProps) {
   const { reservationDetail, user } = useContext(AppContext);
-  const reservationId = reservationDetail?.id;
+  const {
+    id: reservationId,
+    checkIn: checkInDate,
+    checkOut: checkOutDate
+  } = reservationDetail ?? {};
   const guestId = user?.userId;
 
   const [buttonText, setButtonText] = useState<String>();
+  const [buttonDisplay, setButtonDisplay] = useState<boolean>(false);
+  const [surveyRecord, setSurveyRecord] = useState<Response>();
   useEffect(() => {
-    if (survey) {
-      setButtonText('View Survey Response');
-    } else {
-      setButtonText('Review Your Rental Experience');
-    }
-  }, []);
-  return (
-    <Container
-      className={className}
-      cell={cell}
-      to={paramRoute(routes.review, reservationId, guestId)}
-      child={buttonText}
-      state={{ surveyRecord: survey }}
-    />
-  );
+    const surveyExpirationDate = new Date(Date.parse(checkOutDate!));
+    surveyExpirationDate.setDate(surveyExpirationDate.getDate() + 10);
+    (async function () {
+      const response = await fetch(
+        `${server}/api/surveys/${reservationId!}/${guestId!}`
+      );
+      const body = await response.json();
+      console.log(body);
+      console.log(body.data);
+      if (body.data) {
+        setButtonDisplay(true);
+        setSurveyRecord(body.data);
+        setButtonText('View Survey Response');
+        console.log('Allow guest to view submitted survey response');
+      } else {
+        if (
+          Date.parse(checkInDate!) < Date.now() &&
+          Date.now() < surveyExpirationDate.getTime()
+        ) {
+          setButtonDisplay(true);
+          setButtonText('Review Your Rental Experience');
+          console.log('Prompt guest to complete survey');
+        }
+      }
+    })();
+  }, [reservationDetail]);
+
+  if (buttonDisplay) {
+    return (
+      <Container
+        className={className}
+        cell={cell}
+        to={paramRoute(routes.review, reservationId, guestId)}
+        child={buttonText}
+        state={{ surveyRecord }}
+      />
+    );
+  } else {
+    return <></>;
+  }
 }
 
 const Container = styled(DashboardCellClickable)`
