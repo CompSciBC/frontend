@@ -38,7 +38,7 @@ function AddReservation() {
 
         if (reservation) {
           subscribed && setSuccess(await postReservation(reservation));
-          console.log('success');
+          console.log(`Reservation #${resId!} added to guestId ${user.userId}`);
         } else {
           console.log(`Reservation #${resId!} does not exist.`);
         }
@@ -48,7 +48,7 @@ function AddReservation() {
     return () => {
       subscribed = false;
     };
-  }, [user]);
+  }, [user, reservationDetail]);
 
   useEffect(() => {
     success &&
@@ -56,7 +56,7 @@ function AddReservation() {
       navigate(paramRoute(routes.dashboard, reservationDetail.id));
   }, [success]);
 
-  return <>Add Reservation</>;
+  return <></>;
 }
 
 export default AddReservation;
