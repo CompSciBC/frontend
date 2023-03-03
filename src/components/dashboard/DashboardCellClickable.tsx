@@ -9,17 +9,21 @@ export interface DashboardCellClickableProps {
   cell: string;
   to: string;
   child?: ReactNode;
+  state?: any;
 }
 
 function DashboardCellClickable({
   className,
   cell,
   to,
-  child
+  child,
+  state
 }: DashboardCellClickableProps) {
   return (
     <Container className={className} gridArea={cell}>
-      <DashboardCellLink to={to}>{child}</DashboardCellLink>
+      <DashboardCellLink to={to} state={state}>
+        {child}
+      </DashboardCellLink>
     </Container>
   );
 }

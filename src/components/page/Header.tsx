@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { routes } from '../../index';
 import { theme } from '../../utils/styles';
 import Navbar, { NavbarLink } from './Navbar';
+import HamburgerMenu from './HamburgerMenu';
 
 interface HeaderProps {
   className?: string;
@@ -18,11 +19,8 @@ function Header({ className, logo, navLinks }: HeaderProps) {
           <Logo to={routes.home}>
             <img src={logo} alt="logo" />
           </Logo>
-          <Menu className="Menu">
-            <img src="/bmg-branding/Menu.svg" alt="Hamb. Menu" />
-          </Menu>
+          <StyledHamburgerMenu size={40} navLinks={navLinks} />
         </IconHomeLinkFrame>
-
         <NavLinksFrame>{navLinks && <Nav navLinks={navLinks} />}</NavLinksFrame>
       </NavFrame>
     </NavParentFrame>
@@ -48,7 +46,7 @@ const IconHomeLinkFrame = styled.div`
   gap: 10px;
   overflow: hidden;
   flex: 1 61%;
-  padding: 0.4%;
+  padding: 0 10px;
   order: 0;
   flex-grow: 0;
 `;
@@ -92,12 +90,8 @@ const Logo = styled(Link)`
   }
 `;
 
-const Menu = styled.div`
+const StyledHamburgerMenu = styled(HamburgerMenu)`
   display: none;
-
-  img {
-    height: 40px;
-  }
 
   ${theme.screen.small} {
     display: block;

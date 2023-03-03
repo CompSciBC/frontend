@@ -99,9 +99,11 @@ const Container = styled.div`
   flex-direction: column;
   align-items: center;
   width: 85%;
+  padding: 32px 0;
 
   ${theme.screen.small} {
     width: 100%;
+    padding: 16px;
   }
 `;
 

@@ -1,31 +1,18 @@
-import { useContext, useEffect, useState } from 'react';
-import { Outlet, useParams } from 'react-router-dom';
+import { useContext } from 'react';
 import AppContext from '../../context/AppContext';
-import ErrorPage from '../ErrorPage';
+import { Outlet } from 'react-router-dom';
 import Login from './Login';
 
+/**
+ * A wrapper for content requiring authentication before view. If the user
+ * is not authenticated, displays the login page. Upon login, displays the
+ * protected content
+ *
+ * @returns A JSX element
+ */
 function ProtectedRoute() {
-  const { authenticated, reservationDetail, user } = useContext(AppContext);
-  const { resId, userId } = useParams();
-  const [element, setElement] = useState<JSX.Element>(<></>);
-
-  useEffect(() => {
-    let subscribed = true;
-
-    if (!authenticated) {
-      subscribed && setElement(<Login />);
-    } else if ((!resId || reservationDetail?.id === resId) || (!userId || user?.userId === userId)) {
-      subscribed && setElement(<Outlet />);
-    } else {
-      subscribed && setElement(<ErrorPage />);
-    }
-
-    return () => {
-      subscribed = false;
-    };
-  }, [authenticated, resId, reservationDetail, userId, user]);
-
-  return element;
+  const { authenticated } = useContext(AppContext);
+  return authenticated ? <Outlet /> : <Login />;
 }
 
 export default ProtectedRoute;

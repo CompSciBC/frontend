@@ -4,6 +4,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { AppContextProvider } from './context/AppContext';
 import { NavbarLink } from './components/page/Navbar';
 import App from './components/App';
+import ErrorPage from './components/ErrorPage';
 import Home from './components/home/Home';
 import About from './components/about/About';
 import Login from './components/auth/Login';
@@ -25,6 +26,7 @@ import Weather from './components/dashboard/weather/Weather';
 import Restaurants from './components/dashboard/restaurants/Restaurants';
 import EventsAndPlaces from './components/dashboard/eventsAndPlaces/EventsAndPlaces';
 import Map from './components/dashboard/map/Map';
+import SurveyView from './components/dashboard/review/SurveyComponent';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
 import AppTestMode from './components/AppTestMode';
@@ -33,7 +35,6 @@ import Inbox from './components/chat/Inbox';
 // Configure React project with Amplify resources
 import { Amplify } from 'aws-amplify';
 import config from './aws-exports';
-import ErrorPage from './components/ErrorPage';
 Amplify.configure(config);
 
 /**
@@ -71,7 +72,8 @@ export const routes = {
   weather: '/reservations/:resId/weather',
   restaurants: '/reservations/:resId/restaurants',
   eventsAndPlaces: '/reservations/:resId/eventsAndPlaces',
-  map: '/reservations/:resId/map'
+  map: '/reservations/:resId/map',
+  review: '/reservations/:resId/:guestId/review'
 };
 
 /**
@@ -218,6 +220,10 @@ const router = createBrowserRouter([
           {
             path: routes.map,
             element: <Map />
+          },
+          {
+            path: routes.review,
+            element: <SurveyView />
           }
         ]
       }
