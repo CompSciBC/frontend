@@ -27,7 +27,6 @@ function SearchBar({
     )[0] as HTMLInputElement;
     textField.value = '';
     handleSubmit(text);
-    console.log('Searching for: ', text);
   };
 
   return (

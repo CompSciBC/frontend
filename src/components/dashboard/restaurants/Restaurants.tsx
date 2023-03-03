@@ -7,6 +7,7 @@ import getRestaurants from './getRestaurants';
 import RestaurantCard from './RestaurantCard';
 import SearchBar from '../../search/SearchBar';
 import FilterPanel, { FilterState, FilterGroup } from './FilterPanel';
+import CloseX from '../../page/CloseX';
 
 function Restaurants() {
   const { reservationDetail } = useContext(AppContext);
@@ -19,20 +20,6 @@ function Restaurants() {
 
   // filters used to filter the results from the API
   const [filterState, setFilterState] = useState<FilterState>({});
-
-  // initialize query with property address
-  useEffect(() => {
-    let subscribed = true;
-
-    if (reservationDetail) {
-      const { address } = reservationDetail.property;
-      subscribed && setQuery({ address });
-    }
-
-    return () => {
-      subscribed = false;
-    };
-  }, [reservationDetail]);
 
   const distances: { [key: string]: number } = {
     'Walking (1 mile)': 1,
@@ -77,11 +64,14 @@ function Restaurants() {
     }
   ];
 
-  // initialize default filter state
+  // initialize default query and filter state
   useEffect(() => {
     let subscribed = true;
 
     if (reservationDetail) {
+      const { address } = reservationDetail.property;
+      subscribed && setQuery({ address });
+
       const defaultFilters: FilterState = {};
 
       groups
@@ -169,6 +159,18 @@ function Restaurants() {
     };
   }, [restaurants, filterState]);
 
+  const removeKeyword = useCallback(
+    (keyword: string): RestaurantFilters => {
+      const keywords = query?.keywords;
+      const remove = keywords?.indexOf(keyword) ?? -1;
+      remove >= 0 && keywords?.splice(remove, 1);
+
+      const newQuery = { ...query, keywords };
+      return newQuery as RestaurantFilters;
+    },
+    [query]
+  );
+
   const sidebarWidth = 192;
 
   return (
@@ -185,14 +187,29 @@ function Restaurants() {
       <ContentContainer>
         <h2>Nearby Restaurants</h2>
         <StyledSearchBar
-          handleSubmit={(text: string) =>
-            setQuery({
-              address: reservationDetail!.property.address,
-              keywords: text?.split(',')
-            })
-          }
+          handleSubmit={(text: string) => {
+            if (text.trim()) {
+              let keywords = text.split(',').map((i) => i.trim());
+              keywords = [...new Set(keywords)];
+              setQuery({
+                address: reservationDetail!.property.address,
+                keywords
+              });
+            }
+          }}
         />
-        <ResultCount>{`${filteredRestaurants.length} Results`}</ResultCount>
+        <QueryContainer>
+          {query?.keywords?.map((k) => (
+            <QueryTag key={k}>
+              <span>{k}</span>
+              <StyledCloseX
+                size={24}
+                onClick={() => setQuery(removeKeyword(k))}
+              />
+            </QueryTag>
+          ))}
+          <ResultCount>{`${filteredRestaurants.length} Results`}</ResultCount>
+        </QueryContainer>
         <CardContainer>
           {filteredRestaurants?.map((r) => {
             return <RestaurantCard key={r.id} restaurant={r} />;
@@ -264,8 +281,38 @@ const ContentContainer = styled.div`
 
 const StyledSearchBar = styled(SearchBar)``;
 
-const ResultCount = styled.div`
+const QueryContainer = styled.div`
+  position: relative;
+  display: flex;
+  width: 100%;
+  min-height: 24px;
+  gap: 8px;
   margin: 8px 0 16px;
+`;
+
+const QueryTag = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-left: 8px;
+  background-color: ${theme.color.lightGray};
+  ${theme.font.caption}
+  color: ${theme.color.gray};
+`;
+
+const StyledCloseX = styled(CloseX)`
+  padding: 8px;
+
+  :hover {
+    background-color: rgba(0, 0, 0, 0.1);
+  }
+`;
+
+const ResultCount = styled.div`
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+
   ${theme.font.caption}
   color: ${theme.color.gray};
 `;
