@@ -26,15 +26,7 @@ function ReviewCell({ className, cell }: DashboardCellProps) {
       const response = await fetch(
         `${server}/api/surveys/${reservationId!}/${guestId!}`
       );
-      const body = await response.json();
-      console.log(body);
-      console.log(body.data);
-      if (body.data) {
-        setButtonDisplay(true);
-        setSurveyRecord(body.data);
-        setButtonText('View Survey Response');
-        console.log('Allow guest to view submitted survey response');
-      } else {
+      if (response.status === 204) {
         if (
           Date.parse(checkInDate!) < Date.now() &&
           Date.now() < surveyExpirationDate.getTime()
@@ -42,6 +34,14 @@ function ReviewCell({ className, cell }: DashboardCellProps) {
           setButtonDisplay(true);
           setButtonText('Review Your Rental Experience');
           console.log('Prompt guest to complete survey');
+        }
+      } else {
+        const body = await response.json();
+        if (body.data) {
+          setButtonDisplay(true);
+          setSurveyRecord(body.data);
+          setButtonText('View Survey Response');
+          console.log('Allow guest to view submitted survey response');
         }
       }
     })();
