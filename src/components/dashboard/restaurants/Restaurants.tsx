@@ -188,26 +188,30 @@ function Restaurants() {
         <h2>Nearby Restaurants</h2>
         <StyledSearchBar
           handleSubmit={(text: string) => {
-            if (text.trim()) {
+            const { address } = reservationDetail!.property;
+
+            if (!text.trim() && Object.keys(query ?? {}).length > 1) {
+              // reset to default query if user submits blank search while there are keywords set
+              setQuery({ address });
+            } else if (text.trim()) {
               let keywords = text.split(',').map((i) => i.trim());
               keywords = [...new Set(keywords)];
-              setQuery({
-                address: reservationDetail!.property.address,
-                keywords
-              });
+              setQuery({ address, keywords });
             }
           }}
         />
         <QueryContainer>
-          {query?.keywords?.map((k) => (
-            <QueryTag key={k}>
-              <span>{k}</span>
-              <StyledCloseX
-                size={24}
-                onClick={() => setQuery(removeKeyword(k))}
-              />
-            </QueryTag>
-          ))}
+          <TagTrack>
+            {query?.keywords?.map((k) => (
+              <QueryTag key={k}>
+                <span>{k}</span>
+                <StyledCloseX
+                  size={24}
+                  onClick={() => setQuery(removeKeyword(k))}
+                />
+              </QueryTag>
+            ))}
+          </TagTrack>
           <ResultCount>{`${filteredRestaurants.length} Results`}</ResultCount>
         </QueryContainer>
         <CardContainer>
@@ -282,12 +286,17 @@ const ContentContainer = styled.div`
 const StyledSearchBar = styled(SearchBar)``;
 
 const QueryContainer = styled.div`
-  position: relative;
   display: flex;
+  flex-direction: column;
+  gap: 4px;
   width: 100%;
-  min-height: 24px;
+  margin: 8px 0;
+`;
+
+const TagTrack = styled.div`
+  display: flex;
   gap: 8px;
-  margin: 8px 0 16px;
+  flex-wrap: wrap;
 `;
 
 const QueryTag = styled.div`
@@ -309,9 +318,8 @@ const StyledCloseX = styled(CloseX)`
 `;
 
 const ResultCount = styled.div`
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
+  display: flex;
+  justify-content: center;
 
   ${theme.font.caption}
   color: ${theme.color.gray};
