@@ -14,7 +14,7 @@ interface SentStatus {
 export interface SendInviteFormProps {
   className?: string;
   resId: string;
-  userName: string;
+  guestName: string;
   onClose: CallableFunction;
 }
 
@@ -27,7 +27,7 @@ export interface SendInviteFormProps {
 function SendInviteForm({
   className,
   resId,
-  userName,
+  guestName,
   onClose
 }: SendInviteFormProps) {
   const recipientsInputId = 'invite-recipients';
@@ -82,7 +82,7 @@ function SendInviteForm({
 
       const invite: Invitation = {
         recipients: recipients.split(','),
-        guestName: userName,
+        guestName,
         message: messageInput?.value
       };
 
