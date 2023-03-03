@@ -65,7 +65,6 @@ const SearchIcon = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100%;
   padding-left: 8px;
   border-left: 1px solid ${theme.color.lightGray};
   border-top: 1px solid ${theme.color.lightGray};
