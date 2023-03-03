@@ -124,7 +124,7 @@ function Dashboard() {
     }
 
     return container;
-  }, [width, resId, reservationDetail]);
+  }, [width, resId, reservationDetail, reviewCell]);
 
   return layout;
 }
