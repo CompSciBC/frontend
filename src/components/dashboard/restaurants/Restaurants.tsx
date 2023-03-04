@@ -24,7 +24,7 @@ function Restaurants() {
   const distances: { [key: string]: number } = {
     'Walking (1 mile)': 1,
     'Biking (2 miles)': 2,
-    'Driving (10 miles)': 3,
+    'Driving (10 miles)': 10,
     Any: 50
   };
 
