@@ -41,7 +41,7 @@ Amplify.configure(config);
  */
 let endpoint;
 if (process.env.REACT_APP_ENV === 'prod') {
-  endpoint = 'https://bemyguestapp.link:8080/';
+  endpoint = 'https://bemyguestapp.link:8080';
 } else {
   endpoint = 'http://localhost:8080';
 }
