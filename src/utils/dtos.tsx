@@ -125,7 +125,6 @@ export interface Invitation {
  */
 export interface Restaurant {
   id: string;
-  alias: string;
   name: string;
   imageUrl: string;
   isOpen: boolean;

@@ -29,8 +29,8 @@ function RestaurantCard({ className, restaurant }: RestaurantCardProps) {
   const distanceInMiles = `${(0.000621371 * distance).toFixed(2)} mi`;
   const stars = Array.from({ length: rating }, (_, i) => <Star key={i} />);
 
-  // price can be 0, so add 1 to all prices
-  const dollars = Array.from({ length: price + 1 }, (_, i) => (
+  // if price = 0, display 1 $
+  const dollars = Array.from({ length: Math.max(price, 1) }, (_, i) => (
     <Fragment key={i}>$</Fragment>
   ));
 

@@ -28,6 +28,13 @@ function Restaurants() {
     Any: 50
   };
 
+  const ratings: { [key: string]: number } = {
+    '☆☆☆☆ & up': 4,
+    '☆☆☆ & up': 3,
+    '☆☆ & up': 2,
+    '☆ & up': 1
+  };
+
   const groups: FilterGroup[] = [
     {
       type: 'check',
@@ -47,20 +54,14 @@ function Restaurants() {
       type: 'check',
       name: 'price',
       label: 'Price',
-      options: ['$', '$$', '$$$', '$$$$', '$$$$$']
+      options: ['$', '$$', '$$$', '$$$$']
     },
     {
       type: 'radio',
       name: 'rating',
       label: 'Rating',
-      options: ['☆☆☆☆', '☆☆☆', '☆☆', '☆'],
-      defaultChecked: '☆☆☆☆'
-    },
-    {
-      type: 'check',
-      name: 'services',
-      label: 'Services',
-      options: ['delivery', 'pickup']
+      options: Object.keys(ratings),
+      defaultChecked: '☆☆☆☆ & up'
     }
   ];
 
@@ -97,7 +98,7 @@ function Restaurants() {
 
   const filterResults = useCallback(
     (results: Restaurant[]) => {
-      const { openNow, distance, price, rating, services } = filterState;
+      const { openNow, distance, price, rating } = filterState;
       const metersToMiles = (meters: number) => 0.000621371 * meters;
 
       return results.filter((result) => {
@@ -107,21 +108,10 @@ function Restaurants() {
         if (distance && metersToMiles(result.distance) > distances[distance[0]])
           return false;
 
-        // price: 0 = $, price: 1 = $$, etc.
-        if (
-          price?.length &&
-          !price.map((p) => p.length).includes(result.price + 1)
-        )
+        if (price?.length && !price.map((p) => p.length).includes(result.price))
           return false;
 
-        if (rating?.length && result.rating < rating[0].length) return false;
-
-        if (
-          services?.length &&
-          services.filter((s) => result.transactions.includes(s)).length <
-            services.length
-        )
-          return false;
+        if (rating?.length && result.rating < ratings[rating[0]]) return false;
 
         return true;
       });
