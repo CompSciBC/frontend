@@ -24,8 +24,9 @@ const Container = styled.div`
   width: 100vw;
   height: 100vh;
   text-align: center;
-  background-color: ${theme.color.red};
-  text-shadow: 4px 4px 2px rgba(0, 0, 0, 0.5);
+  background-color: ${theme.color.white};
+  text-shadow: 4px 4px 2px rgba(0, 0, 0, 0.25);
+  color: ${theme.color.red};
 
   h1 {
     font-size: 160px;
@@ -38,16 +39,16 @@ const Container = styled.div`
   button {
     margin-top: 32px;
     border: none;
-    border-radius: 16px;
+    border-radius: 8px;
     padding: 8px 16px;
-    background-color: #212529;
-    box-shadow: 4px 4px 2px rgba(0, 0, 0, 0.5);
+    box-shadow: 4px 4px 2px rgba(0, 0, 0, 0.25);
+    background-color: ${theme.color.red};
     font-size: 32px;
     font-weight: bold;
-    color: ${theme.color.red};
+    color: white;
 
     :hover {
-      filter: contrast(1.1);
+      filter: contrast(1.5);
     }
   }
 `;
