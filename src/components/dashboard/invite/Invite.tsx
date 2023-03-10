@@ -59,7 +59,15 @@ function Invite({ className }: InviteProps) {
               <SendInviteForm
                 onClose={() => setEmailFormOpen(false)}
                 resId={reservationDetail.id}
-                userName={user?.username ?? 'Your friend'}
+                guestName={(() => {
+                  const { firstName, lastName } = user!;
+                  let name = '';
+
+                  if (typeof firstName === 'string') name += `${firstName}`;
+                  if (typeof lastName === 'string') name += ` ${lastName}`;
+
+                  return name;
+                })()}
               />
             }
             blur={true}
