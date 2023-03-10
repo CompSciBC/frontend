@@ -1,12 +1,20 @@
 import styled from '@emotion/styled';
-import { Invitation } from '../../../utils/dtos';
 import { theme } from '../../../utils/styles';
+import { useEffect, useState } from 'react';
+import { Invitation } from '../../../utils/dtos';
 import { server } from '../../../index';
+
+type EmailSentStatus = 'notSent' | 'sent' | 'failed';
+
+interface SentStatus {
+  status: EmailSentStatus;
+  recipients: string;
+}
 
 export interface SendInviteFormProps {
   className?: string;
   resId: string;
-  userName: string;
+  guestName: string;
   onClose: CallableFunction;
 }
 
@@ -19,11 +27,15 @@ export interface SendInviteFormProps {
 function SendInviteForm({
   className,
   resId,
-  userName,
+  guestName,
   onClose
 }: SendInviteFormProps) {
   const recipientsInputId = 'invite-recipients';
   const messageInputId = 'invite-message';
+  const [status, setStatus] = useState<SentStatus>({
+    status: 'notSent',
+    recipients: ''
+  });
 
   /**
    * Sends an invitation email message via the api
@@ -70,7 +82,7 @@ function SendInviteForm({
 
       const invite: Invitation = {
         recipients: recipients.split(','),
-        guestName: userName,
+        guestName,
         message: messageInput?.value
       };
 
@@ -80,14 +92,39 @@ function SendInviteForm({
 
         // TODO: replace alert with custom notification
         if (success) {
-          onClose();
-          window.alert('Invitation sent successfully.');
+          setStatus({ status: 'sent', recipients });
         } else {
-          window.alert('Failed to send invitation.');
+          setStatus({ status: 'failed', recipients });
         }
       })();
     }
   };
+
+  useEffect(() => {
+    let subscribed = true;
+
+    switch (status.status) {
+      case 'notSent':
+        break;
+
+      case 'sent':
+        subscribed &&
+          setTimeout(() => {
+            onClose();
+          }, 3000);
+        break;
+
+      case 'failed':
+        subscribed &&
+          setTimeout(() => {
+            subscribed && setStatus({ status: 'notSent', recipients: '' });
+          }, 3000);
+    }
+
+    return () => {
+      subscribed = false;
+    };
+  }, [status]);
 
   /**
    * Removes the required class if input has value
@@ -101,32 +138,42 @@ function SendInviteForm({
 
   return (
     <Container className={className}>
-      <Title>Invite Your Friends</Title>
-      <Field>
-        <label htmlFor={recipientsInputId}>Recipient Emails</label>
-        <input
-          id={recipientsInputId}
-          type="email"
-          placeholder="Enter multiple separated with commas"
-          onBlur={handleBlur}
-        />
-      </Field>
-      <Field>
-        <label htmlFor={messageInputId}>Optional Message</label>
-        <textarea
-          id={messageInputId}
-          placeholder="Hi friend, join me on BeMyGuest!"
-          rows={8}
-        />
-      </Field>
-      <ButtonContainer>
-        <CancelButton type="button" onClick={() => onClose()}>
-          Cancel
-        </CancelButton>
-        <SendButton type="button" onClick={handleSend}>
-          Send
-        </SendButton>
-      </ButtonContainer>
+      {status.status === 'notSent' && (
+        <>
+          <Title>Invite Your Friends</Title>
+          <Field>
+            <label htmlFor={recipientsInputId}>Recipient Emails</label>
+            <input
+              id={recipientsInputId}
+              type="email"
+              placeholder="Enter multiple separated with commas"
+              onBlur={handleBlur}
+            />
+          </Field>
+          <Field>
+            <label htmlFor={messageInputId}>Optional Message</label>
+            <textarea
+              id={messageInputId}
+              placeholder="Hi friend, join me on BeMyGuest!"
+              rows={8}
+            />
+          </Field>
+          <ButtonContainer>
+            <CancelButton type="button" onClick={() => onClose()}>
+              Cancel
+            </CancelButton>
+            <SendButton type="button" onClick={handleSend}>
+              Send
+            </SendButton>
+          </ButtonContainer>
+        </>
+      )}
+      {status.status === 'sent' && (
+        <SentStatusMessage>{`Email sent successfully to ${status.recipients}.`}</SentStatusMessage>
+      )}
+      {status.status === 'failed' && (
+        <SentStatusMessage>Failed to send email.</SentStatusMessage>
+      )}
     </Container>
   );
 }
@@ -230,6 +277,10 @@ const SendButton = styled(FormButton)`
 const CancelButton = styled(FormButton)`
   background-color: lightgray;
   color: black;
+`;
+
+const SentStatusMessage = styled.div`
+  text-align: center;
 `;
 
 export default SendInviteForm;
