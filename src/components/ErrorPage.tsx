@@ -48,7 +48,7 @@ const Container = styled.div`
     color: white;
 
     :hover {
-      filter: contrast(1.5);
+      filter: brightness(0.9) contrast(1.2);
     }
   }
 `;
