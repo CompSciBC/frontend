@@ -49,7 +49,7 @@ export interface GuidebookDto {
   policies?: string[];
   hostRecommended?: string[]; // change later from type any to HostRecommended object
   hostServices?: string[];
-  propertySpecificQ?: any; // change later to Hieu's Survey object
+  askGuestTheseQuestionsinSurvey?: any; // change later to Hieu's Survey object
   checkininstr?: string[];
   checkoutinstr?: string[];
 }

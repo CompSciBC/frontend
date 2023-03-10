@@ -7,13 +7,13 @@ import { useState, useEffect } from 'react';
 
 function Guidebook() {
   const [guidebookInfo, setGuidebookInfo] = useState<GuidebookDto | null>(null);
-  const propID = 'PID00178';
-  // const {reservationDetail} = useContext(AppContext); // & import AppContext at top 
+  const propID = 'PID0001MLT';
+  // const {reservationDetail} = useContext(AppContext); // & import AppContext at top
   useEffect(() => {
     let subscribed = true;
 
     (async function () {
-      const response = await fetch('/api/guidebook/' + propID);
+      const response = await fetch('/api/guidebook/' + propID + '/content');
       subscribed && setGuidebookInfo(await response.json());
     })();
     return () => {
@@ -126,48 +126,43 @@ function Guidebook() {
           <StyledAccordionDropdown
             label="•POLICIES•"
             isOpen={true}
-            content={<BodyText>{guidebookInfo.policies}</BodyText>}
+            content={
+            <BodyText>{guidebookInfo.policies?.map((pol) => {
+              return (
+                <div key={pol}>{pol}
+                </div>
+              );
+            })}</BodyText>
+            }
             smallLineStyling={true}
           />
           <StyledAccordionDropdown
-            label="•YOUR HOST•"
+            label="•HOST RECOMMENDED•"
             isOpen={true}
-            content={<BodyText>{guidebookInfo.policies}</BodyText>}
+            content={
+              <BodyText>{guidebookInfo.hostRecommended?.map((rec) => {
+                return (
+                  <div key={rec}>{rec}
+                  </div>
+                );
+              })}</BodyText>
+              }
             smallLineStyling={true}
           />
           <StyledAccordionDropdown
             label="•SERVICES AND SUPPORT•"
             isOpen={true}
-            content={<BodyText>{guidebookInfo.policies}</BodyText>}
+            content={
+              <BodyText>{guidebookInfo.hostServices?.map((serv) => {
+                return (
+                  <div key={serv}>{serv}
+                  </div>
+                );
+              })}</BodyText>
+              }
             smallLineStyling={true}
           />
         </ListContainer>
-
-        {/* <Faq>                                         // Code below commented out -> For reference !
-      {guidebookInfo.faq?.map((faq) => {
-        return (
-          <li key={faq.Question}>
-            <div>{faq.Question}</div>
-            <div>{faq.Answer}</div>
-          </li>
-        );
-      })
-      }
-    </Faq> */}
-
-        {/* <h2>{guidebookInfo.faq?.[0].Question}</h2>
-    <h2>{guidebookInfo.faq?.[0].Answer}</h2> */}
-
-        {/* Object.keys(guidebookInfo).map((guidebookKey, i) => {
-      
-      return (
-        <div key={guidebookKey}>
-          <div>{guidebookKey}</div>
-          {<div>{guidebookInfo[guidebookKey as keyof GuidebookDto]}</div> }
-        </div>
-      );
-    })
-  */}
       </Container>
     )
   );
