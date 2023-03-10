@@ -240,4 +240,8 @@ const ContainerCarousel = styled.div`
   }
 `;
 
+<<<<<<< HEAD
 export default Guidebook;
+=======
+export default Guidebook;
+>>>>>>> 5938e3beafdd79221d801ecf5be6602bb5b070dc

@@ -1,8 +1,9 @@
 import styled from '@emotion/styled';
-import { Link } from 'react-router-dom';
-import { routes } from '../../index';
-import { ReservationDetail } from '../../utils/dtos';
 import { theme } from '../../utils/styles';
+import { Link } from 'react-router-dom';
+import { paramRoute, routes } from '../../index';
+import { ReservationDetail } from '../../utils/dtos';
+import { useMemo } from 'react';
 
 interface ReservationCardProps {
   className?: string;
@@ -13,9 +14,7 @@ function ReservationCard({
   className,
   reservationDetail
 }: ReservationCardProps) {
-  const { checkIn, address, image } = reservationDetail;
-
-  const streetAddress: string = address.split(',')[0];
+  const { id, checkIn, property, image } = reservationDetail;
 
   const checkInDate = new Date(checkIn).toLocaleDateString('default', {
     weekday: 'short',
@@ -27,15 +26,38 @@ function ReservationCard({
     timeStyle: 'short'
   });
 
+  const address = useMemo(() => {
+    let addressString = '';
+
+    const appendToAddress = (part: string | undefined, separator: string) => {
+      if (part)
+        addressString = addressString
+          ? `${addressString}${separator}${part}`
+          : part;
+    };
+
+    if (property) {
+      const { line1, line2, city } = property.address;
+      appendToAddress(line1, '');
+      appendToAddress(line2, ' ');
+      appendToAddress(city, ', ');
+    }
+    return addressString;
+  }, [reservationDetail]);
+
   return (
-    <Wrapper className={className} image={image ?? ''} to={routes.dashboard}>
+    <Wrapper
+      className={className}
+      image={image ?? ''}
+      to={paramRoute(routes.dashboard, id)}
+    >
       <Container>
         <CheckInInfoBox>
           <CheckInDate>{`Check In : ${checkInDate}`}</CheckInDate>
           <CheckInTime>{checkInTime}</CheckInTime>
         </CheckInInfoBox>
         <AddressInfoBox>
-          <div>{`YOUR RENTAL : ${streetAddress}`}</div>
+          <div>{`YOUR RENTAL : ${address}`}</div>
         </AddressInfoBox>
       </Container>
     </Wrapper>

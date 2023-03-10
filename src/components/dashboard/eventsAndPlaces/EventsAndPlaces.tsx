@@ -1,5 +1,5 @@
 function EventsAndPlaces() {
-  return <>Map</>;
+  return <>Events and Places</>;
 }
 
 export default EventsAndPlaces;

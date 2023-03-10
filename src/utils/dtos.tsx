@@ -1,4 +1,20 @@
-import { WeatherType } from '../components/dashboard/WeatherForecastTile';
+import { WeatherType } from '../components/dashboard/weather/WeatherForecastTile';
+
+export type UserRole = 'guest' | 'host' | undefined;
+
+/**
+ * Represents a user of the application
+ */
+export interface User {
+  userId: string;
+  username: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  role: UserRole;
+  joinedOn?: Date;
+}
 
 /**
  * Represents a physical address (matching Address.java)
@@ -28,7 +44,7 @@ export interface Property {
   id?: string;
   hostId: string;
   name: string;
-  address: string; // TODO: convert to Address type
+  address: Address;
   image?: string; // TODO: add to backend
 }
 
@@ -59,7 +75,7 @@ export interface GuidebookDto {
  * for a specified period of time (matching Reservation.java)
  */
 export interface Reservation {
-  id?: string;
+  id: string;
   hostId: string;
   propertyId: string;
   guestId: string;
@@ -71,10 +87,10 @@ export interface Reservation {
 
 /**
  * A reservation object containing additional details about its associated property
+ * (matching ReservationDetail.java)
  */
 export interface ReservationDetail extends Reservation {
-  propertyName: string;
-  address: string; // TODO: convert to Address type
+  property: Property;
   image?: string;
 }
 

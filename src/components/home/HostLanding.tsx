@@ -1,46 +1,30 @@
 import '@aws-amplify/ui-react/styles.css';
-import { withAuthenticator, useAuthenticator } from '@aws-amplify/ui-react';
-import { useNavigate, Link } from 'react-router-dom';
-import { assignUserToRole, getUserGroup } from '../home/AuthUtils';
+import { useContext } from 'react';
+import { Link } from 'react-router-dom';
+import { routes } from '../..';
+import AppContext from '../../context/AppContext';
 
 function HostLanding() {
-  const { signOut, user } = useAuthenticator();
-  const navigate = useNavigate();
+  const { user } = useContext(AppContext);
 
-  function handleSignOut() {
-    window.localStorage.clear();
-    signOut();
-    navigate('/');
-  }
-
-  let userGroup = getUserGroup(user);
-  if (typeof userGroup === 'boolean') {
-    userGroup = ['host'];
-    assignUserToRole(user.username, 'unassigned', 'host');
-  }
-
-  localStorage.setItem('role', userGroup[0]);
-
-  if (localStorage.getItem('role') === 'guest') {
+  if (user?.role === 'guest') {
     return (
       <>
         <h1>You have logged in with Guest Credentials</h1>
-        <Link to="/guestLanding">
+        <Link to={routes.hostLanding}>
           <button>Go to Guest Landing Page</button>
         </Link>
       </>
     );
   } else {
-    localStorage.setItem('username', user.username!);
     return (
       <>
         <h1>WELCOME TO THE HOST LANDING PAGE!</h1>
-        <p> role = {localStorage.getItem('role')}</p>
-        <p> User Name = {localStorage.getItem('username')}</p>
-        <button onClick={handleSignOut}>Sign out</button>
+        <p> role = {user?.role}</p>
+        <p> User Name = {user?.username}</p>
       </>
     );
   }
 }
 
-export default withAuthenticator(HostLanding);
+export default HostLanding;
