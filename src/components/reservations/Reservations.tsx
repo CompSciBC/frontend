@@ -9,9 +9,13 @@ import { theme } from '../../utils/styles';
 import AccordionDropdown from './AccordionDropdown';
 import ReservationCard from './ReservationCard';
 import { server } from '../../index';
+import CloseX from '../page/CloseX';
+import Modal from '../Modal';
+import AddReservationForm from './AddReservationForm';
 
 function Reservations() {
   const { user } = useContext(AppContext);
+  const [addFormOpen, setAddFormOpen] = useState(false);
 
   const [resDetails, setResDetails] = useState<SortedReservationDetailSet>({
     current: [],
@@ -23,7 +27,7 @@ function Reservations() {
     let subscribed = true;
 
     (async function () {
-      if (user) {
+      if (user && !addFormOpen) {
         const index = user.role;
         const id = user.userId;
 
@@ -58,7 +62,7 @@ function Reservations() {
     return () => {
       subscribed = false;
     };
-  }, [user]);
+  }, [user, addFormOpen]);
 
   // maps the reservation/property objects into a list of reservation cards to be
   // rendered on the screen
@@ -72,7 +76,14 @@ function Reservations() {
 
   return (
     <Container>
-      <Title>My Reservations</Title>
+      <Header>
+        <h1>My Reservations</h1>
+        <AddButton
+          fill="white"
+          size={16}
+          onClick={() => setAddFormOpen(true)}
+        />
+      </Header>
       <ListContainer>
         <StyledAccordionDropdown
           label="Current"
@@ -90,15 +101,23 @@ function Reservations() {
           content={getCards('past')}
         />
       </ListContainer>
+      {addFormOpen && (
+        <Modal
+          content={<AddReservationForm onClose={() => setAddFormOpen(false)} />}
+          blur={true}
+        />
+      )}
     </Container>
   );
 }
 
 const Container = styled.div`
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 85%;
+  gap: 16px;
   padding: 32px 0;
 
   ${theme.screen.small} {
@@ -107,19 +126,51 @@ const Container = styled.div`
   }
 `;
 
-const Title = styled.h1`
-  ${theme.font.displayLarge}
+const Header = styled.div`
+  position: relative;
+  display: flex;
+  justify-content: center;
+  min-width: 512px;
+  text-align: center;
+  height: 32px;
+
+  ${theme.screen.small} {
+    width: 100%;
+    min-width: auto;
+  }
+
+  h1 {
+    ${theme.font.displayLarge}
+    margin: 0;
+  }
+`;
+
+const AddButton = styled(CloseX)`
+  position: absolute;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%) rotate(45deg);
+  border: none;
+  border-radius: 100vh;
+  padding: 8px;
+  background-color: ${theme.color.red};
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+  ${theme.font.button}
+  color: white;
+
+  :hover {
+    filter: contrast(2);
+  }
 `;
 
 const ListContainer = styled.div`
   display: flex;
   flex-direction: column;
   row-gap: 10px;
-  width: 50%;
   min-width: 512px;
 
   ${theme.screen.small} {
-    width: 85%;
+    width: 100%;
     min-width: auto;
   }
 `;

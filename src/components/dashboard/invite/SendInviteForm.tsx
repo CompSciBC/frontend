@@ -3,6 +3,7 @@ import { theme } from '../../../utils/styles';
 import { useEffect, useState } from 'react';
 import { Invitation } from '../../../utils/dtos';
 import { server } from '../../../index';
+import Loading from '../../Loading';
 
 type EmailSentStatus = 'notSent' | 'sent' | 'failed';
 
@@ -32,17 +33,13 @@ function SendInviteForm({
 }: SendInviteFormProps) {
   const recipientsInputId = 'invite-recipients';
   const messageInputId = 'invite-message';
+  const [sending, setSending] = useState(false);
   const [status, setStatus] = useState<SentStatus>({
     status: 'notSent',
     recipients: ''
   });
 
-  /**
-   * Sends an invitation email message via the api
-   *
-   * @param invite An {@link Invitation}
-   * @returns True if the invitation was sent successfully, or false otherwise
-   */
+  // sends an invitation email message via the api
   const sendInvitations = async (invite: Invitation): Promise<boolean> => {
     const send = async () => {
       const response = await fetch(
@@ -60,45 +57,54 @@ function SendInviteForm({
     return (await send()).status === 200; // 200 = ok
   };
 
-  /**
-   * Handles the send action when the send button is clicked
-   */
-  const handleSend = () => {
-    const recipientsInput = document.getElementById(
-      recipientsInputId
-    ) as HTMLInputElement;
+  // send emails
+  useEffect(() => {
+    let subscribed = true;
 
-    const messageInput = document.getElementById(
-      messageInputId
-    ) as HTMLTextAreaElement;
+    if (sending) {
+      const handleSend = () => {
+        const recipientsInput = document.getElementById(
+          recipientsInputId
+        ) as HTMLInputElement;
 
-    const recipients = recipientsInput?.value;
+        const messageInput = document.getElementById(
+          messageInputId
+        ) as HTMLTextAreaElement;
 
-    if (!recipients) {
-      // email field is empty, mark field as required
-      recipientsInput.classList.add('required');
-    } else {
-      recipientsInput.classList.remove('required');
+        const recipients = recipientsInput?.value;
 
-      const invite: Invitation = {
-        recipients: recipients.split(','),
-        guestName,
-        message: messageInput?.value
+        if (!recipients) {
+          // email field is empty, mark field as required
+          recipientsInput.classList.add('required');
+        } else {
+          recipientsInput.classList.remove('required');
+
+          const invite: Invitation = {
+            recipients: recipients.split(','),
+            guestName,
+            message: messageInput?.value
+          };
+
+          // send email and close form if successful
+          (async function () {
+            const success = await sendInvitations(invite);
+
+            if (success) {
+              setStatus({ status: 'sent', recipients });
+            } else {
+              setStatus({ status: 'failed', recipients });
+            }
+            subscribed && setSending(false);
+          })();
+        }
       };
 
-      // send email and close form if successful
-      (async function () {
-        const success = await sendInvitations(invite);
-
-        // TODO: replace alert with custom notification
-        if (success) {
-          setStatus({ status: 'sent', recipients });
-        } else {
-          setStatus({ status: 'failed', recipients });
-        }
-      })();
+      setTimeout(() => handleSend(), 1000);
     }
-  };
+    return () => {
+      subscribed = false;
+    };
+  }, [sending]);
 
   useEffect(() => {
     let subscribed = true;
@@ -108,10 +114,7 @@ function SendInviteForm({
         break;
 
       case 'sent':
-        subscribed &&
-          setTimeout(() => {
-            onClose();
-          }, 3000);
+        subscribed && setTimeout(() => onClose(), 3000);
         break;
 
       case 'failed':
@@ -126,11 +129,7 @@ function SendInviteForm({
     };
   }, [status]);
 
-  /**
-   * Removes the required class if input has value
-   *
-   * @param event The triggering event
-   */
+  // removes the required class if input has value
   const handleBlur = (event: any) => {
     if ((event.target as HTMLInputElement).value)
       document.getElementById(recipientsInputId)?.classList.remove('required');
@@ -162,10 +161,11 @@ function SendInviteForm({
             <CancelButton type="button" onClick={() => onClose()}>
               Cancel
             </CancelButton>
-            <SendButton type="button" onClick={handleSend}>
+            <SendButton type="button" onClick={() => setSending(true)}>
               Send
             </SendButton>
           </ButtonContainer>
+          {sending && <Loading text="Sending" />}
         </>
       )}
       {status.status === 'sent' && (
@@ -179,6 +179,7 @@ function SendInviteForm({
 }
 
 const Container = styled.div`
+  position: relative;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -280,6 +281,11 @@ const CancelButton = styled(FormButton)`
 `;
 
 const SentStatusMessage = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
   text-align: center;
 `;
 

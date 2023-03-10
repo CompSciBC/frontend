@@ -83,6 +83,7 @@ export interface Reservation {
   checkIn: string;
   checkOut: string;
   reasonForStay: string;
+  inviteCode: string;
 }
 
 /**
