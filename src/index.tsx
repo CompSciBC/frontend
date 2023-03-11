@@ -30,6 +30,9 @@ import AppTestMode from './components/AppTestMode';
 // Configure React project with Amplify resources
 import { Amplify } from 'aws-amplify';
 import config from './aws-exports';
+import AddReservation from './components/reservations/AddReservation';
+import Dashboard from './components/dashboard/Dashboard';
+import Guidebook from './components/dashboard/guidebook/Guidebook';
 Amplify.configure(config);
 
 /**
@@ -184,8 +187,7 @@ const router = createBrowserRouter([
           },
           {
             path: routes.guidebook,
-            element: <Guidebook />,
-            loader: GuidebookLoader
+            element: <Guidebook />
           },
           {
             path: routes.invite,

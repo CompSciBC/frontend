@@ -3,19 +3,23 @@ import { GuidebookDto } from '../../../utils/dtos';
 import { theme } from '../../../utils/styles';
 import LightFadeCarousel from './PhotoCarousel';
 import AccordionDropdown from '../../reservations/AccordionDropdown';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
+import AppContext from '../../../context/AppContext';
 
 function Guidebook() {
   const [guidebookInfo, setGuidebookInfo] = useState<GuidebookDto | null>(null);
-  const propID = 'PID0001MLT';
-  // const {reservationDetail} = useContext(AppContext); // & import AppContext at top
+  
+  const {reservationDetail} = useContext(AppContext); 
+  const propID = reservationDetail?.id;
+
   useEffect(() => {
     let subscribed = true;
 
-    (async function () {
-      const response = await fetch('/api/guidebook/' + propID + '/content');
+    if (propID) {(async function () {
+      const response = await fetch(`/api/guidebook/${propID}/content`);
       subscribed && setGuidebookInfo(await response.json());
     })();
+    }
     return () => {
       subscribed = false;
     };
@@ -240,8 +244,4 @@ const ContainerCarousel = styled.div`
   }
 `;
 
-<<<<<<< HEAD
 export default Guidebook;
-=======
-export default Guidebook;
->>>>>>> 5938e3beafdd79221d801ecf5be6602bb5b070dc
