@@ -19,16 +19,8 @@ function Header({ className, logo, navLinks }: HeaderProps) {
           <Logo to={routes.home}>
             <img src={logo} alt="logo" />
           </Logo>
-<<<<<<< HEAD
-          <Menu className="Menu">
-            <img src="bmg-branding/Menu.svg" alt="Hamb. Menu" />
-          </Menu>
-        </IconHomeLinkFrame>
-
-=======
           <StyledHamburgerMenu size={40} navLinks={navLinks} />
         </IconHomeLinkFrame>
->>>>>>> 5938e3beafdd79221d801ecf5be6602bb5b070dc
         <NavLinksFrame>{navLinks && <Nav navLinks={navLinks} />}</NavLinksFrame>
       </NavFrame>
     </NavParentFrame>
@@ -54,11 +46,7 @@ const IconHomeLinkFrame = styled.div`
   gap: 10px;
   overflow: hidden;
   flex: 1 61%;
-<<<<<<< HEAD
-  padding: 0.4%;
-=======
   padding: 0 10px;
->>>>>>> 5938e3beafdd79221d801ecf5be6602bb5b070dc
   order: 0;
   flex-grow: 0;
 `;
