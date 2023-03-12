@@ -17,7 +17,12 @@ function WeatherCell({ className, cell }: DashboardCellProps) {
     let subscribed = true;
 
     (async function () {
-      subscribed && setForecast(await getWeatherForecast());
+      if (reservationDetail?.property.address) {
+        subscribed &&
+          setForecast(
+            await getWeatherForecast(reservationDetail?.property.address)
+          );
+      }
     })();
 
     return () => {
@@ -35,8 +40,8 @@ function WeatherCell({ className, cell }: DashboardCellProps) {
         >
           {forecast.map((f) => (
             <WeatherForecastTile
-              key={f.timestamp}
-              time={f.timestamp}
+              key={f.number}
+              time={f.name}
               weather={f.weather}
               temp={f.temp}
             />

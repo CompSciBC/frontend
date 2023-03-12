@@ -167,15 +167,18 @@ export interface EventOrPlace {
  * Represents a weather forecast (matching Forecast.java)
  */
 export interface Forecast {
-  office: string;
-  gridX_gridY: string;
-  timestamp: string;
+  // office: string;
+  // gridX_gridY: string;
+  timestamp?: string;
 
-  // TODO: this is too general; need to break down into component parts (like temp, humidity, etc.)
-  forecast_content: any;
+  // // TODO: this is too general; need to break down into component parts (like temp, humidity, etc.)
+  // forecast_content: any;
 
-  // TODO: replace these with actual fields from the forecast_content
+  // // TODO: replace these with actual fields from the forecast_content
   weather: WeatherType;
+  number: number;
+  name: string;
+
   temp: number;
 }
 
