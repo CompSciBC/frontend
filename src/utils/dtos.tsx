@@ -125,7 +125,6 @@ export interface Invitation {
  */
 export interface Restaurant {
   id: string;
-  alias: string;
   name: string;
   imageUrl: string;
   isOpen: boolean;
@@ -141,6 +140,18 @@ export interface Restaurant {
   phone: string;
   displayPhone: string;
   distance: number;
+}
+
+/**
+ * Specifies filters for a restaurant search (matching RestaurantFilters.java)
+ */
+export interface RestaurantFilters {
+  address: Address;
+  radius?: number;
+  keywords?: string[];
+  maxPrice?: number;
+  openNow?: boolean;
+  numResults?: number;
 }
 
 /**

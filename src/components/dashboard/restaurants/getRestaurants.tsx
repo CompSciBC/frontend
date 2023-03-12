@@ -1,17 +1,16 @@
-import { Address, Restaurant } from '../../../utils/dtos';
+import { Restaurant, RestaurantFilters } from '../../../utils/dtos';
 import { server } from '../../../index';
 
 /**
  * Gets the top n restaurants from the given address
  *
- * @param address A physical address to search
- * @param n The maximum number of results to return
+ * @param filters A ${@link RestaurantFilters}
  * @returns A {@link Restaurant} array promise
  */
 export default async function getRestaurants(
-  address: Address,
-  n: number
+  filters: RestaurantFilters
 ): Promise<Restaurant[]> {
+  const { address, radius, keywords, maxPrice, openNow, numResults } = filters;
   const { line1, line2, city, stateProvince, postalCode, country } = address;
 
   let queryString: string = '';
@@ -28,7 +27,11 @@ export default async function getRestaurants(
   addParam('stateProvince', stateProvince);
   addParam('postalCode', postalCode);
   addParam('country', country);
-  addParam('numResults', n);
+  addParam('radius', radius);
+  addParam('keywords', keywords?.join(', '));
+  addParam('maxPrice', maxPrice);
+  addParam('openNow', String(openNow ?? ''));
+  addParam('numResults', numResults);
 
   if (queryString) queryString = `?${queryString}`;
 
