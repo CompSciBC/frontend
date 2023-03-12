@@ -15,9 +15,8 @@ function CloseX({
   onClick
 }: CloseXProps) {
   return (
-    <Button type="button" onClick={onClick}>
+    <Button className={className} type="button" onClick={onClick}>
       <svg
-        className={className}
         height={size}
         width={size}
         version="1.1"

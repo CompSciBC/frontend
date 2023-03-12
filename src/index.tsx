@@ -135,6 +135,10 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />,
     children: [
       {
+        path: routes.error,
+        element: <ErrorPage />
+      },
+      {
         path: routes.home,
         element: <Home logo="/bmg-branding/BMG-Script-RdHrt.svg" />,
         index: true
