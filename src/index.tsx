@@ -29,7 +29,7 @@ import Map from './components/dashboard/map/Map';
 import SurveyView from './components/dashboard/review/SurveyComponent';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
-import AppTestMode from './components/AppTestMode';
+// import AppTestMode from './components/AppTestMode';
 
 // Configure React project with Amplify resources
 import { Amplify } from 'aws-amplify';
@@ -129,7 +129,7 @@ const router = createBrowserRouter([
     element: (
       <AppContextProvider>
         <App noAuthNavLinks={noAuthNavLinks} authNavLinks={authNavLinks} />
-        <AppTestMode />
+        {/* <AppTestMode /> */}
       </AppContextProvider>
     ),
     errorElement: <ErrorPage />,
