@@ -1,9 +1,9 @@
 import { Forecast, Address } from '../../../utils/dtos';
-import { weatherTypes } from './WeatherForecastTile';
+// import { weatherTypes } from './WeatherForecastTile';
 import { server } from '../../../index';
 
 /**
- * Gets a five day weather forecast
+ * Get the next five forecasts for dashboard view
  *
  * @returns A {@link Forecast} array promise
  */
@@ -18,23 +18,49 @@ export default async function getWeatherForecast(
     `${server}/api/weather?address=${encodeURI(addressString)}`
   );
   const body = await response.json();
-  // console.log(body);
 
-  // TODO: replace this with real forecast data from the API
-  // Generates a random weather forecast
-  const randomForecast = (number: number): Forecast => {
-    console.log(body[number]);
-    const detailedForecast = body[number].detailedForecast;
+  const forecast = (number: number): Forecast => {
+    const detailedForecast = body[number].detailedForecast.toLowerCase();
     console.log(detailedForecast);
-    // determine the weather type
+    let weatherType = '';
+    if (detailedForecast.includes('rain') && detailedForecast.includes('cloud')) {
+      weatherType = 'heavy-showers';
+    } else if (detailedForecast.includes('rain') && detailedForecast.includes('storm')) {
+      weatherType = 'thunderstorm-showers';
+    } else if (detailedForecast.includes('snow') && detailedForecast.includes('storm')) {
+      weatherType = 'thunderstorm-snow';
+    } else if (detailedForecast.includes('snow') && detailedForecast.includes('cloud')) {
+      weatherType = 'snow';
+    } else if (detailedForecast.includes('snow') && detailedForecast.includes('rain')) {
+      weatherType = 'sleet';
+    } else if (detailedForecast.includes('snow')) {
+      weatherType = 'snow';
+    } else if (detailedForecast.includes('cloud')) {
+      weatherType = 'cloudy';
+    } else if (detailedForecast.includes('rain')) {
+      weatherType = 'showers';
+    } else if (detailedForecast.includes('windy')) {
+      weatherType = 'windy';
+    } else if (detailedForecast.includes('fog')) {
+      weatherType = 'fog';
+    } else if (detailedForecast.includes('overcast')) {
+      weatherType = 'overcast';
+    } else {
+      if (body[number].isDaytime === 'true') {
+        weatherType = 'clear-day';
+      } else {
+        weatherType = 'clear-night';
+      }
+    }
+
+    console.log(weatherType);
     return {
-      // timestamp: 'time',
-      weather: weatherTypes[Math.floor(Math.random() * weatherTypes.length)],
+      weather: weatherType,
       temp: body[number].temperature,
       number,
       name: body[number].name
     };
   };
 
-  return [0, 1, 2, 3, 4].map((number) => randomForecast(number));
+  return [0, 1, 2, 3, 4].map((number) => forecast(number));
 }
