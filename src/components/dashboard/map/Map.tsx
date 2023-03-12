@@ -40,7 +40,7 @@ function Map() {
       .join(' ');
 
     const addressURL = encodeURIComponent(addressLocation);
-    fetch(`${server}/api/coordinates?address=${addressURL}`)
+    fetch(`${server}/api/coordinates/${addressURL}`)
       .then(async (res) => {
         return await res.json();
       })
@@ -80,8 +80,11 @@ function Map() {
 export default Map;
 
 const MapContainer = styled.div`
+  width: 100%;
+  height: 100%;
+
   .map-container {
     width: 100%;
-    height: 100vh;
+    height: 100%;
   }
 `;
