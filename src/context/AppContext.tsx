@@ -1,7 +1,7 @@
 import { createContext, ReactNode, useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Property, Reservation, ReservationDetail, User } from '../utils/dtos';
-import { server } from '../index';
+import { routes, server } from '../index';
 
 export interface AppContextType {
   authenticated: boolean;
@@ -41,6 +41,8 @@ export default AppContext;
  * @returns A context provider
  */
 export function AppContextProvider({ children }: { children: ReactNode }) {
+  const navigate = useNavigate();
+
   // local storage key names
   const authenticatedKey = 'authenticated';
   const userKey = 'user';
@@ -114,6 +116,7 @@ export function AppContextProvider({ children }: { children: ReactNode }) {
               });
           } else {
             subscribed && setReservationDetail(null);
+            navigate(routes.error);
           }
         }
       })();

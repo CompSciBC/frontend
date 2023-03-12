@@ -47,7 +47,7 @@ function Invite({ className }: InviteProps) {
       <ButtonContainer>
         <TextCode>
           <div>Invite Code</div>
-          <span>F7URJ372JE75</span> {/* TODO: replace hard coded value */}
+          <span>{reservationDetail?.inviteCode}</span>
         </TextCode>
         <InviteButton type="button" onClick={() => setEmailFormOpen(true)}>
           Send via Email

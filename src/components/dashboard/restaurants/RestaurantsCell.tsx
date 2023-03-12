@@ -22,7 +22,10 @@ function RestaurantsCell({ className, cell, n }: RestaurantsCellProps) {
       subscribed &&
         reservationDetail &&
         setRestaurants(
-          await getRestaurants(reservationDetail.property.address, n)
+          await getRestaurants({
+            address: reservationDetail.property.address,
+            numResults: n
+          })
         );
     })();
 
