@@ -5,20 +5,23 @@ import LightFadeCarousel from './PhotoCarousel';
 import AccordionDropdown from '../../reservations/AccordionDropdown';
 import { useState, useEffect, useContext } from 'react';
 import AppContext from '../../../context/AppContext';
+import { server } from '../../..';
+
 
 function Guidebook() {
   const [guidebookInfo, setGuidebookInfo] = useState<GuidebookDto | null>(null);
-  
-  const {reservationDetail} = useContext(AppContext); 
-  const propID = reservationDetail?.id;
+
+  const { reservationDetail } = useContext(AppContext);
+  const propID = reservationDetail?.propertyId;
 
   useEffect(() => {
     let subscribed = true;
 
-    if (propID) {(async function () {
-      const response = await fetch(`/api/guidebook/${propID}/content`);
-      subscribed && setGuidebookInfo(await response.json());
-    })();
+    if (propID) {
+      (async function () {
+        const response = await fetch(`${server}/api/guidebook/${propID}/content`);
+        subscribed && setGuidebookInfo(await response.json());
+      })();
     }
     return () => {
       subscribed = false;
@@ -131,12 +134,11 @@ function Guidebook() {
             label="•POLICIES•"
             isOpen={true}
             content={
-            <BodyText>{guidebookInfo.policies?.map((pol) => {
-              return (
-                <div key={pol}>{pol}
-                </div>
-              );
-            })}</BodyText>
+              <BodyText>
+                {guidebookInfo.policies?.map((pol) => {
+                  return <div key={pol}>{pol}</div>;
+                })}
+              </BodyText>
             }
             smallLineStyling={true}
           />
@@ -144,26 +146,24 @@ function Guidebook() {
             label="•HOST RECOMMENDED•"
             isOpen={true}
             content={
-              <BodyText>{guidebookInfo.hostRecommended?.map((rec) => {
-                return (
-                  <div key={rec}>{rec}
-                  </div>
-                );
-              })}</BodyText>
-              }
+              <BodyText>
+                {guidebookInfo.hostRecommended?.map((rec) => {
+                  return <div key={rec}>{rec}</div>;
+                })}
+              </BodyText>
+            }
             smallLineStyling={true}
           />
           <StyledAccordionDropdown
             label="•SERVICES AND SUPPORT•"
             isOpen={true}
             content={
-              <BodyText>{guidebookInfo.hostServices?.map((serv) => {
-                return (
-                  <div key={serv}>{serv}
-                  </div>
-                );
-              })}</BodyText>
-              }
+              <BodyText>
+                {guidebookInfo.hostServices?.map((serv) => {
+                  return <div key={serv}>{serv}</div>;
+                })}
+              </BodyText>
+            }
             smallLineStyling={true}
           />
         </ListContainer>
