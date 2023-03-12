@@ -1,12 +1,21 @@
 import styled from '@emotion/styled';
-import { Invitation } from '../../../utils/dtos';
 import { theme } from '../../../utils/styles';
+import { useEffect, useState } from 'react';
+import { Invitation } from '../../../utils/dtos';
 import { server } from '../../../index';
+import Loading from '../../Loading';
+
+type EmailSentStatus = 'notSent' | 'sent' | 'failed';
+
+interface SentStatus {
+  status: EmailSentStatus;
+  recipients: string;
+}
 
 export interface SendInviteFormProps {
   className?: string;
   resId: string;
-  userName: string;
+  guestName: string;
   onClose: CallableFunction;
 }
 
@@ -19,18 +28,18 @@ export interface SendInviteFormProps {
 function SendInviteForm({
   className,
   resId,
-  userName,
+  guestName,
   onClose
 }: SendInviteFormProps) {
   const recipientsInputId = 'invite-recipients';
   const messageInputId = 'invite-message';
+  const [sending, setSending] = useState(false);
+  const [status, setStatus] = useState<SentStatus>({
+    status: 'notSent',
+    recipients: ''
+  });
 
-  /**
-   * Sends an invitation email message via the api
-   *
-   * @param invite An {@link Invitation}
-   * @returns True if the invitation was sent successfully, or false otherwise
-   */
+  // sends an invitation email message via the api
   const sendInvitations = async (invite: Invitation): Promise<boolean> => {
     const send = async () => {
       const response = await fetch(
@@ -48,52 +57,79 @@ function SendInviteForm({
     return (await send()).status === 200; // 200 = ok
   };
 
-  /**
-   * Handles the send action when the send button is clicked
-   */
-  const handleSend = () => {
-    const recipientsInput = document.getElementById(
-      recipientsInputId
-    ) as HTMLInputElement;
+  // send emails
+  useEffect(() => {
+    let subscribed = true;
 
-    const messageInput = document.getElementById(
-      messageInputId
-    ) as HTMLTextAreaElement;
+    if (sending) {
+      const handleSend = () => {
+        const recipientsInput = document.getElementById(
+          recipientsInputId
+        ) as HTMLInputElement;
 
-    const recipients = recipientsInput?.value;
+        const messageInput = document.getElementById(
+          messageInputId
+        ) as HTMLTextAreaElement;
 
-    if (!recipients) {
-      // email field is empty, mark field as required
-      recipientsInput.classList.add('required');
-    } else {
-      recipientsInput.classList.remove('required');
+        const recipients = recipientsInput?.value;
 
-      const invite: Invitation = {
-        recipients: recipients.split(','),
-        guestName: userName,
-        message: messageInput?.value
+        if (!recipients) {
+          // email field is empty, mark field as required
+          recipientsInput.classList.add('required');
+        } else {
+          recipientsInput.classList.remove('required');
+
+          const invite: Invitation = {
+            recipients: recipients.split(','),
+            guestName,
+            message: messageInput?.value
+          };
+
+          // send email and close form if successful
+          (async function () {
+            const success = await sendInvitations(invite);
+
+            if (success) {
+              setStatus({ status: 'sent', recipients });
+            } else {
+              setStatus({ status: 'failed', recipients });
+            }
+            subscribed && setSending(false);
+          })();
+        }
       };
 
-      // send email and close form if successful
-      (async function () {
-        const success = await sendInvitations(invite);
-
-        // TODO: replace alert with custom notification
-        if (success) {
-          onClose();
-          window.alert('Invitation sent successfully.');
-        } else {
-          window.alert('Failed to send invitation.');
-        }
-      })();
+      setTimeout(() => handleSend(), 1000);
     }
-  };
+    return () => {
+      subscribed = false;
+    };
+  }, [sending]);
 
-  /**
-   * Removes the required class if input has value
-   *
-   * @param event The triggering event
-   */
+  useEffect(() => {
+    let subscribed = true;
+
+    switch (status.status) {
+      case 'notSent':
+        break;
+
+      case 'sent':
+        subscribed && setTimeout(() => onClose(), 3000);
+        break;
+
+      case 'failed':
+        subscribed &&
+          setTimeout(() => {
+            subscribed && setStatus({ status: 'notSent', recipients: '' });
+          }, 3000);
+    }
+
+    return () => {
+      subscribed = false;
+    };
+  }, [status]);
+
+  // removes the required class if input has value
   const handleBlur = (event: any) => {
     if ((event.target as HTMLInputElement).value)
       document.getElementById(recipientsInputId)?.classList.remove('required');
@@ -101,37 +137,49 @@ function SendInviteForm({
 
   return (
     <Container className={className}>
-      <Title>Invite Your Friends</Title>
-      <Field>
-        <label htmlFor={recipientsInputId}>Recipient Emails</label>
-        <input
-          id={recipientsInputId}
-          type="email"
-          placeholder="Enter multiple separated with commas"
-          onBlur={handleBlur}
-        />
-      </Field>
-      <Field>
-        <label htmlFor={messageInputId}>Optional Message</label>
-        <textarea
-          id={messageInputId}
-          placeholder="Hi friend, join me on BeMyGuest!"
-          rows={8}
-        />
-      </Field>
-      <ButtonContainer>
-        <CancelButton type="button" onClick={() => onClose()}>
-          Cancel
-        </CancelButton>
-        <SendButton type="button" onClick={handleSend}>
-          Send
-        </SendButton>
-      </ButtonContainer>
+      {status.status === 'notSent' && (
+        <>
+          <Title>Invite Your Friends</Title>
+          <Field>
+            <label htmlFor={recipientsInputId}>Recipient Emails</label>
+            <input
+              id={recipientsInputId}
+              type="email"
+              placeholder="Enter multiple separated with commas"
+              onBlur={handleBlur}
+            />
+          </Field>
+          <Field>
+            <label htmlFor={messageInputId}>Optional Message</label>
+            <textarea
+              id={messageInputId}
+              placeholder="Hi friend, join me on BeMyGuest!"
+              rows={8}
+            />
+          </Field>
+          <ButtonContainer>
+            <CancelButton type="button" onClick={() => onClose()}>
+              Cancel
+            </CancelButton>
+            <SendButton type="button" onClick={() => setSending(true)}>
+              Send
+            </SendButton>
+          </ButtonContainer>
+          {sending && <Loading text="Sending" />}
+        </>
+      )}
+      {status.status === 'sent' && (
+        <SentStatusMessage>{`Email sent successfully to ${status.recipients}.`}</SentStatusMessage>
+      )}
+      {status.status === 'failed' && (
+        <SentStatusMessage>Failed to send email.</SentStatusMessage>
+      )}
     </Container>
   );
 }
 
 const Container = styled.div`
+  position: relative;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -230,6 +278,15 @@ const SendButton = styled(FormButton)`
 const CancelButton = styled(FormButton)`
   background-color: lightgray;
   color: black;
+`;
+
+const SentStatusMessage = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  text-align: center;
 `;
 
 export default SendInviteForm;

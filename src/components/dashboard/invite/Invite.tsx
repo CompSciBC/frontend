@@ -47,7 +47,7 @@ function Invite({ className }: InviteProps) {
       <ButtonContainer>
         <TextCode>
           <div>Invite Code</div>
-          <span>F7URJ372JE75</span> {/* TODO: replace hard coded value */}
+          <span>{reservationDetail?.inviteCode}</span>
         </TextCode>
         <InviteButton type="button" onClick={() => setEmailFormOpen(true)}>
           Send via Email
@@ -59,7 +59,15 @@ function Invite({ className }: InviteProps) {
               <SendInviteForm
                 onClose={() => setEmailFormOpen(false)}
                 resId={reservationDetail.id}
-                userName={user?.username ?? 'Your friend'}
+                guestName={(() => {
+                  const { firstName, lastName } = user!;
+                  let name = '';
+
+                  if (typeof firstName === 'string') name += `${firstName}`;
+                  if (typeof lastName === 'string') name += ` ${lastName}`;
+
+                  return name;
+                })()}
               />
             }
             blur={true}
