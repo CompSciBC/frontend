@@ -19,7 +19,7 @@ interface Message {
   senderName: String;
   message: String;
   receiverName: String | undefined;
-  chatId: String;  
+  chatId: String;
 }
 
 interface ChatsServerResponse {
@@ -36,7 +36,8 @@ function Chat() {
     isHost: false,
     receivername: '',
     connected: false,
-    message: ''
+    message: '',
+    userLoaded: false
   });
 
   const messageEndRef = useRef<null | HTMLDivElement>(null);
@@ -66,35 +67,41 @@ function Chat() {
     setUserData({
       ...userData,
       connected: true,
-      isHost: user?.role === 'host'
+      isHost: user?.role === 'host',
+      userLoaded: true
     });
+  }, []);
+
+  useEffect(() => {
     // return if loading happened;
     if (pageState.loaded) {
       return;
     }
-    pageState.loaded = true;
-    const loadUrl: string = userData.isHost
-      ? `${server}/api/chat/load/host/${resId}`
-      : `${server}/api/chat/load/guest/${resId}/${userData.username}`;
-    fetch(loadUrl, {
-      method: 'GET',
-      headers: { 'Content-Type': 'application/json' }
-    })
-      .then(async (response) => await response.json())
-      .then((chats: ChatsServerResponse) => {
-        // const Sock = new SockJS('http://localhost:8080/ws');
-        const Sock = new SockJS(`${server}/ws`);
+    if (userData.userLoaded) {
+      pageState.loaded = true;
+      const loadUrl: string = userData.isHost
+        ? `${server}/api/chat/load/host/${resId}`
+        : `${server}/api/chat/load/guest/${resId}/${userData.username}`;
+      fetch(loadUrl, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' }
+      })
+        .then(async (response) => await response.json())
+        .then((chats: ChatsServerResponse) => {
+          // const Sock = new SockJS('http://localhost:8080/ws');
+          const Sock = new SockJS(`${server}/ws`);
 
-        stompClient = over(Sock);
-        stompClient.connect(
-          {},
-          () => {
-            onConnected(chats);
-          },
-          onError
-        );
-      });
-  }, []);
+          stompClient = over(Sock);
+          stompClient.connect(
+            {},
+            () => {
+              onConnected(chats);
+            },
+            onError
+          );
+        });
+    }
+  }, [userData]);
 
   const onConnected = (chats: ChatsServerResponse) => {
     // subscribe to group message
@@ -171,8 +178,8 @@ function Chat() {
         reservationId: resId,
         timestamp: new Date().getTime(),
         receiverName,
-        chatId,        
-      };     
+        chatId
+      };
 
       if (tab === groupChatName) {
         groupChat.push(chatMessage);
@@ -188,7 +195,6 @@ function Chat() {
 
       setUserData({ ...userData, message: '' });
     }
-    
   };
 
   return (
@@ -213,7 +219,7 @@ function Chat() {
                 setTab(chatName);
               }}
             >
-              {chatName}              
+              {chatName}
             </ChatRoom>
           ))}
         </ChatList>
@@ -225,19 +231,20 @@ function Chat() {
             ? [...groupChat]
             : [...privateChats.get(tab)!]
           ).map((message: any, index) => (
-            <MessageBlock
-              id="message-block"
+            <MessageBlockWrapper
               self={message.senderName === userData.username}
               key={index}
             >
-             {message.senderName !== userData.username && (
-                    <Avatar>{message.senderName}</Avatar>
-                  )}
-                   <MessageData id="message-data">{message.message}</MessageData>                   
-                  {message.senderName === userData.username && (
-                    <AvatarSelf>{message.senderName}</AvatarSelf>
-                  )}
-            </MessageBlock>
+              <MessageBlock id="message-block">
+                {message.senderName !== userData.username && (
+                  <Avatar>{message.senderName}</Avatar>
+                )}
+                <MessageData id="message-data">{message.message}</MessageData>
+                {message.senderName === userData.username && (
+                  <AvatarSelf>{message.senderName}</AvatarSelf>
+                )}
+              </MessageBlock>
+            </MessageBlockWrapper>
           ))}
           <LastMessage id="last-message" ref={messageEndRef}></LastMessage>
         </ChatMessages>
@@ -266,7 +273,7 @@ const SideBar = styled.div`
   display: flex;
   flex-direction: column;
   height: 100%;
-  width: 250px;    
+  width: 250px;
   //background-color: red;
   gap: 20px;
   padding: 16px;
@@ -274,7 +281,7 @@ const SideBar = styled.div`
 const ChatContent = styled.div`
   display: flex;
   flex-direction: column;
-  height: 100%;  
+  height: 100%;
   flex-grow: 1;
   // background-color: blue;
   gap: 15px;
@@ -287,14 +294,14 @@ const SideBarHeader = styled.div`
   box-shadow: 0 3px 3px rgb(18 58 39 / 0.4);
   border-color: #539174;
   border-radius: 10px;
-  margin: 5px;  
+  margin: 5px;
 `;
 const ChatList = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
   flex-grow: 1;
-  background-color: #ededed;;
+  background-color: #ededed;
   gap: 10px;
   box-shadow: 0 3px 3px rgb(18 58 39 / 0.4);
   border-color: #539174;
@@ -303,15 +310,15 @@ const ChatList = styled.div`
 
 const ChatRoom = styled.button`
   display: flex;
-  background-color: #ffffff;  
+  background-color: #ffffff;
   margin-top: 13px;
   box-shadow: 0 3px 3px rgb(18 58 39 / 0.4);
   // border-color: #539174;
-  border-radius: 10px;  
-  border: none;  
+  border-radius: 10px;
+  border: none;
 `;
 const ChatName = styled.h1`
-  display: flex;  
+  display: flex;
   align-items: center;
 
   ${theme.font.displayXL}
@@ -333,8 +340,15 @@ const ChatMessages = styled.div`
     width: 90%;
   }
 `;
-const MessageBlock = styled.div<{ self: boolean }>`
+
+const MessageBlockWrapper = styled.div<{ self: boolean }>`
+  display: flex;
   justify-content: ${(props) => (props.self ? 'end' : '')};
+  width: 100%;
+  margin: 10px 0;
+`;
+
+const MessageBlock = styled.div`
   padding: 5px;
   display: flex;
   flex-basis: auto;
@@ -342,8 +356,8 @@ const MessageBlock = styled.div<{ self: boolean }>`
   max-width: fit-content;
   box-shadow: 0 3px 3px rgb(18 58 39 / 0.4);
   border-radius: 10px;
-  margin: 10px;
-  background-color: #ffffff;  
+  margin: 0 10px;
+  background-color: #ffffff;
 `;
 const Input = styled.input<{ userType: string }>`
   flex-grow: 1;
@@ -377,12 +391,12 @@ const MessageData = styled.li`
 `;
 const SendMessage = styled.div`
   width: 75%;
-  display: flex;  
+  display: flex;
 `;
 const SendButton = styled.button`
   border: none;
   padding: 10px;
-  background: #B61616;
+  background: #b61616;
   color: #ffff;
   font-weight: bold;
   width: 100px;
@@ -401,7 +415,7 @@ const LastMessage = styled.div`
 `;
 
 const ChatHeader = styled.h1`
-margin-left: 20px;
+  margin-left: 20px;
   ${theme.font.heading}
 `;
 export default Chat;
