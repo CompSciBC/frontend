@@ -4,10 +4,13 @@ import AppContext from '../../../context/AppContext';
 import { paramRoute, routes } from '../../..';
 import { Forecast } from '../../../utils/dtos';
 import { DashboardCellProps } from '../Dashboard';
-import { DashboardCellLink } from '../DashboardCellClickable';
-import DashboardCellWrapper from '../DashboardCellWrapper';
+import {
+  DashboardCellLink
+} from '../DashboardCellClickable';
+
 import getWeatherForecast from './getWeatherForecast';
 import WeatherForecastTile from './WeatherForecastTile';
+import DashboardCellWrapper from '../DashboardCellWrapper';
 
 function WeatherCell({ className, cell }: DashboardCellProps) {
   const { reservationDetail } = useContext(AppContext);
@@ -20,7 +23,7 @@ function WeatherCell({ className, cell }: DashboardCellProps) {
       if (reservationDetail?.property.address) {
         subscribed &&
           setForecast(
-            await getWeatherForecast(reservationDetail?.property.address)
+            await getWeatherForecast(reservationDetail?.property.address, 5)
           );
       }
     })();

@@ -8,12 +8,12 @@ import { server } from '../../../index';
  * @returns A {@link Forecast} array promise
  */
 export default async function getWeatherForecast(
-  address: Address
+  address: Address, quantity: number
 ): Promise<Forecast[]> {
   const addressString = `${address.line1} ${
     address.city
   } ${address.stateProvince!} ${address.postalCode!}`;
-  console.log(addressString);
+  // console.log(addressString);
   const response = await fetch(
     `${server}/api/weather?address=${encodeURI(addressString)}`
   );
@@ -23,15 +23,30 @@ export default async function getWeatherForecast(
     const detailedForecast = body[number].detailedForecast.toLowerCase();
     console.log(detailedForecast);
     let weatherType = '';
-    if (detailedForecast.includes('rain') && detailedForecast.includes('cloud')) {
-      weatherType = 'heavy-showers';
-    } else if (detailedForecast.includes('rain') && detailedForecast.includes('storm')) {
+    if (
+      detailedForecast.includes('rain') &&
+      detailedForecast.includes('cloud')
+    ) {
+      weatherType = 'showers';
+    } else if (
+      detailedForecast.includes('rain') &&
+      detailedForecast.includes('storm')
+    ) {
       weatherType = 'thunderstorm-showers';
-    } else if (detailedForecast.includes('snow') && detailedForecast.includes('storm')) {
+    } else if (
+      detailedForecast.includes('snow') &&
+      detailedForecast.includes('storm')
+    ) {
       weatherType = 'thunderstorm-snow';
-    } else if (detailedForecast.includes('snow') && detailedForecast.includes('cloud')) {
+    } else if (
+      detailedForecast.includes('snow') &&
+      detailedForecast.includes('cloud')
+    ) {
       weatherType = 'snow';
-    } else if (detailedForecast.includes('snow') && detailedForecast.includes('rain')) {
+    } else if (
+      detailedForecast.includes('snow') &&
+      detailedForecast.includes('rain')
+    ) {
       weatherType = 'sleet';
     } else if (detailedForecast.includes('snow')) {
       weatherType = 'snow';
@@ -58,9 +73,12 @@ export default async function getWeatherForecast(
       weather: weatherType,
       temp: body[number].temperature,
       number,
-      name: body[number].name
+      name: body[number].name,
+      detailedForecast: body[number].detailedForecast,
+      shortForecast: body[number].shortForecast,
     };
   };
 
-  return [0, 1, 2, 3, 4].map((number) => forecast(number));
+  const arr = [...Array(quantity).keys()];
+  return arr.map((number) => forecast(number));
 }
