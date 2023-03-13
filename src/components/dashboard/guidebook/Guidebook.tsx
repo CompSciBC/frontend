@@ -51,11 +51,12 @@ function Guidebook() {
             isOpen={true}
             content={
               <div>
-                <BodyTextBio>
+                <TextParentContainer>
                   {guidebookInfo.propertyBio.map((paragraph) => {
-                    return <BodyText key={paragraph}>{paragraph}</BodyText>;
+                    return <TextContainer key={paragraph}>{paragraph}</TextContainer>;
                   })}
-                </BodyTextBio>
+                  <EndofComponentSpacing></EndofComponentSpacing>
+                </TextParentContainer>
 
                 <EnableTableScroll>
                   <AboutSectionContainerTable>
@@ -90,7 +91,7 @@ function Guidebook() {
                       {guidebookInfo.checkininstr && (
                         <AboutSectionContainerRow>
                           <AboutSectionItem>
-                            Check-In Instructions:{' '}
+                            Check-In Instructions:
                           </AboutSectionItem>
                           <AboutSectionItem>
                             {guidebookInfo.checkininstr}
@@ -101,7 +102,7 @@ function Guidebook() {
                       {guidebookInfo.checkoutinstr && (
                         <AboutSectionContainerRow>
                           <AboutSectionItem>
-                            Check-Out Instructions:{' '}
+                            Check-Out Instructions:
                           </AboutSectionItem>
                           <AboutSectionItem>
                             {guidebookInfo.checkoutinstr}
@@ -148,11 +149,11 @@ function Guidebook() {
             label="•POLICIES•"
             isOpen={true}
             content={
-              <BodyText>
+              <TextParentContainer>
                 {guidebookInfo.policies?.map((pol) => {
-                  return <div key={pol}>{pol}</div>;
+                  return <TextContainer key={pol}>⁃ {pol}</TextContainer>;
                 })}
-              </BodyText>
+              </TextParentContainer>
             }
             smallLineStyling={true}
           />
@@ -160,11 +161,11 @@ function Guidebook() {
             label="•HOST RECOMMENDED•"
             isOpen={true}
             content={
-              <BodyText>
+              <TextParentContainer>
                 {guidebookInfo.hostRecommended?.map((rec) => {
-                  return <div key={rec}>{rec}</div>;
+                  return <TextContainer key={rec}>⁃ {rec}</TextContainer>;
                 })}
-              </BodyText>
+              </TextParentContainer>
             }
             smallLineStyling={true}
           />
@@ -172,11 +173,11 @@ function Guidebook() {
             label="•SERVICES AND SUPPORT•"
             isOpen={true}
             content={
-              <BodyText>
+              <TextParentContainer>
                 {guidebookInfo.hostServices?.map((serv) => {
-                  return <div key={serv}>{serv}</div>;
+                  return <TextContainer key={serv}>⁃ {serv}</TextContainer>;
                 })}
-              </BodyText>
+              </TextParentContainer>
             }
             smallLineStyling={true}
           />
@@ -193,21 +194,23 @@ const Faq = styled.ol`
   margin-top: 20px;
 `;
 
-const BodyText = styled.div`
-  ${theme.font.guidebookBody};
-  display: flex;
-  flex-direction: column;
-  margin: 20px;
+const TextParentContainer = styled.div`
+  word-spacing: 3px;
 `;
 
-const BodyTextBio = styled.div`
-  ${theme.font.guidebookBody};
-  margin: 9px;
+const TextContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin: 10px;
 `;
 
 const DisplayText = styled.h1`
   ${theme.font.displayXL};
   margin: 20px 0 15px 20px;
+`;
+
+const EndofComponentSpacing = styled.div`
+  margin: 0 0 30px 0;
 `;
 
 const EnableTableScroll = styled.div`
@@ -216,8 +219,8 @@ const EnableTableScroll = styled.div`
 `;
 
 const AboutSectionContainerTable = styled.table`
-  ${theme.font.guidebookBody};
   margin-left: 20px;
+  word-spacing: 3px;
   width: 98%;
   border: 1px solid;
   border-color: #d1d1d1;
@@ -225,11 +228,13 @@ const AboutSectionContainerTable = styled.table`
 
 const AboutSectionContainerRow = styled.tr`
   border: 1px solid;
+  word-spacing: 3px;
   border-color: #d1d1d1;
 `;
 
 const AboutSectionItem = styled.td`
   padding: 14px 20px;
+  word-spacing: 3px;
   border: 1px solid;
   border-color: #d1d1d1;
 `;
@@ -239,10 +244,11 @@ const Container = styled.div`
 `;
 
 const StyledAccordionDropdown = styled(AccordionDropdown)`
-  ${theme.font.guidebookBody}
+  /* ${theme.font.guidebookBody} */
 `;
 
 const ListContainer = styled.div`
+${theme.font.guidebookBody}
   display: flex;
   flex-direction: column;
   row-gap: 10px;
@@ -255,7 +261,7 @@ const ContainerCarousel = styled.div`
   display: flex;
   flex-direction: column;
   row-gap: 10px;
-  width: 66%; // was 76%
+  background-color: #393939;
   margin-left: auto;
   margin-right: auto;
   ${theme.screen.small} {

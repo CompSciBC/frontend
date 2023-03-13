@@ -62,9 +62,9 @@ export interface GuidebookDto {
   propertyBio: string[];
   faq?: Array<{ question: string; answer: string }>;
   policies?: string[];
-  hostRecommended?: string[]; 
+  hostRecommended?: string[];
   hostServices?: string[];
-  askGuestTheseQuestionsinSurvey?: any; 
+  askGuestTheseQuestionsinSurvey?: any;
   checkininstr?: string[];
   checkoutinstr?: string[];
 }
