@@ -4,9 +4,7 @@ import AppContext from '../../../context/AppContext';
 import { paramRoute, routes } from '../../..';
 import { Forecast } from '../../../utils/dtos';
 import { DashboardCellProps } from '../Dashboard';
-import {
-  DashboardCellLink
-} from '../DashboardCellClickable';
+import { DashboardCellLink } from '../DashboardCellClickable';
 
 import getWeatherForecast from './getWeatherForecast';
 import WeatherForecastTile from './WeatherForecastTile';

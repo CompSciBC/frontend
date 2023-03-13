@@ -8,7 +8,8 @@ import { server } from '../../../index';
  * @returns A {@link Forecast} array promise
  */
 export default async function getWeatherForecast(
-  address: Address, quantity: number
+  address: Address,
+  quantity: number
 ): Promise<Forecast[]> {
   const addressString = `${address.line1} ${
     address.city
@@ -75,7 +76,7 @@ export default async function getWeatherForecast(
       number,
       name: body[number].name,
       detailedForecast: body[number].detailedForecast,
-      shortForecast: body[number].shortForecast,
+      shortForecast: body[number].shortForecast
     };
   };
 

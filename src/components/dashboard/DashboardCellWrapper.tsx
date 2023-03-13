@@ -11,7 +11,7 @@ export interface DashboardCellWrapperProps {
 function DashboardCellWrapper({
   className,
   cell,
-  child,
+  child
 }: DashboardCellWrapperProps) {
   return (
     <GridCellWrapper className={className} gridArea={cell}>
