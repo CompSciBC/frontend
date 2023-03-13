@@ -7,9 +7,9 @@ import { useState, useEffect, useContext } from 'react';
 import AppContext from '../../../context/AppContext';
 import { server } from '../../..';
 
-
 function Guidebook() {
   const [guidebookInfo, setGuidebookInfo] = useState<GuidebookDto | null>(null);
+  const [guidebookImages, setGuidebookImages] = useState<string[] | null>(null);
 
   const { reservationDetail } = useContext(AppContext);
   const propID = reservationDetail?.propertyId;
@@ -19,8 +19,16 @@ function Guidebook() {
 
     if (propID) {
       (async function () {
-        const response = await fetch(`${server}/api/guidebook/${propID}/content`);
+        const response = await fetch(
+          `${server}/api/guidebook/${propID}/content`
+        );
         subscribed && setGuidebookInfo(await response.json());
+      })();
+      (async function () {
+        const response = await fetch(
+          `${server}/api/guidebook/${propID}/images`
+        );
+        subscribed && setGuidebookImages(await response.json());
       })();
     }
     return () => {
@@ -29,11 +37,12 @@ function Guidebook() {
   }, [propID]);
 
   return (
-    guidebookInfo && (
+    guidebookInfo &&
+    guidebookImages && (
       <Container>
         <DisplayText>{guidebookInfo.propertyName}</DisplayText>
         <ContainerCarousel>
-          <LightFadeCarousel />
+          <LightFadeCarousel images={guidebookImages} />
         </ContainerCarousel>
 
         <ListContainer>
@@ -42,7 +51,12 @@ function Guidebook() {
             isOpen={true}
             content={
               <div>
-                <BodyText>{guidebookInfo.propertyBio}</BodyText>
+                <BodyTextBio>
+                  {guidebookInfo.propertyBio.map((paragraph) => {
+                    return <BodyText key={paragraph}>{paragraph}</BodyText>;
+                  })}
+                </BodyTextBio>
+
                 <EnableTableScroll>
                   <AboutSectionContainerTable>
                     <tbody>
@@ -180,10 +194,15 @@ const Faq = styled.ol`
 `;
 
 const BodyText = styled.div`
-  ${theme.font.body};
+  ${theme.font.guidebookBody};
   display: flex;
   flex-direction: column;
   margin: 20px;
+`;
+
+const BodyTextBio = styled.div`
+  ${theme.font.guidebookBody};
+  margin: 9px;
 `;
 
 const DisplayText = styled.h1`
@@ -197,7 +216,7 @@ const EnableTableScroll = styled.div`
 `;
 
 const AboutSectionContainerTable = styled.table`
-  ${theme.font.body};
+  ${theme.font.guidebookBody};
   margin-left: 20px;
   width: 98%;
   border: 1px solid;
@@ -220,7 +239,7 @@ const Container = styled.div`
 `;
 
 const StyledAccordionDropdown = styled(AccordionDropdown)`
-  ${theme.font.body}
+  ${theme.font.guidebookBody}
 `;
 
 const ListContainer = styled.div`

@@ -59,7 +59,7 @@ export interface GuidebookDto {
   capacity: number;
   pets: 'Allowed' | 'Not Allowed';
   amenities?: string[];
-  propertyBio: string;
+  propertyBio: string[];
   faq?: Array<{ question: string; answer: string }>;
   // faq?: string[];
   policies?: string[];
