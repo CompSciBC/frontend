@@ -35,8 +35,7 @@ function Chat() {
     isHost: false,
     receivername: '',
     connected: false,
-    message: '',
-    userLoaded: false
+    message: ''
   });
 
   const messageEndRef = useRef<null | HTMLDivElement>(null);
@@ -66,41 +65,35 @@ function Chat() {
     setUserData({
       ...userData,
       connected: true,
-      isHost: user?.role === 'host',
-      userLoaded: true
+      isHost: user?.role === 'host'
     });
-  }, []);
-
-  useEffect(() => {
     // return if loading happened;
     if (pageState.loaded) {
       return;
     }
-    if (userData.userLoaded) {
-      pageState.loaded = true;
-      const loadUrl: string = userData.isHost
-        ? `${server}/api/chat/load/host/${resId}`
-        : `${server}/api/chat/load/guest/${resId}/${userData.username}`;
-      fetch(loadUrl, {
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json' }
-      })
-        .then(async (response) => await response.json())
-        .then((chats: ChatsServerResponse) => {
-          // const Sock = new SockJS('http://localhost:8080/ws');
-          const Sock = new SockJS(`${server}/ws`);
+    pageState.loaded = true;
+    const loadUrl: string = userData.isHost
+      ? `${server}/api/chat/load/host/${resId}`
+      : `${server}/api/chat/load/guest/${resId}/${userData.username}`;
+    fetch(loadUrl, {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' }
+    })
+      .then(async (response) => await response.json())
+      .then((chats: ChatsServerResponse) => {
+        // const Sock = new SockJS('http://localhost:8080/ws');
+        const Sock = new SockJS(`${server}/ws`);
 
-          stompClient = over(Sock);
-          stompClient.connect(
-            {},
-            () => {
-              onConnected(chats);
-            },
-            onError
-          );
-        });
-    }
-  }, [userData]);
+        stompClient = over(Sock);
+        stompClient.connect(
+          {},
+          () => {
+            onConnected(chats);
+          },
+          onError
+        );
+      });
+  }, []);
 
   const onConnected = (chats: ChatsServerResponse) => {
     // subscribe to group message
@@ -231,6 +224,7 @@ function Chat() {
             : [...privateChats.get(tab)!]
           ).map((message: any, index) => (
             <MessageBlockWrapper
+              id="message-block"
               self={message.senderName === userData.username}
               key={index}
             >
@@ -339,15 +333,8 @@ const ChatMessages = styled.div`
     width: 90%;
   }
 `;
-
-const MessageBlockWrapper = styled.div<{ self: boolean }>`
-  display: flex;
+const MessageBlock = styled.div<{ self: boolean }>`
   justify-content: ${(props) => (props.self ? 'end' : '')};
-  width: 100%;
-  margin: 10px 0;
-`;
-
-const MessageBlock = styled.div`
   padding: 5px;
   display: flex;
   flex-basis: auto;
@@ -355,7 +342,7 @@ const MessageBlock = styled.div`
   max-width: fit-content;
   box-shadow: 0 3px 3px rgb(18 58 39 / 0.4);
   border-radius: 10px;
-  margin: 0 10px;
+  margin: 10px;
   background-color: #ffffff;
 `;
 const Input = styled.input<{ userType: string }>`
