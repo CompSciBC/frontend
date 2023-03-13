@@ -30,6 +30,7 @@ import SurveyView from './components/dashboard/review/SurveyComponent';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
 // import AppTestMode from './components/AppTestMode';
+import Inbox from './components/chat/Inbox';
 
 // Configure React project with Amplify resources
 import { Amplify } from 'aws-amplify';
@@ -67,6 +68,7 @@ export const routes = {
   guidebook: '/reservations/:resId/guidebook',
   invite: '/reservations/:resId/invite',
   chat: '/reservations/:resId/chat',
+  inbox: 'inbox/:userId',
   weather: '/reservations/:resId/weather',
   restaurants: '/reservations/:resId/restaurants',
   eventsAndPlaces: '/reservations/:resId/eventsAndPlaces',
@@ -111,8 +113,8 @@ const authNavLinks: NavbarLink[] = [
     path: routes.reservations
   },
   {
-    name: 'Chat',
-    path: routes.chat
+    name: 'Inbox',
+    path: routes.inbox
   },
   {
     name: 'Profile',
@@ -202,6 +204,10 @@ const router = createBrowserRouter([
           {
             path: routes.chat,
             element: <Chat />
+          },
+          {
+            path: routes.inbox,
+            element: <Inbox />
           },
           {
             path: routes.weather,
