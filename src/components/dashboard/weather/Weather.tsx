@@ -25,7 +25,9 @@ function Weather() {
   return (
     <Container>
       <H1>7 Day Forecast</H1>
-      <Caption>{`As of ${currentDate.getMonth() + 1}/${currentDate.getDate()} - ${currentDate.getHours()}:${currentDate.getMinutes()}`}</Caption>
+      <Caption>{`As of ${
+        currentDate.getMonth() + 1
+      }/${currentDate.getDate()} - ${currentDate.getHours()}:${currentDate.getMinutes()}`}</Caption>
       {forecast?.map((r: Forecast) => {
         return (
           <RectangularCardLink

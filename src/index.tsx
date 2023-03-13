@@ -29,8 +29,8 @@ import Map from './components/dashboard/map/Map';
 import SurveyView from './components/dashboard/review/SurveyComponent';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
-// import AppTestMode from './components/AppTestMode';
 import Inbox from './components/chat/Inbox';
+// import AppTestMode from './components/AppTestMode';
 
 // Configure React project with Amplify resources
 import { Amplify } from 'aws-amplify';
