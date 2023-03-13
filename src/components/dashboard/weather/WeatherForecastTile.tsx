@@ -69,6 +69,7 @@ const Time = styled.div`
   display: flex;
   align-items: center;
   height: 33%;
+  text-align: center;
 `;
 
 const Icon = styled.img`
