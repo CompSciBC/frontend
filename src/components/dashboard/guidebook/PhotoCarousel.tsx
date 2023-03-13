@@ -1,11 +1,11 @@
 import styled from '@emotion/styled';
 import Carousel from 'react-bootstrap/Carousel';
 
-export interface props {
+export interface Props {
   images: string[];
 }
 
-function LightFadeCarousel({ images }: props) {
+function LightFadeCarousel({ images }: Props) {
   return (
     <Container>
       <Carousel fade variant="light" touch={true}>
