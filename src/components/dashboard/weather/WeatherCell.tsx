@@ -5,9 +5,10 @@ import { paramRoute, routes } from '../../..';
 import { Forecast } from '../../../utils/dtos';
 import { DashboardCellProps } from '../Dashboard';
 import { DashboardCellLink } from '../DashboardCellClickable';
-import DashboardCellWrapper from '../DashboardCellWrapper';
+
 import getWeatherForecast from './getWeatherForecast';
 import WeatherForecastTile from './WeatherForecastTile';
+import DashboardCellWrapper from '../DashboardCellWrapper';
 
 function WeatherCell({ className, cell }: DashboardCellProps) {
   const { reservationDetail } = useContext(AppContext);
@@ -17,7 +18,12 @@ function WeatherCell({ className, cell }: DashboardCellProps) {
     let subscribed = true;
 
     (async function () {
-      subscribed && setForecast(await getWeatherForecast());
+      if (reservationDetail?.property.address) {
+        subscribed &&
+          setForecast(
+            await getWeatherForecast(reservationDetail?.property.address, 5)
+          );
+      }
     })();
 
     return () => {
@@ -35,8 +41,8 @@ function WeatherCell({ className, cell }: DashboardCellProps) {
         >
           {forecast.map((f) => (
             <WeatherForecastTile
-              key={f.timestamp}
-              time={f.timestamp}
+              key={f.number}
+              time={f.name}
               weather={f.weather}
               temp={f.temp}
             />

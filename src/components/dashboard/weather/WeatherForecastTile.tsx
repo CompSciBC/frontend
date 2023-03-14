@@ -45,6 +45,7 @@ function WeatherForecastTile({
     <Container className={className}>
       <Time>{time}</Time>
       <Icon src={`/images/weather/${weather}.png`} />
+      {/* <Icon src={`/images/weather/fog.png`} /> */}
       <Temperature>{temp}</Temperature>
     </Container>
   );
@@ -68,6 +69,7 @@ const Time = styled.div`
   display: flex;
   align-items: center;
   height: 33%;
+  text-align: center;
 `;
 
 const Icon = styled.img`

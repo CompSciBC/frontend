@@ -196,7 +196,7 @@ function Restaurants() {
               <QueryTag key={k}>
                 <span>{k}</span>
                 <StyledCloseX
-                  size={24}
+                  size={8}
                   onClick={() => setQuery(removeKeyword(k))}
                 />
               </QueryTag>
