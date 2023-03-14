@@ -16,6 +16,9 @@ import HostLanding from './components/home/HostLanding';
 import GuestLanding from './components/home/GuestLanding';
 import Profile from './components/profile/Profile';
 import Reservations from './components/reservations/Reservations';
+import AddReservation from './components/reservations/AddReservation';
+import Dashboard from './components/dashboard/Dashboard';
+import Guidebook from './components/dashboard/guidebook/Guidebook';
 import Invite from './components/dashboard/invite/Invite';
 import Chat from './components/chat/Chat';
 import Weather from './components/dashboard/weather/Weather';
@@ -31,9 +34,6 @@ import AppTestMode from './components/AppTestMode';
 // Configure React project with Amplify resources
 import { Amplify } from 'aws-amplify';
 import config from './aws-exports';
-import AddReservation from './components/reservations/AddReservation';
-import Dashboard from './components/dashboard/Dashboard';
-import Guidebook from './components/dashboard/guidebook/Guidebook';
 Amplify.configure(config);
 
 /**
