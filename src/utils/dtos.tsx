@@ -59,13 +59,12 @@ export interface GuidebookDto {
   capacity: number;
   pets: 'Allowed' | 'Not Allowed';
   amenities?: string[];
-  propertyBio: string;
-  faq?: Array<{ Question: string; Answer: string }>;
-  // faq?: string[];
+  propertyBio: string[];
+  faq?: Array<{ question: string; answer: string }>;
   policies?: string[];
-  hostRecommended?: string[]; // change later from type any to HostRecommended object
+  hostRecommended?: string[];
   hostServices?: string[];
-  propertySpecificQ?: any; // change later to Hieu's Survey object
+  askGuestTheseQuestionsinSurvey?: any;
   checkininstr?: string[];
   checkoutinstr?: string[];
 }

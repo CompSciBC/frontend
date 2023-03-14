@@ -19,7 +19,6 @@ import Reservations from './components/reservations/Reservations';
 import AddReservation from './components/reservations/AddReservation';
 import Dashboard from './components/dashboard/Dashboard';
 import Guidebook from './components/dashboard/guidebook/Guidebook';
-import GuidebookLoader from './components/dashboard/guidebook/GuidebookLoader';
 import Invite from './components/dashboard/invite/Invite';
 import Chat from './components/chat/Chat';
 import Weather from './components/dashboard/weather/Weather';
@@ -194,8 +193,7 @@ const router = createBrowserRouter([
           },
           {
             path: routes.guidebook,
-            element: <Guidebook />,
-            loader: GuidebookLoader
+            element: <Guidebook />
           },
           {
             path: routes.invite,
