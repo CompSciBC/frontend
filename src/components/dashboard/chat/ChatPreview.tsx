@@ -22,10 +22,12 @@ export interface ChatPreviewProps extends DashboardCellProps {
  */
 
 function ChatPreview({ className, cell, n }: ChatPreviewProps) {
+  
   const { reservationDetail, user } = useContext(AppContext);
   const [messages, setMessages] = useState<Message[]>([]);
+  
+   const { resId } = useParams() as { resId: string };
 
-  const { resId } = useParams() as { resId: string };
 
   useEffect(() => {
     let subscribed = true;
@@ -33,7 +35,7 @@ function ChatPreview({ className, cell, n }: ChatPreviewProps) {
     (async function () {
       if (subscribed && reservationDetail) {
         const messages: Message[] = await getMessages(resId, user!);
-
+       
         setMessages(messages);
       }
     })().catch(() => {
