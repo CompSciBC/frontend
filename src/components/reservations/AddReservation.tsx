@@ -2,8 +2,7 @@ import { useContext, useEffect, useState } from 'react';
 import AppContext from '../../context/AppContext';
 import { useNavigate, useParams } from 'react-router-dom';
 import { paramRoute, routes } from '../..';
-import { Reservation } from '../../utils/dtos';
-import { server } from '../../index';
+import { postReservation } from './postReservation';
 
 function AddReservation() {
   const { resId } = useParams();
@@ -14,33 +13,16 @@ function AddReservation() {
   useEffect(() => {
     let subscribed = true;
 
-    // makes a post request to add a new reservation entry with the current user's id
-    const postReservation = async (reservation: Reservation) => {
-      const response = await fetch(`${server}/api/reservations`, {
-        method: 'post',
-        headers: {
-          'content-type': 'application/json'
-        },
-        body: JSON.stringify([
-          {
-            ...reservation,
-            guestId: user!.userId
-          }
-        ])
-      });
-      const body = await response.json();
-      return body.status === 201;
-    };
-
     if (user && reservationDetail) {
       (async function () {
         const { property, image, ...reservation } = reservationDetail;
+        const { userId } = user;
 
-        if (reservation) {
-          subscribed && setSuccess(await postReservation(reservation));
-          console.log(`Reservation #${resId!} added to guestId ${user.userId}`);
-        } else {
-          console.log(`Reservation #${resId!} does not exist.`);
+        const result = await postReservation(reservation, userId);
+
+        if (result) {
+          subscribed && setSuccess(result);
+          console.log(`Reservation #${resId!} added to guestId ${userId}`);
         }
       })();
     }

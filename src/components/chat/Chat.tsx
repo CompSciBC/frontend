@@ -36,7 +36,8 @@ function Chat() {
     isHost: false,
     receivername: '',
     connected: false,
-    message: ''
+    message: '',
+    userLoaded: false
   });
 
   const messageEndRef = useRef<null | HTMLDivElement>(null);
@@ -66,35 +67,41 @@ function Chat() {
     setUserData({
       ...userData,
       connected: true,
-      isHost: user?.role === 'host'
+      isHost: user?.role === 'host',
+      userLoaded: true
     });
+  }, []);
+
+  useEffect(() => {
     // return if loading happened;
     if (pageState.loaded) {
       return;
     }
-    pageState.loaded = true;
-    const loadUrl: string = userData.isHost
-      ? `${server}/api/chat/load/host/${resId}`
-      : `${server}/api/chat/load/guest/${resId}/${userData.username}`;
-    fetch(loadUrl, {
-      method: 'GET',
-      headers: { 'Content-Type': 'application/json' }
-    })
-      .then(async (response) => await response.json())
-      .then((chats: ChatsServerResponse) => {
-        // const Sock = new SockJS('http://localhost:8080/ws');
-        const Sock = new SockJS(`${server}/ws`);
+    if (userData.userLoaded) {
+      pageState.loaded = true;
+      const loadUrl: string = userData.isHost
+        ? `${server}/api/chat/load/host/${resId}`
+        : `${server}/api/chat/load/guest/${resId}/${userData.username}`;
+      fetch(loadUrl, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' }
+      })
+        .then(async (response) => await response.json())
+        .then((chats: ChatsServerResponse) => {
+          // const Sock = new SockJS('http://localhost:8080/ws');
+          const Sock = new SockJS(`${server}/ws`);
 
-        stompClient = over(Sock);
-        stompClient.connect(
-          {},
-          () => {
-            onConnected(chats);
-          },
-          onError
-        );
-      });
-  }, []);
+          stompClient = over(Sock);
+          stompClient.connect(
+            {},
+            () => {
+              onConnected(chats);
+            },
+            onError
+          );
+        });
+    }
+  }, [userData]);
 
   const onConnected = (chats: ChatsServerResponse) => {
     // subscribe to group message
@@ -191,127 +198,140 @@ function Chat() {
   };
 
   return (
-    <Container id="container">
-      <ChatBox id="chat-box">
-        <ChatListContainer>
-          <ChatList
+    <Container>
+      <SideBar>
+        <SideBarHeader>
+          <ChatHeader>Chats</ChatHeader>
+        </SideBarHeader>
+        <ChatList>
+          <ChatRoom
             onClick={() => {
               setTab('Group');
             }}
           >
             {' '}
             Group Chat{' '}
-          </ChatList>
+          </ChatRoom>
           {Array.from(privateChats.keys()).map((chatName, index) => (
-            <ChatList
+            <ChatRoom
+              key={index}
               onClick={() => {
                 setTab(chatName);
               }}
-              key={index}
             >
               {chatName}
-            </ChatList>
+            </ChatRoom>
           ))}
-        </ChatListContainer>
-
-        {
-          <ChatContent id="chat-content">
-            <ChatName>{tab === groupChatName ? groupHeader : tab} </ChatName>
-            <ChatMessages id="chat-messages">
-              {(tab === groupChatName
-                ? [...groupChat]
-                : [...privateChats.get(tab)!]
-              ).map((message: any, index) => (
-                <MessageBlock
-                  id="message"
-                  self={message.senderName === userData.username}
-                  key={index}
-                >
-                  {message.senderName !== userData.username && (
-                    <Avatar>{message.senderName}</Avatar>
-                  )}
-                  .
-                  <MessageData id="message-data">{message.message}</MessageData>
-                  {message.senderName === userData.username && (
-                    <AvatarSelf>{message.senderName}</AvatarSelf>
-                  )}
-                </MessageBlock>
-              ))}
-              <LastMessage id="last-message" ref={messageEndRef}></LastMessage>
-            </ChatMessages>
-          </ChatContent>
-        }
-      </ChatBox>
-
-      <SendMessage id="send-message">
-        <Input
-          id="input"
-          userType={userData.username}
-          placeholder="enter the message"
-          value={userData.message}
-          onChange={handleMessage}
-        />
-        <SendButton type="button" onClick={sendMessage}>
-          send
-        </SendButton>
-      </SendMessage>
+        </ChatList>
+      </SideBar>
+      <ChatContent>
+        <ChatName>{tab === groupChatName ? groupHeader : tab} </ChatName>
+        <ChatMessages id="chat-messages">
+          {(tab === groupChatName
+            ? [...groupChat]
+            : [...privateChats.get(tab)!]
+          ).map((message: any, index) => (
+            <MessageBlockWrapper
+              self={message.senderName === userData.username}
+              key={index}
+            >
+              <MessageBlock id="message-block">
+                {message.senderName !== userData.username && (
+                  <Avatar>{message.senderName}</Avatar>
+                )}
+                <MessageData id="message-data">{message.message}</MessageData>
+                {message.senderName === userData.username && (
+                  <AvatarSelf>{message.senderName}</AvatarSelf>
+                )}
+              </MessageBlock>
+            </MessageBlockWrapper>
+          ))}
+          <LastMessage id="last-message" ref={messageEndRef}></LastMessage>
+        </ChatMessages>
+        <SendMessage id="send-message">
+          <Input
+            id="input"
+            userType={userData.username}
+            placeholder="enter the message"
+            value={userData.message}
+            onChange={handleMessage}
+          />
+          <SendButton type="button" onClick={sendMessage}>
+            send
+          </SendButton>
+        </SendMessage>
+      </ChatContent>
     </Container>
   );
 }
 const Container = styled.div`
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  align-content: center;
-  justify-content: center;
-  height: 90%;
-  width: 75%;
-  ${theme.screen.small} {
-    width: 100%;
-  }
-`;
-const ChatBox = styled.div`
-  display: flex;
-  align-items: center;
   width: 100%;
-  height: 80%;
+  height: 100%;
+`;
+const SideBar = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 250px;
+  //background-color: red;
+  gap: 20px;
+  padding: 16px;
+`;
+const ChatContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  flex-grow: 1;
+  // background-color: blue;
+  gap: 15px;
+  padding: 16px;
+`;
+const SideBarHeader = styled.div`
+  display: flex;
+  width: 100%;
+  background-color: #ededed;
+  box-shadow: 0 3px 3px rgb(18 58 39 / 0.4);
+  border-color: #539174;
+  border-radius: 10px;
+  margin: 5px;
+`;
+const ChatList = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  flex-grow: 1;
+  background-color: #ededed;
+  gap: 10px;
+  box-shadow: 0 3px 3px rgb(18 58 39 / 0.4);
+  border-color: #539174;
+  border-radius: 15px;
+`;
+
+const ChatRoom = styled.button`
+  display: flex;
+  background-color: #ffffff;
+  margin-top: 13px;
+  box-shadow: 0 3px 3px rgb(18 58 39 / 0.4);
+  // border-color: #539174;
+  border-radius: 10px;
+  border: none;
 `;
 const ChatName = styled.h1`
   display: flex;
-  //Sjustify-content: center;
   align-items: center;
 
   ${theme.font.displayXL}
 `;
 
-const ChatListContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
-
-const ChatList = styled.button`
-  display: flex;
-  cursor: pointer;
-  padding: 10px;
-  margin: 5px;
-  border-radius: 20px;
-  background: green;
-  color: #fff;
-
-  ${theme.font.button}
-`;
-const ChatContent = styled.div`
-  display: flex;
-  align-items: left;
-  width: 100%;
-  height: 100%;
-  flex-direction: column;
-  justify-content: center;
-`;
 const ChatMessages = styled.div`
   height: 90%;
   width: 75%;
   padding-left: 5;
+  background-color: #ededed;
+  box-shadow: 0 3px 3px rgb(18 58 39 / 0.4);
+  border-color: #539174;
+  border-radius: 15px;
   overflow-y: scroll;
   ::-webkit-scrollbar {
     display: none;
@@ -320,42 +340,54 @@ const ChatMessages = styled.div`
     width: 90%;
   }
 `;
-const MessageBlock = styled.div<{ self: boolean }>`
+
+const MessageBlockWrapper = styled.div<{ self: boolean }>`
+  display: flex;
   justify-content: ${(props) => (props.self ? 'end' : '')};
+  width: 100%;
+  margin: 10px 0;
+`;
+
+const MessageBlock = styled.div`
   padding: 5px;
   display: flex;
-  flex-direction: row;
-  box-shadow: 0 3px 3px rgb(59 26 85 / 0.2);
-  margin: 10px;
-  ${theme.screen.small} {
-    width: 90%;
-  }
+  flex-basis: auto;
+  flex-direction: column;
+  max-width: fit-content;
+  box-shadow: 0 3px 3px rgb(18 58 39 / 0.4);
+  border-radius: 10px;
+  margin: 0 10px;
+  background-color: #ffffff;
 `;
 const Input = styled.input<{ userType: string }>`
   flex-grow: 1;
   margin-top: 3px;
+  margin-bottom: 3 px;
+  box-shadow: 0 3px 3px rgb(18 58 39 / 0.4);
+  border-color: #539174;
+  border-radius: 15px;
   ${theme.font.body}
 `;
 const Avatar = styled.div`
   display: flex;
-  color: red;
+  color: #c5c752;
   ${theme.screen.small} {
     width: 100%;
   }
 `;
-
 const AvatarSelf = styled.div`
   display: flex;
-  color: green;
+  color: #52a782;
   ${theme.screen.small} {
     width: 100%;
   }
 `;
-const MessageData = styled.div`
+const MessageData = styled.li`
+  display: flex;
+  max-width: fit-content;
   padding: 3px;
-  ${theme.screen.small} {
-    width: 100%;
-  }
+  border-radius: 10px;
+  background-color: whitesmoke;
 `;
 const SendMessage = styled.div`
   width: 75%;
@@ -364,8 +396,8 @@ const SendMessage = styled.div`
 const SendButton = styled.button`
   border: none;
   padding: 10px;
-  background: #47a347;
-  color: #fff;
+  background: #b61616;
+  color: #ffff;
   font-weight: bold;
   width: 100px;
   border-radius: 30px;
@@ -377,10 +409,13 @@ const SendButton = styled.button`
 `;
 
 const LastMessage = styled.div`
-  padding: 3px;
   ${theme.screen.small} {
     width: 100%;
   }
 `;
 
+const ChatHeader = styled.h1`
+  margin-left: 20px;
+  ${theme.font.heading}
+`;
 export default Chat;

@@ -59,13 +59,12 @@ export interface GuidebookDto {
   capacity: number;
   pets: 'Allowed' | 'Not Allowed';
   amenities?: string[];
-  propertyBio: string;
-  faq?: Array<{ Question: string; Answer: string }>;
-  // faq?: string[];
+  propertyBio: string[];
+  faq?: Array<{ question: string; answer: string }>;
   policies?: string[];
-  hostRecommended?: string[]; // change later from type any to HostRecommended object
+  hostRecommended?: string[];
   hostServices?: string[];
-  propertySpecificQ?: any; // change later to Hieu's Survey object
+  askGuestTheseQuestionsinSurvey?: any;
   checkininstr?: string[];
   checkoutinstr?: string[];
 }
@@ -83,6 +82,7 @@ export interface Reservation {
   checkIn: string;
   checkOut: string;
   reasonForStay: string;
+  inviteCode: string;
 }
 
 /**
@@ -125,7 +125,6 @@ export interface Invitation {
  */
 export interface Restaurant {
   id: string;
-  alias: string;
   name: string;
   imageUrl: string;
   isOpen: boolean;
@@ -144,6 +143,18 @@ export interface Restaurant {
 }
 
 /**
+ * Specifies filters for a restaurant search (matching RestaurantFilters.java)
+ */
+export interface RestaurantFilters {
+  address: Address;
+  radius?: number;
+  keywords?: string[];
+  maxPrice?: number;
+  openNow?: boolean;
+  numResults?: number;
+}
+
+/**
  * Represents an event or place
  */
 export interface EventOrPlace {
@@ -155,16 +166,13 @@ export interface EventOrPlace {
  * Represents a weather forecast (matching Forecast.java)
  */
 export interface Forecast {
-  office: string;
-  gridX_gridY: string;
-  timestamp: string;
-
-  // TODO: this is too general; need to break down into component parts (like temp, humidity, etc.)
-  forecast_content: any;
-
-  // TODO: replace these with actual fields from the forecast_content
+  timestamp?: string;
   weather: WeatherType;
+  number: number;
+  name: string;
   temp: number;
+  detailedForecast: string;
+  shortForecast: string;
 }
 
 // TODO: replace with Elena's version

@@ -13,5 +13,5 @@ export default async function getEventsAndPlaces(
   n: number
 ): Promise<EventOrPlace[]> {
   // TODO: get from events and places api
-  return await getRestaurantsPreview(address, n);
+  return await getRestaurantsPreview({ address, numResults: n });
 }

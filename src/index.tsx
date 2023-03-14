@@ -19,7 +19,6 @@ import Reservations from './components/reservations/Reservations';
 import AddReservation from './components/reservations/AddReservation';
 import Dashboard from './components/dashboard/Dashboard';
 import Guidebook from './components/dashboard/guidebook/Guidebook';
-import GuidebookLoader from './components/dashboard/guidebook/GuidebookLoader';
 import Invite from './components/dashboard/invite/Invite';
 import Chat from './components/chat/Chat';
 import Weather from './components/dashboard/weather/Weather';
@@ -29,6 +28,7 @@ import Map from './components/dashboard/map/Map';
 import SurveyView from './components/dashboard/review/SurveyComponent';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
+import Inbox from './components/chat/Inbox';
 import AppTestMode from './components/AppTestMode';
 
 // Configure React project with Amplify resources
@@ -67,6 +67,7 @@ export const routes = {
   guidebook: '/reservations/:resId/guidebook',
   invite: '/reservations/:resId/invite',
   chat: '/reservations/:resId/chat',
+  inbox: 'inbox/:userId',
   weather: '/reservations/:resId/weather',
   restaurants: '/reservations/:resId/restaurants',
   eventsAndPlaces: '/reservations/:resId/eventsAndPlaces',
@@ -111,8 +112,8 @@ const authNavLinks: NavbarLink[] = [
     path: routes.reservations
   },
   {
-    name: 'Chat',
-    path: routes.chat
+    name: 'Inbox',
+    path: routes.inbox
   },
   {
     name: 'Profile',
@@ -134,6 +135,10 @@ const router = createBrowserRouter([
     ),
     errorElement: <ErrorPage />,
     children: [
+      {
+        path: routes.error,
+        element: <ErrorPage />
+      },
       {
         path: routes.home,
         element: <Home logo="/bmg-branding/BMG-Script-RdHrt.svg" />,
@@ -188,8 +193,7 @@ const router = createBrowserRouter([
           },
           {
             path: routes.guidebook,
-            element: <Guidebook />,
-            loader: GuidebookLoader
+            element: <Guidebook />
           },
           {
             path: routes.invite,
@@ -198,6 +202,10 @@ const router = createBrowserRouter([
           {
             path: routes.chat,
             element: <Chat />
+          },
+          {
+            path: routes.inbox,
+            element: <Inbox />
           },
           {
             path: routes.weather,

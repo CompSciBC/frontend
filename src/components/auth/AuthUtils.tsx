@@ -25,7 +25,7 @@ export function getUserGroup(user: any): any {
   if (token) {
     const decoded = jwt(token);
     if (decoded) {
-      userGroup = Object.entries(decoded)[1][1];
+      userGroup = Object.entries(decoded)[1][1][0];
     }
   }
   return userGroup;
