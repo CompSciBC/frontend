@@ -53,7 +53,9 @@ function Guidebook() {
               <div>
                 <TextParentContainer>
                   {guidebookInfo.propertyBio.map((paragraph) => {
-                    return <TextContainer key={paragraph}>{paragraph}</TextContainer>;
+                    return (
+                      <TextContainer key={paragraph}>{paragraph}</TextContainer>
+                    );
                   })}
                   <EndofComponentSpacing></EndofComponentSpacing>
                 </TextParentContainer>
@@ -248,7 +250,7 @@ const StyledAccordionDropdown = styled(AccordionDropdown)`
 `;
 
 const ListContainer = styled.div`
-${theme.font.guidebookBody}
+  ${theme.font.guidebookBody}
   display: flex;
   flex-direction: column;
   row-gap: 10px;
