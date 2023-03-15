@@ -239,10 +239,11 @@ function Chat() {
                 {message.senderName !== userData.username && (
                   <Avatar>{message.senderName}</Avatar>
                 )}
-                <MessageData id="message-data">{message.message}</MessageData>
                 {message.senderName === userData.username && (
                   <AvatarSelf>{message.senderName}</AvatarSelf>
                 )}
+                <MessageData id="message-data">{message.message}</MessageData>
+                
               </MessageBlock>
             </MessageBlockWrapper>
           ))}

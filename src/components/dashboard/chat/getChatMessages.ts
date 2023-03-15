@@ -28,7 +28,7 @@ export default async function getMessages(
     headers: { 'Content-Type': 'application/json' }
   }).then(async (response) => {
     const rawMessages = await response.json();
-// in case if there is no chat history
+    // in case if there is no chat history
     if (rawMessages.length === 0) {
       return [
         {
