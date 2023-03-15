@@ -155,6 +155,7 @@ const Ellipses = styled.div`
 const MessageContainer = styled.div<{ me: boolean }>`
   display: flex;
   align-items: center;
+  justify-content: ${(props) => (props.me ? 'end' : 'start')};
   column-gap: 8px;
   padding: 8px;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);

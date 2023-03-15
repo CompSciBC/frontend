@@ -243,7 +243,6 @@ function Chat() {
                   <AvatarSelf>{message.senderName}</AvatarSelf>
                 )}
                 <MessageData id="message-data">{message.message}</MessageData>
-                
               </MessageBlock>
             </MessageBlockWrapper>
           ))}
