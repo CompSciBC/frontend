@@ -2,7 +2,7 @@ import styled from '@emotion/styled';
 import { theme } from '../../../utils/styles';
 import { memo, useContext, useEffect, useState } from 'react';
 import AppContext from '../../../context/AppContext';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { paramRoute, routes } from '../../..';
 import { Message } from '../../../utils/dtos';
 import { DashboardCellProps } from '../Dashboard';
@@ -20,18 +20,32 @@ export interface ChatPreviewProps extends DashboardCellProps {
  * @param props {@link ChatPreviewProps}
  * @returns A JSX element
  */
+
 function ChatPreview({ className, cell, n }: ChatPreviewProps) {
-  const { reservationDetail } = useContext(AppContext);
+  const { reservationDetail, user } = useContext(AppContext);
   const [messages, setMessages] = useState<Message[]>([]);
+
+  const { resId } = useParams() as { resId: string };
 
   useEffect(() => {
     let subscribed = true;
 
     (async function () {
-      subscribed &&
-        reservationDetail &&
-        setMessages(await getMessages(reservationDetail.id, n));
-    })();
+      if (subscribed && reservationDetail) {
+        const messages: Message[] = await getMessages(resId, user!);
+
+        setMessages(messages);
+      }
+    })().catch(() => {
+      setMessages([
+        {
+          name: 'Host',
+          me: false,
+          time: new Date(),
+          message: 'Hello'
+        }
+      ]);
+    });
 
     return () => {
       subscribed = false;
@@ -141,6 +155,7 @@ const Ellipses = styled.div`
 const MessageContainer = styled.div<{ me: boolean }>`
   display: flex;
   align-items: center;
+  justify-content: ${(props) => (props.me ? 'end' : 'start')};
   column-gap: 8px;
   padding: 8px;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
