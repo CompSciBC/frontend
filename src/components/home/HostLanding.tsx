@@ -12,18 +12,14 @@ function HostLanding() {
   const reservations = [];
   const now = new Date();
   for (let i = 1; i < 10; i++) {
-    reservations.push(
-      {
-        propertyId: i,
-        propertyName: `propertyropertyroperty ${i}`,
-        primaryGuestName: `guest ${i}`,
-        reservationStartDate: now.getDate() - i,
-        reservationEndDate: now.getDate() + i
-      }
-    );
+    reservations.push({
+      propertyId: i,
+      propertyName: `propertyropertyroperty ${i}`,
+      primaryGuestName: `guest ${i}`,
+      reservationStartDate: now.getDate() - i,
+      reservationEndDate: now.getDate() + i
+    });
   }
-
-
 
   if (user?.role === 'guest') {
     return (
@@ -63,9 +59,6 @@ function HostLanding() {
             />
           ))}
         </ReservationsScroll>
-        
-        
-
       </>
     );
   }
@@ -76,9 +69,10 @@ export default HostLanding;
 // TODO: how to make text not spill out
 const ReservationsButtons = styled.div`
   width: 80vw;
-  height: 8%;
+  height: 15%;
   display: flex;
   overflow-x: scroll;
+  padding: 15px;
   button {
     background-color: white;
     border: 4ptx;
@@ -101,13 +95,11 @@ const ReservationsButtons = styled.div`
 `;
 
 const ReservationsScroll = styled.div`
-  width:80vw;
-  height:200px;
-  overflow-x:scroll;
+  width: 80vw;
+  height: 175px;
+  overflow-x: scroll;
   white-space: nowrap;
 `;
-
-
 
 const ReservationsWidgetTitle = styled.div`
   width: 80vw;
@@ -129,8 +121,6 @@ const ReservationsWidgetTitle = styled.div`
     ${theme.font.body}
   }
 `;
-
-
 
 // const Container = styled.div`
 //   display: flex;
