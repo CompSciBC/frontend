@@ -8,6 +8,11 @@ import styled from '@emotion/styled';
 import { theme } from '../../utils/styles';
 import ReservationCard from '../hostdashboard/ReservationCard';
 
+interface CellProps {
+  cellContent?: string;
+  cellColor?: string;
+}
+
 function HostLanding() {
   const { user } = useContext(AppContext);
   const reservations = [];
@@ -58,7 +63,7 @@ function HostLanding() {
                 cellContent = `${x}, ${y}`;
                 cellColor = colors[Math.floor(Math.random()*colors.length)];
               }
-              cells.push(<Cell> {cellContent}</Cell>);
+              cells.push(<Cell cellColor={cellColor}> {cellContent}</Cell>);
 
             }
             
@@ -242,10 +247,10 @@ const Container = styled.div`
   }
 `;
 
-const Cell = styled.td`
+const Cell = styled('td')<CellProps>`
   width: 100px;
   /* height: 50px; */
   border: 1px solid #ddd;
   text-align: center;
-  
+  background-color: ${props => (props.cellColor ? props.cellColor : `none`)};
 `;
