@@ -34,7 +34,7 @@ function CheckInCell({ className, cell }: DashboardCellProps) {
     <Container
       className={className}
       cell={cell}
-      to={'/'}
+      onClick={() => window.alert('Hello')}
       child={
         <div>
           {eventType}
