@@ -7,7 +7,6 @@ export interface ReviewCardProps {
   primaryGuestName: string;
   submissionTime: string;
   content: string;
-
 }
 
 export default function ReviewCard({
@@ -16,22 +15,39 @@ export default function ReviewCard({
   submissionTime,
   content
 }: ReviewCardProps) {
-    const timestamp = new Date(submissionTime);
-    const month = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-    const characters = 'abcdefghijklmnopqrstuvwxyz0123456789';
+  const timestamp = new Date(submissionTime);
+  const month = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December'
+  ];
+  const characters = 'abcdefghijklmnopqrstuvwxyz0123456789';
   return (
     <Container>
-        <ReviewQuote>
-            <p> &ldquo; {content.substring(0, 200)} ... &rdquo; </p>
-        </ReviewQuote>
-        <UserLogo>
-            <p>{characters.charAt(Math.floor(Math.random() * characters.length))}{characters.charAt(Math.floor(Math.random() * characters.length))}</p>
-        </UserLogo>
-        <SurveyMetadata>
-            <h6>Guest Name</h6>
-            <p>{month[timestamp.getMonth()]} {timestamp.getFullYear()}</p>
-        </SurveyMetadata>
-
+      <ReviewQuote>
+        <p> &ldquo; {content.substring(0, 200)} ... &rdquo; </p>
+      </ReviewQuote>
+      <UserLogo>
+        <p>
+          {characters.charAt(Math.floor(Math.random() * characters.length))}
+          {characters.charAt(Math.floor(Math.random() * characters.length))}
+        </p>
+      </UserLogo>
+      <SurveyMetadata>
+        <h6>Guest Name</h6>
+        <p>
+          {month[timestamp.getMonth()]} {timestamp.getFullYear()}
+        </p>
+      </SurveyMetadata>
     </Container>
   );
 }
@@ -46,7 +62,6 @@ const Container = styled.div`
   /* background: pink; */
 `;
 
-
 const ReviewQuote = styled.div`
   /* background: yellow; */
   margin: 15px 10px 15px 15px;
@@ -59,19 +74,19 @@ const ReviewQuote = styled.div`
 `;
 
 const SurveyMetadata = styled.div`
-position: relative;
-left: 10%;
-display: inline-block;
+  position: relative;
+  left: 10%;
+  display: inline-block;
   /* background: blue; */
-    text-overflow: clip;
-    overflow: hidden;
-    white-space: nowrap;
+  text-overflow: clip;
+  overflow: hidden;
+  white-space: nowrap;
   width: 50%;
-  
+
   h6 {
     ${theme.font.displaySmall}
     font-weight: bold;
-    color: ${theme.color.blue}
+    color: ${theme.color.blue};
   }
 
   p {
@@ -79,7 +94,6 @@ display: inline-block;
     color: ${theme.color.gray}
   }
 `;
-
 
 const UserLogo = styled.div`
   position: relative;
@@ -94,15 +108,11 @@ const UserLogo = styled.div`
   border-radius: 60px;
   text-transform: uppercase;
   padding: 15px 10px;
-  
+
   p {
     ${theme.font.displayLarge}
     font-weight: bold;
     text-transform: uppercase;
-    color: ${theme.color.white}
+    color: ${theme.color.white};
   }
-
-  
 `;
-
-

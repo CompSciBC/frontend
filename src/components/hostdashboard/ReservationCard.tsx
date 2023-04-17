@@ -3,7 +3,6 @@ import styled from '@emotion/styled';
 import { theme } from '../../utils/styles';
 import { Link } from 'react-router-dom';
 
-
 export interface ReservationCardProps {
   reservationId: string;
   propertyName: string;
@@ -21,23 +20,29 @@ export default function ReservationCard({
   reservationStartDate,
   reservationEndDate
 }: ReservationCardProps) {
-    const checkInDate = new Date(reservationStartDate);
-    const checkOutDate = new Date(reservationEndDate);
-    const chatLink = `/reservations/${reservationId}/chat`;
+  const checkInDate = new Date(reservationStartDate);
+  const checkOutDate = new Date(reservationEndDate);
+  const chatLink = `/reservations/${reservationId}/chat`;
   return (
     <Container>
-        <GuestInfo>
-            <p>FirstName L.</p>
-            <p>{checkInDate.getMonth() + 1}/{checkInDate.getDate()} - {checkOutDate.getMonth() + 1}/{checkOutDate.getDate()}</p>
+      <GuestInfo>
+        <p>FirstName L.</p>
+        <p>
+          {checkInDate.getMonth() + 1}/{checkInDate.getDate()} -{' '}
+          {checkOutDate.getMonth() + 1}/{checkOutDate.getDate()}
+        </p>
       </GuestInfo>
       <ImageContainer>
         <img src={propertyPhoto} />
       </ImageContainer>
 
-        <Link to={chatLink}>
-          <SendButton> 💬 Message </SendButton>
-        </Link>
-        <PropertyName> <p> property name {propertyName} </p> </PropertyName>
+      <Link to={chatLink}>
+        <SendButton> 💬 Message </SendButton>
+      </Link>
+      <PropertyName>
+        {' '}
+        <p> property name {propertyName} </p>{' '}
+      </PropertyName>
     </Container>
   );
 }
@@ -77,29 +82,28 @@ const PropertyName = styled.div`
   /* background: pink; */
 
   text-align: center;
-  
+
   white-space: initial; //make text wrap to next line
-  
+
   ${theme.font.caption}
   font-weight: bold;
-  color: ${theme.color.gray}
+  color: ${theme.color.gray};
 `;
 
 const GuestInfo = styled.div`
-
   position: relative;
   top: 0%;
   left: 0%;
   padding: 10% 0%;
-  
-    text-overflow: clip;
-    overflow: hidden;
-    white-space: nowrap;
+
+  text-overflow: clip;
+  overflow: hidden;
+  white-space: nowrap;
   height: 120px;
   width: 45%;
   text-align: center;
   display: inline-block;
-  
+
   ${theme.font.body}
 `;
 
@@ -113,8 +117,7 @@ const ImageContainer = styled.image`
   /* text-align: right; */
   /* padding: 6% 0; */
   display: inline-block;
-  
-  
+
   img {
     width: 100%;
     height: 100%;
@@ -127,5 +130,3 @@ const ImageContainer = styled.image`
     margin-right: auto; */
   }
 `;
-
-

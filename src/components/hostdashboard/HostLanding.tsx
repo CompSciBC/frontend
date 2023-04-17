@@ -3,114 +3,153 @@ import styled from '@emotion/styled';
 import { theme } from '../../utils/styles';
 import ReservationCard from './ReservationCard';
 import ReviewCard from './ReviewCard';
-import reservationsJson from './reservations.json';
-import surveysJson from './surveys.json';
+import dayjs, { Dayjs } from 'dayjs';
+import { useState } from 'react';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import reservationsJson from './mock_data_delete_later/reservations.json';
+import surveysJson from './mock_data_delete_later/surveys.json';
+import propertiesJson from './mock_data_delete_later/properties.json';
 
 interface CellProps {
   cellContent?: string;
   cellColor?: string;
+  cellWidth?:string;
 }
 
 function HostLanding() {
   const reservations = reservationsJson.data;
   const reviews = surveysJson.data;
-  const photos = ['/images/mountain-cabin.jpg', '/images/beach-house.jpg', '/images/downtown-apartment.jpg', '/images/log-cabin-interior.jpg', '/images/seattle-loft.jpg'];
-  const weekday = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+  const properties = propertiesJson.data;
+  const photos = [
+    '/images/mountain-cabin.jpg',
+    '/images/beach-house.jpg',
+    '/images/downtown-apartment.jpg',
+    '/images/log-cabin-interior.jpg',
+    '/images/seattle-loft.jpg'
+  ];
+  const weekday = [
+    'Sun.',
+    'Mon.',
+    'Tue.',
+    'Wed.',
+    'Thur.',
+    'Fri.',
+    'Sat.'
+  ];
   const colors = [theme.color.orange, theme.color.white];
   const now = new Date();
-
   const rows = [];
-    for (let y = 0; y < reservations.length + 1; y++) {
-        // Build the cells in an array
-        const cells = [];
-        let cellContent;
-        let cellColor;
-        
-        for (let x = 0; x < 8; x++) {
-            if(y === 0) {
-              if (x > 0) {
-                const day = weekday[(now.getDay() + x - 1)%7];
-                cells.push(<Cell> {day} <br/> {now.getMonth() + 1}/{now.getDate() + x - 1}  </Cell>);
-              } else {
-                cells.push(<Cell/>);
-              }
-              
-            } else {
-              if (x === 0) {
-                cellContent = `${reservations[y -1 ].propertyId}`;
-              } else {
-                // cellContent = `${x}, ${y}`;
-                cellContent = undefined;
-                cellColor = colors[Math.floor(Math.random()*colors.length)];
-              }
-              cells.push(<Cell cellColor={cellColor}> {cellContent}</Cell>);
+  const [startDate, setStartDate] = useState<Dayjs | null>(dayjs());
+  const initialEndDate = startDate!.add(7, 'day');
+  const [endDate, setEndDate] = useState<Dayjs | null>(initialEndDate);
+  for (let y = 0; y < properties.length + 1; y++) {
+    // Build the cells in an array
+    const cells = [];
+    let cellContent;
+    let cellColor;
 
-            }
-            
+    for (let x = 0; x < 8; x++) {
+      if (y === 0) {
+        if (x > 0) {
+          const day = weekday[(now.getDay() + x - 1) % 7];
+          cells.push(
+            <Cell>
+              {' '}
+              {day} <br /> {now.getMonth() + 1}/{now.getDate() + x - 1}{' '}
+            </Cell>
+          );
+        } else {
+          cells.push(<Cell />);
         }
-        // Put them in the row
-        rows.push(<tr>{cells}</tr>);
-    }
-  
-    return (
-      <Container>
-        <WidgetTitle>
-          <h3 style={{ float: 'left' }}> Your Reservations </h3>
-          <a style={{ float: 'right' }} href="host-reservations">
-            All reservations ({reservations.length})
-          </a>
-        </WidgetTitle>
-        <ReservationsButtons>
-          <button> Currently hosting (10) </button>
-          <button> Arriving soon (9) </button>
-          <button> Checking out (8) </button>
-          <button> Upcoming (8) </button>
-          <button> Pending review (8) </button>
-        </ReservationsButtons>
-        <ReservationsScroll>
-          {reservations.map((f) => (
-            <ReservationCard
-              key={f.id}
-              reservationId={f.id}
-              propertyName={f.propertyId}
-              propertyPhoto={photos[Math.floor(Math.random()*photos.length)]}
-              primaryGuestName={f.guestId}
-              reservationEndDate={f.checkOut}
-              reservationStartDate={f.checkIn}
-            />
-          ))}
-        </ReservationsScroll>
-        <WidgetTitle>
-          <h3 style={{ float: 'left' }}> Newest Reviews </h3>
-          <a style={{ float: 'right' }} href="host-reservations">
-            All reviews ({reviews.length})
-          </a>
-        </WidgetTitle>
+      } else {
+        if (x === 0) {
+          cellContent = `${properties[y - 1].name}`;
+          cells.push(<Cell cellWidth="200px"> {cellContent}</Cell>);
+        } else {
+          cellContent = undefined;
+          cellColor = colors[Math.floor(Math.random() * colors.length)];
+          cells.push(<Cell cellColor={cellColor}> {cellContent}</Cell>);
+        }
         
-        <Reviews>
-          {/* <select>
-            {photos.map( (x,y) => 
-              <option key={y}>{x}</option> )
-            }
-          </select> */}
-          {reviews.map((f) => (
-            <ReviewCard
-              key={f.propertyId}
-              propertyName={f.propertyId}
-              primaryGuestName={f.guestId}
-              submissionTime={f.submissionTime}
-              content={f.surveyResponse}
-            />
-          ))}
-          
+      }
+    }
+    // Put them in the row
+    rows.push(<tr>{cells}</tr>);
+  }
 
-        </Reviews>
-        <WidgetTitle>
-          <h3 style={{ float: 'left' }}> Your Week at a Glance </h3>
-        </WidgetTitle>
-        <table><tbody>{rows}</tbody></table>
-      </Container>
-    );
+  return (
+    <Container>
+      <WidgetTitle>
+        <h3 style={{ float: 'left' }}> Your Reservations </h3>
+        <a style={{ float: 'right' }} href="host-reservations">
+          All reservations ({reservations.length})
+        </a>
+      </WidgetTitle>
+      <ReservationsButtons>
+        <button> Currently hosting (10) </button>
+        <button> Arriving soon (9) </button>
+        <button> Checking out (8) </button>
+        <button> Upcoming (8) </button>
+        <button> Pending review (8) </button>
+      </ReservationsButtons>
+      <ReservationsScroll>
+        {reservations.map((f) => (
+          <ReservationCard
+            key={f.id}
+            reservationId={f.id}
+            propertyName={f.propertyId}
+            propertyPhoto={photos[Math.floor(Math.random() * photos.length)]}
+            primaryGuestName={f.guestId}
+            reservationEndDate={f.checkOut}
+            reservationStartDate={f.checkIn}
+          />
+        ))}
+      </ReservationsScroll>
+      <WidgetTitle>
+        <h3 style={{ float: 'left' }}> Newest Reviews </h3>
+        <a style={{ float: 'right' }} href="host-reservations">
+          All reviews ({reviews.length})
+        </a>
+      </WidgetTitle>
+
+      <Reviews>
+        {reviews.map((f) => (
+          <ReviewCard
+            key={f.propertyId}
+            propertyName={f.propertyId}
+            primaryGuestName={f.guestId}
+            submissionTime={f.submissionTime}
+            content={f.surveyResponse}
+          />
+        ))}
+      </Reviews>
+      <WidgetTitle>
+        <h3 style={{ float: 'left' }}> Your Week at a Glance </h3>
+      </WidgetTitle>
+      
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <DatePickers>
+            <DatePicker
+                label="Start"
+                value={startDate}
+                onChange={(newValue) => setStartDate(newValue)}
+              />
+              <DatePicker
+                label="End"
+                value={endDate}
+                onChange={(newValue) => setEndDate(newValue)}
+              />
+          </DatePickers>
+       
+        </LocalizationProvider>
+      
+      <table>
+        <tbody>{rows}</tbody>
+      </table>
+    </Container>
+  );
 }
 
 export default HostLanding;
@@ -153,21 +192,7 @@ const Reviews = styled.div`
   display: inline-block;
   align-items: center;
   justify-content: space-evenly;
-
-  /* select {
-    width: 100%;
-    min-width: 15ch;
-    max-width: 30ch;
-    border: 1px solid ${theme.color.gray};
-    border-radius: 0.25em;
-    margin: 10px 4px;
-    cursor: pointer;
-    line-height: 1.1;
-    background-color: transparent;
-    ${theme.font.displaySmall}
-  } */
 `;
-
 
 const WidgetTitle = styled.div`
   width: 80vw;
@@ -204,9 +229,16 @@ const Container = styled.div`
 `;
 
 const Cell = styled('td')<CellProps>`
-  width: 100px;
+  /* width: 100px; */
+  width: ${(props) => (props.cellWidth ? props.cellWidth: `75px`)};
+  height: 50px;
   border: 1px solid #ddd;
   text-align: center;
-  background-color: ${props => (props.cellColor ? props.cellColor : `none`)};
+  background-color: ${(props) => (props.cellColor ? props.cellColor : `none`)};
   font-weight: bold;
+`;
+
+const DatePickers = styled.div`
+  /* display: inline-block; */
+  gap: 10%;
 `;
