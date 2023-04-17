@@ -1,9 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import '@aws-amplify/ui-react/styles.css';
-import { useContext } from 'react';
-import { Link } from 'react-router-dom';
-import { routes } from '../..';
-import AppContext from '../../context/AppContext';
 import styled from '@emotion/styled';
 import { theme } from '../../utils/styles';
 import ReservationCard from './ReservationCard';
@@ -17,25 +12,14 @@ interface CellProps {
 }
 
 function HostLanding() {
-  const { user } = useContext(AppContext);
   const reservations = reservationsJson.data;
   const reviews = surveysJson.data;
   const photos = ['/images/mountain-cabin.jpg', '/images/beach-house.jpg', '/images/downtown-apartment.jpg', '/images/log-cabin-interior.jpg', '/images/seattle-loft.jpg'];
   const weekday = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
-  const colors = ["green", "red", "blue", "yellow"];
+  const colors = [theme.color.orange, theme.color.white];
   const now = new Date();
 
-  if (user?.role === 'guest') {
-    return (
-      <>
-        <h1>You have logged in with Guest Credentials</h1>
-        <Link to={routes.hostLanding}>
-          <button>Go to Guest Landing Page</button>
-        </Link>
-      </>
-    );
-  } else {
-    const rows = [];
+  const rows = [];
     for (let y = 0; y < reservations.length + 1; y++) {
         // Build the cells in an array
         const cells = [];
@@ -55,7 +39,8 @@ function HostLanding() {
               if (x === 0) {
                 cellContent = `${reservations[y -1 ].propertyId}`;
               } else {
-                cellContent = `${x}, ${y}`;
+                // cellContent = `${x}, ${y}`;
+                cellContent = undefined;
                 cellColor = colors[Math.floor(Math.random()*colors.length)];
               }
               cells.push(<Cell cellColor={cellColor}> {cellContent}</Cell>);
@@ -72,7 +57,7 @@ function HostLanding() {
         <WidgetTitle>
           <h3 style={{ float: 'left' }}> Your Reservations </h3>
           <a style={{ float: 'right' }} href="host-reservations">
-            All reservations (100)
+            All reservations ({reservations.length})
           </a>
         </WidgetTitle>
         <ReservationsButtons>
@@ -85,7 +70,8 @@ function HostLanding() {
         <ReservationsScroll>
           {reservations.map((f) => (
             <ReservationCard
-              key={f.propertyId}
+              key={f.id}
+              reservationId={f.id}
               propertyName={f.propertyId}
               propertyPhoto={photos[Math.floor(Math.random()*photos.length)]}
               primaryGuestName={f.guestId}
@@ -97,7 +83,7 @@ function HostLanding() {
         <WidgetTitle>
           <h3 style={{ float: 'left' }}> Newest Reviews </h3>
           <a style={{ float: 'right' }} href="host-reservations">
-            All reviews (420)
+            All reviews ({reviews.length})
           </a>
         </WidgetTitle>
         
@@ -107,7 +93,6 @@ function HostLanding() {
               <option key={y}>{x}</option> )
             }
           </select> */}
-          <SurveysScroll>
           {reviews.map((f) => (
             <ReviewCard
               key={f.propertyId}
@@ -117,7 +102,6 @@ function HostLanding() {
               content={f.surveyResponse}
             />
           ))}
-        </SurveysScroll>
           
 
         </Reviews>
@@ -127,7 +111,6 @@ function HostLanding() {
         <table><tbody>{rows}</tbody></table>
       </Container>
     );
-  }
 }
 
 export default HostLanding;
@@ -164,7 +147,7 @@ const ReservationsScroll = styled.div`
 
 const Reviews = styled.div`
   width: 80vw;
-  /* height: 190px; */
+  height: 225px;
   overflow-x: scroll;
   white-space: nowrap;
   display: inline-block;
@@ -185,12 +168,6 @@ const Reviews = styled.div`
   } */
 `;
 
-const SurveysScroll = styled.div`
-  width: 80vw;
-  height: 225px;
-  overflow-x: scroll;
-  white-space: nowrap;
-`;
 
 const WidgetTitle = styled.div`
   width: 80vw;
@@ -228,8 +205,8 @@ const Container = styled.div`
 
 const Cell = styled('td')<CellProps>`
   width: 100px;
-  /* height: 50px; */
   border: 1px solid #ddd;
   text-align: center;
   background-color: ${props => (props.cellColor ? props.cellColor : `none`)};
+  font-weight: bold;
 `;

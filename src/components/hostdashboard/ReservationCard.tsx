@@ -1,8 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import styled from '@emotion/styled';
 import { theme } from '../../utils/styles';
+import { Link } from 'react-router-dom';
+
 
 export interface ReservationCardProps {
+  reservationId: string;
   propertyName: string;
   propertyPhoto: string;
   primaryGuestName: string;
@@ -11,6 +14,7 @@ export interface ReservationCardProps {
 }
 
 export default function ReservationCard({
+  reservationId,
   propertyName,
   propertyPhoto,
   primaryGuestName,
@@ -19,6 +23,7 @@ export default function ReservationCard({
 }: ReservationCardProps) {
     const checkInDate = new Date(reservationStartDate);
     const checkOutDate = new Date(reservationEndDate);
+    const chatLink = `/reservations/${reservationId}/chat`;
   return (
     <Container>
         <GuestInfo>
@@ -28,7 +33,10 @@ export default function ReservationCard({
       <ImageContainer>
         <img src={propertyPhoto} />
       </ImageContainer>
-        <SendButton> 💬 Message </SendButton>
+
+        <Link to={chatLink}>
+          <SendButton> 💬 Message </SendButton>
+        </Link>
         <PropertyName> <p> property name {propertyName} </p> </PropertyName>
     </Container>
   );
