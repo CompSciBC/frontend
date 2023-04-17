@@ -6,7 +6,10 @@ import { routes } from '../..';
 import AppContext from '../../context/AppContext';
 import styled from '@emotion/styled';
 import { theme } from '../../utils/styles';
-import ReservationCard from '../hostdashboard/ReservationCard';
+import ReservationCard from './ReservationCard';
+import ReviewCard from './ReviewCard';
+import reservationsJson from './reservations.json';
+import surveysJson from './surveys.json';
 
 interface CellProps {
   cellContent?: string;
@@ -15,20 +18,12 @@ interface CellProps {
 
 function HostLanding() {
   const { user } = useContext(AppContext);
-  const reservations = [];
+  const reservations = reservationsJson.data;
+  const reviews = surveysJson.data;
   const photos = ['/images/mountain-cabin.jpg', '/images/beach-house.jpg', '/images/downtown-apartment.jpg', '/images/log-cabin-interior.jpg', '/images/seattle-loft.jpg'];
   const weekday = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
   const colors = ["green", "red", "blue", "yellow"];
   const now = new Date();
-  for (let i = 1; i < 10; i++) {
-    reservations.push({
-      propertyId: i,
-      propertyName: `property ${i}`,
-      primaryGuestName: `guest ${i}`,
-      reservationStartDate: now.getDate() - i,
-      reservationEndDate: now.getDate() + i
-    });
-  }
 
   if (user?.role === 'guest') {
     return (
@@ -58,7 +53,7 @@ function HostLanding() {
               
             } else {
               if (x === 0) {
-                cellContent = `${reservations[y -1 ].propertyName}`;
+                cellContent = `${reservations[y -1 ].propertyId}`;
               } else {
                 cellContent = `${x}, ${y}`;
                 cellColor = colors[Math.floor(Math.random()*colors.length)];
@@ -91,36 +86,38 @@ function HostLanding() {
           {reservations.map((f) => (
             <ReservationCard
               key={f.propertyId}
-              propertyName={f.propertyName}
+              propertyName={f.propertyId}
               propertyPhoto={photos[Math.floor(Math.random()*photos.length)]}
-              primaryGuestName={f.primaryGuestName}
-              reservationEndDate={f.reservationEndDate}
-              reservationStartDate={f.reservationStartDate}
+              primaryGuestName={f.guestId}
+              reservationEndDate={f.checkOut}
+              reservationStartDate={f.checkIn}
             />
           ))}
         </ReservationsScroll>
         <WidgetTitle>
           <h3 style={{ float: 'left' }}> Newest Reviews </h3>
+          <a style={{ float: 'right' }} href="host-reservations">
+            All reviews (420)
+          </a>
         </WidgetTitle>
         
         <Reviews>
-          <select>
+          {/* <select>
             {photos.map( (x,y) => 
               <option key={y}>{x}</option> )
             }
-          </select>
-          <ReservationsScroll>
-          {reservations.map((f) => (
-            <ReservationCard
+          </select> */}
+          <SurveysScroll>
+          {reviews.map((f) => (
+            <ReviewCard
               key={f.propertyId}
-              propertyName={f.propertyName}
-              propertyPhoto={photos[Math.floor(Math.random()*photos.length)]}
-              primaryGuestName={f.primaryGuestName}
-              reservationEndDate={f.reservationEndDate}
-              reservationStartDate={f.reservationStartDate}
+              propertyName={f.propertyId}
+              primaryGuestName={f.guestId}
+              submissionTime={f.submissionTime}
+              content={f.surveyResponse}
             />
           ))}
-        </ReservationsScroll>
+        </SurveysScroll>
           
 
         </Reviews>
@@ -135,7 +132,6 @@ function HostLanding() {
 
 export default HostLanding;
 
-// TODO: how to make text not spill out
 const ReservationsButtons = styled.div`
   width: 80vw;
   display: flex;
@@ -175,47 +171,30 @@ const Reviews = styled.div`
   align-items: center;
   justify-content: space-evenly;
 
-  select {
+  /* select {
     width: 100%;
     min-width: 15ch;
     max-width: 30ch;
     border: 1px solid ${theme.color.gray};
     border-radius: 0.25em;
-    padding: 0.25em 0.5em;
+    margin: 10px 4px;
     cursor: pointer;
     line-height: 1.1;
     background-color: transparent;
     ${theme.font.displaySmall}
-  }
+  } */
 `;
 
-
-
-const RatingsAggregate = styled.div`
-  width: 200px;
-  /* height: 250px; */
-  display: inline-block;
-  vertical-align: middle;
-  margin-right: 16px;
-  background: pink;
-  text-align: center;
-`;
-
-
-
-
-
-const LatestReviews = styled.div`
-  width: 500px;
-  height: 250px;
-  display: inline-block;
-  vertical-align: middle;
-  background: green;
+const SurveysScroll = styled.div`
+  width: 80vw;
+  height: 225px;
+  overflow-x: scroll;
+  white-space: nowrap;
 `;
 
 const WidgetTitle = styled.div`
   width: 80vw;
-  background-color: grey;
+  /* background-color: grey; */
   justify-content: space-between;
 
   h3 {

@@ -1,14 +1,13 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import styled from '@emotion/styled';
 import { theme } from '../../utils/styles';
-import { Link } from 'react-router-dom';
 
 export interface ReservationCardProps {
   propertyName: string;
   propertyPhoto: string;
   primaryGuestName: string;
-  reservationStartDate: number;
-  reservationEndDate: number;
+  reservationStartDate: string;
+  reservationEndDate: string;
 }
 
 export default function ReservationCard({
@@ -18,18 +17,19 @@ export default function ReservationCard({
   reservationStartDate,
   reservationEndDate
 }: ReservationCardProps) {
+    const checkInDate = new Date(reservationStartDate);
+    const checkOutDate = new Date(reservationEndDate);
   return (
     <Container>
-      {/* <p>{propertyName}</p>
-            <p>{primaryGuestName}</p>
-            <p>{reservationStartDate}</p>
-            <p>{reservationEndDate}</p> */}
-      <GuestInfo></GuestInfo>
+        <GuestInfo>
+            <p>FirstName L.</p>
+            <p>{checkInDate.getMonth() + 1}/{checkInDate.getDate()} - {checkOutDate.getMonth() + 1}/{checkOutDate.getDate()}</p>
+      </GuestInfo>
       <ImageContainer>
         <img src={propertyPhoto} />
       </ImageContainer>
         <SendButton> 💬 Message </SendButton>
-        <PropertyName> <p> Most words are short & do not need to break </p> </PropertyName>
+        <PropertyName> <p> property name {propertyName} </p> </PropertyName>
     </Container>
   );
 }
@@ -38,21 +38,19 @@ const Container = styled.div`
   /* padding: 20px 0; */
   margin: 0px 6px;
   display: inline-block;
-  width: 350px;
-  height: 95%;
+  width: 300px;
+  height: 90%;
   border: 1px solid grey;
   border-radius: 16px;
-
-  /* ${theme.font.body} */
 `;
 
 const SendButton = styled.div`
   position: relative;
-  top: 18%;
-  right: 97%;
+  top: 12%;
+  right: 93%;
   background: ${theme.color.red};
   height: 20;
-  width: 40%;
+  width: 35%;
   text-align: center;
   display: inline-block;
   border-radius: 16px;
@@ -80,14 +78,21 @@ const PropertyName = styled.div`
 `;
 
 const GuestInfo = styled.div`
+
   position: relative;
   top: 0%;
   left: 0%;
-  /* background: purple; */
+  padding: 10% 0%;
+  
+    text-overflow: clip;
+    overflow: hidden;
+    white-space: nowrap;
   height: 120px;
   width: 45%;
   text-align: center;
   display: inline-block;
+  
+  ${theme.font.body}
 `;
 
 const ImageContainer = styled.image`

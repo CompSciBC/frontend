@@ -1,0 +1,40 @@
+{
+    "status": 200,
+    "data": [
+        {
+            "reservationId": "winterquarter-16",
+            "guestId": "902f3550-1b7c-4826-b303-2aed6982f79b",
+            "hostId": "7171e252-60d8-48ab-a6ec-dedd49692266",
+            "propertyId": "PID0000ANG",
+            "submissionTime": "2023-03-15T20:48:08",
+            "surveyResponse": "{\n   \"discovery-source\": \"Search engine (Google, Bing, etc.)\",\n   \"quality\": {\n      \"communication-needs-are-met\": 2,\n      \"information-needs-are-met\": 3,\n      \"improvements-required\": 4,\n      \"host-communication\": 3\n   },\n   \"product-aspects-ranked\": [\n      \"Chat with Host\",\n      \"Technical support\",\n      \"Dashboard - Weather Information\",\n      \"Dashboard - Maps Information\",\n      \"Dashboard - Events and Places Information\",\n      \"Guidebook\",\n      \"Dashboard - Restaurants Information\",\n      \"Group chat with other guests in the party\"\n   ],\n   \"suggestions-bmg\": \"no\",\n   \"booking-platform\": \"Expedia.com\",\n   \"have-additional-thoughts\": true,\n   \"additional-thoughts\": \"no\"\n}"
+        },
+        {
+            "reservationId": "winterquarter-6",
+            "guestId": "902f3550-1b7c-4826-b303-2aed6982f79b",
+            "hostId": "7171e252-60d8-48ab-a6ec-dedd49692266",
+            "propertyId": "PID0000HMH",
+            "submissionTime": "2023-03-13T19:34:19",
+            "surveyResponse": "{\n   \"discovery-source\": \"Search engine (Google, Bing, etc.)\",\n   \"quality\": {\n      \"communication-needs-are-met\": 5,\n      \"information-needs-are-met\": 5,\n      \"ease-of-use\": 5,\n      \"improvements-required\": 5\n   },\n   \"have-additional-thoughts\": true,\n   \"additional-thoughts\": \"no\"\n}"
+        },
+        {
+            "reservationId": "winterquarter-21",
+            "guestId": "902f3550-1b7c-4826-b303-2aed6982f79b",
+            "hostId": "7171e252-60d8-48ab-a6ec-dedd49692266",
+            "propertyId": "PID0000HMH",
+            "submissionTime": "2023-03-14T18:55:28",
+            "surveyResponse": "{\n   \"discovery-source\": \"Search engine (Google, Bing, etc.)\",\n   \"quality\": {\n      \"communication-needs-are-met\": 5,\n      \"information-needs-are-met\": 5,\n      \"ease-of-use\": 5,\n      \"improvements-required\": 5,\n      \"host-communication\": 1,\n      \"cleanliness\": 1\n   },\n   \"product-aspects-ranked\": [\n      \"Chat with Host\",\n      \"Guidebook\",\n      \"Dashboard - Weather Information\",\n      \"Technical support\",\n      \"Dashboard - Events and Places Information\",\n      \"Dashboard - Restaurants Information\",\n      \"Dashboard - Maps Information\",\n      \"Group chat with other guests in the party\"\n   ],\n   \"suggestions-bmg\": \"free food\",\n   \"booking-platform\": \"Airbnb\"\n}"
+        },
+        {
+            "reservationId": "winterquarter-1",
+            "guestId": "test-guest-1",
+            "hostId": "7171e252-60d8-48ab-a6ec-dedd49692266",
+            "propertyId": "PID0000ANG",
+            "submissionTime": "2023-03-14T23:50:11",
+            "surveyResponse": "{\n   \"discovery-source\": \"Search engine (Google, Bing, etc.)\",\n   \"quality\": {\n      \"communication-needs-are-met\": 5,\n      \"information-needs-are-met\": 5,\n      \"ease-of-use\": 5,\n      \"improvements-required\": 5\n   },\n   \"product-aspects-ranked\": [\n      \"Guidebook\",\n      \"Group chat with other guests in the party\",\n      \"Chat with Host\",\n      \"Dashboard - Weather Information\",\n      \"Dashboard - Maps Information\",\n      \"Dashboard - Events and Places Information\",\n      \"Dashboard - Restaurants Information\",\n      \"Technical support\"\n   ]\n}"
+        }
+    ],
+    "message": "OK",
+    "path": "http://localhost:8080/api/surveys?index=host&id=7171e252-60d8-48ab-a6ec-dedd49692266",
+    "timestamp": "2023-04-16T15:52:19.067312"
+}
