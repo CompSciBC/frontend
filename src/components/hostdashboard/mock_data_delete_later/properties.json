@@ -1,78 +1,78 @@
 {
-    "status": 200,
-    "data": [
-        {
-            "id": "PID0000ANG",
-            "hostId": "7171e252-60d8-48ab-a6ec-dedd49692266",
-            "name": "Alaskan Northern Lights Glass Dome Hotels",
-            "address": {
-                "line1": "144 Aurora Borealis Rd",
-                "line2": null,
-                "city": "Fairbanks",
-                "stateProvince": "AK",
-                "postalCode": "99709",
-                "country": "United States",
-                "addressString": "144 Aurora Borealis Rd Fairbanks AK 99709 United States"
-            }
-        },
-        {
-            "id": "PID0000HMH",
-            "hostId": "7171e252-60d8-48ab-a6ec-dedd49692266",
-            "name": "Hawaiian Koa Mountain Retreat",
-            "address": {
-                "line1": "Kona Koa Ave",
-                "line2": "House 5",
-                "city": "Hilo",
-                "stateProvince": "HI",
-                "postalCode": "96720",
-                "country": "United States",
-                "addressString": "Kona Koa Ave House 5 Hilo HI 96720 United States"
-            }
-        },
-        {
-            "id": "PID0000PNC",
-            "hostId": "7171e252-60d8-48ab-a6ec-dedd49692266",
-            "name": "Idaho Wilderness Cabin",
-            "address": {
-                "line1": "188 Eagle Nest Wide Rd",
-                "line2": null,
-                "city": "Sandpoint",
-                "stateProvince": "Idaho",
-                "postalCode": "83864",
-                "country": "United States",
-                "addressString": "188 Eagle Nest Wide Rd Sandpoint Idaho 83864 United States"
-            }
-        },
-        {
-            "id": "PID0000PIC",
-            "hostId": "7171e252-60d8-48ab-a6ec-dedd49692266",
-            "name": "Luxury Picasso House",
-            "address": {
-                "line1": "956 Artist Way East",
-                "line2": null,
-                "city": "Beverly Hills",
-                "stateProvince": "California",
-                "postalCode": "90210",
-                "country": "United States",
-                "addressString": "956 Artist Way East Beverly Hills California 90210 United States"
-            }
-        },
-        {
-            "id": "PID1234AZD",
-            "hostId": "7171e252-60d8-48ab-a6ec-dedd49692266",
-            "name": "Rocky Retreat in the Arizona Desert",
-            "address": {
-                "line1": "18 Cactus Drive",
-                "line2": null,
-                "city": "Sedona",
-                "stateProvince": "Arizona",
-                "postalCode": "86336",
-                "country": "United States",
-                "addressString": "18 Cactus Drive Sedona Arizona 86336 United States"
-            }
-        }
-    ],
-    "message": "OK",
-    "path": "http://localhost:8080/api/properties?hostId=7171e252-60d8-48ab-a6ec-dedd49692266",
-    "timestamp": "2023-04-16T20:57:27.071485"
+  "status": 200,
+  "data": [
+    {
+      "id": "PID0000ANG",
+      "hostId": "7171e252-60d8-48ab-a6ec-dedd49692266",
+      "name": "Alaskan Northern Lights Glass Dome Hotels",
+      "address": {
+        "line1": "144 Aurora Borealis Rd",
+        "line2": null,
+        "city": "Fairbanks",
+        "stateProvince": "AK",
+        "postalCode": "99709",
+        "country": "United States",
+        "addressString": "144 Aurora Borealis Rd Fairbanks AK 99709 United States"
+      }
+    },
+    {
+      "id": "PID0000HMH",
+      "hostId": "7171e252-60d8-48ab-a6ec-dedd49692266",
+      "name": "Hawaiian Koa Mountain Retreat",
+      "address": {
+        "line1": "Kona Koa Ave",
+        "line2": "House 5",
+        "city": "Hilo",
+        "stateProvince": "HI",
+        "postalCode": "96720",
+        "country": "United States",
+        "addressString": "Kona Koa Ave House 5 Hilo HI 96720 United States"
+      }
+    },
+    {
+      "id": "PID0000PNC",
+      "hostId": "7171e252-60d8-48ab-a6ec-dedd49692266",
+      "name": "Idaho Wilderness Cabin",
+      "address": {
+        "line1": "188 Eagle Nest Wide Rd",
+        "line2": null,
+        "city": "Sandpoint",
+        "stateProvince": "Idaho",
+        "postalCode": "83864",
+        "country": "United States",
+        "addressString": "188 Eagle Nest Wide Rd Sandpoint Idaho 83864 United States"
+      }
+    },
+    {
+      "id": "PID0000PIC",
+      "hostId": "7171e252-60d8-48ab-a6ec-dedd49692266",
+      "name": "Luxury Picasso House",
+      "address": {
+        "line1": "956 Artist Way East",
+        "line2": null,
+        "city": "Beverly Hills",
+        "stateProvince": "California",
+        "postalCode": "90210",
+        "country": "United States",
+        "addressString": "956 Artist Way East Beverly Hills California 90210 United States"
+      }
+    },
+    {
+      "id": "PID1234AZD",
+      "hostId": "7171e252-60d8-48ab-a6ec-dedd49692266",
+      "name": "Rocky Retreat in the Arizona Desert",
+      "address": {
+        "line1": "18 Cactus Drive",
+        "line2": null,
+        "city": "Sedona",
+        "stateProvince": "Arizona",
+        "postalCode": "86336",
+        "country": "United States",
+        "addressString": "18 Cactus Drive Sedona Arizona 86336 United States"
+      }
+    }
+  ],
+  "message": "OK",
+  "path": "http://localhost:8080/api/properties?hostId=7171e252-60d8-48ab-a6ec-dedd49692266",
+  "timestamp": "2023-04-16T20:57:27.071485"
 }

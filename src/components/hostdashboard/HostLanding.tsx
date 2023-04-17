@@ -1,27 +1,20 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import '@aws-amplify/ui-react/styles.css';
 import styled from '@emotion/styled';
 import { theme } from '../../utils/styles';
 import ReservationCard from './ReservationCard';
 import ReviewCard from './ReviewCard';
-import dayjs, { Dayjs } from 'dayjs';
-import { useState } from 'react';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import GanttChart from './GanttChart';
+import AppContext from '../../context/AppContext';
+import { useContext } from 'react';
+
 import reservationsJson from './mock_data_delete_later/reservations.json';
 import surveysJson from './mock_data_delete_later/surveys.json';
-import propertiesJson from './mock_data_delete_later/properties.json';
-
-interface CellProps {
-  cellContent?: string;
-  cellColor?: string;
-  cellWidth?:string;
-}
 
 function HostLanding() {
+  const { user } = useContext(AppContext);
   const reservations = reservationsJson.data;
   const reviews = surveysJson.data;
-  const properties = propertiesJson.data;
   const photos = [
     '/images/mountain-cabin.jpg',
     '/images/beach-house.jpg',
@@ -29,55 +22,6 @@ function HostLanding() {
     '/images/log-cabin-interior.jpg',
     '/images/seattle-loft.jpg'
   ];
-  const weekday = [
-    'Sun.',
-    'Mon.',
-    'Tue.',
-    'Wed.',
-    'Thur.',
-    'Fri.',
-    'Sat.'
-  ];
-  const colors = [theme.color.orange, theme.color.white];
-  const now = new Date();
-  const rows = [];
-  const [startDate, setStartDate] = useState<Dayjs | null>(dayjs());
-  const initialEndDate = startDate!.add(7, 'day');
-  const [endDate, setEndDate] = useState<Dayjs | null>(initialEndDate);
-  for (let y = 0; y < properties.length + 1; y++) {
-    // Build the cells in an array
-    const cells = [];
-    let cellContent;
-    let cellColor;
-
-    for (let x = 0; x < 8; x++) {
-      if (y === 0) {
-        if (x > 0) {
-          const day = weekday[(now.getDay() + x - 1) % 7];
-          cells.push(
-            <Cell>
-              {' '}
-              {day} <br /> {now.getMonth() + 1}/{now.getDate() + x - 1}{' '}
-            </Cell>
-          );
-        } else {
-          cells.push(<Cell />);
-        }
-      } else {
-        if (x === 0) {
-          cellContent = `${properties[y - 1].name}`;
-          cells.push(<Cell cellWidth="200px"> {cellContent}</Cell>);
-        } else {
-          cellContent = undefined;
-          cellColor = colors[Math.floor(Math.random() * colors.length)];
-          cells.push(<Cell cellColor={cellColor}> {cellContent}</Cell>);
-        }
-        
-      }
-    }
-    // Put them in the row
-    rows.push(<tr>{cells}</tr>);
-  }
 
   return (
     <Container>
@@ -114,7 +58,7 @@ function HostLanding() {
         </a>
       </WidgetTitle>
 
-      <Reviews>
+      {/* <Reviews>
         {reviews.map((f) => (
           <ReviewCard
             key={f.propertyId}
@@ -124,30 +68,16 @@ function HostLanding() {
             content={f.surveyResponse}
           />
         ))}
-      </Reviews>
+      </Reviews> */}
       <WidgetTitle>
         <h3 style={{ float: 'left' }}> Your Week at a Glance </h3>
       </WidgetTitle>
-      
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <DatePickers>
-            <DatePicker
-                label="Start"
-                value={startDate}
-                onChange={(newValue) => setStartDate(newValue)}
-              />
-              <DatePicker
-                label="End"
-                value={endDate}
-                onChange={(newValue) => setEndDate(newValue)}
-              />
-          </DatePickers>
-       
-        </LocalizationProvider>
-      
-      <table>
-        <tbody>{rows}</tbody>
-      </table>
+      {/* <GanttChart
+        key='1'
+        hostId={user!.userId}
+        ganttStart={new Date()}
+        ganttDuration={20}
+      /> */}
     </Container>
   );
 }
@@ -212,7 +142,6 @@ const WidgetTitle = styled.div`
   }
 `;
 
-
 const Container = styled.div`
   position: relative;
   display: flex;
@@ -226,19 +155,4 @@ const Container = styled.div`
     width: 100%;
     padding: 16px;
   }
-`;
-
-const Cell = styled('td')<CellProps>`
-  /* width: 100px; */
-  width: ${(props) => (props.cellWidth ? props.cellWidth: `75px`)};
-  height: 50px;
-  border: 1px solid #ddd;
-  text-align: center;
-  background-color: ${(props) => (props.cellColor ? props.cellColor : `none`)};
-  font-weight: bold;
-`;
-
-const DatePickers = styled.div`
-  /* display: inline-block; */
-  gap: 10%;
 `;
