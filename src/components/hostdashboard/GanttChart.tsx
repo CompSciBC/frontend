@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import styled from '@emotion/styled';
 import { theme } from '../../utils/styles';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -71,7 +72,7 @@ export default function GanttChart({
     rows.push(<tr>{cells}</tr>);
   }
   return (
-    <Container>
+    <>
       <Box sx={{ display: 'inline' }}>
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <DatePicker
@@ -92,16 +93,11 @@ export default function GanttChart({
       <table>
         <tbody>{rows}</tbody>
       </table>
-    </Container>
+    </>
   );
 }
 
-const Container = styled.div`
-  width: 80vw;
-  /* height: 190px; */
-  overflow-x: scroll;
-  white-space: nowrap;
-`;
+
 
 const Cell = styled('td')<CellProps>`
   /* width: 100px; */

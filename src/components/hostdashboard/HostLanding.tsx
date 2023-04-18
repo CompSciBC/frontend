@@ -39,9 +39,9 @@ function HostLanding() {
         <button> Pending review (8) </button>
       </ReservationsButtons>
       <ReservationsScroll>
-        {reservations.map((f) => (
+        {reservations.map((f, index) => (
           <ReservationCard
-            key={f.id}
+            key={index}
             reservationId={f.id}
             propertyName={f.propertyId}
             propertyPhoto={photos[Math.floor(Math.random() * photos.length)]}
@@ -57,27 +57,27 @@ function HostLanding() {
           All reviews ({reviews.length})
         </a>
       </WidgetTitle>
-
-      {/* <Reviews>
-        {reviews.map((f) => (
+      <Reviews>
+        {reviews.map((f, index) => (
           <ReviewCard
-            key={f.propertyId}
+            key={index}
             propertyName={f.propertyId}
             primaryGuestName={f.guestId}
             submissionTime={f.submissionTime}
             content={f.surveyResponse}
           />
         ))}
-      </Reviews> */}
+      </Reviews>
       <WidgetTitle>
         <h3 style={{ float: 'left' }}> Your Week at a Glance </h3>
       </WidgetTitle>
-      {/* <GanttChart
-        key='1'
-        hostId={user!.userId}
-        ganttStart={new Date()}
-        ganttDuration={20}
-      /> */}
+      <GanttChartContainer>
+        <GanttChart
+          hostId={user!.userId}
+          ganttStart={new Date()}
+          ganttDuration={20}
+        />
+      </GanttChartContainer>
     </Container>
   );
 }
@@ -155,4 +155,11 @@ const Container = styled.div`
     width: 100%;
     padding: 16px;
   }
+`;
+
+const GanttChartContainer = styled.div`
+  width: 80vw;
+  /* height: 190px; */
+  overflow-x: scroll;
+  white-space: nowrap;
 `;

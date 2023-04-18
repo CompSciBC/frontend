@@ -107,7 +107,7 @@ const GuestInfo = styled.div`
   ${theme.font.body}
 `;
 
-const ImageContainer = styled.image`
+const ImageContainer = styled.div`
   position: relative;
   top: 0px;
   left: 0.5px;
