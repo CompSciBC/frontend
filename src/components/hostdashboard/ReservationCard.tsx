@@ -60,10 +60,10 @@ const Container = styled.div`
 const SendButton = styled.div`
   position: relative;
   top: 12%;
-  right: 93%;
+  right: 96%;
   background: ${theme.color.red};
   height: 20;
-  width: 35%;
+  width: 40%;
   text-align: center;
   display: inline-block;
   border-radius: 16px;
