@@ -37,7 +37,7 @@ export default function ReservationCard({
       </ImageContainer>
 
       <Link to={chatLink}>
-        <SendButton> 💬 Message </SendButton>
+        <SendButton> 💬 &nbsp; Message </SendButton>
       </Link>
       <PropertyName>
         {' '}
