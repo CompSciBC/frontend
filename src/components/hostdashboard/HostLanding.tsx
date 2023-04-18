@@ -71,13 +71,11 @@ function HostLanding() {
       <WidgetTitle>
         <h3 style={{ float: 'left' }}> Your Week at a Glance </h3>
       </WidgetTitle>
-      <GanttChartContainer>
-        <GanttChart
-          hostId={user!.userId}
-          ganttStart={new Date()}
-          ganttDuration={20}
-        />
-      </GanttChartContainer>
+      <GanttChart
+        hostId={user!.userId}
+        ganttStart={new Date()}
+        ganttDuration={20}
+      />
     </Container>
   );
 }
@@ -157,9 +155,4 @@ const Container = styled.div`
   }
 `;
 
-const GanttChartContainer = styled.div`
-  width: 80vw;
-  /* height: 190px; */
-  overflow-x: scroll;
-  white-space: nowrap;
-`;
+

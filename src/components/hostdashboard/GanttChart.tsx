@@ -89,15 +89,16 @@ export default function GanttChart({
           />
         </LocalizationProvider>
       </Box>
-
-      <table>
-        <tbody>{rows}</tbody>
-      </table>
+      <Container>
+        <table>
+          <tbody>{rows}</tbody>
+        </table>
+      </Container>
     </>
+      
+
   );
 }
-
-
 
 const Cell = styled('td')<CellProps>`
   /* width: 100px; */
@@ -108,4 +109,11 @@ const Cell = styled('td')<CellProps>`
   background-color: ${(props) => (props.cellColor ? props.cellColor : `none`)};
   font-weight: bold;
   padding: 5px;
+`;
+
+const Container = styled.div`
+  width: 80vw;
+  /* height: 190px; */
+  overflow-x: scroll;
+  white-space: nowrap;
 `;
