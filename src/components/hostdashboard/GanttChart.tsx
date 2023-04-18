@@ -44,32 +44,34 @@ export default function GanttChart({
     let cellColor;
 
     for (let x = 0; x < ganttDuration; x++) {
+      const cellKey = `${y}, ${x}`;
       if (y === 0) {
         if (x > 0) {
-          const day = weekday[(currentDay.toDate().getDay() + x - 1) % 7];
+          const day = weekday[(currentDay.toDate().getDay())];
           cells.push(
-            <Cell>
+            <Cell key={cellKey}>
               {day} <br /> {currentDay?.month() + 1}/{currentDay?.date()}
             </Cell>
           );
         } else {
-          cells.push(<Cell />);
+          cells.push(<Cell key={cellKey}/>);
         }
       } else {
         const property = properties[y - 1];
         if (x === 0) {
           cellContent = property.name;
-          cells.push(<Cell cellWidth="200px"> {cellContent}</Cell>);
+          cells.push(<Cell key={cellKey} cellWidth="200px"> {cellContent}</Cell>);
         } else {
           cellContent = undefined;
           cellColor = colors[Math.floor(Math.random() * colors.length)];
-          cells.push(<Cell cellColor={cellColor}> {cellContent}</Cell>);
+          cells.push(<Cell key={cellKey} cellColor={cellColor}> {cellContent}</Cell>);
         }
       }
       currentDay = currentDay.add(1, 'day');
     }
     // Put them in the row
-    rows.push(<tr>{cells}</tr>);
+    
+    rows.push(<tr key={y}>{cells}</tr>);
   }
   return (
     <>
