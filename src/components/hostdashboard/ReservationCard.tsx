@@ -26,9 +26,9 @@ export default function ReservationCard({
   return (
     <Container>
       <GuestInfo>
-        <p>FirstName L.</p>
+        <h6>FirstName L.</h6>
         <p>
-          {checkInDate.getMonth() + 1}/{checkInDate.getDate()} -{' '}
+          {checkInDate.getMonth() + 1}/{checkInDate.getDate()} — {' '}
           {checkOutDate.getMonth() + 1}/{checkOutDate.getDate()}
         </p>
       </GuestInfo>
@@ -104,7 +104,15 @@ const GuestInfo = styled.div`
   text-align: center;
   display: inline-block;
 
-  ${theme.font.body}
+  h6 {
+    ${theme.font.displaySmall}
+    font-weight: bold;
+    color: ${theme.color.red};
+  }
+
+  p {
+    ${theme.font.body}
+  }
 `;
 
 const ImageContainer = styled.div`
