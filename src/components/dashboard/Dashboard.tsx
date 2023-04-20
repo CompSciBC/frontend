@@ -52,6 +52,7 @@ function Dashboard() {
   useEffect(() => {
     let subscribed = true;
 
+    //  The && operator is used to ensure that setWidth is only called if subscribed is still true.
     const updateWidth = () => {
       subscribed && setWidth(window.innerWidth);
     };
