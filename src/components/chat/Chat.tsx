@@ -88,7 +88,6 @@ function Chat() {
       })
         .then(async (response) => await response.json())
         .then((chats: ChatsServerResponse) => {
-          // const Sock = new SockJS('http://localhost:8080/ws');
           const Sock = new SockJS(`${server}/ws`);
 
           stompClient = over(Sock);

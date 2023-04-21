@@ -67,7 +67,7 @@ export const routes = {
   guidebook: '/reservations/:resId/guidebook',
   invite: '/reservations/:resId/invite',
   chat: '/reservations/:resId/chat',
-  inbox: 'inbox/:userId',
+  inbox: '/inbox/:userId',
   weather: '/reservations/:resId/weather',
   restaurants: '/reservations/:resId/restaurants',
   eventsAndPlaces: '/reservations/:resId/eventsAndPlaces',
