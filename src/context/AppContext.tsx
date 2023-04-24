@@ -12,6 +12,7 @@ export interface AppContextType {
   setReservationDetail: React.Dispatch<
     React.SetStateAction<ReservationDetail | null>
   >;
+  refreshReservationDetail: Function;
   clearAppContext: Function;
   testing: boolean;
   setTesting: React.Dispatch<React.SetStateAction<boolean>>;
@@ -27,6 +28,7 @@ const AppContext = createContext<AppContextType>({
   setUser: () => {},
   reservationDetail: null,
   setReservationDetail: () => {},
+  refreshReservationDetail: () => {},
   clearAppContext: () => {},
   testing: false,
   setTesting: () => {}
@@ -80,6 +82,8 @@ export function AppContextProvider({ children }: { children: ReactNode }) {
     );
   }, [reservationDetail]);
 
+  const [manualRefreshReservation, setManualRefreshReservation] =
+    useState(false);
   const { resId } = useParams();
   useEffect(() => {
     let subscribed = true;
@@ -88,7 +92,13 @@ export function AppContextProvider({ children }: { children: ReactNode }) {
       subscribed && setReservationDetail(null);
     } else {
       (async function () {
-        if (!reservationDetail || reservationDetail.id !== resId) {
+        if (
+          !reservationDetail ||
+          reservationDetail.id !== resId ||
+          manualRefreshReservation
+        ) {
+          setManualRefreshReservation(false);
+
           let reservation: Reservation | null = null;
           let property: Property | null = null;
 
@@ -125,7 +135,7 @@ export function AppContextProvider({ children }: { children: ReactNode }) {
     return () => {
       subscribed = true;
     };
-  }, [resId, authenticated]);
+  }, [resId, authenticated, manualRefreshReservation]);
 
   // purge all saved state (triggers useEffects to update local storage as well)
   const clearAppContext = () => {
@@ -189,6 +199,7 @@ export function AppContextProvider({ children }: { children: ReactNode }) {
         setUser,
         reservationDetail,
         setReservationDetail,
+        refreshReservationDetail: () => setManualRefreshReservation(true),
         clearAppContext,
         testing,
         setTesting

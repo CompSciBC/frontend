@@ -28,7 +28,7 @@ export default function ReservationCard({
       <GuestInfo>
         <h6>FirstName L.</h6>
         <p>
-          {checkInDate.getMonth() + 1}/{checkInDate.getDate()} — {' '}
+          {checkInDate.getMonth() + 1}/{checkInDate.getDate()} —{' '}
           {checkOutDate.getMonth() + 1}/{checkOutDate.getDate()}
         </p>
       </GuestInfo>
