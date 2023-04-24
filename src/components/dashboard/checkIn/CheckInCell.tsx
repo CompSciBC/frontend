@@ -78,7 +78,7 @@ function CheckInCell({ className, cell }: DashboardCellProps) {
       const currentDate = new Date().setHours(0, 0, 0, 0);
 
       const type: EventType =
-        checkedIn || currentDate === checkOutDate ? 'out' : 'in';
+        checkedIn || currentDate >= checkOutDate ? 'out' : 'in';
 
       subscribed && setEventType(type);
     }
