@@ -47,30 +47,40 @@ export default function GanttChart({
       const cellKey = `${y}, ${x}`;
       if (y === 0) {
         if (x > 0) {
-          const day = weekday[(currentDay.toDate().getDay())];
+          const day = weekday[currentDay.toDate().getDay()];
           cells.push(
             <Cell key={cellKey}>
               {day} <br /> {currentDay?.month() + 1}/{currentDay?.date()}
             </Cell>
           );
         } else {
-          cells.push(<Cell key={cellKey}/>);
+          cells.push(<Cell key={cellKey} />);
         }
       } else {
         const property = properties[y - 1];
         if (x === 0) {
           cellContent = property.name;
-          cells.push(<Cell key={cellKey} cellWidth="200px"> {cellContent}</Cell>);
+          cells.push(
+            <Cell key={cellKey} cellWidth="200px">
+              {' '}
+              {cellContent}
+            </Cell>
+          );
         } else {
           cellContent = undefined;
           cellColor = colors[Math.floor(Math.random() * colors.length)];
-          cells.push(<Cell key={cellKey} cellColor={cellColor}> {cellContent}</Cell>);
+          cells.push(
+            <Cell key={cellKey} cellColor={cellColor}>
+              {' '}
+              {cellContent}
+            </Cell>
+          );
         }
       }
       currentDay = currentDay.add(1, 'day');
     }
     // Put them in the row
-    
+
     rows.push(<tr key={y}>{cells}</tr>);
   }
   return (
@@ -97,8 +107,6 @@ export default function GanttChart({
         </table>
       </Container>
     </>
-      
-
   );
 }
 

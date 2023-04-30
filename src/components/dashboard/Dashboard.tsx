@@ -33,9 +33,34 @@ const review = 'review';
 function Dashboard() {
   const { resId } = useParams();
   const { reservationDetail } = useContext(AppContext);
+  const [checkCellVisible, setCheckCellVisible] = useState(false);
+
+  // determine if check-in/out cell is visible
+  useEffect(() => {
+    let subscribed = true;
+
+    if (reservationDetail) {
+      const { checkIn, checkOut } = reservationDetail;
+
+      // convert date/time strings to pure dates (with no time)
+      const checkInDate = new Date(checkIn).setHours(0, 0, 0, 0);
+      const checkOutDate = new Date(checkOut).setHours(0, 0, 0, 0);
+      const currentDate = new Date().setHours(0, 0, 0, 0);
+
+      subscribed &&
+        setCheckCellVisible(
+          // only visible during reservation period
+          currentDate >= checkInDate && currentDate <= checkOutDate
+        );
+    }
+
+    return () => {
+      subscribed = false;
+    };
+  }, [reservationDetail]);
 
   const infoCell = <InfoCell cell={info} />;
-  const checkCell = <CheckInCell cell={check} />;
+  const checkCell = checkCellVisible ? <CheckInCell cell={check} /> : null;
   const guideCell = <GuidebookCell cell={guide} />;
   const inviteCell = <InviteCell cell={invite} />;
   const weatherCell = <WeatherCell cell={weather} />;
@@ -75,7 +100,7 @@ function Dashboard() {
       container = <></>;
     } else if (width <= 700) {
       container = (
-        <SmallScreenContainer>
+        <SmallScreenContainer checkCellVisible={checkCellVisible}>
           {infoCell}
           {inviteCell}
           {guideCell}
@@ -90,7 +115,7 @@ function Dashboard() {
       );
     } else if (width <= 1024) {
       container = (
-        <MediumScreenContainer>
+        <MediumScreenContainer checkCellVisible={checkCellVisible}>
           {infoCell}
           {checkCell}
           {guideCell}
@@ -105,7 +130,7 @@ function Dashboard() {
       );
     } else {
       container = (
-        <LargeScreenContainer>
+        <LargeScreenContainer checkCellVisible={checkCellVisible}>
           <div>
             {infoCell}
             {checkCell}
@@ -130,7 +155,11 @@ function Dashboard() {
   return layout;
 }
 
-const SmallScreenContainer = styled.div`
+interface ScreenContainerProps {
+  checkCellVisible: boolean;
+}
+
+const SmallScreenContainer = styled.div<ScreenContainerProps>`
   display: grid;
   align-items: center;
   width: 100%;
@@ -138,36 +167,45 @@ const SmallScreenContainer = styled.div`
   gap: 16px;
   grid-template-columns: repeat(7, 1fr);
   grid-template-rows: 64px 112px 112px 112px 140px 140px 64px;
-  grid-template-areas:
-    '${info}    ${info}    ${info}    ${info}    ${invite}  ${invite}  ${invite}'
-    '${guide}   ${guide}   ${guide}   ${guide}   ${chat}    ${chat}    ${chat}'
-    '${check}   ${check}   ${check}   ${map}     ${map}     ${map}     ${map}'
-    '${weather} ${weather} ${weather} ${weather} ${weather} ${weather} ${weather}'
-    '${rest}    ${rest}    ${rest}    ${rest}    ${rest}    ${rest}    ${rest}'
-    '${event}   ${event}   ${event}   ${event}   ${event}   ${event}   ${event}'
-    '${review}  ${review}  ${review}  ${review}  ${review}  ${review}  ${review}';
+  grid-template-areas: ${(props) => {
+    const checkOrMap = props.checkCellVisible ? check : map;
+    return `
+      '${info}       ${info}       ${info}       ${info}    ${invite}  ${invite}  ${invite}'
+      '${guide}      ${guide}      ${guide}      ${guide}   ${chat}    ${chat}    ${chat}'
+      '${checkOrMap} ${checkOrMap} ${checkOrMap} ${map}     ${map}     ${map}     ${map}'
+      '${weather}    ${weather}    ${weather}    ${weather} ${weather} ${weather} ${weather}'
+      '${rest}       ${rest}       ${rest}       ${rest}    ${rest}    ${rest}    ${rest}'
+      '${event}      ${event}      ${event}      ${event}   ${event}   ${event}   ${event}'
+      '${review}     ${review}     ${review}     ${review}  ${review}  ${review}  ${review}'
+    `;
+  }};
 `;
 
-const MediumScreenContainer = styled.div`
+const MediumScreenContainer = styled.div<ScreenContainerProps>`
   display: grid;
   align-items: center;
   width: 100%;
   padding: 16px;
   gap: 16px;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(6, 1fr);
   grid-template-rows: 64px 80px 144px 1fr 256px 192px 192px 64px;
-  grid-template-areas:
-    '${info}    ${info}    ${info}'
-    '${check}   ${guide}   ${invite}'
-    '${weather} ${weather} ${weather}'
-    '${chat}    ${chat}    ${chat}'
-    '${map}     ${map}     ${map}'
-    '${rest}    ${rest}    ${rest}'
-    '${event}   ${event}   ${event}'
-    '${review}  ${review}  ${review}';
+  grid-template-areas: ${(props) => {
+    const checkOrGuide = props.checkCellVisible ? check : guide;
+    const guideOrInvite = props.checkCellVisible ? guide : invite;
+    return `
+      '${info}         ${info}         ${info}    ${info}          ${info}    ${info}'
+      '${checkOrGuide} ${checkOrGuide} ${guide}   ${guideOrInvite} ${invite}  ${invite}'
+      '${weather}      ${weather}      ${weather} ${weather}       ${weather} ${weather}'
+      '${chat}         ${chat}         ${chat}    ${chat}          ${chat}    ${chat}'
+      '${map}          ${map}          ${map}     ${map}           ${map}     ${map}'
+      '${rest}         ${rest}         ${rest}    ${rest}          ${rest}    ${rest}'
+      '${event}        ${event}        ${event}   ${event}         ${event}   ${event}'
+      '${review}       ${review}       ${review}  ${review}        ${review}  ${review}'
+    `;
+  }};
 `;
 
-const LargeScreenContainer = styled.div`
+const LargeScreenContainer = styled.div<ScreenContainerProps>`
   display: flex;
   column-gap: 32px;
   width: 85%;
@@ -180,14 +218,19 @@ const LargeScreenContainer = styled.div`
     align-items: center;
     row-gap: 32px;
     column-gap: 16px;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(6, 1fr);
     grid-template-rows: 80px 96px 144px 192px 192px;
-    grid-template-areas:
-      '${info}    ${info}    ${info}'
-      '${check}   ${guide}   ${invite}'
-      '${weather} ${weather} ${weather}'
-      '${rest}    ${rest}    ${rest}'
-      '${event}   ${event}   ${event}';
+    grid-template-areas: ${(props) => {
+      const checkOrGuide = props.checkCellVisible ? check : guide;
+      const guideOrInvite = props.checkCellVisible ? guide : invite;
+      return `
+        '${info}         ${info}         ${info}    ${info}          ${info}    ${info}'
+        '${checkOrGuide} ${checkOrGuide} ${guide}   ${guideOrInvite} ${invite}  ${invite}'
+        '${weather}      ${weather}      ${weather} ${weather}       ${weather} ${weather}'
+        '${rest}         ${rest}         ${rest}    ${rest}          ${rest}    ${rest}'
+        '${event}        ${event}        ${event}   ${event}         ${event}   ${event}'
+      `;
+    }};
   }
 
   // right column
