@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import styled from '@emotion/styled';
 import { Auth } from '@aws-amplify/auth';
 import { FormEvent, useContext, useEffect, useState } from 'react';
@@ -15,6 +16,7 @@ import AuthForm, {
   SubmitButton,
   TwoColumnFormContainer
 } from './AuthForm';
+import { server } from '../../index';
 
 export interface SignUpProps {
   className?: string;
@@ -70,37 +72,46 @@ function SignUp({ className }: SignUpProps) {
     } else if (enteredPassword !== enteredConfirmPassword) {
       setErrorMessage('Password fields do not match.');
     } else {
-      try {
-        signUpResult = await Auth.signUp({
-          username: enteredUsername,
-          password: enteredPassword,
-          attributes: {
-            given_name: enteredFirstName,
-            family_name: enteredLastName,
+      // Check that email does not exist
+      const response = await fetch(
+        `${server}/api/users?index=email&id=${enteredEmail}`
+      );
+      const body = await response.json();
+      if (body.data.length !== 0) {
+        setErrorMessage('This email is already taken.');
+      } else {
+        try {
+          signUpResult = await Auth.signUp({
+            username: enteredUsername,
+            password: enteredPassword,
+            attributes: {
+              given_name: enteredFirstName,
+              family_name: enteredLastName,
+              email: enteredEmail,
+              phone_number: enteredPhone
+            },
+            autoSignIn: {
+              enabled: true
+            }
+          });
+
+          setErrorMessage('');
+        } catch (error) {
+          setErrorMessage(String(error));
+        }
+
+        if (signUpResult) {
+          setUser({
+            userId: signUpResult.userSub,
+            firstName: enteredFirstName,
+            lastName: enteredLastName,
+            username: enteredUsername,
             email: enteredEmail,
-            phone_number: enteredPhone
-          },
-          autoSignIn: {
-            enabled: true
-          }
-        });
-
-        setErrorMessage('');
-      } catch (error) {
-        setErrorMessage(String(error));
-      }
-
-      if (signUpResult) {
-        setUser({
-          userId: signUpResult.userSub,
-          firstName: enteredFirstName,
-          lastName: enteredLastName,
-          username: enteredUsername,
-          email: enteredEmail,
-          phone: enteredPhone,
-          role: enteredRole as UserRole
-        });
-        setConfirming(true);
+            phone: enteredPhone,
+            role: enteredRole as UserRole
+          });
+          setConfirming(true);
+        }
       }
     }
   };
