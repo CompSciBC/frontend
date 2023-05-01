@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import styled from '@emotion/styled';
 import { Auth } from '@aws-amplify/auth';
 import { FormEvent, useContext, useEffect, useState } from 'react';
