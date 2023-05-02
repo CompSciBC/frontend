@@ -1,18 +1,36 @@
 import styled from '@emotion/styled';
-import { GuidebookDto } from '../../../utils/dtos';
+import { GuidebookDto, UserRole } from '../../../utils/dtos';
 import { theme } from '../../../utils/styles';
 import LightFadeCarousel from './PhotoCarousel';
 import AccordionDropdown from '../../reservations/AccordionDropdown';
 import { useState, useEffect, useContext } from 'react';
 import AppContext from '../../../context/AppContext';
 import { server } from '../../..';
+import { FormControlLabel, Switch } from '@mui/material';
 
 function Guidebook() {
   const [guidebookInfo, setGuidebookInfo] = useState<GuidebookDto | null>(null);
   const [guidebookImages, setGuidebookImages] = useState<string[] | null>(null);
+  const [role, setRole] = useState<UserRole>();
+  const [view, setView] = useState<UserRole>();
 
-  const { reservationDetail } = useContext(AppContext);
+  const { reservationDetail, user } = useContext(AppContext);
   const propID = reservationDetail?.propertyId;
+
+  // initialize role and view
+  useEffect(() => {
+    let subscribed = true;
+
+    if (user) {
+      const { role } = user;
+      subscribed && setRole(role);
+      subscribed && setView(role);
+    }
+
+    return () => {
+      subscribed = false;
+    };
+  }, [user]);
 
   useEffect(() => {
     let subscribed = true;
@@ -40,6 +58,18 @@ function Guidebook() {
     guidebookInfo &&
     guidebookImages && (
       <Container>
+        {role === 'host' && (
+          <HostHeader>
+            <FormControlLabel
+              control={<Switch />}
+              label="View as Guest"
+              labelPlacement="start"
+              onChange={() => {
+                setView(view === 'host' ? 'guest' : 'host');
+              }}
+            />
+          </HostHeader>
+        )}
         <DisplayText>{guidebookInfo.propertyName}</DisplayText>
         <ContainerCarousel>
           <LightFadeCarousel images={guidebookImages} />
@@ -188,6 +218,13 @@ function Guidebook() {
     )
   );
 }
+
+const HostHeader = styled.div`
+  display: flex;
+  justify-content: end;
+  padding: 16px;
+  background-color: ${theme.color.lightGray};
+`;
 
 const Faq = styled.ol`
   display: flex;
