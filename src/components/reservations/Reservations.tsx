@@ -52,7 +52,7 @@ function Reservations() {
           const status = statusName as ReservationStatus;
 
           for (const reservation of data[status])
-            reservation.image = images[randomImage++ % images.length];
+            reservation.property.image = images[randomImage++ % images.length];
         }
 
         subscribed && setResDetails(data);
@@ -69,7 +69,7 @@ function Reservations() {
   const getCards = (status: ReservationStatus) => (
     <DropdownContent>
       {resDetails?.[status].map((resProp) => (
-        <ReservationCard key={resProp.id} reservationDetail={resProp} />
+        <ReservationCard key={resProp.id} reservation={resProp} />
       ))}
     </DropdownContent>
   );

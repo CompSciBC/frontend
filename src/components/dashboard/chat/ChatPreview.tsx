@@ -22,7 +22,7 @@ export interface ChatPreviewProps extends DashboardCellProps {
  */
 
 function ChatPreview({ className, cell, n }: ChatPreviewProps) {
-  const { reservationDetail, user } = useContext(AppContext);
+  const { reservation, user } = useContext(AppContext);
   const [messages, setMessages] = useState<Message[]>([]);
 
   const { resId } = useParams() as { resId: string };
@@ -31,7 +31,7 @@ function ChatPreview({ className, cell, n }: ChatPreviewProps) {
     let subscribed = true;
 
     (async function () {
-      if (subscribed && reservationDetail) {
+      if (subscribed && reservation) {
         const messages: Message[] = await getMessages(resId, user!);
 
         setMessages(messages);
@@ -50,7 +50,7 @@ function ChatPreview({ className, cell, n }: ChatPreviewProps) {
     return () => {
       subscribed = false;
     };
-  }, [reservationDetail]); // TODO: this should update whenever new messages arrive
+  }, [reservation]); // TODO: this should update whenever new messages arrive
 
   return (
     <Container
@@ -60,7 +60,7 @@ function ChatPreview({ className, cell, n }: ChatPreviewProps) {
         <>
           <Header>
             <div>Chat</div>
-            <GoToChatButton to={paramRoute(routes.chat, reservationDetail?.id)}>
+            <GoToChatButton to={paramRoute(routes.chat, reservation?.id)}>
               <ChevronDown fill="white" width={24} />
             </GoToChatButton>
           </Header>

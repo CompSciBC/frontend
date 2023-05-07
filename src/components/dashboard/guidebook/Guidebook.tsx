@@ -14,8 +14,8 @@ function Guidebook() {
   const [role, setRole] = useState<UserRole>();
   const [view, setView] = useState<UserRole>();
 
-  const { reservationDetail, user } = useContext(AppContext);
-  const propID = reservationDetail?.propertyId;
+  const { reservation, user } = useContext(AppContext);
+  const propID = reservation?.propertyId;
 
   // initialize role and view
   useEffect(() => {

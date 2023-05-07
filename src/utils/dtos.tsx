@@ -84,15 +84,7 @@ export interface Reservation {
   reasonForStay: string;
   inviteCode: string;
   checkedIn: boolean;
-}
-
-/**
- * A reservation object containing additional details about its associated property
- * (matching ReservationDetail.java)
- */
-export interface ReservationDetail extends Reservation {
   property: Property;
-  image?: string;
 }
 
 /**
@@ -105,11 +97,11 @@ export interface ReservationDetail extends Reservation {
 export type ReservationStatus = 'current' | 'upcoming' | 'past';
 
 /**
- * An object containing reservation/property objects grouped by status type
+ * An object containing reservation objects grouped by status type
  * (current, upcoming, past)
  */
 export type SortedReservationDetailSet = {
-  [key in ReservationStatus]: ReservationDetail[];
+  [key in ReservationStatus]: Reservation[];
 };
 
 /**

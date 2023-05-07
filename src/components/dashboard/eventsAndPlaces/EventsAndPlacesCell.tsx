@@ -12,7 +12,7 @@ export interface EventsAndPlacesCellProps extends DashboardCellProps {
 }
 
 function EventsAndPlacesCell({ className, cell, n }: EventsAndPlacesCellProps) {
-  const { reservationDetail } = useContext(AppContext);
+  const { reservation } = useContext(AppContext);
   const [eventsAndPlaces, setEventsAndPlaces] = useState<EventOrPlace[]>([]);
 
   useEffect(() => {
@@ -20,16 +20,16 @@ function EventsAndPlacesCell({ className, cell, n }: EventsAndPlacesCellProps) {
 
     (async function () {
       subscribed &&
-        reservationDetail &&
+        reservation &&
         setEventsAndPlaces(
-          await getEventsAndPlaces(reservationDetail.property.address, n)
+          await getEventsAndPlaces(reservation.property.address, n)
         );
     })();
 
     return () => {
       subscribed = false;
     };
-  }, [reservationDetail]);
+  }, [reservation]);
 
   return (
     <DashboardCellWrapper
@@ -38,10 +38,7 @@ function EventsAndPlacesCell({ className, cell, n }: EventsAndPlacesCellProps) {
       child={
         <ImagePreview
           title="Events and Places"
-          viewMoreLink={paramRoute(
-            routes.eventsAndPlaces,
-            reservationDetail?.id
-          )}
+          viewMoreLink={paramRoute(routes.eventsAndPlaces, reservation?.id)}
           previewSlides={eventsAndPlaces.map((e) => {
             return {
               image: e.imageUrl,

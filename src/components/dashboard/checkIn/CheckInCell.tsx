@@ -32,8 +32,7 @@ const sqsClient = new SQSClient({
 });
 
 function CheckInCell({ className, cell }: DashboardCellProps) {
-  const { reservationDetail, refreshReservationDetail, user } =
-    useContext(AppContext);
+  const { reservation, refreshReservation, user } = useContext(AppContext);
   const [eventType, setEventType] = useState<EventType>();
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
   const [alert, setAlert] = useState<{
@@ -47,11 +46,9 @@ function CheckInCell({ className, cell }: DashboardCellProps) {
   });
 
   const formattedDateTime = useMemo(() => {
-    if (reservationDetail) {
+    if (reservation) {
       const dateTime =
-        eventType === 'in'
-          ? reservationDetail.checkIn
-          : reservationDetail.checkOut;
+        eventType === 'in' ? reservation.checkIn : reservation.checkOut;
 
       const date = new Date(dateTime).toLocaleDateString('default', {
         month: 'short',
@@ -70,8 +67,8 @@ function CheckInCell({ className, cell }: DashboardCellProps) {
   useEffect(() => {
     let subscribed = true;
 
-    if (reservationDetail) {
-      const { checkOut, checkedIn } = reservationDetail;
+    if (reservation) {
+      const { checkOut, checkedIn } = reservation;
 
       // convert date/time strings to pure dates (with no time)
       const checkOutDate = new Date(checkOut).setHours(0, 0, 0, 0);
@@ -86,12 +83,12 @@ function CheckInCell({ className, cell }: DashboardCellProps) {
     return () => {
       subscribed = false;
     };
-  }, [reservationDetail]);
+  }, [reservation]);
 
   // sends a message to the AWS SQS
   const sendSqsMessage = useCallback(() => {
-    if (reservationDetail && user && eventType) {
-      const reservationId = reservationDetail.id;
+    if (reservation && user && eventType) {
+      const reservationId = reservation.id;
 
       const input: SendMessageCommandInput = {
         QueueUrl: process.env.REACT_APP_AWS_CHECK_IN_OUT_QUEUE,
@@ -105,15 +102,15 @@ function CheckInCell({ className, cell }: DashboardCellProps) {
       };
       sqsClient.send(new SendMessageCommand(input));
     }
-  }, [reservationDetail, user, eventType]);
+  }, [reservation, user, eventType]);
 
   // sets the reservation checkIn field to true
   const handleCheckIn = useCallback(async (): Promise<boolean> => {
     let result = false;
 
-    if (reservationDetail) {
+    if (reservation) {
       const response = await fetch(
-        `${server}/api/reservations/${reservationDetail.id}`,
+        `${server}/api/reservations/${reservation.id}`,
         {
           method: 'PATCH',
           headers: { 'content-type': 'application/json' },
@@ -123,7 +120,7 @@ function CheckInCell({ className, cell }: DashboardCellProps) {
       result = (await response.json()).status === 200;
     }
     return result;
-  }, [reservationDetail]);
+  }, [reservation]);
 
   // checks the guest in/out
   const checkInOut = useCallback(() => {
@@ -135,7 +132,7 @@ function CheckInCell({ className, cell }: DashboardCellProps) {
             severity: 'success',
             message: `You've been checked-${eventType}. Thanks!`
           });
-          refreshReservationDetail();
+          refreshReservation();
         } else {
           // checkIn failed
           setAlert({

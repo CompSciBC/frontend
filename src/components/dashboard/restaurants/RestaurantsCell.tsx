@@ -12,7 +12,7 @@ export interface RestaurantsCellProps extends DashboardCellProps {
 }
 
 function RestaurantsCell({ className, cell, n }: RestaurantsCellProps) {
-  const { reservationDetail } = useContext(AppContext);
+  const { reservation } = useContext(AppContext);
   const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
 
   useEffect(() => {
@@ -20,10 +20,10 @@ function RestaurantsCell({ className, cell, n }: RestaurantsCellProps) {
 
     (async function () {
       subscribed &&
-        reservationDetail &&
+        reservation &&
         setRestaurants(
           await getRestaurants({
-            address: reservationDetail.property.address,
+            address: reservation.property.address,
             numResults: n
           })
         );
@@ -32,7 +32,7 @@ function RestaurantsCell({ className, cell, n }: RestaurantsCellProps) {
     return () => {
       subscribed = false;
     };
-  }, [reservationDetail]);
+  }, [reservation]);
 
   return (
     <DashboardCellWrapper
@@ -41,7 +41,7 @@ function RestaurantsCell({ className, cell, n }: RestaurantsCellProps) {
       child={
         <ImagePreview
           title="Nearby Restaurants"
-          viewMoreLink={paramRoute(routes.restaurants, reservationDetail?.id)}
+          viewMoreLink={paramRoute(routes.restaurants, reservation?.id)}
           previewSlides={restaurants.map((r) => {
             return {
               image: r.imageUrl,
