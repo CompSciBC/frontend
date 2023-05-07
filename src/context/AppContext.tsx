@@ -91,9 +91,7 @@ export function AppContextProvider({ children }: { children: ReactNode }) {
         ) {
           setManualRefreshReservation(false);
 
-          let reservation: Reservation | null = null;
-
-          reservation = await fetch(
+          const reservation: Reservation | null = await fetch(
             `${server}/api/reservations/${resId}?primary=true`
           )
             .then(async (r) => await r.json())
