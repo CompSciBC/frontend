@@ -6,16 +6,15 @@ import { postReservation } from './postReservation';
 
 function AddReservation() {
   const { resId } = useParams();
-  const { user, reservationDetail } = useContext(AppContext);
+  const { user, reservation } = useContext(AppContext);
   const navigate = useNavigate();
   const [success, setSuccess] = useState(false);
 
   useEffect(() => {
     let subscribed = true;
 
-    if (user && reservationDetail) {
+    if (user && reservation) {
       (async function () {
-        const { property, image, ...reservation } = reservationDetail;
         const { userId } = user;
 
         const result = await postReservation(reservation, userId);
@@ -30,12 +29,12 @@ function AddReservation() {
     return () => {
       subscribed = false;
     };
-  }, [user, reservationDetail]);
+  }, [user, reservation]);
 
   useEffect(() => {
     success &&
-      reservationDetail &&
-      navigate(paramRoute(routes.dashboard, reservationDetail.id));
+      reservation &&
+      navigate(paramRoute(routes.dashboard, reservation.id));
   }, [success]);
 
   return <></>;

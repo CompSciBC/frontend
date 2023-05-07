@@ -9,8 +9,8 @@ import { server } from '../../..';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 function SurveyComponent() {
-  const { reservationDetail, user } = useContext(AppContext);
-  const reservationId = reservationDetail?.id;
+  const { reservation, user } = useContext(AppContext);
+  const reservationId = reservation?.id;
   const guestId = user?.userId;
   const location = useLocation();
   const navigate = useNavigate();

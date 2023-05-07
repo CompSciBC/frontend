@@ -11,8 +11,8 @@ function Guidebook() {
   const [guidebookInfo, setGuidebookInfo] = useState<GuidebookDto | null>(null);
   const [guidebookImages, setGuidebookImages] = useState<string[] | null>(null);
 
-  const { reservationDetail } = useContext(AppContext);
-  const propID = reservationDetail?.propertyId;
+  const { reservation } = useContext(AppContext);
+  const propID = reservation?.propertyId;
 
   useEffect(() => {
     let subscribed = true;
