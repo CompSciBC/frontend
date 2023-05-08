@@ -17,7 +17,7 @@ function Map() {
     longitude: 0.0
   };
 
-  const { reservationDetail } = useContext(AppContext);
+  const { reservation } = useContext(AppContext);
   // const { resId } = useParams() as { resId: string };
   const [location, setLocation] = useState<Location>(coordinates); // location is a variable but Location is an interface (object)
 
@@ -25,7 +25,7 @@ function Map() {
     // let subscribed = true;
     // let address:Address;
     // if (reservationDetail && subscribed) {
-    const address = reservationDetail!.property.address;
+    const address = reservation!.property.address;
     /// }
 
     const addressLocation = [
@@ -50,7 +50,7 @@ function Map() {
     // return () => {
     //   subscribed = false;
     // };
-  }, [reservationDetail]);
+  }, [reservation]);
 
   console.log('Setting center');
   const center = {

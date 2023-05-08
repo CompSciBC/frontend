@@ -2,19 +2,16 @@ import styled from '@emotion/styled';
 import { theme } from '../../utils/styles';
 import { Link } from 'react-router-dom';
 import { paramRoute, routes } from '../../index';
-import { ReservationDetail } from '../../utils/dtos';
+import { Reservation } from '../../utils/dtos';
 import { useMemo } from 'react';
 
 interface ReservationCardProps {
   className?: string;
-  reservationDetail: ReservationDetail;
+  reservation: Reservation;
 }
 
-function ReservationCard({
-  className,
-  reservationDetail
-}: ReservationCardProps) {
-  const { id, checkIn, property, image } = reservationDetail;
+function ReservationCard({ className, reservation }: ReservationCardProps) {
+  const { id, checkIn, property } = reservation;
 
   const checkInDate = new Date(checkIn).toLocaleDateString('default', {
     weekday: 'short',
@@ -43,12 +40,12 @@ function ReservationCard({
       appendToAddress(city, ', ');
     }
     return addressString;
-  }, [reservationDetail]);
+  }, [reservation]);
 
   return (
     <Wrapper
       className={className}
-      image={image ?? ''}
+      image={property.image ?? ''}
       to={paramRoute(routes.dashboard, id)}
     >
       <Container>
