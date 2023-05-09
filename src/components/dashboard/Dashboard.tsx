@@ -8,7 +8,7 @@ import GuidebookCell from './guidebook/GuidebookCell';
 import InviteCell from './invite/InviteCell';
 import WeatherCell from './weather/WeatherCell';
 import RestaurantsCell from './restaurants/RestaurantsCell';
-import EventsAndPlacesCell from './eventsAndPlaces/EventsAndPlacesCell';
+import PlacesCell from './places/PlacesCell';
 import ChatCell from './chat/ChatCell';
 import ChatPreview from './chat/ChatPreview';
 import MapCell from './map/MapCell';
@@ -65,7 +65,7 @@ function Dashboard() {
   const inviteCell = <InviteCell cell={invite} />;
   const weatherCell = <WeatherCell cell={weather} />;
   const restCell = <RestaurantsCell n={2} cell={rest} />;
-  const eventCell = <EventsAndPlacesCell n={2} cell={event} />;
+  const eventCell = <PlacesCell n={2} cell={event} />;
   const chatCell = <ChatCell cell={chat} />;
   const chatPreviewCell = <ChatPreview n={3} cell={chat} />;
   const mapCell = <MapCell cell={map} />;

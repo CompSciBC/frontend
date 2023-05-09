@@ -1,19 +1,19 @@
 import { memo, useContext, useEffect, useState } from 'react';
 import AppContext from '../../../context/AppContext';
 import { paramRoute, routes } from '../../..';
-import { EventOrPlace } from '../../../utils/dtos';
+import { Place } from '../../../utils/dtos';
 import { DashboardCellProps } from '../Dashboard';
 import DashboardCellWrapper from '../DashboardCellWrapper';
 import ImagePreview from '../ImagePreview';
-import getEventsAndPlaces from './getEventsAndPlaces';
+import getPlaces from './getPlaces';
 
-export interface EventsAndPlacesCellProps extends DashboardCellProps {
+export interface PlacesCellProps extends DashboardCellProps {
   n: number;
 }
 
-function EventsAndPlacesCell({ className, cell, n }: EventsAndPlacesCellProps) {
+function PlacesCell({ className, cell, n }: PlacesCellProps) {
   const { reservationDetail } = useContext(AppContext);
-  const [eventsAndPlaces, setEventsAndPlaces] = useState<EventOrPlace[]>([]);
+  const [places, setPlaces] = useState<Place[]>([]);
 
   useEffect(() => {
     let subscribed = true;
@@ -21,9 +21,7 @@ function EventsAndPlacesCell({ className, cell, n }: EventsAndPlacesCellProps) {
     (async function () {
       subscribed &&
         reservationDetail &&
-        setEventsAndPlaces(
-          await getEventsAndPlaces(reservationDetail.property.address, n)
-        );
+        setPlaces(await getPlaces(reservationDetail.property.address, n));
     })();
 
     return () => {
@@ -37,15 +35,12 @@ function EventsAndPlacesCell({ className, cell, n }: EventsAndPlacesCellProps) {
       cell={cell}
       child={
         <ImagePreview
-          title="Events and Places"
-          viewMoreLink={paramRoute(
-            routes.eventsAndPlaces,
-            reservationDetail?.id
-          )}
-          previewSlides={eventsAndPlaces.map((e) => {
+          title="Places"
+          viewMoreLink={paramRoute(routes.places, reservationDetail?.id)}
+          previewSlides={places.map((e) => {
             return {
-              image: e.imageUrl,
-              link: e.url
+              image: '/images/no-image-available.jpeg',
+              link: 'https://google.com'
             };
           })}
         />
@@ -54,4 +49,4 @@ function EventsAndPlacesCell({ className, cell, n }: EventsAndPlacesCellProps) {
   );
 }
 
-export default memo(EventsAndPlacesCell);
+export default memo(PlacesCell);
