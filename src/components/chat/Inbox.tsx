@@ -1,26 +1,30 @@
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 import React, { useState, useRef, useEffect, useContext } from 'react';
 import AppContext from '../../context/AppContext';
-// import { over } from 'stompjs';
-// import SockJS from 'sockjs-client';
+import { over } from 'stompjs';
+import SockJS from 'sockjs-client';
 // import { useParams } from 'react-router-dom';
 import styled from '@emotion/styled';
 import { theme } from '../../utils/styles';
 import { server } from '../..';
+// import Chat from './Chat';
 
-// let stompClient: any = null;
-// const hostUserName: string = 'Host Chat';
+let stompClient: any = null;
+const hostUserName: string = 'Host';
 // const groupChatName: string = 'Group';
 // const groupHeader: string = '';
 let firstChatId: string = ' ';
+let chatRoomTitle: string = '';
+const resId: string = '';
 
 interface Message {
-  reservationId: String;
+  reservationId: string;
   timestamp: Number;
-  senderName: String;
-  message: String;
-  receiverName: String | undefined;
-  chatId: String;
+  senderName: string;
+  message: string;
+  receiverName: string | undefined;
+  chatId: string;
+  userId: string;
 }
 
 interface ChatsServerResponse {
@@ -81,40 +85,29 @@ function Inbox() {
     }
     if (userData.userLoaded) {
       pageState.loaded = true;
-      const loadUrl = `${server}/api/chat/load/inbox/${userData.userId}/${user?.role}`;
+      const loadUrl = `${server}/api/chat/load/inbox/${userData.userId}`;
       fetch(loadUrl, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' }
       })
         .then(async (response) => await response.json())
         .then((chats: ChatsServerResponse) => {
-          // const Sock = new SockJS(`${server}/ws`);
-          onConnected(chats);
+          const Sock = new SockJS(`${server}/ws`);
 
-          // stompClient = over(Sock);
-          // stompClient.connect(
-          // {},
-          // () => {
-          //  onConnected(chats);
-          // },
-          // onError
-          // );
+          stompClient = over(Sock);
+          stompClient.connect(
+            {},
+            () => {
+              onConnected(chats);
+            },
+            onError
+          );
         });
     }
   }, [userData]);
 
   const onConnected = (chats: ChatsServerResponse) => {
-    // // subscribe to group message
-    // stompClient.subscribe(`/group/${resId}`, onGroupMessage);
-    // // subscribe to private message
-    // stompClient.subscribe(
-    //   `/user/${userData.username}/private/${resId}`,
-    //   onPrivateMessage
-    // );
-
-    // const groupMesages = chats[resId];
-    // groupChat.push(...groupMesages);
-    // setGroupChat([...groupChat]);
+    stompClient.subscribe(`/user/${userData.userId}/inbox/`, onPrivateMessage);
 
     for (const chatId in chats) {
       const chatName = chatId;
@@ -132,68 +125,72 @@ function Inbox() {
   //   setGroupChat([...groupChat]);
   // };
 
-  // const onPrivateMessage = (payload: any) => {
-  //   const payloadData: Message = JSON.parse(payload.body);
-  //   const chatId = payloadData.chatId;
-  //   const chatName = userData.isHost ? chatId.split('_')[1] : hostUserName;
+  const onPrivateMessage = (payload: any) => {
+    const payloadData: Message = JSON.parse(payload.body);
+    const chatName: string = payloadData.chatId;
 
-  //   privateChats.get(chatName)!.push(payloadData);
-  //   setPrivateChats(new Map(privateChats));
-  // };
+    privateChats.get(chatName)!.push(payloadData);
+    setPrivateChats(new Map(privateChats));
+  };
 
-  // const onError = (err: any) => {
-  //   console.log(err);
-  // };
+  const onError = (err: any) => {
+    console.log(err);
+  };
 
-  // const handleMessage = (event: any) => {
-  //   const { value } = event.target;
-  //   setUserData({ ...userData, message: value });
-  // };
+  const handleMessage = (event: any) => {
+    const { value } = event.target;
+    setUserData({ ...userData, message: value });
+  };
 
-  // const sendMessage = () => {
-  //   let chatId: string = '';
-  //   let receiverName: string | undefined;
+  const sendMessage = () => {
+    let chatId: string = '';
+    let receiverName: string | undefined;
 
-  //   if (tab === groupChatName) {
-  //     chatId = resId; // Group chat Id is Reservation id.
-  //     receiverName = undefined; // No message receiver for a group chat
-  //   } else {
-  //     // private chat
-  //     if (userData.isHost) {
-  //       // For a host, Tab is the receiver guest.
-  //       chatId = `${resId}_${tab}`;
-  //       receiverName = tab;
-  //     } else {
-  //       chatId = `${resId}_${userData.username}`;
-  //       receiverName = hostUserName;
-  //     }
-  //   }
+    if (tab.includes('Group')) {
+      chatId = resId; // Group chat Id is Reservation id.
+      receiverName = undefined; // No message receiver for a group chat
+    } else {
+      // private chat
+      if (userData.isHost) {
+        // For a host, Tab is the receiver guest
+        const name: string = tab.split(' ')[0];
 
-  //   if (stompClient) {
-  //     const chatMessage: Message = {
-  //       senderName: userData.username,
-  //       message: userData.message,
-  //       reservationId: resId,
-  //       timestamp: new Date().getTime(),
-  //       receiverName,
-  //       chatId
-  //     };
+        chatId = `${resId}_${name}`;
+        receiverName = name;
+      } else {
+        chatId = `${resId}_${userData.username}`;
+        receiverName = hostUserName;
+      }
+    }
 
-  //     if (tab === groupChatName) {
-  //       groupChat.push(chatMessage);
-  //       stompClient.send('/app/group-message', {}, JSON.stringify(chatMessage));
-  //     } else {
-  //       privateChats.get(tab)!.push(chatMessage);
-  //       stompClient.send(
-  //         '/app/private-message',
-  //         {},
-  //         JSON.stringify(chatMessage)
-  //       );
-  //     }
+    if (stompClient) {
+      const chatMessage: Message = {
+        senderName: userData.username,
+        message: userData.message,
+        reservationId: resId,
+        timestamp: new Date().getTime(),
+        receiverName,
+        chatId,
+        userId: userData.userId
+      };
 
-  //     setUserData({ ...userData, message: '' });
-  //   }
-  // };
+      if (tab.includes('Group')) {
+        privateChats.get(chatId)!.push(chatMessage);
+        stompClient.send('/app/inbox', {}, JSON.stringify(chatMessage));
+        stompClient.send('/app/group-message', {}, JSON.stringify(chatMessage));
+      } else {
+        privateChats.get(chatId)!.push(chatMessage);
+        stompClient.send('/app/inbox', {}, JSON.stringify(chatMessage));
+        stompClient.send(
+          '/app/private-message',
+          {},
+          JSON.stringify(chatMessage)
+        );
+      }
+
+      setUserData({ ...userData, message: '' });
+    }
+  };
 
   return (
     <Container>
@@ -202,51 +199,61 @@ function Inbox() {
           <ChatHeader>Inbox</ChatHeader>
         </SideBarHeader>
         <ChatList>
-          {Array.from(privateChats.keys()).map((chatName, index) => (
-            <ChatRoom
-              key={index}
-              onClick={() => {
-                setTab(chatName);
-              }}
-            >
-              {chatName}
-            </ChatRoom>
-          ))}
+          {Array.from(privateChats.keys()).map((chatName, index) => {
+            chatRoomTitle = chatName.includes('_')
+              ? chatName.split('_')[1] + ' w/Host'
+              : 'Group for ' + chatName;
+            return (
+              <ChatRoom
+                key={index}
+                onClick={() => {
+                  setTab(chatName);
+                }}
+              >
+                {chatRoomTitle}
+              </ChatRoom>
+            );
+          })}
         </ChatList>
       </SideBar>
-      <ChatContent>
-        <ChatName> {tab} </ChatName>
-        <ChatMessages id="chat-messages">
-          {[...privateChats.get(tab)!].map((message: any, index) => (
-            <MessageBlockWrapper
-              self={message.senderName === userData.username}
-              key={index}
-            >
-              <MessageBlock id="message-block">
-                {message.senderName !== userData.username && (
-                  <Avatar>{message.senderName}</Avatar>
-                )}
-                {message.senderName === userData.username && (
-                  <AvatarSelf>{message.senderName}</AvatarSelf>
-                )}
-                <MessageData id="message-data">{message.message}</MessageData>
-              </MessageBlock>
-            </MessageBlockWrapper>
-          ))}
-        </ChatMessages>
-        {/* <SendMessage id="send-message">
-          <Input
-            id="input"
-            userType={userData.username}
-            placeholder="enter the message"
-            value={userData.message}
-            onChange={handleMessage}
-          />
-          <SendButton type="button" onClick={sendMessage}>
-            send
-          </SendButton>
-        </SendMessage>  */}
-      </ChatContent>
+
+      {tab !== '' && privateChats.has(tab) ? (
+        <ChatContent>
+          <ChatName> {chatRoomTitle} </ChatName>
+          <ChatMessages id="chat-messages">
+            {[...privateChats.get(tab)!].map((message: any, index) => (
+              <MessageBlockWrapper
+                self={message.senderName === userData.username}
+                key={index}
+              >
+                <MessageBlock id="message-block">
+                  {message.senderName !== userData.username && (
+                    <Avatar>{message.senderName}</Avatar>
+                  )}
+                  {message.senderName === userData.username && (
+                    <AvatarSelf>{message.senderName}</AvatarSelf>
+                  )}
+                  <MessageData id="message-data">{message.message}</MessageData>
+                </MessageBlock>
+              </MessageBlockWrapper>
+            ))}
+          </ChatMessages>
+          <SendMessage id="send-message">
+            <Input
+              id="input"
+              userType={userData.username}
+              placeholder="enter the message"
+              value={userData.message}
+              onChange={handleMessage}
+            />
+            <SendButton type="button" onClick={sendMessage}>
+              send
+            </SendButton>
+          </SendMessage>
+        </ChatContent>
+      ) : (
+        <br />
+      )}
     </Container>
   );
 }
@@ -367,35 +374,34 @@ const MessageData = styled.li`
   border-radius: 10px;
   background-color: whitesmoke;
 `;
-// const Input = styled.input<{ userType: string }>`
-//   flex-grow: 1;
-//   margin-top: 3px;
-//   margin-bottom: 3 px;
-//   box-shadow: 0 3px 3px rgb(18 58 39 / 0.4);
-//   border-color: #539174;
-//   border-radius: 15px;
-//   ${theme.font.body}
-// `;
-//
+const Input = styled.input<{ userType: string }>`
+  flex-grow: 1;
+  margin-top: 3px;
+  margin-bottom: 3 px;
+  box-shadow: 0 3px 3px rgb(18 58 39 / 0.4);
+  border-color: #539174;
+  border-radius: 15px;
+  ${theme.font.body}
+`;
 
-// const SendMessage = styled.div`
-//   width: 75%;
-//   display: flex;
-// `;
-// const SendButton = styled.button`
-//   border: none;
-//   padding: 10px;
-//   background: #b61616;
-//   color: #ffff;
-//   font-weight: bold;
-//   width: 100px;
-//   border-radius: 30px;
-//   margin-left: 5px;
-//   cursor: pointer;
-//   ${theme.screen.small} {
-//     width: 100%;
-//   }
-// `;
+const SendMessage = styled.div`
+  width: 75%;
+  display: flex;
+`;
+const SendButton = styled.button`
+  border: none;
+  padding: 10px;
+  background: #b61616;
+  color: #ffff;
+  font-weight: bold;
+  width: 100px;
+  border-radius: 30px;
+  margin-left: 5px;
+  cursor: pointer;
+  ${theme.screen.small} {
+    width: 100%;
+  }
+`;
 
 // const LastMessage = styled.div`
 //   ${theme.screen.small} {

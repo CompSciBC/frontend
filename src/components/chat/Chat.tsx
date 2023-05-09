@@ -19,7 +19,9 @@ interface Message {
   senderName: String;
   message: String;
   receiverName: String | undefined;
+  receiverId: String | undefined;
   chatId: String;
+  userId: String;
 }
 
 interface ChatsServerResponse {
@@ -28,11 +30,13 @@ interface ChatsServerResponse {
 
 function Chat() {
   const { user } = useContext(AppContext);
+  const { reservationDetail } = useContext(AppContext);
 
   const { resId } = useParams() as { resId: string };
 
   const [userData, setUserData] = useState({
     username: user!.username,
+    userId: user!.userId,
     isHost: false,
     receivername: '',
     connected: false,
@@ -153,20 +157,25 @@ function Chat() {
 
   const sendMessage = () => {
     let chatId: string = '';
-    let receiverName: string | undefined;
+        let receiverName: string | undefined;
+    let receiverId: string | undefined;
+    console.log(reservationDetail);
 
     if (tab === groupChatName) {
       chatId = resId; // Group chat Id is Reservation id.
       receiverName = undefined; // No message receiver for a group chat
+      receiverId = reservationDetail!.property.hostId; // get a hostId for saving a group messafe in a host inbox
     } else {
       // private chat
       if (userData.isHost) {
         // For a host, Tab is the receiver guest.
         chatId = `${resId}_${tab}`;
         receiverName = tab;
+        receiverId = undefined;
       } else {
         chatId = `${resId}_${userData.username}`;
-        receiverName = hostUserName;
+        receiverName = undefined;
+        receiverId = reservationDetail!.property.hostId;
       }
     }
 
@@ -177,7 +186,9 @@ function Chat() {
         reservationId: resId,
         timestamp: new Date().getTime(),
         receiverName,
-        chatId
+        receiverId,
+        chatId,
+        userId: userData.userId
       };
 
       if (tab === groupChatName) {
