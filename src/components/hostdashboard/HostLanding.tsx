@@ -6,7 +6,8 @@ import ReservationCard from './ReservationCard';
 import ReviewCard from './ReviewCard';
 import GanttChart from './GanttChart';
 import AppContext from '../../context/AppContext';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
+import { HostProvider, HostContextType } from './hostContext';
 
 import reservationsJson from './mock_data_delete_later/reservations.json';
 import surveysJson from './mock_data_delete_later/surveys.json';
@@ -22,61 +23,72 @@ function HostLanding() {
     '/images/log-cabin-interior.jpg',
     '/images/seattle-loft.jpg'
   ];
+  // console.log('reservations');
+  // console.log(JSON.stringify(reservations));
+  // console.log('reviews');
+  // console.log(JSON.stringify(reviews));
+  const [host, setHost] = useState<HostContextType>({
+    reservations,
+    reviews,
+  });
 
   return (
-    <Container>
-      <WidgetTitle>
-        <h3 style={{ float: 'left' }}> Your Reservations </h3>
-        <a style={{ float: 'right' }} href="host-reservations">
-          All reservations ({reservations.length})
-        </a>
-      </WidgetTitle>
-      <ReservationsButtons>
-        <button> Currently hosting (10) </button>
-        <button> Arriving soon (9) </button>
-        <button> Checking out (8) </button>
-        <button> Upcoming (8) </button>
-        <button> Pending review (8) </button>
-      </ReservationsButtons>
-      <ReservationsScroll>
-        {reservations.map((f, index) => (
-          <ReservationCard
-            key={index}
-            reservationId={f.id}
-            propertyName={f.propertyId}
-            propertyPhoto={photos[Math.floor(Math.random() * photos.length)]}
-            primaryGuestName={f.guestId}
-            reservationEndDate={f.checkOut}
-            reservationStartDate={f.checkIn}
-          />
-        ))}
-      </ReservationsScroll>
-      <WidgetTitle>
-        <h3 style={{ float: 'left' }}> Newest Reviews </h3>
-        <a style={{ float: 'right' }} href="host-reservations">
-          All reviews ({reviews.length})
-        </a>
-      </WidgetTitle>
-      <Reviews>
-        {reviews.map((f, index) => (
-          <ReviewCard
-            key={index}
-            propertyName={f.propertyId}
-            primaryGuestName={f.guestId}
-            submissionTime={f.submissionTime}
-            content={f.surveyResponse}
-          />
-        ))}
-      </Reviews>
-      <WidgetTitle>
-        <h3 style={{ float: 'left' }}> Your Week at a Glance </h3>
-      </WidgetTitle>
-      <GanttChart
-        hostId={user!.userId}
-        ganttStart={new Date()}
-        ganttDuration={20}
-      />
-    </Container>
+    <HostProvider value={ host }>
+      <Container>
+        <WidgetTitle>
+          <h3 style={{ float: 'left' }}> Your Reservations </h3>
+          <a style={{ float: 'right' }} href="host-reservations">
+            All reservations ({reservations.length})
+          </a>
+        </WidgetTitle>
+        <ReservationsButtons>
+          <button> Currently hosting (10) </button>
+          <button> Arriving soon (9) </button>
+          <button> Checking out (8) </button>
+          <button> Upcoming (8) </button>
+          <button> Pending review (8) </button>
+        </ReservationsButtons>
+        <ReservationsScroll>
+          {reservations.map((f, index) => (
+            <ReservationCard
+              key={index}
+              reservationId={f.id}
+              propertyName={f.propertyId}
+              propertyPhoto={photos[Math.floor(Math.random() * photos.length)]}
+              primaryGuestName={f.guestId}
+              reservationEndDate={f.checkOut}
+              reservationStartDate={f.checkIn}
+            />
+          ))}
+        </ReservationsScroll>
+        <WidgetTitle>
+          <h3 style={{ float: 'left' }}> Newest Reviews </h3>
+          <a style={{ float: 'right' }} href="host-reservations">
+            All reviews ({reviews.length})
+          </a>
+        </WidgetTitle>
+        <Reviews>
+          {reviews.map((f, index) => (
+            <ReviewCard
+              key={index}
+              propertyName={f.propertyId}
+              primaryGuestName={f.guestId}
+              submissionTime={f.submissionTime}
+              content={f.surveyResponse}
+            />
+          ))}
+        </Reviews>
+        <WidgetTitle>
+          <h3 style={{ float: 'left' }}> Your Week at a Glance </h3>
+        </WidgetTitle>
+        <GanttChart
+          hostId={user!.userId}
+          ganttStart={new Date()}
+          ganttDuration={20}
+        />
+      </Container>
+    </HostProvider>
+    
   );
 }
 

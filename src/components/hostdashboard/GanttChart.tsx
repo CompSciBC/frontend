@@ -6,8 +6,9 @@ import { Box } from '@mui/system';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs, { Dayjs } from 'dayjs';
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import propertiesJson from './mock_data_delete_later/properties.json';
+import HostContext from './hostContext';
 
 export interface GanttChartProps {
   hostId: string;
@@ -26,6 +27,9 @@ export default function GanttChart({
   ganttStart,
   ganttDuration
 }: GanttChartProps) {
+  const things = useContext(HostContext);
+  console.log(things);
+  console.log(things?.reservations);
   const weekday = ['Sun.', 'Mon.', 'Tue.', 'Wed.', 'Thur.', 'Fri.', 'Sat.'];
   const colors = [theme.color.lime, theme.color.white];
   const rows = [];
