@@ -2,12 +2,14 @@
 import styled from '@emotion/styled';
 import { theme } from '../../utils/styles';
 import { Link } from 'react-router-dom';
-
+import { useState, useEffect } from 'react';
+import { server } from '../../index';
+import {User} from '../../utils/dtos';
 export interface ReservationCardProps {
   reservationId: string;
   propertyName: string;
-  propertyPhoto: string;
-  primaryGuestName: string;
+  propertyId: string;
+  primaryGuestEmail: string;
   reservationStartDate: string;
   reservationEndDate: string;
 }
@@ -15,18 +17,39 @@ export interface ReservationCardProps {
 export default function ReservationCard({
   reservationId,
   propertyName,
-  propertyPhoto,
-  primaryGuestName,
+  propertyId,
+  primaryGuestEmail,
   reservationStartDate,
   reservationEndDate
 }: ReservationCardProps) {
   const checkInDate = new Date(reservationStartDate);
   const checkOutDate = new Date(reservationEndDate);
   const chatLink = `/reservations/${reservationId}/chat`;
+  const [propertyPhoto, setPropertyPhoto] = useState();
+  useEffect(() => {
+    fetch(`${server}/api/guidebook/${propertyId}/images`)
+      .then(async (res) => {
+        return await res.json();
+      })
+      .then((data) => {
+        setPropertyPhoto(data[0]);
+      });
+  }, []);
+  const [primaryGuest, setPrimaryGuest] = useState<string>();
+  useEffect(() => {
+    (async function () {
+      const response = await fetch(`${server}/api/users?index=email&id=${primaryGuestEmail}`);
+      const body = await response.json();
+      const data: User = body.data[0];
+      const primaryGuestName = `${data.firstName} ${data.lastName}`;
+      setPrimaryGuest(primaryGuestName);
+    })();
+    
+  }, []);
   return (
     <Container>
       <GuestInfo>
-        <h6>FirstName L.</h6>
+        <h6>{primaryGuest}</h6>
         <p>
           {checkInDate.getMonth() + 1}/{checkInDate.getDate()} —{' '}
           {checkOutDate.getMonth() + 1}/{checkOutDate.getDate()}
@@ -41,7 +64,7 @@ export default function ReservationCard({
       </Link>
       <PropertyName>
         {' '}
-        <p> property name {propertyName} </p>{' '}
+        <p> {propertyName} </p>{' '}
       </PropertyName>
     </Container>
   );

@@ -1,10 +1,8 @@
 import React from 'react';
 
 export interface HostContextType {
-    reservations: any;
-    reviews: any;
-
-
+  reservations: any;
+  reviews: any;
 }
 const HostContext = React.createContext<HostContextType | null>(null);
 

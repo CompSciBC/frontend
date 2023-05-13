@@ -9,6 +9,7 @@ import AppContext from '../../context/AppContext';
 import { useContext, useState } from 'react';
 import { HostProvider, HostContextType } from './hostContext';
 
+// http://localhost:8080/api/reservations/checkoutafter?index=host&id=652ac46b-f438-45e6-95c0-bb7cc6029db8&primaryOnly=true&checkOutCutOff=2023-05-13T00:00:00.000
 import reservationsJson from './mock_data_delete_later/reservations.json';
 import surveysJson from './mock_data_delete_later/surveys.json';
 
@@ -29,11 +30,11 @@ function HostLanding() {
   // console.log(JSON.stringify(reviews));
   const [host, setHost] = useState<HostContextType>({
     reservations,
-    reviews,
+    reviews
   });
 
   return (
-    <HostProvider value={ host }>
+    <HostProvider value={host}>
       <Container>
         <WidgetTitle>
           <h3 style={{ float: 'left' }}> Your Reservations </h3>
@@ -53,9 +54,9 @@ function HostLanding() {
             <ReservationCard
               key={index}
               reservationId={f.id}
-              propertyName={f.propertyId}
-              propertyPhoto={photos[Math.floor(Math.random() * photos.length)]}
-              primaryGuestName={f.guestId}
+              propertyName={f.property.name}
+              propertyId={f.property.id}
+              primaryGuestEmail={f.guestId}
               reservationEndDate={f.checkOut}
               reservationStartDate={f.checkIn}
             />
@@ -88,7 +89,6 @@ function HostLanding() {
         />
       </Container>
     </HostProvider>
-    
   );
 }
 
@@ -119,14 +119,14 @@ const ReservationsButtons = styled.div`
 
 const ReservationsScroll = styled.div`
   width: 80vw;
-  height: 190px;
+  height: 230px;
   overflow-x: scroll;
   white-space: nowrap;
 `;
 
 const Reviews = styled.div`
   width: 80vw;
-  height: 225px;
+  height: 250px;
   overflow-x: scroll;
   white-space: nowrap;
   display: inline-block;
