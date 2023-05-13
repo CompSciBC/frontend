@@ -1,8 +1,8 @@
 import styled from '@emotion/styled';
 import { theme } from '../../../utils/styles';
 // import { Fragment } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { routes } from '../../..';
+import { useNavigate, useParams } from 'react-router-dom';
+import { paramRoute, routes } from '../../..';
 import { Place } from '../../../utils/dtos';
 // import Star from '../restaurants/Star';
 
@@ -12,6 +12,7 @@ export interface PlaceCardProps {
 }
 
 function PlaceCard({ className, place }: PlaceCardProps) {
+  const { resId } = useParams();
   const navigate = useNavigate();
   const {
     name,
@@ -76,7 +77,7 @@ function PlaceCard({ className, place }: PlaceCardProps) {
               type="button"
               onClick={(event) => {
                 event.preventDefault();
-                navigate(routes.map);
+                navigate(paramRoute(routes.map, resId));
               }}
             >
               Get Directions

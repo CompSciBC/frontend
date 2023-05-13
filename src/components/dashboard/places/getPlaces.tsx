@@ -15,17 +15,17 @@ export default async function getPlaces(
 ): Promise<Place[]> {
   // TODO: get from events and places api
 
-    // const addressValues = Object.values(address) as string[];
+  // const addressValues = Object.values(address) as string[];
 
-    // const addressString = addressValues.reduce( (prev, cur) => `${prev} ${cur}`, '');
-    const addressString = address.city;
+  // const addressString = addressValues.reduce( (prev, cur) => `${prev} ${cur}`, '');
+  const addressString = address.city;
 
-    // const response = await fetch(
-    //   `${server}/api/places/${addressString}/`
-    // );
+  // const response = await fetch(
+  //   `${server}/api/places/${addressString}/`
+  // );
 
-  const response = await fetch( `${server}/api/places/${addressString}`);
-  const body = await response.json() as Place[];
+  const response = await fetch(`${server}/api/places/${addressString}`);
+  const body = (await response.json()) as Place[];
   // const e = process.env.REACT_APP_GOOGLE_MAPS_KEY as string;
 
   // for (const p of body) {
