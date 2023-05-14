@@ -7,7 +7,7 @@ import { server } from '../../..';
  *
  * @param address A physical address to search
  * @param n The maximum number of results to return
- * @returns A {@link EventOrPlace} array promise
+ * @returns A {@link Place} array promise
  */
 export default async function getPlaces(
   address: Address,
@@ -15,10 +15,10 @@ export default async function getPlaces(
 ): Promise<Place[]> {
   // TODO: get from events and places api
 
-  // const addressValues = Object.values(address) as string[];
+  const addressValues = Object.values(address) as string[];
 
-  // const addressString = addressValues.reduce( (prev, cur) => `${prev} ${cur}`, '');
-  const addressString = address.city;
+  const addressString = addressValues.reduce( (prev, cur) => `${prev} ${cur}`, '');
+  // const addressString = address.city; // this code works ! 
 
   // const response = await fetch(
   //   `${server}/api/places/${addressString}/`
@@ -29,9 +29,26 @@ export default async function getPlaces(
   // const e = process.env.REACT_APP_GOOGLE_MAPS_KEY as string;
 
   // for (const p of body) {
-  //   const photoResponse = await fetch( `https://maps.googleapis.com/maps/api/place/photo?maxwidth=600&photoreference=${p.userPhotoReference}&key=${e}`);
-  //   const photoBlob = await photoResponse.json() as Blob;
-  //   p.photo = photoBlob;
+  //   await fetch( `https://maps.googleapis.com/maps/api/place/photo?maxwidth=600&photoreference=${p.userPhotoReference}&key=${e}`, { mode: 'no-cors' })
+  //   .then(async responseObj => await responseObj.blob())
+  //   .then(blob => {
+  //     // const url = window.URL.createObjectURL(blob);
+  //     // const img = new Image();
+  //     // img.src = url;
+  //     p.photo = blob;
+  //     console.log(p.photo);
+  //     // document.body.appendChild(img);
+  //   })
+  //   .catch(error => console.error(error));
+    
+    
+    
+    
+    
+  //   // console.log(photoResponse);
+  //   // const photoBlob = await photoResponse.json() as Blob;
+  //   // console.log(photoBlob);
+  //   // p.photo = photoBlob;
   // }
   return body;
 }

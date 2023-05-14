@@ -178,7 +178,7 @@ function Places() {
         </Sidebar>
       </SidebarWrapper> */}
       <ContentContainer>
-        <h2>Nearby Restaurants</h2>
+        <h2>Nearby Places</h2>
         <StyledSearchBar
           handleSubmit={(text: string) => {
             const { address } = reservationDetail!.property;

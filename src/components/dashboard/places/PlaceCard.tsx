@@ -18,7 +18,8 @@ function PlaceCard({ className, place }: PlaceCardProps) {
     name,
     openNow,
     rating,
-    types
+    types,
+    photo
     // loc,
     // vicinity,
     // priceLvl,
@@ -32,16 +33,31 @@ function PlaceCard({ className, place }: PlaceCardProps) {
   // const dollars = Array.from({ length: Math.max(price, 1) }, (_, i) => (
   //   <Fragment key={i}>$</Fragment>
   // ));
+  // const imageUrl = URL.createObjectURL(photo);
+  console.log(photo);
+  const blob = new Blob([photo], {type: 'image/jpeg'});
+  console.log(blob);
+  const url = URL.createObjectURL(blob);
+  console.log(url);
+
+  const img2 = new Image();
+  img2.src = url;
+  // Log the image element to the console to check it
+  // console.log(document.body.appendChild(img2));
+
 
   return (
     <Container className={className}>
       <CardHeader>
         <ImageWrapper>
-          {/* <img
-            src={
-              URL.createObjectURL(photo) || '/images/no-image-available.jpeg'
-            }
-          /> */}
+          {/* document.body.appendChild(photo);
+          photo */}
+          {/* <img src={photo}></img> */}
+          <img
+            
+            src={url}
+            // URL.createObjectURL(photo) || '/images/no-image-available.jpeg'
+          />
           <IsOpen>{openNow ? 'Open Now' : 'Closed'}</IsOpen>
         </ImageWrapper>
         <Stars>
