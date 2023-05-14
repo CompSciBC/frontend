@@ -2,9 +2,10 @@
 import styled from '@emotion/styled';
 import { theme } from '../../utils/styles';
 import { Link } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { server } from '../../index';
-import {User} from '../../utils/dtos';
+import { User } from '../../utils/dtos';
+
 export interface ReservationCardProps {
   reservationId: string;
   propertyName: string;
@@ -26,7 +27,7 @@ export default function ReservationCard({
   const checkOutDate = new Date(reservationEndDate);
   const chatLink = `/reservations/${reservationId}/chat`;
   const [propertyPhoto, setPropertyPhoto] = useState();
-  useEffect(() => {
+  useMemo(() => {
     fetch(`${server}/api/guidebook/${propertyId}/images`)
       .then(async (res) => {
         return await res.json();
@@ -34,18 +35,20 @@ export default function ReservationCard({
       .then((data) => {
         setPropertyPhoto(data[0]);
       });
-  }, []);
+  }, [propertyId]);
   const [primaryGuest, setPrimaryGuest] = useState<string>();
-  useEffect(() => {
+  useMemo(() => {
     (async function () {
-      const response = await fetch(`${server}/api/users?index=email&id=${primaryGuestEmail}`);
+      const response = await fetch(
+        `${server}/api/users?index=email&id=${primaryGuestEmail}`
+      );
       const body = await response.json();
       const data: User = body.data[0];
       const primaryGuestName = `${data.firstName} ${data.lastName}`;
       setPrimaryGuest(primaryGuestName);
     })();
-    
-  }, []);
+  }, [primaryGuestEmail]);
+  // console.log(primaryGuest);
   return (
     <Container>
       <GuestInfo>

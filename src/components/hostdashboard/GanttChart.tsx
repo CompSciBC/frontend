@@ -12,7 +12,6 @@ import HostContext from './hostContext';
 
 export interface GanttChartProps {
   hostId: string;
-  ganttStart: Date;
   ganttDuration: number;
 }
 
@@ -24,7 +23,6 @@ interface CellProps {
 
 export default function GanttChart({
   hostId,
-  ganttStart,
   ganttDuration
 }: GanttChartProps) {
   const things = useContext(HostContext);
@@ -35,7 +33,7 @@ export default function GanttChart({
   const rows = [];
   // const [startDate, setStartDate] = useState<Dayjs | null>(dayjs());
   const [startDate, setStartDate] = useState<Dayjs | null>(
-    dayjs('03-01-2023', 'MM-DD-YYYY')
+    dayjs()
   );
   const properties = propertiesJson.data;
   const initialEndDate = startDate!.add(ganttDuration, 'day');

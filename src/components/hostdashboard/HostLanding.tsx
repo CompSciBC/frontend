@@ -6,16 +6,24 @@ import ReservationCard from './ReservationCard';
 import ReviewCard from './ReviewCard';
 import GanttChart from './GanttChart';
 import AppContext from '../../context/AppContext';
-import { useContext, useState } from 'react';
+import { useContext, useState, useEffect, useRef } from 'react';
 import { HostProvider, HostContextType } from './hostContext';
+import { server } from '../../index';
+import { Reservation } from '../../utils/dtos';
+
+
 
 // http://localhost:8080/api/reservations/checkoutafter?index=host&id=652ac46b-f438-45e6-95c0-bb7cc6029db8&primaryOnly=true&checkOutCutOff=2023-05-13T00:00:00.000
+// Upcoming
+// http://localhost:8080/api/reservations/checkinafter?index=host&id=652ac46b-f438-45e6-95c0-bb7cc6029db8&primaryOnly=true&checkInCutOff=2023-05-14T00:00:00.000
+// Currently hosting
+// http://localhost:8080/api/reservations/checkinonorbeforecheckoutafter?index=host&id=652ac46b-f438-45e6-95c0-bb7cc6029db8&primaryOnly=true&checkInCutOff=2023-05-14T00:00:00.000&checkOutCutOff=2023-05-14T00:00:00.000
 import reservationsJson from './mock_data_delete_later/reservations.json';
 import surveysJson from './mock_data_delete_later/surveys.json';
 
 function HostLanding() {
   const { user } = useContext(AppContext);
-  const reservations = reservationsJson.data;
+  // const reservations = reservationsJson.data;
   const reviews = surveysJson.data;
   const photos = [
     '/images/mountain-cabin.jpg',
@@ -28,26 +36,48 @@ function HostLanding() {
   // console.log(JSON.stringify(reservations));
   // console.log('reviews');
   // console.log(JSON.stringify(reviews));
+  const [reservationButton, setReservationButton] = useState<string>("getCurrent");
+  const [reservations, setReservations] = useState<Reservation[]>([]);
   const [host, setHost] = useState<HostContextType>({
     reservations,
     reviews
   });
 
+  useEffect(() => {
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    tomorrow.setHours(0, 0, 0, 0);
+    const formattedString = tomorrow.toISOString().slice(0, -1);
+    let queryString = "";
+    if (reservationButton === 'getCurrent') {
+      queryString = `${server}/api/reservations/checkinonorbeforecheckoutafter?index=host&id=${user!.userId}&primaryOnly=true&checkInCutOff=${formattedString}&&checkOutCutOff=${formattedString}`;
+    } else if (reservationButton === 'getUpcoming') {
+      queryString = `${server}/api/reservations/checkinafter?index=host&id=${user!.userId}&primaryOnly=true&checkInCutOff=${formattedString}`;
+    }
+    fetch(queryString)
+      .then(async (res) => {
+        return await res.json();
+      })
+      .then((data) => {
+        // console.log(data);
+        setReservations(data.data);
+      });    
+  }, [reservationButton]);
+
+  // console.log('reservations');
+  // console.log(reservations);
   return (
     <HostProvider value={host}>
       <Container>
         <WidgetTitle>
           <h3 style={{ float: 'left' }}> Your Reservations </h3>
           <a style={{ float: 'right' }} href="host-reservations">
-            All reservations ({reservations.length})
+            All reservations
           </a>
         </WidgetTitle>
         <ReservationsButtons>
-          <button> Currently hosting (10) </button>
-          <button> Arriving soon (9) </button>
-          <button> Checking out (8) </button>
-          <button> Upcoming (8) </button>
-          <button> Pending review (8) </button>
+          <button autoFocus onFocus={() => setReservationButton('getCurrent')}> Currently hosting </button>
+          <button onFocus={() => setReservationButton('getUpcoming')}> Upcoming </button>
         </ReservationsButtons>
         <ReservationsScroll>
           {reservations.map((f, index) => (
@@ -55,7 +85,7 @@ function HostLanding() {
               key={index}
               reservationId={f.id}
               propertyName={f.property.name}
-              propertyId={f.property.id}
+              propertyId={f.property.id!}
               primaryGuestEmail={f.guestId}
               reservationEndDate={f.checkOut}
               reservationStartDate={f.checkIn}
@@ -65,7 +95,7 @@ function HostLanding() {
         <WidgetTitle>
           <h3 style={{ float: 'left' }}> Newest Reviews </h3>
           <a style={{ float: 'right' }} href="host-reservations">
-            All reviews ({reviews.length})
+            All reviews
           </a>
         </WidgetTitle>
         <Reviews>
@@ -84,7 +114,6 @@ function HostLanding() {
         </WidgetTitle>
         <GanttChart
           hostId={user!.userId}
-          ganttStart={new Date()}
           ganttDuration={20}
         />
       </Container>
@@ -113,6 +142,12 @@ const ReservationsButtons = styled.div`
       filter: brightness(0.9) contrast(1.2);
       border-color: dodgerblue;
       color: dodgerblue;
+    }
+
+    :focus {
+      background-color: dodgerblue;
+      color: white;
+      border: 1px dodgerblue;
     }
   }
 `;
