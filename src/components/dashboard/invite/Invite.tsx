@@ -17,7 +17,7 @@ export interface InviteProps {
  * @returns A JSX element
  */
 function Invite({ className }: InviteProps) {
-  const { user, reservationDetail } = useContext(AppContext);
+  const { user, reservation } = useContext(AppContext);
   const [qrCodeUrl, setQrCodeUrl] = useState('');
   const [emailFormOpen, setEmailFormOpen] = useState(false);
 
@@ -25,9 +25,9 @@ function Invite({ className }: InviteProps) {
     let subscribed = true;
 
     (async function () {
-      if (reservationDetail) {
+      if (reservation) {
         const response = await fetch(
-          `${server}/api/invites/${reservationDetail.id}/qr-code`
+          `${server}/api/invites/${reservation.id}/qr-code`
         );
         const body = await response.json();
 
@@ -38,7 +38,7 @@ function Invite({ className }: InviteProps) {
     return () => {
       subscribed = false;
     };
-  }, [reservationDetail]);
+  }, [reservation]);
 
   return (
     <Container className={className}>
@@ -47,18 +47,18 @@ function Invite({ className }: InviteProps) {
       <ButtonContainer>
         <TextCode>
           <div>Invite Code</div>
-          <span>{reservationDetail?.inviteCode}</span>
+          <span>{reservation?.inviteCode}</span>
         </TextCode>
         <InviteButton type="button" onClick={() => setEmailFormOpen(true)}>
           Send via Email
         </InviteButton>
         <InviteButton type="button">Send via SMS</InviteButton>
-        {emailFormOpen && reservationDetail && (
+        {emailFormOpen && reservation && (
           <Modal
             content={
               <SendInviteForm
                 onClose={() => setEmailFormOpen(false)}
-                resId={reservationDetail.id}
+                resId={reservation.id}
                 guestName={(() => {
                   const { firstName, lastName } = user!;
                   let name = '';

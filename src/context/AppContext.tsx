@@ -1,6 +1,6 @@
 import { createContext, ReactNode, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Property, Reservation, ReservationDetail, User } from '../utils/dtos';
+import { Reservation, User } from '../utils/dtos';
 import { routes, server } from '../index';
 
 export interface AppContextType {
@@ -8,10 +8,9 @@ export interface AppContextType {
   setAuthenticated: React.Dispatch<React.SetStateAction<boolean>>;
   user: User | null;
   setUser: React.Dispatch<React.SetStateAction<User | null>>;
-  reservationDetail: ReservationDetail | null;
-  setReservationDetail: React.Dispatch<
-    React.SetStateAction<ReservationDetail | null>
-  >;
+  reservation: Reservation | null;
+  setReservation: React.Dispatch<React.SetStateAction<Reservation | null>>;
+  refreshReservation: Function;
   clearAppContext: Function;
   testing: boolean;
   setTesting: React.Dispatch<React.SetStateAction<boolean>>;
@@ -25,8 +24,9 @@ const AppContext = createContext<AppContextType>({
   setAuthenticated: () => {},
   user: null,
   setUser: () => {},
-  reservationDetail: null,
-  setReservationDetail: () => {},
+  reservation: null,
+  setReservation: () => {},
+  refreshReservation: () => {},
   clearAppContext: () => {},
   testing: false,
   setTesting: () => {}
@@ -46,7 +46,7 @@ export function AppContextProvider({ children }: { children: ReactNode }) {
   // local storage key names
   const authenticatedKey = 'authenticated';
   const userKey = 'user';
-  const reservationDetailKey = 'reservationDetail';
+  const reservationKey = 'reservation';
 
   // initialize state variables
   const [authenticated, setAuthenticated] = useState<boolean>(
@@ -57,12 +57,9 @@ export function AppContextProvider({ children }: { children: ReactNode }) {
     JSON.parse(localStorage.getItem(userKey) ?? 'null') as User
   );
 
-  const [reservationDetail, setReservationDetail] =
-    useState<ReservationDetail | null>(
-      JSON.parse(
-        localStorage.getItem(reservationDetailKey) ?? 'null'
-      ) as ReservationDetail
-    );
+  const [reservation, setReservation] = useState<Reservation | null>(
+    JSON.parse(localStorage.getItem(reservationKey) ?? 'null') as Reservation
+  );
 
   // persist state in local storage whenever updated
   useEffect(() => {
@@ -74,25 +71,27 @@ export function AppContextProvider({ children }: { children: ReactNode }) {
   }, [user]);
 
   useEffect(() => {
-    localStorage.setItem(
-      reservationDetailKey,
-      JSON.stringify(reservationDetail)
-    );
-  }, [reservationDetail]);
+    localStorage.setItem(reservationKey, JSON.stringify(reservation));
+  }, [reservation]);
 
+  const [manualRefreshReservation, setManualRefreshReservation] =
+    useState(false);
   const { resId } = useParams();
   useEffect(() => {
     let subscribed = true;
 
     if (!authenticated || !resId || resId === ':resId') {
-      subscribed && setReservationDetail(null);
+      subscribed && setReservation(null);
     } else {
       (async function () {
-        if (!reservationDetail || reservationDetail.id !== resId) {
-          let reservation: Reservation | null = null;
-          let property: Property | null = null;
+        if (
+          !reservation ||
+          reservation.id !== resId ||
+          manualRefreshReservation
+        ) {
+          setManualRefreshReservation(false);
 
-          reservation = await fetch(
+          const reservation: Reservation | null = await fetch(
             `${server}/api/reservations/${resId}?primary=true`
           )
             .then(async (r) => await r.json())
@@ -100,22 +99,9 @@ export function AppContextProvider({ children }: { children: ReactNode }) {
             .catch(() => null);
 
           if (reservation) {
-            property = await fetch(
-              `${server}/api/properties/${reservation.propertyId}`
-            )
-              .then(async (p) => await p.json())
-              .then((p) => p.data[0])
-              .catch(() => null);
-          }
-
-          if (reservation && property) {
-            subscribed &&
-              setReservationDetail({
-                ...reservation,
-                property
-              });
+            subscribed && setReservation(reservation);
           } else {
-            subscribed && setReservationDetail(null);
+            subscribed && setReservation(null);
             navigate(routes.error);
           }
         }
@@ -125,13 +111,13 @@ export function AppContextProvider({ children }: { children: ReactNode }) {
     return () => {
       subscribed = true;
     };
-  }, [resId, authenticated]);
+  }, [resId, authenticated, manualRefreshReservation]);
 
   // purge all saved state (triggers useEffects to update local storage as well)
   const clearAppContext = () => {
     setAuthenticated(false);
     setUser(null);
-    setReservationDetail(null);
+    setReservation(null);
     setTesting(false);
     setSavedUser(null);
   };
@@ -187,8 +173,9 @@ export function AppContextProvider({ children }: { children: ReactNode }) {
         setAuthenticated,
         user,
         setUser,
-        reservationDetail,
-        setReservationDetail,
+        reservation,
+        setReservation,
+        refreshReservation: () => setManualRefreshReservation(true),
         clearAppContext,
         testing,
         setTesting

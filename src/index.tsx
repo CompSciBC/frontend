@@ -12,7 +12,7 @@ import SignUp from './components/auth/SignUp';
 import ForgotPassword from './components/auth/ForgotPassword';
 import Logout from './components/auth/Logout';
 import ProtectedRoute from './components/auth/ProtectedRoute';
-import HostLanding from './components/home/HostLanding';
+import HostLanding from './components/hostdashboard/HostLanding';
 import GuestLanding from './components/home/GuestLanding';
 import Profile from './components/profile/Profile';
 import Reservations from './components/reservations/Reservations';

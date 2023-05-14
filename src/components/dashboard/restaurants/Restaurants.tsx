@@ -10,7 +10,7 @@ import FilterPanel, { FilterState, FilterGroup } from './FilterPanel';
 import CloseX from '../../page/CloseX';
 
 function Restaurants() {
-  const { reservationDetail } = useContext(AppContext);
+  const { reservation } = useContext(AppContext);
   const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
   const [filteredRestaurants, setFilteredRestaurants] =
     useState<Restaurant[]>(restaurants);
@@ -69,8 +69,8 @@ function Restaurants() {
   useEffect(() => {
     let subscribed = true;
 
-    if (reservationDetail) {
-      const { address } = reservationDetail.property;
+    if (reservation) {
+      const { address } = reservation.property;
       subscribed && setQuery({ address });
 
       const defaultFilters: FilterState = {};
@@ -94,7 +94,7 @@ function Restaurants() {
     return () => {
       subscribed = false;
     };
-  }, [reservationDetail]);
+  }, [reservation]);
 
   const filterResults = useCallback(
     (results: Restaurant[]) => {
@@ -123,9 +123,9 @@ function Restaurants() {
   useEffect(() => {
     let subscribed = true;
 
-    if (reservationDetail) {
+    if (reservation) {
       (async function () {
-        const { address } = reservationDetail.property;
+        const { address } = reservation.property;
         subscribed &&
           setRestaurants(await getRestaurants({ ...query, address }));
       })();
@@ -134,7 +134,7 @@ function Restaurants() {
     return () => {
       subscribed = false;
     };
-  }, [reservationDetail, query]);
+  }, [reservation, query]);
 
   // filter the restaurant query results
   useEffect(() => {
@@ -178,7 +178,7 @@ function Restaurants() {
         <h2>Nearby Restaurants</h2>
         <StyledSearchBar
           handleSubmit={(text: string) => {
-            const { address } = reservationDetail!.property;
+            const { address } = reservation!.property;
 
             if (!text.trim() && Object.keys(query ?? {}).length > 1) {
               // reset to default query if user submits blank search while there are keywords set
