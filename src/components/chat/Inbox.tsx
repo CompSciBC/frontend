@@ -7,6 +7,7 @@ import SockJS from 'sockjs-client';
 import styled from '@emotion/styled';
 import { theme } from '../../utils/styles';
 import { server } from '../..';
+import { SortedReservationDetailSet } from '../../utils/dtos';
 // import Chat from './Chat';
 
 let stompClient: any = null;
@@ -16,6 +17,7 @@ const hostUserName: string = 'Host';
 let firstChatId: string = ' ';
 let chatRoomTitle: string = '';
 const resId: string = '';
+
 
 interface Message {
   reservationId: string;
@@ -103,11 +105,21 @@ function Inbox() {
             onError
           );
         });
+
+      fetch(`${server}/api/reservations-by-status?index=${user?.role}&id=${user?.userId}`,{
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' }
+      })
+      .then(async (response) => await response.json())
+      .then((responseJson) => {
+        const data: SortedReservationDetailSet = responseJson.data[0];
+        console.log(data);
+      });
     }
   }, [userData]);
 
   const onConnected = (chats: ChatsServerResponse) => {
-    stompClient.subscribe(`/user/${userData.userId}/inbox/`, onPrivateMessage);
+    stompClient.subscribe(`/user/${userData.userId}/inbox`, onPrivateMessage);
 
     for (const chatId in chats) {
       const chatName = chatId;
@@ -127,6 +139,7 @@ function Inbox() {
 
   const onPrivateMessage = (payload: any) => {
     const payloadData: Message = JSON.parse(payload.body);
+    console.log(payloadData);
     const chatName: string = payloadData.chatId;
 
     privateChats.get(chatName)!.push(payloadData);
@@ -177,15 +190,9 @@ function Inbox() {
       if (tab.includes('Group')) {
         privateChats.get(chatId)!.push(chatMessage);
         stompClient.send('/app/inbox', {}, JSON.stringify(chatMessage));
-        stompClient.send('/app/group-message', {}, JSON.stringify(chatMessage));
       } else {
         privateChats.get(chatId)!.push(chatMessage);
         stompClient.send('/app/inbox', {}, JSON.stringify(chatMessage));
-        stompClient.send(
-          '/app/private-message',
-          {},
-          JSON.stringify(chatMessage)
-        );
       }
 
       setUserData({ ...userData, message: '' });

@@ -111,7 +111,7 @@ function Chat() {
     stompClient.subscribe(`/group/${resId}`, onGroupMessage);
     // subscribe to private message
     stompClient.subscribe(
-      `/user/${userData.username}/private/${resId}`,
+      `/user/${userData.userId}/private/${resId}`,
       onPrivateMessage
     );
 
@@ -157,7 +157,7 @@ function Chat() {
 
   const sendMessage = () => {
     let chatId: string = '';
-        let receiverName: string | undefined;
+    let receiverName: string | undefined;
     let receiverId: string | undefined;
     console.log(reservationDetail);
 
