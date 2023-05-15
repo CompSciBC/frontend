@@ -105,37 +105,49 @@ function HostLanding() {
             Upcoming{' '}
           </button>
         </ReservationsButtons>
-        <ReservationsScroll>
-          {reservations.map((f, index) => (
-            <ReservationCard
-              key={index}
-              reservationId={f.id}
-              propertyName={f.property.name}
-              propertyId={f.property.id!}
-              primaryGuestEmail={f.guestId}
-              reservationEndDate={f.checkOut}
-              reservationStartDate={f.checkIn}
-            />
-          ))}
-        </ReservationsScroll>
+        {reservations.length === 0?
+          <Placeholder>
+            <h3> You have no reservations at the moment </h3>
+          </Placeholder>
+          :
+          <ReservationsScroll>
+            {reservations.map((f, index) => (
+              <ReservationCard
+                key={index}
+                reservationId={f.id}
+                propertyName={f.property.name}
+                propertyId={f.property.id!}
+                primaryGuestEmail={f.guestId}
+                reservationEndDate={f.checkOut}
+                reservationStartDate={f.checkIn}
+              />
+            ))}
+          </ReservationsScroll>
+        }
         <WidgetTitle>
           <h3 style={{ float: 'left' }}> Newest Reviews </h3>
           <a style={{ float: 'right' }} href="host-reservations">
             All reviews
           </a>
         </WidgetTitle>
-        <Reviews>
-          {reviews?.surveyResponses.map((f: any, index: any) => (
-            <ReviewCard
-              key={index}
-              property={f.property}
-              guest={f.guest}
-              submissionTime={f.submissionTime}
-              qualityMetrics={f.qualityMetrics}
-              content={f.surveyResponse}
-            />
-          ))}
-        </Reviews>
+        {reviews?.surveyResponses.length === 0?
+          <Placeholder>
+            <h3> You have no reviews at the moment </h3>
+          </Placeholder>
+          :
+          <Reviews>
+            {reviews?.surveyResponses.map((f: any, index: any) => (
+              <ReviewCard
+                key={index}
+                property={f.property}
+                guest={f.guest}
+                submissionTime={f.submissionTime}
+                qualityMetrics={f.qualityMetrics}
+                content={f.surveyResponse}
+              />
+            ))}
+          </Reviews>
+        }
         <WidgetTitle>
           <h3 style={{ float: 'left' }}> Your Week at a Glance </h3>
         </WidgetTitle>
@@ -191,6 +203,19 @@ const Reviews = styled.div`
   display: inline-block;
   align-items: center;
   justify-content: space-evenly;
+`;
+
+const Placeholder = styled.div`
+  width: 80vw;
+  height: 200px;
+  align-items: center;
+  padding: 75px;
+
+  text-align: center;
+  justify-content: center;
+  border-radius: 16px;
+  ${theme.font.placeholder}
+  background-color: #FBFCFC 
 `;
 
 const WidgetTitle = styled.div`

@@ -56,52 +56,37 @@ export default function ReservationCard({
       }
     })();
   }, [primaryGuestEmail]);
-  if (newGuest) {
-    return (
-      <Container>
-        <GuestInfo>
+  return (
+    <Container>
+      <GuestInfo>
+        { newGuest?
           <h6>{primaryGuest}</h6>
-          <p>
-            {checkInDate.getMonth() + 1}/{checkInDate.getDate()} —{' '}
-            {checkOutDate.getMonth() + 1}/{checkOutDate.getDate()}
-          </p>
-        </GuestInfo>
-        <ImageContainer>
-          <img src={propertyPhoto} />
-        </ImageContainer>
-
+          :
+          <h5>{primaryGuest}</h5>
+        }
+        <p>
+          {checkInDate.getMonth() + 1}/{checkInDate.getDate()} —{' '}
+          {checkOutDate.getMonth() + 1}/{checkOutDate.getDate()}
+        </p>
+      </GuestInfo>
+      <ImageContainer>
+        <img src={propertyPhoto} />
+      </ImageContainer>
+      { newGuest?
         <Link to={chatLink}>
           <InviteButton> 📨 &nbsp;Invite </InviteButton>
         </Link>
-        <PropertyName>
-          {' '}
-          <p> {propertyName} </p>{' '}
-        </PropertyName>
-      </Container>
-    );
-  } else {
-    return (
-      <Container>
-        <GuestInfo>
-          <h5>{primaryGuest}</h5>
-          <p>
-            {checkInDate.getMonth() + 1}/{checkInDate.getDate()} —{' '}
-            {checkOutDate.getMonth() + 1}/{checkOutDate.getDate()}
-          </p>
-        </GuestInfo>
-        <ImageContainer>
-          <img src={propertyPhoto} />
-        </ImageContainer>
+        :
         <Link to={chatLink}>
           <MessageButton> 💬 &nbsp; Message </MessageButton>
         </Link>
-        <PropertyName>
-          {' '}
-          <p> {propertyName} </p>{' '}
-        </PropertyName>
-      </Container>
-    );
-  }
+      }
+      <PropertyName>
+        {' '}
+        <p> {propertyName} </p>{' '}
+      </PropertyName>
+    </Container>
+  );
 }
 
 const Container = styled.div`
@@ -157,6 +142,12 @@ const PropertyName = styled.div`
   ${theme.font.caption}
   font-weight: bold;
   color: ${theme.color.gray};
+
+  p {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 `;
 
 const GuestInfo = styled.div`
