@@ -18,14 +18,13 @@ import { Reservation, SurveyMetrics } from '../../utils/dtos';
 // http://localhost:8080/api/reservations/checkinonorbeforecheckoutafter?index=host&id=652ac46b-f438-45e6-95c0-bb7cc6029db8&primaryOnly=true&checkInCutOff=2023-05-14T00:00:00.000&checkOutCutOff=2023-05-14T00:00:00.000
 
 // http://localhost:8080/api/surveys/hostmetrics?id=652ac46b-f438-45e6-95c0-bb7cc6029db8
-import reservationsJson from './mock_data_delete_later/reservations.json';
 import surveysJson from './mock_data_delete_later/surveys.json';
 
 function HostLanding() {
   const { user } = useContext(AppContext);
   // const reservations = reservationsJson.data;
-  const surveys = JSON.stringify(surveysJson);
-  const reviews: SurveyMetrics = JSON.parse(surveys);
+  // const surveys = JSON.stringify(surveysJson);
+  // const reviews: SurveyMetrics = JSON.parse(surveys);
   const photos = [
     '/images/mountain-cabin.jpg',
     '/images/beach-house.jpg',
@@ -40,10 +39,21 @@ function HostLanding() {
   const [reservationButton, setReservationButton] =
     useState<string>('getCurrent');
   const [reservations, setReservations] = useState<Reservation[]>([]);
-  const [host, setHost] = useState<HostContextType>({
-    reservations,
-    reviews
-  });
+  
+
+  const [reviews, setReviews] = useState<SurveyMetrics>();
+  useEffect(() => {
+    fetch(`${server}/api/surveys/hostmetrics?id=${
+      user!.userId
+    }`)
+      .then(async (res) => {
+        return await res.json();
+      })
+      .then((data) => {
+        setReviews(JSON.parse(JSON.stringify(data)));
+        // console.log(reviews);
+      });
+  }, []);
 
   useEffect(() => {
     const tomorrow = new Date();
@@ -70,6 +80,10 @@ function HostLanding() {
       });
   }, [reservationButton]);
 
+  const [host, setHost] = useState<HostContextType>({
+    reservations,
+    reviews
+  });
   // console.log('reservations');
   // console.log(reservations);
   return (
@@ -111,7 +125,7 @@ function HostLanding() {
           </a>
         </WidgetTitle>
         <Reviews>
-          {reviews.surveyResponses.map((f: any, index: any) => (
+          {reviews?.surveyResponses.map((f: any, index: any) => (
             <ReviewCard
               key={index}
               property={f.property}
@@ -171,7 +185,7 @@ const ReservationsScroll = styled.div`
 
 const Reviews = styled.div`
   width: 80vw;
-  height: 210px;
+  height: 220px;
   overflow-x: scroll;
   white-space: nowrap;
   display: inline-block;
