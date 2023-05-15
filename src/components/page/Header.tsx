@@ -28,7 +28,14 @@ interface HeaderProps {
   user?: string;
 }
 
-function Header({ className, logo, navLinks, authenticated, avatarLinks, user }: HeaderProps) {
+function Header({
+  className,
+  logo,
+  navLinks,
+  authenticated,
+  avatarLinks,
+  user
+}: HeaderProps) {
   const navigate = useNavigate();
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null
@@ -165,7 +172,7 @@ function Header({ className, logo, navLinks, authenticated, avatarLinks, user }:
               </Button>
             ))}
           </Box>
-          {authenticated? 
+          {authenticated ? (
             <Box sx={{ flexGrow: 0 }}>
               <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
@@ -189,15 +196,18 @@ function Header({ className, logo, navLinks, authenticated, avatarLinks, user }:
                 onClose={handleCloseUserMenu}
               >
                 {avatarLinks!.map((link) => (
-                  <MenuItem key={link.name} onClick={() => navigateToPage(link.path)}>
+                  <MenuItem
+                    key={link.name}
+                    onClick={() => navigateToPage(link.path)}
+                  >
                     <Typography textAlign="center">{link.name}</Typography>
                   </MenuItem>
                 ))}
               </Menu>
             </Box>
-            :
+          ) : (
             <></>
-          }
+          )}
         </Toolbar>
       </Container>
     </AppBar>

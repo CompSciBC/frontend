@@ -55,7 +55,7 @@ function Login({ className }: LoginProps) {
       if (authUser) {
         const selectedRole = getRadioValue(roleField).toLowerCase() as UserRole;
         setRole(selectedRole);
-  
+
         let userGroup = getUserGroup(authUser);
         if (typeof userGroup === 'boolean') {
           userGroup = selectedRole;
@@ -63,15 +63,14 @@ function Login({ className }: LoginProps) {
         } else {
           if (userGroup !== selectedRole) {
             throw new Error('user logged in with incorrect role');
-            
           }
         }
-  
+
         const userAttributes = await Auth.userAttributes(authUser);
-  
+
         const getAttribute = (name: string) =>
           userAttributes.find((a) => a.getName() === name)?.getValue() ?? '';
-  
+
         setUser({
           userId: getAttribute('sub'), // sub = userId assigned by cognito
           username: authUser.getUsername(),
@@ -84,9 +83,10 @@ function Login({ className }: LoginProps) {
         setAuthenticated(true);
       }
     } catch (error) {
-      setErrorMessage("The credentials you provided does not match the selected role");
+      setErrorMessage(
+        'The credentials you provided does not match the selected role'
+      );
     }
-    
   };
 
   // redirect after successful login

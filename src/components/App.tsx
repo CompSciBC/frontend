@@ -11,7 +11,12 @@ interface AppProps {
   noAuthNavLinks: NavbarLink[];
 }
 
-function App({ guestNavLinks, hostNavLinks, avatarLinks, noAuthNavLinks }: AppProps) {
+function App({
+  guestNavLinks,
+  hostNavLinks,
+  avatarLinks,
+  noAuthNavLinks
+}: AppProps) {
   const { authenticated, user } = useContext(AppContext);
   const [navLinks, setNavLinks] = useState<NavbarLink[]>(noAuthNavLinks);
   useEffect(() => {
@@ -25,7 +30,7 @@ function App({ guestNavLinks, hostNavLinks, avatarLinks, noAuthNavLinks }: AppPr
       setNavLinks(noAuthNavLinks);
     }
   }, [authenticated]);
-  
+
   return (
     <Page
       header={

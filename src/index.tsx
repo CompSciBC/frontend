@@ -114,7 +114,7 @@ const guestNavLinks: NavbarLink[] = [
   {
     name: 'Inbox',
     path: routes.inbox
-  },
+  }
 ];
 
 const hostNavLinks: NavbarLink[] = [
@@ -129,7 +129,7 @@ const hostNavLinks: NavbarLink[] = [
   {
     name: 'Inbox',
     path: routes.inbox
-  },
+  }
 ];
 
 const avatarLinks: NavbarLink[] = [
