@@ -21,20 +21,15 @@ interface CellProps {
   cellWidth?: string;
 }
 
-export default function GanttChart({
-  hostId,
-  ganttDuration
-}: GanttChartProps) {
+export default function GanttChart({ hostId, ganttDuration }: GanttChartProps) {
   const things = useContext(HostContext);
-  console.log(things);
-  console.log(things?.reservations);
+  // console.log(things);
+  // console.log(things?.reservations);
   const weekday = ['Sun.', 'Mon.', 'Tue.', 'Wed.', 'Thur.', 'Fri.', 'Sat.'];
   const colors = [theme.color.lime, theme.color.white];
   const rows = [];
   // const [startDate, setStartDate] = useState<Dayjs | null>(dayjs());
-  const [startDate, setStartDate] = useState<Dayjs | null>(
-    dayjs()
-  );
+  const [startDate, setStartDate] = useState<Dayjs | null>(dayjs());
   const properties = propertiesJson.data;
   const initialEndDate = startDate!.add(ganttDuration, 'day');
   const [endDate, setEndDate] = useState<Dayjs | null>(initialEndDate);

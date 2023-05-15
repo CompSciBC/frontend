@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { useState, useEffect, useMemo } from 'react';
 import { server } from '../../index';
 import { User } from '../../utils/dtos';
+import Button from '@mui/material/Button';
 
 export interface ReservationCardProps {
   reservationId: string;
@@ -37,40 +38,70 @@ export default function ReservationCard({
       });
   }, [propertyId]);
   const [primaryGuest, setPrimaryGuest] = useState<string>();
-  useMemo(() => {
+  const [newGuest, setNewGuest] = useState<boolean>(false);
+  useEffect(() => {
     (async function () {
       const response = await fetch(
         `${server}/api/users?index=email&id=${primaryGuestEmail}`
       );
       const body = await response.json();
       const data: User = body.data[0];
-      const primaryGuestName = `${data.firstName} ${data.lastName}`;
-      setPrimaryGuest(primaryGuestName);
+      try {
+        const primaryGuestName = `${data.firstName} ${data.lastName}`;
+        setPrimaryGuest(primaryGuestName);
+        setNewGuest(false);
+      } catch {
+        setPrimaryGuest(primaryGuestEmail);
+        setNewGuest(true);
+      }
     })();
   }, [primaryGuestEmail]);
-  // console.log(primaryGuest);
-  return (
-    <Container>
-      <GuestInfo>
-        <h6>{primaryGuest}</h6>
-        <p>
-          {checkInDate.getMonth() + 1}/{checkInDate.getDate()} —{' '}
-          {checkOutDate.getMonth() + 1}/{checkOutDate.getDate()}
-        </p>
-      </GuestInfo>
-      <ImageContainer>
-        <img src={propertyPhoto} />
-      </ImageContainer>
+  if (newGuest) {
+    return (
+      <Container>
+        <GuestInfo>
+          <h6>{primaryGuest}</h6>
+          <p>
+            {checkInDate.getMonth() + 1}/{checkInDate.getDate()} —{' '}
+            {checkOutDate.getMonth() + 1}/{checkOutDate.getDate()}
+          </p>
+        </GuestInfo>
+        <ImageContainer>
+          <img src={propertyPhoto} />
+        </ImageContainer>
 
-      <Link to={chatLink}>
-        <SendButton> 💬 &nbsp; Message </SendButton>
-      </Link>
-      <PropertyName>
-        {' '}
-        <p> {propertyName} </p>{' '}
-      </PropertyName>
-    </Container>
-  );
+        <Link to={chatLink}>
+          <InviteButton> 📨 &nbsp;Invite </InviteButton>
+        </Link>
+        <PropertyName>
+          {' '}
+          <p> {propertyName} </p>{' '}
+        </PropertyName>
+      </Container>
+    );
+  } else {
+    return (
+      <Container>
+        <GuestInfo>
+          <h5>{primaryGuest}</h5>
+          <p>
+            {checkInDate.getMonth() + 1}/{checkInDate.getDate()} —{' '}
+            {checkOutDate.getMonth() + 1}/{checkOutDate.getDate()}
+          </p>
+        </GuestInfo>
+        <ImageContainer>
+          <img src={propertyPhoto} />
+        </ImageContainer>
+        <Link to={chatLink}>
+          <MessageButton> 💬 &nbsp; Message </MessageButton>
+        </Link>
+        <PropertyName>
+          {' '}
+          <p> {propertyName} </p>{' '}
+        </PropertyName>
+      </Container>
+    );
+  }
 }
 
 const Container = styled.div`
@@ -78,12 +109,12 @@ const Container = styled.div`
   margin: 0px 6px;
   display: inline-block;
   width: 300px;
-  height: 90%;
+  height: 175px;
   border: 1px solid grey;
   border-radius: 16px;
 `;
 
-const SendButton = styled.div`
+const MessageButton = styled.div`
   position: relative;
   top: 12%;
   right: 96%;
@@ -99,18 +130,30 @@ const SendButton = styled.div`
   color: ${theme.color.white}
 `;
 
+const InviteButton = styled.div`
+  position: relative;
+  top: 12%;
+  right: 96%;
+  background: ${theme.color.purple};
+  height: 20;
+  width: 40%;
+  text-align: center;
+  display: inline-block;
+  border-radius: 16px;
+  padding: 10px;
+  text-transform: uppercase;
+  ${theme.font.subHeading}
+  color: ${theme.color.white}
+`;
+
 const PropertyName = styled.div`
   position: relative;
   bottom: 5%;
   left: 50%;
-
   width: 45%;
   /* background: pink; */
-
   text-align: center;
-
   white-space: initial; //make text wrap to next line
-
   ${theme.font.caption}
   font-weight: bold;
   color: ${theme.color.gray};
@@ -121,8 +164,7 @@ const GuestInfo = styled.div`
   top: 0%;
   left: 0%;
   padding: 10% 0%;
-
-  text-overflow: clip;
+  text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
   height: 120px;
@@ -131,6 +173,12 @@ const GuestInfo = styled.div`
   display: inline-block;
 
   h6 {
+    ${theme.font.displaySmall}
+    font-weight: bold;
+    color: ${theme.color.purple};
+  }
+
+  h5 {
     ${theme.font.displaySmall}
     font-weight: bold;
     color: ${theme.color.red};
@@ -145,11 +193,8 @@ const ImageContainer = styled.div`
   position: relative;
   top: 0px;
   left: 0.5px;
-  /* background: cyan; */
   height: 120px;
   width: 55%;
-  /* text-align: right; */
-  /* padding: 6% 0; */
   display: inline-block;
 
   img {

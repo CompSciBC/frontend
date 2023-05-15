@@ -9,22 +9,23 @@ import AppContext from '../../context/AppContext';
 import { useContext, useState, useEffect, useRef } from 'react';
 import { HostProvider, HostContextType } from './hostContext';
 import { server } from '../../index';
-import { Reservation } from '../../utils/dtos';
-
-
+import { Reservation, SurveyMetrics } from '../../utils/dtos';
 
 // http://localhost:8080/api/reservations/checkoutafter?index=host&id=652ac46b-f438-45e6-95c0-bb7cc6029db8&primaryOnly=true&checkOutCutOff=2023-05-13T00:00:00.000
 // Upcoming
 // http://localhost:8080/api/reservations/checkinafter?index=host&id=652ac46b-f438-45e6-95c0-bb7cc6029db8&primaryOnly=true&checkInCutOff=2023-05-14T00:00:00.000
 // Currently hosting
 // http://localhost:8080/api/reservations/checkinonorbeforecheckoutafter?index=host&id=652ac46b-f438-45e6-95c0-bb7cc6029db8&primaryOnly=true&checkInCutOff=2023-05-14T00:00:00.000&checkOutCutOff=2023-05-14T00:00:00.000
+
+// http://localhost:8080/api/surveys/hostmetrics?id=652ac46b-f438-45e6-95c0-bb7cc6029db8
 import reservationsJson from './mock_data_delete_later/reservations.json';
 import surveysJson from './mock_data_delete_later/surveys.json';
 
 function HostLanding() {
   const { user } = useContext(AppContext);
   // const reservations = reservationsJson.data;
-  const reviews = surveysJson.data;
+  const surveys = JSON.stringify(surveysJson);
+  const reviews: SurveyMetrics = JSON.parse(surveys);
   const photos = [
     '/images/mountain-cabin.jpg',
     '/images/beach-house.jpg',
@@ -33,10 +34,11 @@ function HostLanding() {
     '/images/seattle-loft.jpg'
   ];
   // console.log('reservations');
-  // console.log(JSON.stringify(reservations));
+  // console.log(JSON.stringify(reservationsJson));
   // console.log('reviews');
   // console.log(JSON.stringify(reviews));
-  const [reservationButton, setReservationButton] = useState<string>("getCurrent");
+  const [reservationButton, setReservationButton] =
+    useState<string>('getCurrent');
   const [reservations, setReservations] = useState<Reservation[]>([]);
   const [host, setHost] = useState<HostContextType>({
     reservations,
@@ -48,11 +50,15 @@ function HostLanding() {
     tomorrow.setDate(tomorrow.getDate() + 1);
     tomorrow.setHours(0, 0, 0, 0);
     const formattedString = tomorrow.toISOString().slice(0, -1);
-    let queryString = "";
+    let queryString = '';
     if (reservationButton === 'getCurrent') {
-      queryString = `${server}/api/reservations/checkinonorbeforecheckoutafter?index=host&id=${user!.userId}&primaryOnly=true&checkInCutOff=${formattedString}&&checkOutCutOff=${formattedString}`;
+      queryString = `${server}/api/reservations/checkinonorbeforecheckoutafter?index=host&id=${
+        user!.userId
+      }&primaryOnly=true&checkInCutOff=${formattedString}&&checkOutCutOff=${formattedString}`;
     } else if (reservationButton === 'getUpcoming') {
-      queryString = `${server}/api/reservations/checkinafter?index=host&id=${user!.userId}&primaryOnly=true&checkInCutOff=${formattedString}`;
+      queryString = `${server}/api/reservations/checkinafter?index=host&id=${
+        user!.userId
+      }&primaryOnly=true&checkInCutOff=${formattedString}`;
     }
     fetch(queryString)
       .then(async (res) => {
@@ -61,7 +67,7 @@ function HostLanding() {
       .then((data) => {
         // console.log(data);
         setReservations(data.data);
-      });    
+      });
   }, [reservationButton]);
 
   // console.log('reservations');
@@ -76,8 +82,14 @@ function HostLanding() {
           </a>
         </WidgetTitle>
         <ReservationsButtons>
-          <button autoFocus onFocus={() => setReservationButton('getCurrent')}> Currently hosting </button>
-          <button onFocus={() => setReservationButton('getUpcoming')}> Upcoming </button>
+          <button autoFocus onFocus={() => setReservationButton('getCurrent')}>
+            {' '}
+            Currently hosting{' '}
+          </button>
+          <button onFocus={() => setReservationButton('getUpcoming')}>
+            {' '}
+            Upcoming{' '}
+          </button>
         </ReservationsButtons>
         <ReservationsScroll>
           {reservations.map((f, index) => (
@@ -99,12 +111,13 @@ function HostLanding() {
           </a>
         </WidgetTitle>
         <Reviews>
-          {reviews.map((f, index) => (
+          {reviews.surveyResponses.map((f: any, index: any) => (
             <ReviewCard
               key={index}
-              propertyName={f.propertyId}
-              primaryGuestName={f.guestId}
+              property={f.property}
+              guest={f.guest}
               submissionTime={f.submissionTime}
+              qualityMetrics={f.qualityMetrics}
               content={f.surveyResponse}
             />
           ))}
@@ -112,10 +125,7 @@ function HostLanding() {
         <WidgetTitle>
           <h3 style={{ float: 'left' }}> Your Week at a Glance </h3>
         </WidgetTitle>
-        <GanttChart
-          hostId={user!.userId}
-          ganttDuration={20}
-        />
+        <GanttChart hostId={user!.userId} ganttDuration={20} />
       </Container>
     </HostProvider>
   );
@@ -154,14 +164,14 @@ const ReservationsButtons = styled.div`
 
 const ReservationsScroll = styled.div`
   width: 80vw;
-  height: 230px;
+  height: 200px;
   overflow-x: scroll;
   white-space: nowrap;
 `;
 
 const Reviews = styled.div`
   width: 80vw;
-  height: 250px;
+  height: 210px;
   overflow-x: scroll;
   white-space: nowrap;
   display: inline-block;

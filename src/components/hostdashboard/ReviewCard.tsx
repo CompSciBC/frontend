@@ -1,18 +1,22 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import styled from '@emotion/styled';
+import { User, Property } from '../../utils/dtos';
 import { theme } from '../../utils/styles';
+import Rating from '@mui/material/Rating';
 
 export interface ReviewCardProps {
-  propertyName: string;
-  primaryGuestName: string;
+  property: Property;
+  guest: User;
   submissionTime: string;
+  qualityMetrics: any;
   content: string;
 }
 
 export default function ReviewCard({
-  propertyName,
-  primaryGuestName,
+  property,
+  guest,
   submissionTime,
+  qualityMetrics,
   content
 }: ReviewCardProps) {
   const timestamp = new Date(submissionTime);
@@ -30,22 +34,39 @@ export default function ReviewCard({
     'November',
     'December'
   ];
-  const characters = 'abcdefghijklmnopqrstuvwxyz0123456789';
+
+  let averageRating: number = 0;
+  for (const key in qualityMetrics) {
+    const value: number = qualityMetrics[key];
+    averageRating += value;
+  }
+  averageRating = averageRating / Object.keys(qualityMetrics).length;
+  // console.log(averageRating);
   return (
     <Container>
       <ReviewQuote>
-        <p> &ldquo; {content.substring(0, 200)} ... &rdquo; </p>
+        <h5> {property.name}</h5>
+        <Rating
+          name="half-rating-read"
+          value={averageRating}
+          precision={0.5}
+          readOnly
+        />
+        {/* <p> {averageRating} / 5 </p> */}
       </ReviewQuote>
       <UserLogo>
         <p>
-          {characters.charAt(Math.floor(Math.random() * characters.length))}
-          {characters.charAt(Math.floor(Math.random() * characters.length))}
+          {guest.firstName.charAt(0)}
+          {guest.lastName.charAt(0)}
         </p>
       </UserLogo>
       <SurveyMetadata>
-        <h6>Guest Name</h6>
+        <h6>
+          {guest.firstName} {guest.lastName}
+        </h6>
         <p>
-          {month[timestamp.getMonth()]} {timestamp.getFullYear()}
+          {month[timestamp.getMonth()]} {timestamp.getDate()},{' '}
+          {timestamp.getFullYear()}
         </p>
       </SurveyMetadata>
     </Container>
@@ -57,6 +78,7 @@ const Container = styled.div`
   margin: 0px 6px;
   display: inline-block;
   width: 300px;
+  height: 165px;
   border: 1px solid grey;
   border-radius: 16px;
   /* background: pink; */
@@ -65,6 +87,14 @@ const Container = styled.div`
 const ReviewQuote = styled.div`
   /* background: yellow; */
   margin: 15px 10px 15px 15px;
+  height: 100px;
+  h5 {
+    white-space: normal;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    ${theme.font.displayXSmall}
+    font-weight:500;
+  }
   p {
     white-space: normal;
     overflow: hidden;
@@ -77,6 +107,7 @@ const SurveyMetadata = styled.div`
   position: relative;
   left: 10%;
   display: inline-block;
+  bottom: 40px;
   /* background: blue; */
   text-overflow: clip;
   overflow: hidden;
@@ -98,7 +129,7 @@ const SurveyMetadata = styled.div`
 const UserLogo = styled.div`
   position: relative;
   left: 15px;
-  bottom: 30px;
+  bottom: 75px;
   background: ${theme.color.lightBlue};
   align-items: center;
   height: 60px;
@@ -116,3 +147,11 @@ const UserLogo = styled.div`
     color: ${theme.color.white};
   }
 `;
+
+function printStars(numStars: number) {
+  let starString = '';
+  for (let i = 0; i < numStars; i++) {
+    starString += '*';
+  }
+  console.log(starString);
+}

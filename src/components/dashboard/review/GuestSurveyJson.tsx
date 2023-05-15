@@ -1,5 +1,3 @@
-
-
 export const guestSurveyJson = {
   logo: '/bmg-branding/BMG-Script-RdHrt.svg',
   logoWidth: '200px',
@@ -26,7 +24,8 @@ export const guestSurveyJson = {
         {
           type: 'matrix',
           name: 'quality',
-          title: 'Please rate the following aspects of your stay on a scale of 1-5, where 1 is "very poor" and 5 is "excellent"',
+          title:
+            'Please rate the following aspects of your stay on a scale of 1-5, where 1 is "very poor" and 5 is "excellent"',
           isRequired: true,
           columns: [1, 2, 3, 4, 5],
           rows: [
@@ -57,7 +56,8 @@ export const guestSurveyJson = {
         {
           type: 'boolean',
           name: 'have-additional-thoughts',
-          title: "Is there anything else you would like to share about your experience?"
+          title:
+            'Is there anything else you would like to share about your experience?'
         },
         {
           type: 'comment',
@@ -138,7 +138,7 @@ export const guestSurveyJson = {
           title: 'What would make you more satisfied with BeMyGuest?'
         }
       ]
-    },
+    }
   ],
   showProgressBar: 'top',
   progressBarType: 'questions',
@@ -149,6 +149,5 @@ export const guestSurveyJson = {
 };
 
 export const guestSurveyQuestionsMap = {
-  'discovery-source' : 'How did you first hear about us?',
-
+  'discovery-source': 'How did you first hear about us?'
 };
