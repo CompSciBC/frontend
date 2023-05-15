@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import styled from '@emotion/styled';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { routes } from '../../index';
 import { theme } from '../../utils/styles';
 import Navbar, { NavbarLink } from './Navbar';
@@ -18,25 +18,24 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
-import AdbIcon from '@mui/icons-material/Adb';
 
 interface HeaderProps {
   className?: string;
   logo: string;
   navLinks?: NavbarLink[];
+  authenticated: boolean;
+  avatarLinks?: NavbarLink[];
+  user?: string;
 }
 
-const pages = ['Products', 'Pricing', 'Blog'];
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
-
-function Header({ className, logo, navLinks }: HeaderProps) {
+function Header({ className, logo, navLinks, authenticated, avatarLinks, user }: HeaderProps) {
+  const navigate = useNavigate();
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null
   );
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
     null
   );
-
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
   };
@@ -46,6 +45,12 @@ function Header({ className, logo, navLinks }: HeaderProps) {
 
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
+  };
+
+  const navigateToPage = (path: string) => {
+    navigate(path);
+    handleCloseNavMenu();
+    handleCloseUserMenu();
   };
 
   const handleCloseUserMenu = () => {
@@ -63,10 +68,12 @@ function Header({ className, logo, navLinks }: HeaderProps) {
     //     <NavLinksFrame>{navLinks && <Nav navLinks={navLinks} />}</NavLinksFrame>
     //   </NavFrame>
     // </NavParentFrame>
-    <AppBar position="static" style={{  background: 'linear-gradient(to right, #0072c6, #33cc33)' }}>
+    <AppBar
+      position="static"
+      style={{ background: 'linear-gradient(to right, #F4F269, #5CB270)' }}
+    >
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
           <Logo to={routes.home}>
             <img src={logo} alt="logo" />
           </Logo>
@@ -81,7 +88,7 @@ function Header({ className, logo, navLinks }: HeaderProps) {
               fontFamily: 'monospace',
               fontWeight: 700,
               letterSpacing: '.3rem',
-              color: 'inherit',
+              color: 'black',
               textDecoration: 'none'
             }}
           >
@@ -95,7 +102,7 @@ function Header({ className, logo, navLinks }: HeaderProps) {
               aria-controls="menu-appbar"
               aria-haspopup="true"
               onClick={handleOpenNavMenu}
-              color="inherit"
+              color="primary"
             >
               <MenuIcon />
             </IconButton>
@@ -117,14 +124,18 @@ function Header({ className, logo, navLinks }: HeaderProps) {
                 display: { xs: 'block', md: 'none' }
               }}
             >
-              {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page}</Typography>
+              {navLinks!.map((link) => (
+                <MenuItem
+                  key={link.name}
+                  onClick={() => navigateToPage(link.path)}
+                >
+                  <Typography textAlign="center" sx={{ color: 'black' }}>
+                    {link.name}
+                  </Typography>
                 </MenuItem>
               ))}
             </Menu>
           </Box>
-          <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
           <Typography
             variant="h5"
             noWrap
@@ -137,53 +148,56 @@ function Header({ className, logo, navLinks }: HeaderProps) {
               fontFamily: 'monospace',
               fontWeight: 700,
               letterSpacing: '.3rem',
-              color: 'inherit',
+              color: 'black',
               textDecoration: 'none'
             }}
           >
             BeMyGuest
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-            {pages.map((page) => (
+            {navLinks!.map((link) => (
               <Button
-                key={page}
-                onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: 'white', display: 'block' }}
+                key={link.name}
+                onClick={() => navigateToPage(link.path)}
+                sx={{ my: 2, color: 'black', display: 'block' }}
               >
-                {page}
+                {link.name}
               </Button>
             ))}
           </Box>
-
-          <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
-              </IconButton>
-            </Tooltip>
-            <Menu
-              sx={{ mt: '45px' }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right'
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right'
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
-            >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
-                </MenuItem>
-              ))}
-            </Menu>
-          </Box>
+          {authenticated? 
+            <Box sx={{ flexGrow: 0 }}>
+              <Tooltip title="Open settings">
+                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                  <Avatar alt={user} src="/static/images/avatar/2.jpg" />
+                </IconButton>
+              </Tooltip>
+              <Menu
+                sx={{ mt: '45px' }}
+                id="menu-appbar"
+                anchorEl={anchorElUser}
+                anchorOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right'
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right'
+                }}
+                open={Boolean(anchorElUser)}
+                onClose={handleCloseUserMenu}
+              >
+                {avatarLinks!.map((link) => (
+                  <MenuItem key={link.name} onClick={() => navigateToPage(link.path)}>
+                    <Typography textAlign="center">{link.name}</Typography>
+                  </MenuItem>
+                ))}
+              </Menu>
+            </Box>
+            :
+            <></>
+          }
         </Toolbar>
       </Container>
     </AppBar>
