@@ -185,7 +185,7 @@ const ReservationsScroll = styled.div`
 
 const Reviews = styled.div`
   width: 80vw;
-  height: 220px;
+  height: 240px;
   overflow-x: scroll;
   white-space: nowrap;
   display: inline-block;

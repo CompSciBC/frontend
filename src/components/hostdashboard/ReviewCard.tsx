@@ -78,7 +78,7 @@ const Container = styled.div`
   margin: 0px 6px;
   display: inline-block;
   width: 300px;
-  height: 165px;
+  height: 175px;
   border: 1px solid grey;
   border-radius: 16px;
   /* background: pink; */
@@ -86,7 +86,7 @@ const Container = styled.div`
 
 const ReviewQuote = styled.div`
   /* background: yellow; */
-  margin: 15px 10px 15px 15px;
+  margin: 15px 10px;
   height: 100px;
   h5 {
     white-space: normal;
