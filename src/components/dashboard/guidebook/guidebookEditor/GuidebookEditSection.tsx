@@ -1,0 +1,308 @@
+import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  AlertColor,
+  Button,
+  ButtonGroup,
+  Tooltip
+} from '@mui/material';
+import { useEffect, useCallback, useState } from 'react';
+import {
+  ExpandMore,
+  MoveDown,
+  SaveOutlined,
+  DeleteOutlined
+} from '@mui/icons-material';
+import styled from '@emotion/styled';
+import { theme } from '../../../../utils/styles';
+import ConfirmCancelDialog from '../../../stuff/ConfirmCancelDialog';
+import { GuidebookSection } from '../../../../utils/dtos';
+import GuidebookEditSectionText from './GuidebookEditSectionText';
+import GuidebookEditSectionList from './GuidebookEditSectionList';
+import AlertPopup from '../../../stuff/AlertPopup';
+
+export interface GuidebookEditSectionProps {
+  className?: string;
+  sectionId: string;
+  section: GuidebookSection<any>;
+  onMoveDown?: Function;
+  onSave: (sectionId: string, update: any) => Promise<boolean>;
+  onDelete?: (sectionId: string) => Promise<boolean>;
+}
+
+/**
+ * Manages the editing of a single section of a property guidebook
+ *
+ * @param props {@link GuidebookEditSectionProps}
+ * @returns A JSX element
+ */
+function GuidebookEditSection({
+  className,
+  sectionId,
+  section,
+  onMoveDown,
+  onSave,
+  onDelete
+}: GuidebookEditSectionProps) {
+  const { title, type, content } = section;
+  const [expanded, setExpanded] = useState(false);
+  const [input, setInput] = useState<JSX.Element | null>(null);
+  const [changed, setChanged] = useState(false);
+  const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
+  const [alert, setAlert] = useState<{
+    open: boolean;
+    severity: AlertColor;
+    message: string;
+  }>({
+    open: false,
+    severity: 'error',
+    message: ''
+  });
+  const idPrefix = `${sectionId}-input-${type as string}-`;
+
+  // initialize the content input field
+  useEffect(() => {
+    let subscribed = true;
+    let component: JSX.Element | null = null;
+
+    // returns true if the arrays a and b are the same
+    const arrayEquals = (a: any[], b: any[]) => {
+      return (
+        a.length === b.length &&
+        a.every((x, i) => JSON.stringify(x) === JSON.stringify(b[i]))
+      );
+    };
+
+    switch (type) {
+      case 'text':
+        component = (
+          <GuidebookEditSectionText
+            id={idPrefix}
+            content={content}
+            placeholder={title}
+            onChange={(changed: string) => setChanged(changed !== content)}
+          />
+        );
+        break;
+
+      case 'list':
+      case 'keyValue':
+        component = (
+          <GuidebookEditSectionList
+            type={section.type as 'list' | 'keyValue'}
+            idPrefix={idPrefix}
+            content={content}
+            placeholder={title}
+            onChange={(changed: any[]) =>
+              setChanged(!arrayEquals(changed, content))
+            }
+          />
+        );
+        break;
+    }
+
+    subscribed && setInput(component);
+
+    return () => {
+      subscribed = false;
+    };
+  }, [section]);
+
+  const saveButton = useCallback(
+    (screen: 'lg' | 'sm') => {
+      return (
+        <Tooltip title="Save" arrow disableInteractive>
+          <HeaderButton
+            screen={screen}
+            variant="text"
+            onClick={(event) => {
+              event.stopPropagation();
+
+              let update: any = null;
+              const selector = `textarea[id^=${idPrefix}]`;
+
+              switch (type) {
+                case 'text':
+                  update =
+                    document.querySelector<HTMLInputElement>(selector)?.value;
+                  break;
+
+                case 'list':
+                  update = Array.from(
+                    document.querySelectorAll<HTMLInputElement>(selector),
+                    (x) => x?.value
+                  );
+                  break;
+
+                case 'keyValue':
+                  break;
+              }
+
+              onSave(sectionId, update).then((res) => {
+                if (res) setChanged(false);
+                else {
+                  setAlert({
+                    open: true,
+                    severity: 'error',
+                    message: 'Unable to save at this time. Please try again.'
+                  });
+                }
+              });
+            }}
+            sx={{ visibility: changed ? 'visible' : 'hidden' }}
+          >
+            <SaveOutlined />
+          </HeaderButton>
+        </Tooltip>
+      );
+    },
+    [sectionId, changed]
+  );
+
+  const deleteButton = useCallback((screen: 'lg' | 'sm') => {
+    return (
+      <Tooltip title="Delete" arrow disableInteractive>
+        <HeaderButton
+          screen={screen}
+          variant="text"
+          onClick={(event) => {
+            event.stopPropagation();
+            setDeleteConfirmOpen(true);
+          }}
+          sx={{ visibility: onDelete ? 'visible' : 'hidden' }}
+        >
+          <DeleteOutlined />
+        </HeaderButton>
+      </Tooltip>
+    );
+  }, []);
+
+  return (
+    <div className={className}>
+      <Accordion expanded={expanded}>
+        <AccordionSummary
+          expandIcon={<ExpandMore />}
+          onClick={() => setExpanded(!expanded)}
+        >
+          <AccordionSummaryContent>
+            <TitleContainer>
+              <Tooltip title="Move down" arrow disableInteractive>
+                <Button
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    onMoveDown?.(sectionId);
+                  }}
+                  sx={{
+                    padding: '4px',
+                    minWidth: 'fit-content',
+                    visibility: onMoveDown ? 'visible' : 'hidden'
+                  }}
+                >
+                  <MoveDown />
+                </Button>
+              </Tooltip>
+              <h5>{section.title}</h5>
+              {!expanded && changed && (
+                <UnsavedChangesWrapper>(unsaved changes)</UnsavedChangesWrapper>
+              )}
+            </TitleContainer>
+            <ButtonGroup size="small">
+              {saveButton('lg')}
+              {deleteButton('lg')}
+            </ButtonGroup>
+          </AccordionSummaryContent>
+        </AccordionSummary>
+        <AccordionDetails>
+          <HeaderButtonContainer>
+            <ButtonGroup size="small">
+              {saveButton('sm')}
+              {deleteButton('sm')}
+            </ButtonGroup>
+          </HeaderButtonContainer>
+          {input}
+        </AccordionDetails>
+      </Accordion>
+      <ConfirmCancelDialog
+        open={deleteConfirmOpen}
+        onClose={() => setDeleteConfirmOpen(false)}
+        text="Are you sure you want to delete this section? This action cannot be undone."
+        confirm={{
+          text: 'Yes',
+          action: () => {
+            onDelete?.(sectionId).then((res) => {
+              if (!res) {
+                // TODO: FIX BUG: alert is not being set here, possibly due to the way
+                // the action function is being called in confirm cancel dialog? Not sure...
+                setAlert({
+                  open: true,
+                  severity: 'error',
+                  message: 'Unable to delete at this time. Please try again.'
+                });
+              }
+            });
+          }
+        }}
+        cancel={{ text: 'No' }}
+      />
+      <AlertPopup
+        open={alert.open}
+        onClose={() => setAlert({ ...alert, open: false })}
+        severity={alert.severity}
+        message={alert.message}
+      />
+    </div>
+  );
+}
+
+const AccordionSummaryContent = styled.div`
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin-right: 8px;
+`;
+
+const TitleContainer = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  h5 {
+    margin: 0;
+  }
+`;
+
+const UnsavedChangesWrapper = styled.span`
+  display: none;
+
+  ${theme.screen.small} {
+    display: inline;
+    color: rgba(0, 0, 0, 0.25);
+    font-size: smaller;
+  }
+`;
+
+/*
+  workaround for passing custom props to mui components. The explanation below is actually
+  for Styled-Components and not Emotion, but I believe the issue is similar
+  Explanation: https://github.com/styled-components/styled-components/issues/1198#issuecomment-336628848
+  Fix: https://stackoverflow.com/questions/71128841/mui-system-how-to-pass-transient-props-to-styled
+*/
+const HeaderButton = styled(Button, {
+  shouldForwardProp: (prop) => prop !== 'screen'
+})<{ screen?: 'lg' | 'sm' }>`
+  display: ${(props) => (props?.screen === 'lg' ? 'flex' : 'none')};
+  min-width: fit-content;
+  padding: 4px;
+
+  ${theme.screen.small} {
+    display: ${(props) => (props?.screen === 'sm' ? 'flex' : 'none')};
+  }
+`;
+
+const HeaderButtonContainer = styled.div`
+  display: flex;
+  justify-content: right;
+`;
+
+export default GuidebookEditSection;
