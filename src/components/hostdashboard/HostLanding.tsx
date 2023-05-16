@@ -50,7 +50,7 @@ function HostLanding() {
         return await res.json();
       })
       .then((data) => {
-        setReviews(JSON.parse(JSON.stringify(data)));
+        setReviews(data);
         // console.log(reviews);
       });
   }, []);
