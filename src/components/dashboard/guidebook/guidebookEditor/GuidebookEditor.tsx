@@ -1,11 +1,11 @@
 import styled from '@emotion/styled';
 import { Box, FormControlLabel, Stack, Switch } from '@mui/material';
 import { GuidebookDto2 } from '../../../../utils/dtos';
-import AppContext from '../../../../context/AppContext';
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { theme } from '../../../../utils/styles';
 import GuidebookEditSection from './GuidebookEditSection';
 import gb from './gb1.json';
+import { useParams } from 'react-router-dom';
 
 /**
  * Generates a object key name for a new custom guidebook section
@@ -38,7 +38,7 @@ export interface GuidebookEditorProps {
  * @returns A JSX element
  */
 function GuidebookEditor({ className }: GuidebookEditorProps) {
-  const { reservation } = useContext(AppContext);
+  const { propId } = useParams();
   const [guestView, setGuestView] = useState(false);
   const [guidebook, setGuidebook] = useState<GuidebookDto2 | null>(null);
   const [order, setOrder] = useState<string[]>([]);
@@ -47,7 +47,7 @@ function GuidebookEditor({ className }: GuidebookEditorProps) {
   useEffect(() => {
     let subscribed = true;
 
-    if (reservation) {
+    if (propId) {
       (async function () {
         // TODO:
         // const gb: GuidebookDto2 = await fetch(
@@ -63,7 +63,7 @@ function GuidebookEditor({ className }: GuidebookEditorProps) {
     return () => {
       subscribed = false;
     };
-  }, [reservation]);
+  }, [propId]);
 
   const handleSave = async (
     sectionId: string,

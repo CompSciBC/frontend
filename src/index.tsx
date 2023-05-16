@@ -66,7 +66,7 @@ export const routes = {
   addReservation: '/reservations/add/:resId',
   dashboard: '/reservations/:resId/dashboard',
   guidebook: '/reservations/:resId/guidebook',
-  guidebookEdit: '/reservations/:resId/guidebook/edit',
+  guidebookEdit: '/hostLanding/:propId/guidebook/edit',
   invite: '/reservations/:resId/invite',
   chat: '/reservations/:resId/chat',
   inbox: 'inbox/:userId',
