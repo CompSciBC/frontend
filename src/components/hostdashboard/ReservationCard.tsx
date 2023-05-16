@@ -73,13 +73,9 @@ export default function ReservationCard({
         <img src={propertyPhoto} />
       </ImageContainer>
       { newGuest?
-        <Link to={chatLink}>
-          <InviteButton> 📨 &nbsp;Invite </InviteButton>
-        </Link>
+        <InviteButton to={chatLink}> 📨 &nbsp;Invite </InviteButton>
         :
-        <Link to={chatLink}>
-          <MessageButton> 💬 &nbsp; Message </MessageButton>
-        </Link>
+        <MessageButton to={chatLink}> 💬 &nbsp; Message </MessageButton>
       }
       <PropertyName>
         {' '}
@@ -99,7 +95,7 @@ const Container = styled.div`
   border-radius: 16px;
 `;
 
-const MessageButton = styled.div`
+const MessageButton = styled(Link)`
   position: relative;
   top: 12%;
   right: 96%;
@@ -112,10 +108,11 @@ const MessageButton = styled.div`
   padding: 10px;
   text-transform: uppercase;
   ${theme.font.subHeading}
+  text-decoration: none;
   color: ${theme.color.white}
 `;
 
-const InviteButton = styled.div`
+const InviteButton = styled(Link)`
   position: relative;
   top: 12%;
   right: 96%;
@@ -128,6 +125,7 @@ const InviteButton = styled.div`
   padding: 10px;
   text-transform: uppercase;
   ${theme.font.subHeading}
+  text-decoration: none;
   color: ${theme.color.white}
 `;
 
