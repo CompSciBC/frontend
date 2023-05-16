@@ -96,11 +96,11 @@ function HostLanding() {
           </a>
         </WidgetTitle>
         <ReservationsButtons>
-          <button autoFocus onFocus={() => setReservationButton('getCurrent')}>
+          <button autoFocus onClick={() => setReservationButton('getCurrent')}>
             {' '}
             Currently hosting{' '}
           </button>
-          <button onFocus={() => setReservationButton('getUpcoming')}>
+          <button onClick={() => setReservationButton('getUpcoming')}>
             {' '}
             Upcoming{' '}
           </button>
