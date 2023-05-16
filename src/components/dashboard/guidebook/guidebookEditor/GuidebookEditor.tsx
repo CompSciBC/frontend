@@ -1,11 +1,11 @@
 import styled from '@emotion/styled';
 import { Box, FormControlLabel, Stack, Switch } from '@mui/material';
-import { GuidebookDto2 } from '../../../../utils/dtos';
+import { GuidebookDto } from '../../../../utils/dtos';
 import { useEffect, useState } from 'react';
 import { theme } from '../../../../utils/styles';
 import GuidebookEditSection from './GuidebookEditSection';
-import gb from './gb1.json';
 import { useParams } from 'react-router-dom';
+import { server } from '../../../..';
 
 /**
  * Generates a object key name for a new custom guidebook section
@@ -40,7 +40,7 @@ export interface GuidebookEditorProps {
 function GuidebookEditor({ className }: GuidebookEditorProps) {
   const { propId } = useParams();
   const [guestView, setGuestView] = useState(false);
-  const [guidebook, setGuidebook] = useState<GuidebookDto2 | null>(null);
+  const [guidebook, setGuidebook] = useState<GuidebookDto | null>(null);
   const [order, setOrder] = useState<string[]>([]);
 
   // retrieve guidebook content from api
@@ -49,14 +49,12 @@ function GuidebookEditor({ className }: GuidebookEditorProps) {
 
     if (propId) {
       (async function () {
-        // TODO:
-        // const gb: GuidebookDto2 = await fetch(
-        //   `${server}/api/guidebook/${reservation.propertyId}/content`
-        // ).then(async (res) => await res.json());
-
-        // subscribed && setGuidebook(gb);
-        subscribed && setGuidebook(gb as unknown as GuidebookDto2);
-        subscribed && setOrder(gb.sections);
+        fetch(`${server}/api/guidebook/${propId}/content`)
+          .then(async (res) => await res.json())
+          .then((gb: GuidebookDto) => {
+            subscribed && setGuidebook(gb);
+            subscribed && setOrder(gb.sections);
+          });
       })();
     }
 
@@ -70,7 +68,7 @@ function GuidebookEditor({ className }: GuidebookEditorProps) {
     update: any
   ): Promise<boolean> => {
     if (guidebook) {
-      const updatedGuidebook: GuidebookDto2 = {
+      const updatedGuidebook: GuidebookDto = {
         ...guidebook,
         [sectionId]: {
           ...guidebook[sectionId],
@@ -95,7 +93,7 @@ function GuidebookEditor({ className }: GuidebookEditorProps) {
       const updatedGuidebook = {
         ...guidebook,
         sections: newSections
-      } as GuidebookDto2;
+      } as GuidebookDto;
 
       // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
       delete updatedGuidebook[sectionId];
