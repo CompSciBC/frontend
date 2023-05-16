@@ -1,7 +1,16 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { useContext, useState, useEffect } from 'react';
 import AppContext from '../../context/AppContext';
-import { Typography, TextField, Paper, Box, Grid, Avatar, Container, Button } from '@mui/material';
+import {
+  Typography,
+  TextField,
+  Paper,
+  Box,
+  Grid,
+  Avatar,
+  Container,
+  Button
+} from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { User } from '../../utils/dtos';
 import EditIcon from '@mui/icons-material/Edit';
@@ -13,7 +22,7 @@ const Item = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
   padding: theme.spacing(1),
   textAlign: 'center',
-  color: theme.palette.text.secondary,
+  color: theme.palette.text.secondary
 }));
 
 const month = [
@@ -32,14 +41,14 @@ const month = [
 ];
 
 interface UserAttribute {
-  value : string;
+  value: string;
   label: string;
   editable?: boolean;
 }
 
 function Profile() {
   const { user } = useContext(AppContext);
-  const userInfo : User = user!;
+  const userInfo: User = user!;
   const today = new Date();
   const [joinedDate, setJoinedDate] = useState<Date>(today);
   useEffect(() => {
@@ -73,7 +82,7 @@ function Profile() {
       label: 'Phone',
       value: userInfo?.phone,
       editable: true
-    },
+    }
   ]);
   const [editMode, setEditMode] = useState(false);
   const changeEditMode = () => {
@@ -81,11 +90,25 @@ function Profile() {
   };
 
   const saveData = () => {
-    console.log(content);
+    const userId: String = user!.userId;
+    const firstName: String = content[0].value;
+    const lastName: String = content[1].value;
+    const phone: String = content[3].value;
+    (async function () {
+      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+      const response = await fetch(`${server}/api/users/update?userId=${userId}&firstName=${firstName}&lastName=${lastName}&phone=${phone}`, {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json;charset=UTF-8'
+        },
+      });
+      const body = await response.json();
+      // console.log(body);
+    })();
     changeEditMode();
   };
 
-  const handleInputChange = (event: any, field : any, index: number) => {
+  const handleInputChange = (event: any, field: any, index: number) => {
     // console.log(field);
     // console.log(event.target.value);
     const contentCopy = content;
@@ -99,32 +122,73 @@ function Profile() {
     // console.log(`content = ${JSON.stringify(content)}`);
   };
   return (
-      <Container maxWidth="md">
-        <Box sx={{ mt: 10, }} >
-          <Grid container wrap="nowrap" spacing={1}>
-            <Grid item xs={2}>
-              <Avatar alt={userInitials} src="/static/images/avatar/1.jpg" sx={{ width: 120, height: 120, fontSize: '50px' }} style={{ background: 'linear-gradient(to bottom right, #bcfb69, #26bbac)' }}/>
-            </Grid>
-            <Grid item xs={9} sx={{ mt: 1 }} justifyContent="center" alignItems="flex-start" >
-              <Typography sx={{ fontFamily: 'Roboto', fontWeight: 500, fontSize: '30px', color: '#005B00',
-              }} textTransform="uppercase">{user!.firstName} {user!.lastName}</Typography>
-              <Typography fontStyle="italic" sx={{ fontFamily: 'Roboto', fontWeight: 300, fontSize: '18px', color: 'grey',
-              }}>{user!.role?.charAt(0).toUpperCase()}{user!.role?.slice(1)} on BeMyGuest since {month[joinedDate.getMonth()]} {joinedDate.getFullYear()} </Typography>
-              {
-                (editMode) ?
-                <Button startIcon={<SaveIcon />} size="medium" color="success" onClick={saveData}>
-                  Save
-                </Button>
-                :
-                <Button startIcon={<EditIcon />} size="medium" color="inherit" onClick={changeEditMode}>
-                  Edit
-                </Button>
-              }
-              
-            </Grid>
+    <Container maxWidth="md">
+      <Box sx={{ mt: 10 }}>
+        <Grid container wrap="nowrap" spacing={1}>
+          <Grid item xs={2}>
+            <Avatar
+              alt={userInitials}
+              src="/static/images/avatar/1.jpg"
+              sx={{ width: 120, height: 120, fontSize: '50px' }}
+              style={{
+                background: 'linear-gradient(to bottom right, #bcfb69, #26bbac)'
+              }}
+            />
           </Grid>
-        </Box>
-        {/* <Box sx={{ mt: 5, }} >
+          <Grid
+            item
+            xs={9}
+            sx={{ mt: 1 }}
+            justifyContent="center"
+            alignItems="flex-start"
+          >
+            <Typography
+              sx={{
+                fontFamily: 'Roboto',
+                fontWeight: 500,
+                fontSize: '30px',
+                color: '#005B00'
+              }}
+              textTransform="uppercase"
+            >
+              {user!.firstName} {user!.lastName}
+            </Typography>
+            <Typography
+              fontStyle="italic"
+              sx={{
+                fontFamily: 'Roboto',
+                fontWeight: 300,
+                fontSize: '18px',
+                color: 'grey'
+              }}
+            >
+              {user!.role?.charAt(0).toUpperCase()}
+              {user!.role?.slice(1)} on BeMyGuest since{' '}
+              {month[joinedDate.getMonth()]} {joinedDate.getFullYear()}{' '}
+            </Typography>
+            {editMode ? (
+              <Button
+                startIcon={<SaveIcon />}
+                size="medium"
+                color="success"
+                onClick={saveData}
+              >
+                Save
+              </Button>
+            ) : (
+              <Button
+                startIcon={<EditIcon />}
+                size="medium"
+                color="inherit"
+                onClick={changeEditMode}
+              >
+                Edit
+              </Button>
+            )}
+          </Grid>
+        </Grid>
+      </Box>
+      {/* <Box sx={{ mt: 5, }} >
           {content.map((field, index) => (
             <Grid container spacing={2} key={index} sx={{mt: 5, ml: 2}}>
               <Grid item xs={3} >
@@ -138,35 +202,58 @@ function Profile() {
             </Grid>
           ))}
         </Box> */}
-        <Box sx={{ mt: 5, }} >
-          {content.map((field, index) => (
-            <Grid container spacing={2} key={index} sx={{mt: 5, ml: 2}}>
-              <Grid item xs={4} >
-                <Typography sx={{ fontFamily: 'Roboto', fontWeight: 400, fontSize: '20px', color: 'grey',
-                }}> {field.label} </Typography>
-              </Grid>
-              <Grid item xs={7} textAlign="center">
-                {
-                  (editMode && field.editable) ?
-                  <TextField
-                    id="standard-multiline-flexible"
-                    onChange={() => handleInputChange(event, field, index)}
-                    multiline
-                    variant="standard"
-                    placeholder={field.value}
-                    fullWidth
-                    inputProps={{style: {fontFamily: 'Roboto', fontWeight: 600, fontSize: '20px', color: 'grey'}}}
-                  />
-                  :
-                  <Typography sx={{ fontFamily: 'Roboto', fontWeight: 600, fontSize: '20px', color: 'grey',
-                }}> {field.value} </Typography>
-                }
-              </Grid>
+      <Box sx={{ mt: 5 }}>
+        {content.map((field, index) => (
+          <Grid container spacing={2} key={index} sx={{ mt: 5, ml: 2 }}>
+            <Grid item xs={4}>
+              <Typography
+                sx={{
+                  fontFamily: 'Roboto',
+                  fontWeight: 400,
+                  fontSize: '20px',
+                  color: 'grey'
+                }}
+              >
+                {' '}
+                {field.label}{' '}
+              </Typography>
             </Grid>
-          ))}
-        </Box>
-      </Container>
-
+            <Grid item xs={7} textAlign="center">
+              {editMode && field.editable ? (
+                <TextField
+                  id="standard-multiline-flexible"
+                  onChange={() => handleInputChange(event, field, index)}
+                  multiline
+                  variant="standard"
+                  placeholder={field.value}
+                  fullWidth
+                  inputProps={{
+                    style: {
+                      fontFamily: 'Roboto',
+                      fontWeight: 600,
+                      fontSize: '20px',
+                      color: 'grey'
+                    }
+                  }}
+                />
+              ) : (
+                <Typography
+                  sx={{
+                    fontFamily: 'Roboto',
+                    fontWeight: 600,
+                    fontSize: '20px',
+                    color: 'grey'
+                  }}
+                >
+                  {' '}
+                  {field.value}{' '}
+                </Typography>
+              )}
+            </Grid>
+          </Grid>
+        ))}
+      </Box>
+    </Container>
   );
 }
 
