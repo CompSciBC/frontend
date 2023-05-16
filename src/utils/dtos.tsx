@@ -197,3 +197,17 @@ export interface Message {
   time: Date;
   message: string;
 }
+
+export interface SurveyData {
+  reservationId: string;
+  property: Property;
+  guest: User;
+  qualityMetrics: {};
+  submissionTime: Date;
+  surveyResponse: string;
+}
+
+export interface SurveyMetrics {
+  hostId: string;
+  surveyResponses: SurveyData[];
+}
