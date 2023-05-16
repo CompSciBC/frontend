@@ -7,17 +7,15 @@ import SockJS from 'sockjs-client';
 import styled from '@emotion/styled';
 import { theme } from '../../utils/styles';
 import { server } from '../..';
-import { SortedReservationDetailSet } from '../../utils/dtos';
-// import Chat from './Chat';
+import { SortedReservationDetailSet, Reservation } from '../../utils/dtos';
 
 let stompClient: any = null;
-const hostUserName: string = 'Host';
-// const groupChatName: string = 'Group';
-// const groupHeader: string = '';
+// const hostUserName: string = 'Host';
 let firstChatId: string = ' ';
+let firstChatTitle: string = ' ';
 let chatRoomTitle: string = '';
-const resId: string = '';
-
+// const resId: string = '';
+let propertyName: string = '';
 
 interface Message {
   reservationId: string;
@@ -35,9 +33,6 @@ interface ChatsServerResponse {
 
 function Inbox() {
   const { user } = useContext(AppContext);
-
-  // const { resId } = useParams() as { resId: string };
-
   const [userData, setUserData] = useState({
     userId: user!.userId,
     username: user!.username,
@@ -58,9 +53,9 @@ function Inbox() {
 
   /* use a map object where key is a receiver and value is a message
    */
-  const [privateChats, setPrivateChats] = useState(
-    new Map<string, Message[]>()
-  );
+  const [inboxChats, setInboxChats] = useState(new Map<string, Message[]>());
+  const [chatTitle, setChatTitle] = useState(new Map<string, string>());
+
   // const [groupChat, setGroupChat] = useState<Message[]>([]);
 
   /* use this trick to prevent double loading of data. It looks like that an additional loading erases GroupChat array.
@@ -70,6 +65,19 @@ function Inbox() {
   /* set as a string
    */
   const [tab, setTab] = useState('');
+
+  const onError = (err: any) => {
+    console.log(err);
+  };
+
+  const onInboxMessage = (payload: any) => {
+    const payloadData: Message = JSON.parse(payload.body);
+    console.log(payloadData);
+    const chatName: string = payloadData.chatId;
+
+    inboxChats.get(chatName)!.push(payloadData);
+    setInboxChats(new Map(inboxChats));
+  };
 
   useEffect(() => {
     setUserData({
@@ -87,117 +95,142 @@ function Inbox() {
     }
     if (userData.userLoaded) {
       pageState.loaded = true;
+      // Join two API calls for messages and reservation details
+      // define urls for API calls
       const loadUrl = `${server}/api/chat/load/inbox/${userData.userId}`;
-      fetch(loadUrl, {
+      const reservationUrl = `${server}/api/reservations-by-status?index=${user?.role}&id=${user?.userId}`;
+
+      // load promise for both calls
+      // these promises are then passed as an array to Promise.all(), which waits for both promises to resolve before continuing.
+      // Once both promises are resolved, the then() callback for Promise.all() is called with an array of the results from both promises.
+
+      const loadPromise = fetch(loadUrl, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' }
+      }).then(async (response) => await response.json());
+
+      const reservationPromise = fetch(reservationUrl, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' }
       })
         .then(async (response) => await response.json())
-        .then((chats: ChatsServerResponse) => {
+        .then((responseJson) => {
+          const data: SortedReservationDetailSet = responseJson.data[0];
+          const reservations: Reservation[] = Object.values(data).flat();
+          const reservationMap = new Map<string, Reservation>();
+          for (const reservation of reservations) {
+            reservationMap.set(reservation.id, reservation);
+          }
+          // Return the reservationMap in the promise to be accessed by Promise.all
+          return reservationMap;
+        });
+
+      Promise.all([loadPromise, reservationPromise]).then(
+        ([chats, reservationsMap]) => {
           const Sock = new SockJS(`${server}/ws`);
 
           stompClient = over(Sock);
           stompClient.connect(
             {},
             () => {
-              onConnected(chats);
+              onConnected(chats, reservationsMap);
             },
             onError
           );
-        });
-
-      fetch(`${server}/api/reservations-by-status?index=${user?.role}&id=${user?.userId}`,{
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json' }
-      })
-      .then(async (response) => await response.json())
-      .then((responseJson) => {
-        const data: SortedReservationDetailSet = responseJson.data[0];
-        console.log(data);
-      });
+        }
+      );
     }
   }, [userData]);
 
-  const onConnected = (chats: ChatsServerResponse) => {
-    stompClient.subscribe(`/user/${userData.userId}/inbox`, onPrivateMessage);
+  const onConnected = (
+    chats: ChatsServerResponse,
+    reservationsMap: Map<string, Reservation>
+  ) => {
+    stompClient.subscribe(`/user/${userData.userId}/inbox`, onInboxMessage);
 
     for (const chatId in chats) {
       const chatName = chatId;
       const messages = chats[chatId];
-      privateChats.set(chatName, messages);
+      console.log('chatName', chatName);
+      inboxChats.set(chatName, messages);
+
+      const reservationId = chatName.includes('_')
+        ? chatName.split('_')[0]
+        : chatName;
+
+      //  console.log('reservationId', reservationId);
+        if (chatName.includes('_')) {
+        propertyName =
+          'Host ' + reservationsMap.get(reservationId)!.property.name;
+      } else {
+        propertyName =
+          'Group ' + reservationsMap.get(reservationId)!.property.name;
+      }
+      console.log('chatTitle', propertyName);
+      chatTitle.set(chatName, propertyName);
     }
-    setPrivateChats(privateChats);
-    firstChatId = privateChats.keys().next().value;
+    setInboxChats(inboxChats);
+    setChatTitle(chatTitle);
+
+    firstChatId = inboxChats.keys().next().value;
+    console.log(firstChatId);
     setTab(firstChatId);
+
+    firstChatTitle = chatTitle.keys().next().value;
+    console.log(firstChatTitle);
+    
+    // setTab(firstChatId);  
+
   };
 
-  // const onGroupMessage = (payload: any) => {
-  //   const payloadData = JSON.parse(payload.body);
-  //   groupChat.push(payloadData as never);
-  //   setGroupChat([...groupChat]);
+  // const handleMessage = (event: any) => {
+  //   const { value } = event.target;
+  //   setUserData({ ...userData, message: value });
   // };
 
-  const onPrivateMessage = (payload: any) => {
-    const payloadData: Message = JSON.parse(payload.body);
-    console.log(payloadData);
-    const chatName: string = payloadData.chatId;
+  // const sendMessage = () => {
+  //   let chatId: string = '';
+  //   let receiverName: string | undefined;
 
-    privateChats.get(chatName)!.push(payloadData);
-    setPrivateChats(new Map(privateChats));
-  };
+  //   if (tab.includes('Group')) {
+  //     chatId = resId; // Group chat Id is Reservation id.
+  //     receiverName = undefined; // No message receiver for a group chat
+  //   } else {
+  //     // private chat
+  //     if (userData.isHost) {
+  //       // For a host, Tab is the receiver guest
+  //       const name: string = tab.split(' ')[0];
 
-  const onError = (err: any) => {
-    console.log(err);
-  };
+  //       chatId = `${resId}_${name}`;
+  //       receiverName = name;
+  //     } else {
+  //       chatId = `${resId}_${userData.username}`;
+  //       receiverName = hostUserName;
+  //     }
+  //   }
 
-  const handleMessage = (event: any) => {
-    const { value } = event.target;
-    setUserData({ ...userData, message: value });
-  };
+  //   if (stompClient) {
+  //     const chatMessage: Message = {
+  //       senderName: userData.username,
+  //       message: userData.message,
+  //       reservationId: resId,
+  //       timestamp: new Date().getTime(),
+  //       receiverName,
+  //       chatId,
+  //       userId: userData.userId
+  //     };
 
-  const sendMessage = () => {
-    let chatId: string = '';
-    let receiverName: string | undefined;
+  //     if (tab.includes('Group')) {
+  //       inboxChats.get(chatId)!.push(chatMessage);
+  //       stompClient.send('/app/inbox', {}, JSON.stringify(chatMessage));
+  //     } else {
+  //       inboxChats.get(chatId)!.push(chatMessage);
+  //       stompClient.send('/app/inbox', {}, JSON.stringify(chatMessage));
+  //     }
 
-    if (tab.includes('Group')) {
-      chatId = resId; // Group chat Id is Reservation id.
-      receiverName = undefined; // No message receiver for a group chat
-    } else {
-      // private chat
-      if (userData.isHost) {
-        // For a host, Tab is the receiver guest
-        const name: string = tab.split(' ')[0];
-
-        chatId = `${resId}_${name}`;
-        receiverName = name;
-      } else {
-        chatId = `${resId}_${userData.username}`;
-        receiverName = hostUserName;
-      }
-    }
-
-    if (stompClient) {
-      const chatMessage: Message = {
-        senderName: userData.username,
-        message: userData.message,
-        reservationId: resId,
-        timestamp: new Date().getTime(),
-        receiverName,
-        chatId,
-        userId: userData.userId
-      };
-
-      if (tab.includes('Group')) {
-        privateChats.get(chatId)!.push(chatMessage);
-        stompClient.send('/app/inbox', {}, JSON.stringify(chatMessage));
-      } else {
-        privateChats.get(chatId)!.push(chatMessage);
-        stompClient.send('/app/inbox', {}, JSON.stringify(chatMessage));
-      }
-
-      setUserData({ ...userData, message: '' });
-    }
-  };
+  //     setUserData({ ...userData, message: '' });
+  //   }
+  // };
 
   return (
     <Container>
@@ -206,15 +239,13 @@ function Inbox() {
           <ChatHeader>Inbox</ChatHeader>
         </SideBarHeader>
         <ChatList>
-          {Array.from(privateChats.keys()).map((chatName, index) => {
-            chatRoomTitle = chatName.includes('_')
-              ? chatName.split('_')[1] + ' w/Host'
-              : 'Group for ' + chatName;
+          {Array.from(chatTitle.keys()).map((chatTitleKey, index) => {
             return (
               <ChatRoom
                 key={index}
                 onClick={() => {
-                  setTab(chatName);
+                  chatRoomTitle = chatTitle.has(chatTitleKey) ? chatTitle.get(chatTitleKey)! : "";                  
+                  setTab(chatTitleKey);
                 }}
               >
                 {chatRoomTitle}
@@ -224,11 +255,11 @@ function Inbox() {
         </ChatList>
       </SideBar>
 
-      {tab !== '' && privateChats.has(tab) ? (
+      {tab !== '' && inboxChats.has(tab) ? (
         <ChatContent>
           <ChatName> {chatRoomTitle} </ChatName>
           <ChatMessages id="chat-messages">
-            {[...privateChats.get(tab)!].map((message: any, index) => (
+            {[...inboxChats.get(tab)!].map((message: any, index) => (
               <MessageBlockWrapper
                 self={message.senderName === userData.username}
                 key={index}
@@ -246,15 +277,8 @@ function Inbox() {
             ))}
           </ChatMessages>
           <SendMessage id="send-message">
-            <Input
-              id="input"
-              userType={userData.username}
-              placeholder="enter the message"
-              value={userData.message}
-              onChange={handleMessage}
-            />
-            <SendButton type="button" onClick={sendMessage}>
-              send
+            <SendButton type="button" onClick={() => {window.location.href = 'https://localhost:3000';}}>
+              To send a new message go to Chat page 
             </SendButton>
           </SendMessage>
         </ChatContent>
@@ -311,17 +335,20 @@ const ChatList = styled.div`
 const ChatRoom = styled.button`
   display: flex;
   background-color: #ffffff;
-  margin-top: 13px;
+  margin-top: 10px;
+  margin-left: 10px;
   box-shadow: 0 3px 3px rgb(18 58 39 / 0.4);
-  // border-color: #539174;
-  border-radius: 10px;
+  border-color: #539174;
+  border-radius: 5px;
+  padding: 10px;
+  max-width: 200px;
   border: none;
 `;
 const ChatName = styled.h1`
   display: flex;
   align-items: center;
 
-  ${theme.font.displayXL}
+  ${theme.font.displaySmall}
 `;
 
 const ChatMessages = styled.div`
@@ -381,15 +408,15 @@ const MessageData = styled.li`
   border-radius: 10px;
   background-color: whitesmoke;
 `;
-const Input = styled.input<{ userType: string }>`
-  flex-grow: 1;
-  margin-top: 3px;
-  margin-bottom: 3 px;
-  box-shadow: 0 3px 3px rgb(18 58 39 / 0.4);
-  border-color: #539174;
-  border-radius: 15px;
-  ${theme.font.body}
-`;
+// const Input = styled.input<{ userType: string }>`
+//   flex-grow: 1;
+//   margin-top: 3px;
+//   margin-bottom: 3 px;
+//   box-shadow: 0 3px 3px rgb(18 58 39 / 0.4);
+//   border-color: #539174;
+//   border-radius: 15px;
+//   ${theme.font.body}
+// `;
 
 const SendMessage = styled.div`
   width: 75%;
@@ -401,7 +428,7 @@ const SendButton = styled.button`
   background: #b61616;
   color: #ffff;
   font-weight: bold;
-  width: 100px;
+  width: 400px;
   border-radius: 30px;
   margin-left: 5px;
   cursor: pointer;

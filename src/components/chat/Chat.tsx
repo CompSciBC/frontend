@@ -30,7 +30,7 @@ interface ChatsServerResponse {
 
 function Chat() {
   const { user } = useContext(AppContext);
-  const { reservationDetail } = useContext(AppContext);
+  const { reservation } = useContext(AppContext);
 
   const { resId } = useParams() as { resId: string };
 
@@ -159,12 +159,12 @@ function Chat() {
     let chatId: string = '';
     let receiverName: string | undefined;
     let receiverId: string | undefined;
-    console.log(reservationDetail);
+    console.log(reservation);
 
     if (tab === groupChatName) {
       chatId = resId; // Group chat Id is Reservation id.
       receiverName = undefined; // No message receiver for a group chat
-      receiverId = reservationDetail!.property.hostId; // get a hostId for saving a group messafe in a host inbox
+      receiverId = reservation!.property.hostId; // get a hostId for saving a group messafe in a host inbox
     } else {
       // private chat
       if (userData.isHost) {
@@ -175,7 +175,7 @@ function Chat() {
       } else {
         chatId = `${resId}_${userData.username}`;
         receiverName = undefined;
-        receiverId = reservationDetail!.property.hostId;
+        receiverId = reservation!.property.hostId;
       }
     }
 
