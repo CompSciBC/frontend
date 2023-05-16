@@ -9,6 +9,7 @@ export const theme = {
     heading: 'font: normal normal 700 20px/26px Roboto, sans-serif;',
     subHeading: 'font: normal normal 700 14px/16px Roboto, sans-serif;',
     body: 'font: normal normal 400 16px/20px "Reem Kufi", sans-serif;',
+    placeholder: 'font: normal normal lighter 30px/34px "Krub", sans-serif;',
     guidebookBody: 'font: normal normal 400 18px/22px "Reem Kufi", sans-serif;',
     button: 'font: normal normal 500 16px/20px "Reem Kufi", sans-serif;',
     caption: 'font: normal normal 400 13px/20px "Reem Kufi", sans-serif;',

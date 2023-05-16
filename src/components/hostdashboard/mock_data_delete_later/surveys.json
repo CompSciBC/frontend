@@ -1,40 +1,144 @@
 {
-  "status": 200,
-  "data": [
+  "hostId": "652ac46b-f438-45e6-95c0-bb7cc6029db8",
+  "surveyResponses": [
     {
-      "reservationId": "winterquarter-16",
-      "guestId": "902f3550-1b7c-4826-b303-2aed6982f79b",
-      "hostId": "7171e252-60d8-48ab-a6ec-dedd49692266",
-      "propertyId": "PID0000ANG",
-      "submissionTime": "2023-03-15T20:48:08",
-      "surveyResponse": "{\n   \"discovery-source\": \"Search engine (Google, Bing, etc.)\",\n   \"quality\": {\n      \"communication-needs-are-met\": 2,\n      \"information-needs-are-met\": 3,\n      \"improvements-required\": 4,\n      \"host-communication\": 3\n   },\n   \"product-aspects-ranked\": [\n      \"Chat with Host\",\n      \"Technical support\",\n      \"Dashboard - Weather Information\",\n      \"Dashboard - Maps Information\",\n      \"Dashboard - Events and Places Information\",\n      \"Guidebook\",\n      \"Dashboard - Restaurants Information\",\n      \"Group chat with other guests in the party\"\n   ],\n   \"suggestions-bmg\": \"no\",\n   \"booking-platform\": \"Expedia.com\",\n   \"have-additional-thoughts\": true,\n   \"additional-thoughts\": \"no\"\n}"
+      "reservationId": "5cbd1059-4142-477d-85f6-674d1003b38e",
+      "guest": {
+        "userID": "ec1f8784-77f5-4c4f-84c7-7eee4db0f0e2",
+        "email": "hieu.do@bellevuecollege.edu",
+        "firstName": "Hieu",
+        "joinedOn": "2023-02-27",
+        "lastName": "Do",
+        "phone": "+11234567890",
+        "role": "guest",
+        "username": "hndo_guest4"
+      },
+      "property": {
+        "id": "HDPID0000QCH",
+        "hostId": "652ac46b-f438-45e6-95c0-bb7cc6029db8",
+        "name": "Hieu's Quartz Cavern Wellness Retreat",
+        "address": {
+          "line1": "377 Cavern Route Rd",
+          "line2": null,
+          "city": "Salt Lake City",
+          "stateProvince": "Utah",
+          "postalCode": "84101",
+          "country": "United States"
+        }
+      },
+      "qualityMetrics": {
+        "host-communication-timeliness": 5,
+        "location": 4,
+        "cleanliness": 3
+      },
+      "submissionTime": "2023-05-14T10:31:41",
+      "surveyResponse": "{\n   \"quality\": {\n      \"cleanliness\": 3,\n      \"location\": 4,\n      \"host-communication-timeliness\": 5\n   }\n}"
     },
     {
-      "reservationId": "winterquarter-6",
-      "guestId": "902f3550-1b7c-4826-b303-2aed6982f79b",
-      "hostId": "7171e252-60d8-48ab-a6ec-dedd49692266",
-      "propertyId": "PID0000HMH",
-      "submissionTime": "2023-03-13T19:34:19",
-      "surveyResponse": "{\n   \"discovery-source\": \"Search engine (Google, Bing, etc.)\",\n   \"quality\": {\n      \"communication-needs-are-met\": 5,\n      \"information-needs-are-met\": 5,\n      \"ease-of-use\": 5,\n      \"improvements-required\": 5\n   },\n   \"have-additional-thoughts\": true,\n   \"additional-thoughts\": \"no\"\n}"
+      "reservationId": "27e52a7c-e88a-497e-bf9a-a430fa820224",
+      "guest": {
+        "userID": "ec1f8784-77f5-4c4f-84c7-7eee4db0f0e2",
+        "email": "hieu.do@bellevuecollege.edu",
+        "firstName": "Hieu",
+        "joinedOn": "2023-02-27",
+        "lastName": "Do",
+        "phone": "+11234567890",
+        "role": "guest",
+        "username": "hndo_guest4"
+      },
+      "property": {
+        "id": "HDPID0000JTN",
+        "hostId": "652ac46b-f438-45e6-95c0-bb7cc6029db8",
+        "name": "Hieu's Luxury Joshua Tree Desert Oasis",
+        "address": {
+          "line1": "West Desert View Drive",
+          "line2": "Property 3",
+          "city": "Joshua Tree",
+          "stateProvince": "CA",
+          "postalCode": "92252",
+          "country": "USA"
+        }
+      },
+      "qualityMetrics": {
+        "location": 4,
+        "comfort": 3,
+        "cleanliness": 2
+      },
+      "submissionTime": "2023-05-14T10:30:11",
+      "surveyResponse": "{\n   \"quality\": {\n      \"cleanliness\": 2,\n      \"comfort\": 3,\n      \"location\": 4\n   }\n}"
     },
     {
-      "reservationId": "winterquarter-21",
-      "guestId": "902f3550-1b7c-4826-b303-2aed6982f79b",
-      "hostId": "7171e252-60d8-48ab-a6ec-dedd49692266",
-      "propertyId": "PID0000HMH",
-      "submissionTime": "2023-03-14T18:55:28",
-      "surveyResponse": "{\n   \"discovery-source\": \"Search engine (Google, Bing, etc.)\",\n   \"quality\": {\n      \"communication-needs-are-met\": 5,\n      \"information-needs-are-met\": 5,\n      \"ease-of-use\": 5,\n      \"improvements-required\": 5,\n      \"host-communication\": 1,\n      \"cleanliness\": 1\n   },\n   \"product-aspects-ranked\": [\n      \"Chat with Host\",\n      \"Guidebook\",\n      \"Dashboard - Weather Information\",\n      \"Technical support\",\n      \"Dashboard - Events and Places Information\",\n      \"Dashboard - Restaurants Information\",\n      \"Dashboard - Maps Information\",\n      \"Group chat with other guests in the party\"\n   ],\n   \"suggestions-bmg\": \"free food\",\n   \"booking-platform\": \"Airbnb\"\n}"
+      "reservationId": "e234b2fd-01c5-4aa0-880c-eecee29e2087",
+      "guest": {
+        "userID": "ec1f8784-77f5-4c4f-84c7-7eee4db0f0e2",
+        "email": "hieu.do@bellevuecollege.edu",
+        "firstName": "Hieu",
+        "joinedOn": "2023-02-27",
+        "lastName": "Do",
+        "phone": "+11234567890",
+        "role": "guest",
+        "username": "hndo_guest4"
+      },
+      "property": {
+        "id": "HDPID0000JTN",
+        "hostId": "652ac46b-f438-45e6-95c0-bb7cc6029db8",
+        "name": "Hieu's Luxury Joshua Tree Desert Oasis",
+        "address": {
+          "line1": "West Desert View Drive",
+          "line2": "Property 3",
+          "city": "Joshua Tree",
+          "stateProvince": "CA",
+          "postalCode": "92252",
+          "country": "USA"
+        }
+      },
+      "qualityMetrics": {
+        "amenities": 5,
+        "value-for-money": 5,
+        "comfort": 5,
+        "cleanliness": 4,
+        "host-communication-ease": 4
+      },
+      "submissionTime": "2023-05-14T10:31:25",
+      "surveyResponse": "{\n   \"booking-platform\": \"Expedia.com\",\n   \"quality\": {\n      \"cleanliness\": 4,\n      \"comfort\": 5,\n      \"value-for-money\": 5,\n      \"host-communication-ease\": 4,\n      \"amenities\": 5\n   }\n}"
     },
     {
-      "reservationId": "winterquarter-1",
-      "guestId": "test-guest-1",
-      "hostId": "7171e252-60d8-48ab-a6ec-dedd49692266",
-      "propertyId": "PID0000ANG",
-      "submissionTime": "2023-03-14T23:50:11",
-      "surveyResponse": "{\n   \"discovery-source\": \"Search engine (Google, Bing, etc.)\",\n   \"quality\": {\n      \"communication-needs-are-met\": 5,\n      \"information-needs-are-met\": 5,\n      \"ease-of-use\": 5,\n      \"improvements-required\": 5\n   },\n   \"product-aspects-ranked\": [\n      \"Guidebook\",\n      \"Group chat with other guests in the party\",\n      \"Chat with Host\",\n      \"Dashboard - Weather Information\",\n      \"Dashboard - Maps Information\",\n      \"Dashboard - Events and Places Information\",\n      \"Dashboard - Restaurants Information\",\n      \"Technical support\"\n   ]\n}"
+      "reservationId": "776e8cfb-509f-4d05-adfb-61507dc14aff",
+      "guest": {
+        "userID": "ec1f8784-77f5-4c4f-84c7-7eee4db0f0e2",
+        "email": "hieu.do@bellevuecollege.edu",
+        "firstName": "Hieu",
+        "joinedOn": "2023-02-27",
+        "lastName": "Do",
+        "phone": "+11234567890",
+        "role": "guest",
+        "username": "hndo_guest4"
+      },
+      "property": {
+        "id": "HDPID0000QCH",
+        "hostId": "652ac46b-f438-45e6-95c0-bb7cc6029db8",
+        "name": "Hieu's Quartz Cavern Wellness Retreat",
+        "address": {
+          "line1": "377 Cavern Route Rd",
+          "line2": null,
+          "city": "Salt Lake City",
+          "stateProvince": "Utah",
+          "postalCode": "84101",
+          "country": "United States"
+        }
+      },
+      "qualityMetrics": {
+        "amenities": 4,
+        "value-for-money": 5,
+        "host-communication-timeliness": 5,
+        "guidebook": 5,
+        "location": 5,
+        "comfort": 5,
+        "cleanliness": 5,
+        "host-communication-ease": 5
+      },
+      "submissionTime": "2023-05-14T10:30:41",
+      "surveyResponse": "{\n   \"quality\": {\n      \"cleanliness\": 5,\n      \"comfort\": 5,\n      \"location\": 5,\n      \"value-for-money\": 5,\n      \"host-communication-ease\": 5,\n      \"host-communication-timeliness\": 5,\n      \"amenities\": 4,\n      \"guidebook\": 5\n   }\n}"
     }
-  ],
-  "message": "OK",
-  "path": "http://localhost:8080/api/surveys?index=host&id=7171e252-60d8-48ab-a6ec-dedd49692266",
-  "timestamp": "2023-04-16T15:52:19.067312"
+  ]
 }
