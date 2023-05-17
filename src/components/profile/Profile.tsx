@@ -95,13 +95,16 @@ function Profile() {
     const lastName: String = content[1].value;
     const phone: String = content[3].value;
     (async function () {
-      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-      const response = await fetch(`${server}/api/users/update?userId=${userId}&firstName=${firstName}&lastName=${lastName}&phone=${phone}`, {
-        method: 'POST',
-        headers: {
-          'content-type': 'application/json;charset=UTF-8'
-        },
-      });
+      const response = await fetch(
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+        `${server}/api/users/update?userId=${userId}&firstName=${firstName}&lastName=${lastName}&phone=${phone}`,
+        {
+          method: 'POST',
+          headers: {
+            'content-type': 'application/json;charset=UTF-8'
+          }
+        }
+      );
       const body = await response.json();
       // console.log(body);
     })();
