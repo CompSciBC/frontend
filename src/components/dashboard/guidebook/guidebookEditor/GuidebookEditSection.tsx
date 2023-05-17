@@ -17,7 +17,7 @@ import {
 import styled from '@emotion/styled';
 import { theme } from '../../../../utils/styles';
 import ConfirmCancelDialog from '../../../stuff/ConfirmCancelDialog';
-import { GuidebookSection } from '../../../../utils/dtos';
+import { GuidebookSection, KeyValue } from '../../../../utils/dtos';
 import GuidebookEditSectionText from './GuidebookEditSectionText';
 import GuidebookEditSectionList from './GuidebookEditSectionList';
 import AlertPopup from '../../../stuff/AlertPopup';
@@ -135,8 +135,22 @@ function GuidebookEditSection({
                   );
                   break;
 
-                case 'keyValue':
+                case 'keyValue': {
+                  const inputs = Array.from(
+                    document.querySelectorAll<HTMLInputElement>(selector),
+                    (x) => x?.value
+                  );
+                  const kv: KeyValue[] = [];
+
+                  for (let i = 0; i < inputs.length; i += 2) {
+                    kv.push({
+                      key: inputs[i],
+                      value: inputs[i + 1]
+                    });
+                  }
+                  update = kv;
                   break;
+                }
               }
 
               onSave(sectionId, update).then((res) => {
@@ -157,7 +171,7 @@ function GuidebookEditSection({
         </Tooltip>
       );
     },
-    [sectionId, changed]
+    [sectionId, changed, onSave]
   );
 
   const deleteButton = useCallback((screen: 'lg' | 'sm') => {

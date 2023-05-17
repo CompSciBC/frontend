@@ -3,7 +3,14 @@ import { GuidebookDto, KeyValue } from '../../../utils/dtos';
 import { theme } from '../../../utils/styles';
 import LightFadeCarousel from './PhotoCarousel';
 import AccordionDropdown from '../../reservations/AccordionDropdown';
-import { useState, useEffect, useContext } from 'react';
+import {
+  useState,
+  useEffect,
+  useContext,
+  useMemo,
+  useCallback,
+  Fragment
+} from 'react';
 import AppContext from '../../../context/AppContext';
 import { server } from '../../..';
 
@@ -36,6 +43,127 @@ function Guidebook() {
     };
   }, [propID]);
 
+  const propertyBio: JSX.Element | undefined = useMemo(() => {
+    if (guidebookInfo) {
+      const { content, amenities, facts, checkInInstr, checkOutInstr } =
+        guidebookInfo.propertyBio;
+
+      return (
+        <StyledAccordionDropdown
+          label="•ABOUT•"
+          isOpen={true}
+          content={
+            <div>
+              <TextParentContainer>
+                <TextContainer>{content}</TextContainer>
+                <EndofComponentSpacing />
+              </TextParentContainer>
+
+              <EnableTableScroll>
+                <AboutSectionContainerTable>
+                  <tbody>
+                    {amenities && (
+                      <AboutSectionContainerRow>
+                        <AboutSectionItem>Amenities: </AboutSectionItem>
+                        {amenities?.map((amen) => {
+                          return (
+                            <AboutSectionItem key={amen}>
+                              {amen}
+                            </AboutSectionItem>
+                          );
+                        })}
+                      </AboutSectionContainerRow>
+                    )}
+
+                    {facts.map(({ key, value }) => {
+                      return (
+                        <AboutSectionContainerRow key={key}>
+                          <AboutSectionItem>{key}: </AboutSectionItem>
+                          <AboutSectionItem>{value}</AboutSectionItem>
+                        </AboutSectionContainerRow>
+                      );
+                    })}
+
+                    {checkInInstr && (
+                      <AboutSectionContainerRow>
+                        <AboutSectionItem>
+                          Check-In Instructions:
+                        </AboutSectionItem>
+                        <AboutSectionItem>{checkInInstr}</AboutSectionItem>
+                      </AboutSectionContainerRow>
+                    )}
+
+                    {checkOutInstr && (
+                      <AboutSectionContainerRow>
+                        <AboutSectionItem>
+                          Check-Out Instructions:
+                        </AboutSectionItem>
+                        <AboutSectionItem>{checkOutInstr}</AboutSectionItem>
+                      </AboutSectionContainerRow>
+                    )}
+                  </tbody>
+                </AboutSectionContainerTable>
+              </EnableTableScroll>
+            </div>
+          }
+          smallLineStyling={true}
+        />
+      );
+    }
+  }, [guidebookInfo]);
+
+  const getSection = useCallback(
+    (sectionId: string): JSX.Element | undefined => {
+      if (guidebookInfo) {
+        const { title, type, content } = guidebookInfo[sectionId];
+        let formattedContent: JSX.Element | null = null;
+
+        switch (type) {
+          case 'text':
+            formattedContent = <>{content as string}</>;
+            break;
+
+          case 'list':
+            formattedContent = (
+              <>
+                {(content as string[])?.map((c) => {
+                  return <TextContainer key={c}>⁃ {c}</TextContainer>;
+                })}
+              </>
+            );
+            break;
+
+          case 'keyValue':
+            formattedContent = (
+              <KeyVal>
+                {(content as KeyValue[])?.map(({ key, value }) => {
+                  return (
+                    <li key={key}>
+                      <div>{key}</div>
+                      <div>{value}</div>
+                    </li>
+                  );
+                })}
+              </KeyVal>
+            );
+            break;
+        }
+        return (
+          <StyledAccordionDropdown
+            key={sectionId}
+            label={`•${title.toUpperCase()}•`}
+            isOpen={true}
+            content={
+              <TextParentContainer>{formattedContent}</TextParentContainer>
+            }
+            smallLineStyling={true}
+          />
+        );
+      }
+    },
+    [guidebookInfo]
+  );
+
   return (
     guidebookInfo &&
     guidebookImages && (
@@ -46,120 +174,13 @@ function Guidebook() {
         </ContainerCarousel>
 
         <ListContainer>
-          <StyledAccordionDropdown
-            label="•ABOUT•"
-            isOpen={true}
-            content={(function () {
-              const { content, amenities, facts, checkInInstr, checkOutInstr } =
-                guidebookInfo.propertyBio;
-              return (
-                <div>
-                  <TextParentContainer>
-                    <TextContainer>{content}</TextContainer>
-                    <EndofComponentSpacing />
-                  </TextParentContainer>
-
-                  <EnableTableScroll>
-                    <AboutSectionContainerTable>
-                      <tbody>
-                        {amenities && (
-                          <AboutSectionContainerRow>
-                            <AboutSectionItem>Amenities: </AboutSectionItem>
-                            {amenities?.map((amen) => {
-                              return (
-                                <AboutSectionItem key={amen}>
-                                  {amen}
-                                </AboutSectionItem>
-                              );
-                            })}
-                          </AboutSectionContainerRow>
-                        )}
-
-                        {facts.map(({ key, value }) => {
-                          return (
-                            <AboutSectionContainerRow key={key}>
-                              <AboutSectionItem>{key}: </AboutSectionItem>
-                              <AboutSectionItem>{value}</AboutSectionItem>
-                            </AboutSectionContainerRow>
-                          );
-                        })}
-
-                        {checkInInstr && (
-                          <AboutSectionContainerRow>
-                            <AboutSectionItem>
-                              Check-In Instructions:
-                            </AboutSectionItem>
-                            <AboutSectionItem>{checkInInstr}</AboutSectionItem>
-                          </AboutSectionContainerRow>
-                        )}
-
-                        {checkOutInstr && (
-                          <AboutSectionContainerRow>
-                            <AboutSectionItem>
-                              Check-Out Instructions:
-                            </AboutSectionItem>
-                            <AboutSectionItem>{checkOutInstr}</AboutSectionItem>
-                          </AboutSectionContainerRow>
-                        )}
-                      </tbody>
-                    </AboutSectionContainerTable>
-                  </EnableTableScroll>
-                </div>
-              );
-            })()}
-            smallLineStyling={true}
-          />
-
-          {guidebookInfo.sections
-            .filter((sectionId) => sectionId.includes('custom_'))
-            .map((sectionId) => {
-              const { title, type, content } = guidebookInfo[sectionId];
-              let formattedContent: JSX.Element | null = null;
-
-              switch (type) {
-                case 'text':
-                  formattedContent = <>{content as string}</>;
-                  break;
-
-                case 'list':
-                  formattedContent = (
-                    <>
-                      {(content as string[]).map((c) => {
-                        return <TextContainer key={c}>⁃ {c}</TextContainer>;
-                      })}
-                    </>
-                  );
-                  break;
-
-                case 'keyValue':
-                  formattedContent = (
-                    <KeyVal>
-                      {(content as KeyValue[]).map(({ key, value }) => {
-                        return (
-                          <li key={key}>
-                            <div>{key}</div>
-                            <div>{value}</div>
-                          </li>
-                        );
-                      })}
-                    </KeyVal>
-                  );
-                  break;
-              }
-              return (
-                <StyledAccordionDropdown
-                  key={sectionId}
-                  label={`•${title.toUpperCase()}•`}
-                  isOpen={true}
-                  content={
-                    <TextParentContainer>
-                      {formattedContent}
-                    </TextParentContainer>
-                  }
-                  smallLineStyling={true}
-                />
-              );
-            })}
+          {guidebookInfo.sections.map((sectionId) => (
+            <Fragment key={sectionId}>
+              {sectionId === 'propertyBio'
+                ? propertyBio
+                : getSection(sectionId)}
+            </Fragment>
+          ))}
         </ListContainer>
       </Container>
     )

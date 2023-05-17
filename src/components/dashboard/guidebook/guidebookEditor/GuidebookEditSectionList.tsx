@@ -129,7 +129,7 @@ function GuidebookEditSectionList({
   return (
     <div className={className}>
       <List dense>
-        {order.map((x, i) => {
+        {order?.map((x, i) => {
           let uniqueKey: string = '';
           switch (type) {
             case 'list':
