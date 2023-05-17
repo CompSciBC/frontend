@@ -19,6 +19,7 @@ import Reservations from './components/reservations/Reservations';
 import AddReservation from './components/reservations/AddReservation';
 import Dashboard from './components/dashboard/Dashboard';
 import Guidebook from './components/dashboard/guidebook/Guidebook';
+import GuidebookEditor from './components/dashboard/guidebook/guidebookEditor/GuidebookEditor';
 import Invite from './components/dashboard/invite/Invite';
 import Chat from './components/chat/Chat';
 import Weather from './components/dashboard/weather/Weather';
@@ -65,6 +66,7 @@ export const routes = {
   addReservation: '/reservations/add/:resId',
   dashboard: '/reservations/:resId/dashboard',
   guidebook: '/reservations/:resId/guidebook',
+  guidebookEdit: '/hostLanding/:propId/guidebook/edit',
   invite: '/reservations/:resId/invite',
   chat: '/reservations/:resId/chat',
   inbox: 'inbox/:userId',
@@ -194,6 +196,10 @@ const router = createBrowserRouter([
           {
             path: routes.guidebook,
             element: <Guidebook />
+          },
+          {
+            path: routes.guidebookEdit,
+            element: <GuidebookEditor />
           },
           {
             path: routes.invite,
