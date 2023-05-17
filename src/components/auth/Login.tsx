@@ -51,32 +51,41 @@ function Login({ className }: LoginProps) {
     } catch (error) {
       setErrorMessage('The username or password is incorrect.');
     }
+    try {
+      if (authUser) {
+        const selectedRole = getRadioValue(roleField).toLowerCase() as UserRole;
+        setRole(selectedRole);
 
-    if (authUser) {
-      const selectedRole = getRadioValue(roleField).toLowerCase() as UserRole;
-      setRole(selectedRole);
+        let userGroup = getUserGroup(authUser);
+        if (typeof userGroup === 'boolean') {
+          userGroup = selectedRole;
+          assignUserToRole(authUser.getUsername(), userGroup);
+        } else {
+          if (userGroup !== selectedRole) {
+            throw new Error('user logged in with incorrect role');
+          }
+        }
 
-      let userGroup = getUserGroup(authUser);
-      if (typeof userGroup === 'boolean') {
-        userGroup = selectedRole;
-        assignUserToRole(authUser.getUsername(), userGroup);
+        const userAttributes = await Auth.userAttributes(authUser);
+
+        const getAttribute = (name: string) =>
+          userAttributes.find((a) => a.getName() === name)?.getValue() ?? '';
+
+        setUser({
+          userId: getAttribute('sub'), // sub = userId assigned by cognito
+          username: authUser.getUsername(),
+          firstName: getAttribute('given_name'),
+          lastName: getAttribute('family_name'),
+          email: getAttribute('email'),
+          phone: getAttribute('phone_number'),
+          role: userGroup
+        });
+        setAuthenticated(true);
       }
-
-      const userAttributes = await Auth.userAttributes(authUser);
-
-      const getAttribute = (name: string) =>
-        userAttributes.find((a) => a.getName() === name)?.getValue() ?? '';
-
-      setUser({
-        userId: getAttribute('sub'), // sub = userId assigned by cognito
-        username: authUser.getUsername(),
-        firstName: getAttribute('given_name'),
-        lastName: getAttribute('family_name'),
-        email: getAttribute('email'),
-        phone: getAttribute('phone_number'),
-        role: userGroup
-      });
-      setAuthenticated(true);
+    } catch (error) {
+      setErrorMessage(
+        'The credentials you provided does not match the selected role'
+      );
     }
   };
 
