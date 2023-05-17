@@ -3,18 +3,15 @@ import React, { useState, useRef, useEffect, useContext } from 'react';
 import AppContext from '../../context/AppContext';
 import { over } from 'stompjs';
 import SockJS from 'sockjs-client';
-// import { useParams } from 'react-router-dom';
 import styled from '@emotion/styled';
 import { theme } from '../../utils/styles';
 import { server } from '../..';
 import { SortedReservationDetailSet, Reservation } from '../../utils/dtos';
 
 let stompClient: any = null;
-// const hostUserName: string = 'Host';
 let firstChatId: string = ' ';
 let firstChatTitle: string = ' ';
-let chatRoomTitle: string = '';
-// const resId: string = '';
+let currentChatTitle: string = '';
 let propertyName: string = '';
 
 interface Message {
@@ -54,7 +51,7 @@ function Inbox() {
   /* use a map object where key is a receiver and value is a message
    */
   const [inboxChats, setInboxChats] = useState(new Map<string, Message[]>());
-  const [chatTitle, setChatTitle] = useState(new Map<string, string>());
+  const [chatTitlesMap, setChatTitlesMap] = useState(new Map<string, string>());
 
   // const [groupChat, setGroupChat] = useState<Message[]>([]);
 
@@ -159,7 +156,7 @@ function Inbox() {
         : chatName;
 
       //  console.log('reservationId', reservationId);
-        if (chatName.includes('_')) {
+      if (chatName.includes('_')) {
         propertyName =
           'Host ' + reservationsMap.get(reservationId)!.property.name;
       } else {
@@ -167,70 +164,19 @@ function Inbox() {
           'Group ' + reservationsMap.get(reservationId)!.property.name;
       }
       console.log('chatTitle', propertyName);
-      chatTitle.set(chatName, propertyName);
+      chatTitlesMap.set(chatName, propertyName);
     }
     setInboxChats(inboxChats);
-    setChatTitle(chatTitle);
+    setChatTitlesMap(chatTitlesMap);
 
     firstChatId = inboxChats.keys().next().value;
     console.log(firstChatId);
     setTab(firstChatId);
+    currentChatTitle = chatTitlesMap.get(firstChatId)!;
 
-    firstChatTitle = chatTitle.keys().next().value;
+    firstChatTitle = chatTitlesMap.keys().next().value;
     console.log(firstChatTitle);
-    
-    // setTab(firstChatId);  
-
   };
-
-  // const handleMessage = (event: any) => {
-  //   const { value } = event.target;
-  //   setUserData({ ...userData, message: value });
-  // };
-
-  // const sendMessage = () => {
-  //   let chatId: string = '';
-  //   let receiverName: string | undefined;
-
-  //   if (tab.includes('Group')) {
-  //     chatId = resId; // Group chat Id is Reservation id.
-  //     receiverName = undefined; // No message receiver for a group chat
-  //   } else {
-  //     // private chat
-  //     if (userData.isHost) {
-  //       // For a host, Tab is the receiver guest
-  //       const name: string = tab.split(' ')[0];
-
-  //       chatId = `${resId}_${name}`;
-  //       receiverName = name;
-  //     } else {
-  //       chatId = `${resId}_${userData.username}`;
-  //       receiverName = hostUserName;
-  //     }
-  //   }
-
-  //   if (stompClient) {
-  //     const chatMessage: Message = {
-  //       senderName: userData.username,
-  //       message: userData.message,
-  //       reservationId: resId,
-  //       timestamp: new Date().getTime(),
-  //       receiverName,
-  //       chatId,
-  //       userId: userData.userId
-  //     };
-
-  //     if (tab.includes('Group')) {
-  //       inboxChats.get(chatId)!.push(chatMessage);
-  //       stompClient.send('/app/inbox', {}, JSON.stringify(chatMessage));
-  //     } else {
-  //       inboxChats.get(chatId)!.push(chatMessage);
-  //       stompClient.send('/app/inbox', {}, JSON.stringify(chatMessage));
-  //     }
-
-  //     setUserData({ ...userData, message: '' });
-  //   }
-  // };
 
   return (
     <Container>
@@ -239,16 +185,18 @@ function Inbox() {
           <ChatHeader>Inbox</ChatHeader>
         </SideBarHeader>
         <ChatList>
-          {Array.from(chatTitle.keys()).map((chatTitleKey, index) => {
+          {Array.from(chatTitlesMap.keys()).map((chatTitleKey, index) => {
             return (
               <ChatRoom
                 key={index}
                 onClick={() => {
-                  chatRoomTitle = chatTitle.has(chatTitleKey) ? chatTitle.get(chatTitleKey)! : "";                  
+                  currentChatTitle = chatTitlesMap.has(chatTitleKey)
+                    ? chatTitlesMap.get(chatTitleKey)!
+                    : '';
                   setTab(chatTitleKey);
                 }}
               >
-                {chatRoomTitle}
+                {chatTitlesMap.get(chatTitleKey)}
               </ChatRoom>
             );
           })}
@@ -257,7 +205,7 @@ function Inbox() {
 
       {tab !== '' && inboxChats.has(tab) ? (
         <ChatContent>
-          <ChatName> {chatRoomTitle} </ChatName>
+          <ChatName> {currentChatTitle} </ChatName>
           <ChatMessages id="chat-messages">
             {[...inboxChats.get(tab)!].map((message: any, index) => (
               <MessageBlockWrapper
@@ -275,10 +223,16 @@ function Inbox() {
                 </MessageBlock>
               </MessageBlockWrapper>
             ))}
+            <LastMessage id="last-message" ref={messageEndRef}></LastMessage>
           </ChatMessages>
           <SendMessage id="send-message">
-            <SendButton type="button" onClick={() => {window.location.href = 'https://localhost:3000';}}>
-              To send a new message go to Chat page 
+            <SendButton
+              type="button"
+              onClick={() => {
+                window.location.href = 'https://localhost:3000';
+              }}
+            >
+              To send a new message go to Chat page
             </SendButton>
           </SendMessage>
         </ChatContent>
@@ -408,15 +362,6 @@ const MessageData = styled.li`
   border-radius: 10px;
   background-color: whitesmoke;
 `;
-// const Input = styled.input<{ userType: string }>`
-//   flex-grow: 1;
-//   margin-top: 3px;
-//   margin-bottom: 3 px;
-//   box-shadow: 0 3px 3px rgb(18 58 39 / 0.4);
-//   border-color: #539174;
-//   border-radius: 15px;
-//   ${theme.font.body}
-// `;
 
 const SendMessage = styled.div`
   width: 75%;
@@ -436,12 +381,11 @@ const SendButton = styled.button`
     width: 100%;
   }
 `;
-
-// const LastMessage = styled.div`
-//   ${theme.screen.small} {
-//     width: 100%;
-//   }
-// `;
+const LastMessage = styled.div`
+  ${theme.screen.small} {
+    width: 100%;
+  }
+`;
 
 const ChatHeader = styled.h1`
   margin-left: 20px;
