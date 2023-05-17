@@ -13,42 +13,28 @@ export default async function getPlaces(
   address: Address,
   n: number
 ): Promise<Place[]> {
-  // TODO: get from events and places api
-
   const addressValues = Object.values(address) as string[];
 
-  const addressString = addressValues.reduce( (prev, cur) => `${prev} ${cur}`, '');
-  // const addressString = address.city; // this code works ! 
-
-  // const response = await fetch(
-  //   `${server}/api/places/${addressString}/`
-  // );
+  const addressString = addressValues.reduce(
+    (prev, cur) => `${prev} ${cur}`,
+    ''
+  );
 
   const response = await fetch(`${server}/api/places/${addressString}`);
   const body = (await response.json()) as Place[];
-  // const e = process.env.REACT_APP_GOOGLE_MAPS_KEY as string;
-
-  // for (const p of body) {
-  //   await fetch( `https://maps.googleapis.com/maps/api/place/photo?maxwidth=600&photoreference=${p.userPhotoReference}&key=${e}`, { mode: 'no-cors' })
-  //   .then(async responseObj => await responseObj.blob())
-  //   .then(blob => {
-  //     // const url = window.URL.createObjectURL(blob);
-  //     // const img = new Image();
-  //     // img.src = url;
-  //     p.photo = blob;
-  //     console.log(p.photo);
-  //     // document.body.appendChild(img);
-  //   })
-  //   .catch(error => console.error(error));
-    
-    
-    
-    
-    
-  //   // console.log(photoResponse);
-  //   // const photoBlob = await photoResponse.json() as Blob;
-  //   // console.log(photoBlob);
-  //   // p.photo = photoBlob;
-  // }
+ 
+  for (const p of body) {
+    const decodedBlob = atob(p.photo);
+    const regex = /<A\s+HREF="([^"]+)">/;
+    const match = regex.exec(decodedBlob);
+  
+    let imageUrl = 'https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.vecteezy.com%2Fvector-art%2F5337799-icon-image-not-found-vector&psig=AOvVaw1wbUFbMuFK2oERCOXvUTnl&ust=1684302173572000&source=images&cd=vfe&ved=0CBAQjRxqFwoTCNiE79eQ-f4CFQAAAAAdAAAAABAJ';
+    if (match) {
+      imageUrl = match[1];
+    } else {
+      imageUrl = '';
+    }
+    p.photo = imageUrl;
+  }
   return body;
 }

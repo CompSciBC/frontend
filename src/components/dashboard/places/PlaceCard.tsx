@@ -34,29 +34,31 @@ function PlaceCard({ className, place }: PlaceCardProps) {
   //   <Fragment key={i}>$</Fragment>
   // ));
   // const imageUrl = URL.createObjectURL(photo);
+
   console.log(photo);
-  const blob = new Blob([photo], {type: 'image/jpeg'});
-  console.log(blob);
-  const url = URL.createObjectURL(blob);
-  console.log(url);
+  // const blob = new Blob([photo], { type: 'image/jpeg' });
+  // console.log(blob);
+  // const url = URL.createObjectURL(blob);
+  // console.log(url);
 
-  const img2 = new Image();
-  img2.src = url;
-  // Log the image element to the console to check it
-  // console.log(document.body.appendChild(img2));
+  // const decodedBlob = atob(photo);
+  // const regex = /<A\s+HREF="([^"]+)">/;
+  // const match = regex.exec(decodedBlob);
 
+  // let imageUrl = 'https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.vecteezy.com%2Fvector-art%2F5337799-icon-image-not-found-vector&psig=AOvVaw1wbUFbMuFK2oERCOXvUTnl&ust=1684302173572000&source=images&cd=vfe&ved=0CBAQjRxqFwoTCNiE79eQ-f4CFQAAAAAdAAAAABAJ';
+  // if (match) {
+  //   imageUrl = match[1];
+  //   console.log(imageUrl); 
+  // } else {
+  //   console.log("No match found.");
+  // }
 
   return (
     <Container className={className}>
       <CardHeader>
         <ImageWrapper>
-          {/* document.body.appendChild(photo);
-          photo */}
-          {/* <img src={photo}></img> */}
           <img
-            
-            src={url}
-            // URL.createObjectURL(photo) || '/images/no-image-available.jpeg'
+            src={photo}
           />
           <IsOpen>{openNow ? 'Open Now' : 'Closed'}</IsOpen>
         </ImageWrapper>
