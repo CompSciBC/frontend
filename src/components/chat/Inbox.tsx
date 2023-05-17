@@ -13,6 +13,8 @@ let firstChatId: string = ' ';
 let firstChatTitle: string = ' ';
 let currentChatTitle: string = '';
 let propertyName: string = '';
+let firstReservationIdLink: string = '';
+let currentReservationIdLink: string = '';
 
 interface Message {
   reservationId: string;
@@ -52,8 +54,9 @@ function Inbox() {
    */
   const [inboxChats, setInboxChats] = useState(new Map<string, Message[]>());
   const [chatTitlesMap, setChatTitlesMap] = useState(new Map<string, string>());
-
-  // const [groupChat, setGroupChat] = useState<Message[]>([]);
+  const [reservationIdLinksMap, setReservationIdLinks] = useState(
+    new Map<string, string>()
+  );
 
   /* use this trick to prevent double loading of data. It looks like that an additional loading erases GroupChat array.
   I have no idea why this not happened to Map. Probably, I'll put Group Chat into a Map */
@@ -165,9 +168,11 @@ function Inbox() {
       }
       console.log('chatTitle', propertyName);
       chatTitlesMap.set(chatName, propertyName);
+      reservationIdLinksMap.set(propertyName, reservationId);
     }
     setInboxChats(inboxChats);
     setChatTitlesMap(chatTitlesMap);
+    setReservationIdLinks(reservationIdLinksMap);
 
     firstChatId = inboxChats.keys().next().value;
     console.log(firstChatId);
@@ -176,6 +181,11 @@ function Inbox() {
 
     firstChatTitle = chatTitlesMap.keys().next().value;
     console.log(firstChatTitle);
+
+    currentReservationIdLink = reservationIdLinksMap.get(currentChatTitle)!;
+    console.log(currentReservationIdLink + 'curentLinkResId');
+    firstReservationIdLink = reservationIdLinksMap.keys().next().value;
+    console.log(firstReservationIdLink + 'FirstResIdLink');
   };
 
   return (
@@ -225,15 +235,19 @@ function Inbox() {
             ))}
             <LastMessage id="last-message" ref={messageEndRef}></LastMessage>
           </ChatMessages>
-          <SendMessage id="send-message">
-            <SendButton
-              type="button"
-              onClick={() => {
-                window.location.href = 'https://localhost:3000';
-              }}
-            >
-              To send a new message go to Chat page
-            </SendButton>
+          <SendMessage id="send-message">            
+                <SendButton
+                    type="button"                    
+                    onClick={() => {
+                      currentReservationIdLink = reservationIdLinksMap.has(currentChatTitle)
+                        ? reservationIdLinksMap.get(currentChatTitle)!
+                        : '';
+                      window.location.href = `http://localhost:3000/${currentReservationIdLink}/chat`;
+                    }}
+                  >
+                    To send a new message go to Chat page
+                  </SendButton>                           
+          
           </SendMessage>
         </ChatContent>
       ) : (
