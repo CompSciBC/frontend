@@ -13,6 +13,7 @@ import GuidebookEditSection from './GuidebookEditSection';
 import { useParams } from 'react-router-dom';
 import { server } from '../../../..';
 import AlertPopup from '../../../stuff/AlertPopup';
+import Guidebook from '../Guidebook';
 
 /**
  * Generates a object key name for a new custom guidebook section
@@ -202,36 +203,40 @@ function GuidebookEditor({ className }: GuidebookEditorProps) {
             onChange={() => setGuestView(!guestView)}
           />
         </Header>
-        <EditorContainer className={className}>
-          <Box sx={{ width: '100%' }}>
-            {guidebook && (
-              <Stack>
-                {guidebook.sections?.map((sectionId, i) => {
-                  return guidebook[sectionId] ? (
-                    <GuidebookEditSection
-                      key={sectionId}
-                      sectionId={sectionId}
-                      section={guidebook[sectionId]}
-                      onMoveDown={
-                        // last section will not have move down logic as it cannot move down further
-                        i < guidebook.sections.length - 1
-                          ? handleMoveDown
-                          : undefined
-                      }
-                      onSave={handleSave}
-                      onDelete={
-                        // only host's custom defined sections can be deleted
-                        isCustomGuidebookSection(sectionId)
-                          ? handleDelete
-                          : undefined
-                      }
-                    />
-                  ) : null;
-                })}
-              </Stack>
-            )}
-          </Box>
-        </EditorContainer>
+        {guestView ? (
+          <Guidebook propertyId={propId} />
+        ) : (
+          <EditorContainer className={className}>
+            <Box sx={{ width: '100%' }}>
+              {guidebook && (
+                <Stack>
+                  {guidebook.sections?.map((sectionId, i) => {
+                    return guidebook[sectionId] ? (
+                      <GuidebookEditSection
+                        key={sectionId}
+                        sectionId={sectionId}
+                        section={guidebook[sectionId]}
+                        onMoveDown={
+                          // last section will not have move down logic as it cannot move down further
+                          i < guidebook.sections.length - 1
+                            ? handleMoveDown
+                            : undefined
+                        }
+                        onSave={handleSave}
+                        onDelete={
+                          // only host's custom defined sections can be deleted
+                          isCustomGuidebookSection(sectionId)
+                            ? handleDelete
+                            : undefined
+                        }
+                      />
+                    ) : null;
+                  })}
+                </Stack>
+              )}
+            </Box>
+          </EditorContainer>
+        )}
       </Container>
       <AlertPopup
         open={alert.open}

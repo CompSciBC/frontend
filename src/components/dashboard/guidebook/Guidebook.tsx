@@ -14,12 +14,15 @@ import {
 import AppContext from '../../../context/AppContext';
 import { server } from '../../..';
 
-function Guidebook() {
+export interface GuidebookProps {
+  className?: string;
+  propertyId?: string;
+}
+
+function Guidebook({ className, propertyId }: GuidebookProps) {
   const [guidebookInfo, setGuidebookInfo] = useState<GuidebookDto | null>(null);
   const [guidebookImages, setGuidebookImages] = useState<string[] | null>(null);
-
-  const { reservation } = useContext(AppContext);
-  const propID = reservation?.propertyId;
+  const propID = propertyId ?? useContext(AppContext).reservation?.propertyId;
 
   useEffect(() => {
     let subscribed = true;
@@ -167,7 +170,7 @@ function Guidebook() {
   return (
     guidebookInfo &&
     guidebookImages && (
-      <Container>
+      <Container className={className}>
         <DisplayText>{guidebookInfo.propertyName}</DisplayText>
         <ContainerCarousel>
           <LightFadeCarousel images={guidebookImages} />
