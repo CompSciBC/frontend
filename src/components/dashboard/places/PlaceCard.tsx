@@ -3,7 +3,6 @@ import { theme } from '../../../utils/styles';
 import { useNavigate, useParams } from 'react-router-dom';
 import { paramRoute, routes } from '../../..';
 import { Place } from '../../../utils/dtos';
-// import Star from '../restaurants/Star';
 
 export interface PlaceCardProps {
   className?: string;

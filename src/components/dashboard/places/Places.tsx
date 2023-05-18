@@ -4,9 +4,7 @@ import { useEffect, useState, useContext, useCallback } from 'react';
 import AppContext from '../../../context/AppContext';
 import { Place, RestaurantFilters } from '../../../utils/dtos';
 import getPlaces from './getPlaces';
-// import RestaurantCard from '../restaurants/RestaurantCard';
 import SearchBar from '../../search/SearchBar';
-// import FilterPanel, { FilterState, FilterGroup } from '../restaurants/FilterPanel';
 import CloseX from '../../page/CloseX';
 import PlaceCard from './PlaceCard';
 
@@ -14,56 +12,7 @@ function Places() {
   const { reservation } = useContext(AppContext);
   const [places, setPlaces] = useState<Place[]>([]);
   const [filteredPlaces, setFilteredPlaces] = useState<Place[]>(places);
-
-  // filters used in the query to the API
   const [query, setQuery] = useState<RestaurantFilters>();
-
-  // filters used to filter the results from the API
-  // const [filterState, setFilterState] = useState<FilterState>({});
-
-  // const distances: { [key: string]: number } = {
-  //   'Walking (1 mile)': 1,
-  //   'Biking (2 miles)': 2,
-  //   'Driving (10 miles)': 10,
-  //   Any: 50
-  // };
-
-  // const ratings: { [key: string]: number } = {
-  //   '☆☆☆☆ & up': 4,
-  //   '☆☆☆ & up': 3,
-  //   '☆☆ & up': 2,
-  //   '☆ & up': 1
-  // };
-
-  // const groups: FilterGroup[] = [
-  //   {
-  //     type: 'check',
-  //     name: 'openNow',
-  //     label: 'Open Now',
-  //     options: ['Open Now'],
-  //     defaultChecked: 'Open Now'
-  //   },
-  //   {
-  //     type: 'radio',
-  //     name: 'distance',
-  //     label: 'Distance',
-  //     options: Object.keys(distances),
-  //     defaultChecked: 'Any'
-  //   },
-  //   {
-  //     type: 'check',
-  //     name: 'price',
-  //     label: 'Price',
-  //     options: ['$', '$$', '$$$', '$$$$']
-  //   },
-  //   {
-  //     type: 'radio',
-  //     name: 'rating',
-  //     label: 'Rating',
-  //     options: Object.keys(ratings),
-  //     defaultChecked: '☆☆☆☆ & up'
-  //   }
-  // ];
 
   // initialize default query and filter state
   useEffect(() => {
@@ -72,52 +21,12 @@ function Places() {
     if (reservation) {
       const { address } = reservation.property;
       subscribed && setQuery({ address });
-
-      // const defaultFilters: FilterState = {};
-
-      // groups
-      //   .filter((g) => g.defaultChecked)
-      //   .forEach((g) => {
-      //     switch (typeof g.defaultChecked) {
-      //       case 'string':
-      //         defaultFilters[g.name] = [g.defaultChecked];
-      //         break;
-      //       case 'object':
-      //         defaultFilters[g.name] = g.defaultChecked;
-      //         break;
-      //     }
-      //   });
-
-      // subscribed && setFilterState(defaultFilters);
     }
 
     return () => {
       subscribed = false;
     };
   }, [reservation]);
-
-  // const filterResults = useCallback(
-  //   (results: Restaurant[]) => {
-  //     const { openNow, distance, price, rating } = filterState;
-  //     const metersToMiles = (meters: number) => 0.000621371 * meters;
-
-  //     return results.filter((result) => {
-  //       if (openNow && openNow[0] === 'Open Now' && !result.isOpen)
-  //         return false;
-
-  //       if (distance && metersToMiles(result.distance) > distances[distance[0]])
-  //         return false;
-
-  //       if (price?.length && !price.map((p) => p.length).includes(result.price))
-  //         return false;
-
-  //       if (rating?.length && result.rating < ratings[rating[0]]) return false;
-
-  //       return true;
-  //     });
-  //   },
-  //   [filterState]
-  // );
 
   // query the API
   useEffect(() => {
@@ -135,13 +44,11 @@ function Places() {
     };
   }, [reservation, query]);
 
-  // filter the restaurant query results
+
   useEffect(() => {
     let subscribed = true;
 
     subscribed &&
-      // eventsOrPlaces &&
-      // setFilteredRestaurants(filterResults(eventsOrPlaces));
 
       places &&
       setFilteredPlaces(places);
@@ -150,7 +57,7 @@ function Places() {
       subscribed = false;
     };
   }, [places]);
-  // }, [eventsOrPlaces, filterState]);
+
 
   const removeKeyword = useCallback(
     (keyword: string): RestaurantFilters => {
@@ -164,19 +71,8 @@ function Places() {
     [query]
   );
 
-  // const sidebarWidth = 192;
-
   return (
     <Container>
-      {/* <SidebarWrapper width={sidebarWidth}>
-        <Sidebar width={sidebarWidth}>
-          <FilterPanel
-            handleChange={setFilterState}
-            groups={groups}
-            title={null}
-          />
-        </Sidebar>
-      </SidebarWrapper> */}
       <ContentContainer>
         <h2>Nearby Places</h2>
         <StyledSearchBar
@@ -222,41 +118,6 @@ const Container = styled.div`
   width: 100%;
   height: 100%;
 `;
-
-// const SidebarWrapper = styled.div<{ width: number }>`
-//   position: relative;
-//   width: ${(props) => `${props.width}px`};
-
-//   ${theme.screen.small} {
-//     display: none;
-//   }
-// `;
-
-// const Sidebar = styled.div<{ width: number }>`
-//   position: fixed;
-//   --header-height: 60px; // TODO: make dynamic based on height of header
-//   top: var(--header-height);
-//   left: 0;
-//   width: ${(props) => `${props.width}px`};
-//   height: calc(100% - var(--header-height));
-//   background-color: ${theme.color.lightGray};
-//   overflow-y: scroll;
-
-//   // hide scrollbar on chrome/safari
-//   ::-webkit-scrollbar {
-//     display: none;
-//   }
-
-//   // hide scrollbar on firefox
-//   ::-moz-scrollbar {
-//     display: none;
-//   }
-
-//   // hide scrollbar on edge/ie
-//   ::-ms-scrollbar {
-//     display: none;
-//   }
-// `;
 
 const ContentContainer = styled.div`
   display: flex;
