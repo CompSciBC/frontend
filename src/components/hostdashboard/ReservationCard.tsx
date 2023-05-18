@@ -59,11 +59,7 @@ export default function ReservationCard({
   return (
     <Container>
       <GuestInfo>
-        { newGuest?
-          <h6>{primaryGuest}</h6>
-          :
-          <h5>{primaryGuest}</h5>
-        }
+        {newGuest ? <h6>{primaryGuest}</h6> : <h5>{primaryGuest}</h5>}
         <p>
           {checkInDate.getMonth() + 1}/{checkInDate.getDate()} —{' '}
           {checkOutDate.getMonth() + 1}/{checkOutDate.getDate()}
@@ -72,11 +68,11 @@ export default function ReservationCard({
       <ImageContainer>
         <img src={propertyPhoto} />
       </ImageContainer>
-      { newGuest?
+      {newGuest ? (
         <InviteButton to={chatLink}> 📨 &nbsp;Invite </InviteButton>
-        :
+      ) : (
         <MessageButton to={chatLink}> 💬 &nbsp; Message </MessageButton>
-      }
+      )}
       <PropertyName>
         {' '}
         <p> {propertyName} </p>{' '}
@@ -109,7 +105,7 @@ const MessageButton = styled(Link)`
   text-transform: uppercase;
   ${theme.font.subHeading}
   text-decoration: none;
-  color: ${theme.color.white}
+  color: ${theme.color.white};
 `;
 
 const InviteButton = styled(Link)`
@@ -126,7 +122,7 @@ const InviteButton = styled(Link)`
   text-transform: uppercase;
   ${theme.font.subHeading}
   text-decoration: none;
-  color: ${theme.color.white}
+  color: ${theme.color.white};
 `;
 
 const PropertyName = styled.div`

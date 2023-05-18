@@ -11,7 +11,7 @@ import CloseX from '../../page/CloseX';
 import PlaceCard from './PlaceCard';
 
 function Places() {
-  const { reservationDetail } = useContext(AppContext);
+  const { reservation } = useContext(AppContext);
   const [places, setPlaces] = useState<Place[]>([]);
   const [filteredPlaces, setFilteredPlaces] = useState<Place[]>(places);
 
@@ -69,8 +69,8 @@ function Places() {
   useEffect(() => {
     let subscribed = true;
 
-    if (reservationDetail) {
-      const { address } = reservationDetail.property;
+    if (reservation) {
+      const { address } = reservation.property;
       subscribed && setQuery({ address });
 
       // const defaultFilters: FilterState = {};
@@ -94,7 +94,7 @@ function Places() {
     return () => {
       subscribed = false;
     };
-  }, [reservationDetail]);
+  }, [reservation]);
 
   // const filterResults = useCallback(
   //   (results: Restaurant[]) => {
@@ -123,17 +123,17 @@ function Places() {
   useEffect(() => {
     let subscribed = true;
 
-    if (reservationDetail) {
+    if (reservation) {
       (async function () {
-        const { address } = reservationDetail.property;
-        subscribed && setPlaces(await getPlaces(address, 20));
+        const { address } = reservation.property;
+        subscribed && setPlaces(await getPlaces(address));
       })();
     }
 
     return () => {
       subscribed = false;
     };
-  }, [reservationDetail, query]);
+  }, [reservation, query]);
 
   // filter the restaurant query results
   useEffect(() => {
@@ -181,7 +181,7 @@ function Places() {
         <h2>Nearby Places</h2>
         <StyledSearchBar
           handleSubmit={(text: string) => {
-            const { address } = reservationDetail!.property;
+            const { address } = reservation!.property;
 
             if (!text.trim() && Object.keys(query ?? {}).length > 1) {
               // reset to default query if user submits blank search while there are keywords set

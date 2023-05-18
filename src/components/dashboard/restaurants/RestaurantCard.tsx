@@ -190,6 +190,7 @@ const CategoryTag = styled.div`
 `;
 
 const CardFooter = styled.div`
+  float: right;
   flex-grow: 1;
   display: flex;
   align-items: end;
@@ -209,6 +210,7 @@ const CardFooter = styled.div`
 `;
 
 const FooterButton = styled.button`
+  float: right;
   padding: 4px 8px;
   border: 1px solid ${theme.color.lightGray};
   border-radius: 4px;

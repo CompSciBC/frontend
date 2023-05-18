@@ -39,8 +39,7 @@ function PlacesCell({ className, cell, n }: PlacesCellProps) {
           viewMoreLink={paramRoute(routes.places, reservation?.id)}
           previewSlides={places.map((e) => {
             return {
-              image: '/images/no-image-available.jpeg',
-              link: 'https://google.com'
+              image: e.photo
             };
           })}
         />

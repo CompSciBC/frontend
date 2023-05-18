@@ -1,6 +1,5 @@
 import styled from '@emotion/styled';
 import { theme } from '../../../utils/styles';
-// import { Fragment } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { paramRoute, routes } from '../../..';
 import { Place } from '../../../utils/dtos';
@@ -20,51 +19,17 @@ function PlaceCard({ className, place }: PlaceCardProps) {
     rating,
     types,
     photo
-    // loc,
-    // vicinity,
-    // priceLvl,
-    // placeID,
   } = place;
-
-  // const distanceInMiles = `${(0.000621371 * distance).toFixed(2)} mi`;
-  // const stars = Array.from({ length: rating }, (_, i) => <Star key={i} />);
-
-  // // if price = 0, display 1 $
-  // const dollars = Array.from({ length: Math.max(price, 1) }, (_, i) => (
-  //   <Fragment key={i}>$</Fragment>
-  // ));
-  // const imageUrl = URL.createObjectURL(photo);
-
-  console.log(photo);
-  // const blob = new Blob([photo], { type: 'image/jpeg' });
-  // console.log(blob);
-  // const url = URL.createObjectURL(blob);
-  // console.log(url);
-
-  // const decodedBlob = atob(photo);
-  // const regex = /<A\s+HREF="([^"]+)">/;
-  // const match = regex.exec(decodedBlob);
-
-  // let imageUrl = 'https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.vecteezy.com%2Fvector-art%2F5337799-icon-image-not-found-vector&psig=AOvVaw1wbUFbMuFK2oERCOXvUTnl&ust=1684302173572000&source=images&cd=vfe&ved=0CBAQjRxqFwoTCNiE79eQ-f4CFQAAAAAdAAAAABAJ';
-  // if (match) {
-  //   imageUrl = match[1];
-  //   console.log(imageUrl); 
-  // } else {
-  //   console.log("No match found.");
-  // }
 
   return (
     <Container className={className}>
       <CardHeader>
         <ImageWrapper>
-          <img
-            src={photo}
-          />
+          <img src={photo} />
           <IsOpen>{openNow ? 'Open Now' : 'Closed'}</IsOpen>
         </ImageWrapper>
         <Stars>
           <div>{rating}</div>
-          {/* {`${numReviews.toLocaleString()} Reviews`} */}
         </Stars>
       </CardHeader>
       <CardBody>
@@ -73,24 +38,11 @@ function PlaceCard({ className, place }: PlaceCardProps) {
           {types.map((ty) => (
             <CategoryTag key={ty}>{ty}</CategoryTag>
           ))}
-          {/* {transactions.map((t) => (
-            <CategoryTag key={t}>{t}</CategoryTag>
-          ))} */}
         </TagContainer>
       </CardBody>
       <CardFooter>
         <div>
-          {/* {dollars} */}
           <div>
-            {/* links cannot be children of links, so these are buttons as a workaround */}
-            {/* <FooterButton
-              type="button"
-              onClick={(event) => {
-                event.preventDefault();
-              }}
-            >
-              Order
-            </FooterButton> */}
             <FooterButton
               type="button"
               onClick={(event) => {
@@ -161,11 +113,6 @@ const IsOpen = styled(ImageTag)`
   border-radius: 8px 0 0 0;
 `;
 
-// const Distance = styled(ImageTag)`
-//   right: 0;
-//   border-radius: 0 8px 0 0;
-// `;
-
 const Stars = styled.div`
   display: flex;
   align-items: center;
@@ -228,6 +175,8 @@ const CardFooter = styled.div`
 `;
 
 const FooterButton = styled.button`
+  float: right;
+  align-items: right;
   padding: 4px 8px;
   border: 1px solid ${theme.color.lightGray};
   border-radius: 4px;

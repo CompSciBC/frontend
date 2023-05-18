@@ -11,7 +11,7 @@ import { server } from '../../..';
  */
 export default async function getPlaces(
   address: Address,
-  n: number
+  n?: number
 ): Promise<Place[]> {
   const addressValues = Object.values(address) as string[];
 
@@ -22,19 +22,21 @@ export default async function getPlaces(
 
   const response = await fetch(`${server}/api/places/${addressString}`);
   const body = (await response.json()) as Place[];
- 
-  for (const p of body) {
+  const filteredResults = n ? body.slice(0, n) : body;
+
+  for (const p of filteredResults) {
     const decodedBlob = atob(p.photo);
     const regex = /<A\s+HREF="([^"]+)">/;
     const match = regex.exec(decodedBlob);
-  
-    let imageUrl = 'https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.vecteezy.com%2Fvector-art%2F5337799-icon-image-not-found-vector&psig=AOvVaw1wbUFbMuFK2oERCOXvUTnl&ust=1684302173572000&source=images&cd=vfe&ved=0CBAQjRxqFwoTCNiE79eQ-f4CFQAAAAAdAAAAABAJ';
+
+    let imageUrl =
+      'https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.vecteezy.com%2Fvector-art%2F5337799-icon-image-not-found-vector&psig=AOvVaw1wbUFbMuFK2oERCOXvUTnl&ust=1684302173572000&source=images&cd=vfe&ved=0CBAQjRxqFwoTCNiE79eQ-f4CFQAAAAAdAAAAABAJ';
     if (match) {
       imageUrl = match[1];
     } else {
-      imageUrl = '';
+      imageUrl = '/images/no-image-available.jpeg';
     }
     p.photo = imageUrl;
   }
-  return body;
+  return filteredResults;
 }
