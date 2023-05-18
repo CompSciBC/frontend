@@ -108,7 +108,7 @@ const noAuthNavLinks: NavbarLink[] = [
   }
 ];
 
-const authNavLinks: NavbarLink[] = [
+const guestNavLinks: NavbarLink[] = [
   {
     name: 'Reservations',
     path: routes.reservations
@@ -116,7 +116,25 @@ const authNavLinks: NavbarLink[] = [
   {
     name: 'Inbox',
     path: routes.inbox
+  }
+];
+
+const hostNavLinks: NavbarLink[] = [
+  {
+    name: 'Dashboard',
+    path: routes.hostLanding
   },
+  {
+    name: 'Manage Listings',
+    path: routes.error
+  },
+  {
+    name: 'Inbox',
+    path: routes.inbox
+  }
+];
+
+const avatarLinks: NavbarLink[] = [
   {
     name: 'Profile',
     path: routes.profile
@@ -131,7 +149,12 @@ const router = createBrowserRouter([
   {
     element: (
       <AppContextProvider>
-        <App noAuthNavLinks={noAuthNavLinks} authNavLinks={authNavLinks} />
+        <App
+          noAuthNavLinks={noAuthNavLinks}
+          guestNavLinks={guestNavLinks}
+          hostNavLinks={hostNavLinks}
+          avatarLinks={avatarLinks}
+        />
         {/* <AppTestMode /> */}
       </AppContextProvider>
     ),
