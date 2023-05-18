@@ -48,8 +48,8 @@ function Guidebook({ className, propertyId }: GuidebookProps) {
 
   const propertyBio: JSX.Element | undefined = useMemo(() => {
     if (guidebookInfo) {
-      const { content, amenities, facts, checkInInstr, checkOutInstr } =
-        guidebookInfo.propertyBio;
+      const { about, amenities, facts, checkInInstr, checkOutInstr } =
+        guidebookInfo.propertyBio.content;
 
       return (
         <StyledAccordionDropdown
@@ -58,7 +58,7 @@ function Guidebook({ className, propertyId }: GuidebookProps) {
           content={
             <div>
               <TextParentContainer>
-                <TextContainer>{content}</TextContainer>
+                <TextContainer>{about}</TextContainer>
                 <EndofComponentSpacing />
               </TextParentContainer>
 

@@ -1,15 +1,50 @@
-import { GuidebookDto } from '../../../../utils/dtos';
+import { GuidebookPropertyBio } from '../../../../utils/dtos';
 import GuidebookEditSectionText from './GuidebookEditSectionText';
 import GuidebookEditSectionList from './GuidebookEditSectionList';
 import styled from '@emotion/styled';
 import { theme } from '../../../../utils/styles';
+import { useState } from 'react';
+import { getArray, getKeyValues, getText } from '../../../../utils/functions';
 
-export type GuidebookPropertyBio = GuidebookDto['propertyBio'];
+/**
+ * Generates an id for the property bio input element
+ *
+ * @param idPrefix A string to prefix to the id
+ * @param field The property bio input field
+ * @returns A string id for the input element
+ */
+const getInputId = (idPrefix: string, field: keyof GuidebookPropertyBio) =>
+  `${idPrefix}${field as string}`;
+
+/**
+ * Gets the updated property bio state
+ *
+ * @param idPrefix The id prefix assigned to the {@link GuidebookEditSectionPropertyBio}
+ * @param currentBio The current state of the property bio
+ * @returns The updated state of the property bio
+ */
+export const getUpdatedPropertyBio = (
+  idPrefix: string,
+  currentBio: GuidebookPropertyBio
+): GuidebookPropertyBio => {
+  const selector = (field: keyof GuidebookPropertyBio) =>
+    `textarea[id^=${getInputId(idPrefix, field)}]`;
+
+  const updated = {
+    ...currentBio,
+    about: getText(selector('about')),
+    amenities: getArray(selector('amenities')),
+    facts: getKeyValues(selector('facts')),
+    checkInInstr: getText(selector('checkInInstr')),
+    checkOutInstr: getText(selector('checkOutInstr'))
+  };
+  return updated;
+};
 
 export interface GuidebookEditSectionPropertyBioProps {
   className?: string;
   idPrefix: string;
-  propertyBio: GuidebookPropertyBio;
+  content: GuidebookPropertyBio;
   onChange: (changed: GuidebookPropertyBio) => void;
 }
 
@@ -22,12 +57,16 @@ export interface GuidebookEditSectionPropertyBioProps {
 function GuidebookEditSectionPropertyBio({
   className,
   idPrefix,
-  propertyBio,
+  content,
   onChange
 }: GuidebookEditSectionPropertyBioProps) {
+  const [bio, setBio] = useState(content);
+  const { about, amenities, facts, checkInInstr, checkOutInstr } = content;
+
   const handleChange = (field: keyof GuidebookPropertyBio, update: any) => {
-    const updatedBio = { ...propertyBio };
+    const updatedBio: GuidebookPropertyBio = { ...bio };
     updatedBio[field] = update;
+    setBio(updatedBio);
     onChange(updatedBio);
   };
 
@@ -36,18 +75,18 @@ function GuidebookEditSectionPropertyBio({
       <SectionBorder>
         <h6>Property Description</h6>
         <GuidebookEditSectionText
-          id={`${idPrefix}-content-`}
-          content={propertyBio.content}
+          id={getInputId(idPrefix, 'about')}
+          content={about}
           placeholder="Property bio"
-          onChange={(changed: string) => handleChange('content', changed)}
+          onChange={(changed: string) => handleChange('about', changed)}
         />
       </SectionBorder>
       <ColumnContainer>
         <SectionBorder>
           <h6>Check-in Instructions</h6>
           <GuidebookEditSectionText
-            id={`${idPrefix}-checkInInstr-`}
-            content={propertyBio.checkInInstr ?? ''}
+            id={getInputId(idPrefix, 'checkInInstr')}
+            content={checkInInstr ?? ''}
             placeholder="Instructions for checking-in"
             onChange={(changed: string) =>
               handleChange('checkInInstr', changed)
@@ -58,8 +97,8 @@ function GuidebookEditSectionPropertyBio({
         <SectionBorder>
           <h6>Check-out Instructions</h6>
           <GuidebookEditSectionText
-            id={`${idPrefix}-checkOutInstr-`}
-            content={propertyBio.checkOutInstr ?? ''}
+            id={getInputId(idPrefix, 'checkOutInstr')}
+            content={checkOutInstr ?? ''}
             placeholder="Instructions for checking-out"
             onChange={(changed: string) =>
               handleChange('checkOutInstr', changed)
@@ -73,8 +112,8 @@ function GuidebookEditSectionPropertyBio({
           <h6>Amenities</h6>
           <GuidebookEditSectionList
             type="list"
-            idPrefix={`${idPrefix}-amenities-`}
-            content={propertyBio.amenities}
+            idPrefix={getInputId(idPrefix, 'amenities')}
+            content={amenities}
             placeholder="Amenity"
             onChange={(changed: any[]) => handleChange('amenities', changed)}
           />
@@ -83,8 +122,8 @@ function GuidebookEditSectionPropertyBio({
           <h6>Facts</h6>
           <GuidebookEditSectionList
             type="keyValue"
-            idPrefix={`${idPrefix}-facts-`}
-            content={propertyBio.facts}
+            idPrefix={getInputId(idPrefix, 'facts')}
+            content={facts}
             onChange={(changed: any[]) => handleChange('facts', changed)}
           />
         </SectionBorder>

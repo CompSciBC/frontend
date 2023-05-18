@@ -71,6 +71,17 @@ export interface GuidebookSection<T> {
 }
 
 /**
+ * The property bio information for a property guidebook
+ */
+export interface GuidebookPropertyBio {
+  about: string;
+  amenities: string[];
+  facts: KeyValue[];
+  checkInInstr?: string;
+  checkOutInstr?: string;
+}
+
+/**
  * Represents a guidebook json object that is used to save information from the Host
  * and displays to guests.
  */
@@ -78,12 +89,7 @@ export type GuidebookDto = {
   propertyId: string;
   propertyName: string;
   sections: string[];
-  propertyBio: GuidebookSection<string> & {
-    amenities: string[];
-    facts: KeyValue[];
-    checkInInstr?: string;
-    checkOutInstr?: string;
-  };
+  propertyBio: GuidebookSection<GuidebookPropertyBio>;
 } & {
   [key: string]: GuidebookSection<string | string[] | KeyValue[]>;
 };

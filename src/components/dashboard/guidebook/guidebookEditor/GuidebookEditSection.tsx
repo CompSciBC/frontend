@@ -17,55 +17,19 @@ import {
 import styled from '@emotion/styled';
 import { theme } from '../../../../utils/styles';
 import ConfirmCancelDialog from '../../../stuff/ConfirmCancelDialog';
-import { GuidebookSection, KeyValue } from '../../../../utils/dtos';
+import { GuidebookSection } from '../../../../utils/dtos';
 import GuidebookEditSectionText from './GuidebookEditSectionText';
 import GuidebookEditSectionList from './GuidebookEditSectionList';
 import AlertPopup from '../../../stuff/AlertPopup';
 import GuidebookEditSectionPropertyBio, {
-  GuidebookPropertyBio
+  getUpdatedPropertyBio
 } from './GuidebookEditSectionPropertyBio';
-
-/**
- * Checks the given objects for deep equality (Thanks ChatGPT!)
- *
- * @param a An object
- * @param b An object
- * @returns True if a and b are equivalent
- */
-const objectEquals = (a: any, b: any): boolean => {
-  if (typeof a !== typeof b) {
-    return false;
-  }
-
-  if (a === null || a === undefined || typeof a !== 'object') {
-    return a === b;
-  }
-
-  if (Array.isArray(a) && Array.isArray(b)) {
-    if (a.length !== b.length) {
-      return false;
-    }
-
-    for (let i = 0; i < a.length; i++) {
-      if (!objectEquals(a[i], b[i])) {
-        return false;
-      }
-    }
-  } else {
-    const aKeys = Object.keys(a);
-    const bKeys = Object.keys(b);
-
-    if (aKeys.length !== bKeys.length) {
-      return false;
-    }
-
-    for (const key of aKeys) {
-      if (!objectEquals(a[key], b[key])) return false;
-    }
-  }
-
-  return true;
-};
+import {
+  getArray,
+  getKeyValues,
+  getText,
+  objectEquals
+} from '../../../../utils/functions';
 
 export interface GuidebookEditSectionProps {
   className?: string;
@@ -142,9 +106,9 @@ function GuidebookEditSection({
         component = (
           <GuidebookEditSectionPropertyBio
             idPrefix={idPrefix}
-            propertyBio={section as GuidebookPropertyBio}
+            content={content}
             onChange={(changed: any) =>
-              setChanged(!objectEquals(changed, section))
+              setChanged(!objectEquals(changed, content))
             }
           />
         );
@@ -173,33 +137,20 @@ function GuidebookEditSection({
 
               switch (type) {
                 case 'text':
-                  update =
-                    document.querySelector<HTMLInputElement>(selector)?.value;
+                  update = getText(selector);
                   break;
 
                 case 'list':
-                  update = Array.from(
-                    document.querySelectorAll<HTMLInputElement>(selector),
-                    (x) => x?.value
-                  );
+                  update = getArray(selector);
                   break;
 
-                case 'keyValue': {
-                  const inputs = Array.from(
-                    document.querySelectorAll<HTMLInputElement>(selector),
-                    (x) => x?.value
-                  );
-                  const kv: KeyValue[] = [];
-
-                  for (let i = 0; i < inputs.length; i += 2) {
-                    kv.push({
-                      key: inputs[i],
-                      value: inputs[i + 1]
-                    });
-                  }
-                  update = kv;
+                case 'keyValue':
+                  update = getKeyValues(selector);
                   break;
-                }
+
+                case 'bio':
+                  update = getUpdatedPropertyBio(idPrefix, content);
+                  break;
               }
 
               onSave(sectionId, update).then((res) => {
