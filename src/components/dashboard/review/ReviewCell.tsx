@@ -8,12 +8,12 @@ import DashboardCellClickable from '../DashboardCellClickable';
 import { server } from '../../../index';
 
 function ReviewCell({ className, cell }: DashboardCellProps) {
-  const { reservationDetail, user } = useContext(AppContext);
+  const { reservation, user } = useContext(AppContext);
   const {
     id: reservationId,
     checkIn: checkInDate,
     checkOut: checkOutDate
-  } = reservationDetail ?? {};
+  } = reservation ?? {};
   const guestId = user?.userId;
 
   const [buttonText, setButtonText] = useState<String>();
@@ -45,7 +45,7 @@ function ReviewCell({ className, cell }: DashboardCellProps) {
         }
       }
     })();
-  }, [reservationDetail]);
+  }, [reservation]);
 
   if (buttonDisplay) {
     return (

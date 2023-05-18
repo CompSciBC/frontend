@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { GuidebookDto } from '../../../utils/dtos';
+import { GuidebookDto, KeyValue } from '../../../utils/dtos';
 import { theme } from '../../../utils/styles';
 import LightFadeCarousel from './PhotoCarousel';
 import AccordionDropdown from '../../reservations/AccordionDropdown';
@@ -11,8 +11,8 @@ function Guidebook() {
   const [guidebookInfo, setGuidebookInfo] = useState<GuidebookDto | null>(null);
   const [guidebookImages, setGuidebookImages] = useState<string[] | null>(null);
 
-  const { reservationDetail } = useContext(AppContext);
-  const propID = reservationDetail?.propertyId;
+  const { reservation } = useContext(AppContext);
+  const propID = reservation?.propertyId;
 
   useEffect(() => {
     let subscribed = true;
@@ -49,147 +49,124 @@ function Guidebook() {
           <StyledAccordionDropdown
             label="•ABOUT•"
             isOpen={true}
-            content={
-              <div>
-                <TextParentContainer>
-                  {guidebookInfo.propertyBio.map((paragraph) => {
-                    return (
-                      <TextContainer key={paragraph}>{paragraph}</TextContainer>
-                    );
-                  })}
-                  <EndofComponentSpacing></EndofComponentSpacing>
-                </TextParentContainer>
+            content={(function () {
+              const { content, amenities, facts, checkInInstr, checkOutInstr } =
+                guidebookInfo.propertyBio;
+              return (
+                <div>
+                  <TextParentContainer>
+                    <TextContainer>{content}</TextContainer>
+                    <EndofComponentSpacing />
+                  </TextParentContainer>
 
-                <EnableTableScroll>
-                  <AboutSectionContainerTable>
-                    <tbody>
-                      {guidebookInfo.amenities && (
-                        <AboutSectionContainerRow>
-                          <AboutSectionItem>Amenities: </AboutSectionItem>
-                          {guidebookInfo.amenities?.map((amen) => {
-                            return (
-                              <AboutSectionItem key={amen}>
-                                {amen}
-                              </AboutSectionItem>
-                            );
-                          })}
-                        </AboutSectionContainerRow>
-                      )}
+                  <EnableTableScroll>
+                    <AboutSectionContainerTable>
+                      <tbody>
+                        {amenities && (
+                          <AboutSectionContainerRow>
+                            <AboutSectionItem>Amenities: </AboutSectionItem>
+                            {amenities?.map((amen) => {
+                              return (
+                                <AboutSectionItem key={amen}>
+                                  {amen}
+                                </AboutSectionItem>
+                              );
+                            })}
+                          </AboutSectionContainerRow>
+                        )}
 
-                      <AboutSectionContainerRow>
-                        <AboutSectionItem>Pets: </AboutSectionItem>
-                        <AboutSectionItem>
-                          {guidebookInfo.pets}
-                        </AboutSectionItem>
-                      </AboutSectionContainerRow>
+                        {facts.map(({ key, value }) => {
+                          return (
+                            <AboutSectionContainerRow key={key}>
+                              <AboutSectionItem>{key}: </AboutSectionItem>
+                              <AboutSectionItem>{value}</AboutSectionItem>
+                            </AboutSectionContainerRow>
+                          );
+                        })}
 
-                      <AboutSectionContainerRow>
-                        <AboutSectionItem>Capacity: </AboutSectionItem>
-                        <AboutSectionItem>
-                          {guidebookInfo.capacity}
-                        </AboutSectionItem>
-                      </AboutSectionContainerRow>
+                        {checkInInstr && (
+                          <AboutSectionContainerRow>
+                            <AboutSectionItem>
+                              Check-In Instructions:
+                            </AboutSectionItem>
+                            <AboutSectionItem>{checkInInstr}</AboutSectionItem>
+                          </AboutSectionContainerRow>
+                        )}
 
-                      {guidebookInfo.checkininstr && (
-                        <AboutSectionContainerRow>
-                          <AboutSectionItem>
-                            Check-In Instructions:
-                          </AboutSectionItem>
-                          <AboutSectionItem>
-                            {guidebookInfo.checkininstr}
-                          </AboutSectionItem>
-                        </AboutSectionContainerRow>
-                      )}
-
-                      {guidebookInfo.checkoutinstr && (
-                        <AboutSectionContainerRow>
-                          <AboutSectionItem>
-                            Check-Out Instructions:
-                          </AboutSectionItem>
-                          <AboutSectionItem>
-                            {guidebookInfo.checkoutinstr}
-                          </AboutSectionItem>
-                        </AboutSectionContainerRow>
-                      )}
-
-                      {guidebookInfo.propertyType && (
-                        <AboutSectionContainerRow>
-                          <AboutSectionItem>Property Type: </AboutSectionItem>
-                          <AboutSectionItem>
-                            {guidebookInfo.propertyType}
-                          </AboutSectionItem>
-                        </AboutSectionContainerRow>
-                      )}
-                    </tbody>
-                  </AboutSectionContainerTable>
-                </EnableTableScroll>
-              </div>
-            }
+                        {checkOutInstr && (
+                          <AboutSectionContainerRow>
+                            <AboutSectionItem>
+                              Check-Out Instructions:
+                            </AboutSectionItem>
+                            <AboutSectionItem>{checkOutInstr}</AboutSectionItem>
+                          </AboutSectionContainerRow>
+                        )}
+                      </tbody>
+                    </AboutSectionContainerTable>
+                  </EnableTableScroll>
+                </div>
+              );
+            })()}
             smallLineStyling={true}
           />
 
-          {guidebookInfo.faq && (
-            <StyledAccordionDropdown
-              label="•GUEST FAQ•"
-              isOpen={true}
-              content={
-                <Faq>
-                  {guidebookInfo.faq?.map((faq) => {
-                    return (
-                      <li key={faq.question}>
-                        <div>{faq.question}</div>
-                        <div>{faq.answer}</div>
-                      </li>
-                    );
-                  })}
-                </Faq>
+          {guidebookInfo.sections
+            .filter((sectionId) => sectionId.includes('custom_'))
+            .map((sectionId) => {
+              const { title, type, content } = guidebookInfo[sectionId];
+              let formattedContent: JSX.Element | null = null;
+
+              switch (type) {
+                case 'text':
+                  formattedContent = <>{content as string}</>;
+                  break;
+
+                case 'list':
+                  formattedContent = (
+                    <>
+                      {(content as string[]).map((c) => {
+                        return <TextContainer key={c}>⁃ {c}</TextContainer>;
+                      })}
+                    </>
+                  );
+                  break;
+
+                case 'keyValue':
+                  formattedContent = (
+                    <KeyVal>
+                      {(content as KeyValue[]).map(({ key, value }) => {
+                        return (
+                          <li key={key}>
+                            <div>{key}</div>
+                            <div>{value}</div>
+                          </li>
+                        );
+                      })}
+                    </KeyVal>
+                  );
+                  break;
               }
-              smallLineStyling={true}
-            />
-          )}
-          <StyledAccordionDropdown
-            label="•POLICIES•"
-            isOpen={true}
-            content={
-              <TextParentContainer>
-                {guidebookInfo.policies?.map((pol) => {
-                  return <TextContainer key={pol}>⁃ {pol}</TextContainer>;
-                })}
-              </TextParentContainer>
-            }
-            smallLineStyling={true}
-          />
-          <StyledAccordionDropdown
-            label="•HOST RECOMMENDED•"
-            isOpen={true}
-            content={
-              <TextParentContainer>
-                {guidebookInfo.hostRecommended?.map((rec) => {
-                  return <TextContainer key={rec}>⁃ {rec}</TextContainer>;
-                })}
-              </TextParentContainer>
-            }
-            smallLineStyling={true}
-          />
-          <StyledAccordionDropdown
-            label="•SERVICES AND SUPPORT•"
-            isOpen={true}
-            content={
-              <TextParentContainer>
-                {guidebookInfo.hostServices?.map((serv) => {
-                  return <TextContainer key={serv}>⁃ {serv}</TextContainer>;
-                })}
-              </TextParentContainer>
-            }
-            smallLineStyling={true}
-          />
+              return (
+                <StyledAccordionDropdown
+                  key={sectionId}
+                  label={`•${title.toUpperCase()}•`}
+                  isOpen={true}
+                  content={
+                    <TextParentContainer>
+                      {formattedContent}
+                    </TextParentContainer>
+                  }
+                  smallLineStyling={true}
+                />
+              );
+            })}
         </ListContainer>
       </Container>
     )
   );
 }
 
-const Faq = styled.ol`
+const KeyVal = styled.ol`
   display: flex;
   flex-direction: column;
   row-gap: 20px;
@@ -204,6 +181,7 @@ const TextContainer = styled.div`
   display: flex;
   flex-direction: column;
   margin: 10px;
+  white-space: pre-wrap; // preserves newline characters
 `;
 
 const DisplayText = styled.h1`

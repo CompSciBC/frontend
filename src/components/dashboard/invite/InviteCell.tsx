@@ -7,13 +7,13 @@ import { DashboardCellProps } from '../Dashboard';
 import DashboardCellClickable from '../DashboardCellClickable';
 
 function InviteCell({ className, cell }: DashboardCellProps) {
-  const { reservationDetail } = useContext(AppContext);
+  const { reservation } = useContext(AppContext);
 
   return (
     <Container
       className={className}
       cell={cell}
-      to={paramRoute(routes.invite, reservationDetail?.id)}
+      to={paramRoute(routes.invite, reservation?.id)}
       child={'Invite'}
     />
   );

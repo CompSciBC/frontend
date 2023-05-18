@@ -49,25 +49,44 @@ export interface Property {
 }
 
 /**
+ * Represents a key/value data pair
+ */
+export interface KeyValue {
+  key: string;
+  value: string | number;
+}
+
+/**
+ * The valid types of a guidebook section
+ */
+export type GuidebookSectionType = 'text' | 'list' | 'keyValue';
+
+/**
+ * The base shape of a guidebook section
+ */
+export interface GuidebookSection<T> {
+  title: string;
+  type: GuidebookSectionType;
+  content: T;
+}
+
+/**
  * Represents a guidebook json object that is used to save information from the Host
  * and displays to guests.
  */
-export interface GuidebookDto {
-  propertyID: string;
+export type GuidebookDto = {
+  propertyId: string;
   propertyName: string;
-  propertyType?: 'Cabin' | 'City' | 'Beach' | 'Mountain';
-  capacity: number;
-  pets: 'Allowed' | 'Not Allowed';
-  amenities?: string[];
-  propertyBio: string[];
-  faq?: Array<{ question: string; answer: string }>;
-  policies?: string[];
-  hostRecommended?: string[];
-  hostServices?: string[];
-  askGuestTheseQuestionsinSurvey?: any;
-  checkininstr?: string[];
-  checkoutinstr?: string[];
-}
+  sections: string[];
+  propertyBio: GuidebookSection<string> & {
+    amenities: string[];
+    facts: KeyValue[];
+    checkInInstr?: string;
+    checkOutInstr?: string;
+  };
+} & {
+  [key: string]: GuidebookSection<string | string[] | KeyValue[]>;
+};
 
 /**
  * Represents a place that a guest can view that is nearby their property rental.
@@ -101,15 +120,7 @@ export interface Reservation {
   reasonForStay: string;
   inviteCode: string;
   checkedIn: boolean;
-}
-
-/**
- * A reservation object containing additional details about its associated property
- * (matching ReservationDetail.java)
- */
-export interface ReservationDetail extends Reservation {
   property: Property;
-  image?: string;
 }
 
 /**
@@ -122,11 +133,11 @@ export interface ReservationDetail extends Reservation {
 export type ReservationStatus = 'current' | 'upcoming' | 'past';
 
 /**
- * An object containing reservation/property objects grouped by status type
+ * An object containing reservation objects grouped by status type
  * (current, upcoming, past)
  */
 export type SortedReservationDetailSet = {
-  [key in ReservationStatus]: ReservationDetail[];
+  [key in ReservationStatus]: Reservation[];
 };
 
 /**
@@ -202,4 +213,18 @@ export interface Message {
   me: boolean;
   time: Date;
   message: string;
+}
+
+export interface SurveyData {
+  reservationId: string;
+  property: Property;
+  guest: User;
+  qualityMetrics: {};
+  submissionTime: Date;
+  surveyResponse: string;
+}
+
+export interface SurveyMetrics {
+  hostId: string;
+  surveyResponses: SurveyData[];
 }

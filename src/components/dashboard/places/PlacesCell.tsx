@@ -12,7 +12,7 @@ export interface PlacesCellProps extends DashboardCellProps {
 }
 
 function PlacesCell({ className, cell, n }: PlacesCellProps) {
-  const { reservationDetail } = useContext(AppContext);
+  const { reservation } = useContext(AppContext);
   const [places, setPlaces] = useState<Place[]>([]);
 
   useEffect(() => {
@@ -20,14 +20,14 @@ function PlacesCell({ className, cell, n }: PlacesCellProps) {
 
     (async function () {
       subscribed &&
-        reservationDetail &&
-        setPlaces(await getPlaces(reservationDetail.property.address, n));
+        reservation &&
+        setPlaces(await getPlaces(reservation.property.address, n));
     })();
 
     return () => {
       subscribed = false;
     };
-  }, [reservationDetail]);
+  }, [reservation]);
 
   return (
     <DashboardCellWrapper
@@ -36,7 +36,7 @@ function PlacesCell({ className, cell, n }: PlacesCellProps) {
       child={
         <ImagePreview
           title="Places"
-          viewMoreLink={paramRoute(routes.places, reservationDetail?.id)}
+          viewMoreLink={paramRoute(routes.places, reservation?.id)}
           previewSlides={places.map((e) => {
             return {
               image: '/images/no-image-available.jpeg',
