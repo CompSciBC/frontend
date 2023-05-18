@@ -21,7 +21,7 @@ function GuidebookEditSectionText({
   content,
   placeholder,
   onChange,
-  rows
+  rows = 12
 }: GuidebookEditSectionTextProps) {
   return (
     <TextField
@@ -39,7 +39,7 @@ function GuidebookEditSectionText({
         See SO question:
         https://stackoverflow.com/questions/64837884/material-ui-too-many-re-renders-the-layout-is-unstable-textareaautosize-limit
       */
-      rows={rows ?? 12}
+      rows={rows}
       defaultValue={content}
       placeholder={placeholder}
       onChange={(event) => onChange(event.target.value)}
