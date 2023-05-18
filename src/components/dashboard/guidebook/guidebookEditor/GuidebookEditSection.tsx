@@ -21,6 +21,51 @@ import { GuidebookSection, KeyValue } from '../../../../utils/dtos';
 import GuidebookEditSectionText from './GuidebookEditSectionText';
 import GuidebookEditSectionList from './GuidebookEditSectionList';
 import AlertPopup from '../../../stuff/AlertPopup';
+import GuidebookEditSectionPropertyBio, {
+  GuidebookPropertyBio
+} from './GuidebookEditSectionPropertyBio';
+
+/**
+ * Checks the given objects for deep equality (Thanks ChatGPT!)
+ *
+ * @param a An object
+ * @param b An object
+ * @returns True if a and b are equivalent
+ */
+const objectEquals = (a: any, b: any): boolean => {
+  if (typeof a !== typeof b) {
+    return false;
+  }
+
+  if (a === null || a === undefined || typeof a !== 'object') {
+    return a === b;
+  }
+
+  if (Array.isArray(a) && Array.isArray(b)) {
+    if (a.length !== b.length) {
+      return false;
+    }
+
+    for (let i = 0; i < a.length; i++) {
+      if (!objectEquals(a[i], b[i])) {
+        return false;
+      }
+    }
+  } else {
+    const aKeys = Object.keys(a);
+    const bKeys = Object.keys(b);
+
+    if (aKeys.length !== bKeys.length) {
+      return false;
+    }
+
+    for (const key of aKeys) {
+      if (!objectEquals(a[key], b[key])) return false;
+    }
+  }
+
+  return true;
+};
 
 export interface GuidebookEditSectionProps {
   className?: string;
@@ -66,14 +111,6 @@ function GuidebookEditSection({
     let subscribed = true;
     let component: JSX.Element | null = null;
 
-    // returns true if the arrays a and b are the same
-    const arrayEquals = (a: any[], b: any[]) => {
-      return (
-        a.length === b.length &&
-        a.every((x, i) => JSON.stringify(x) === JSON.stringify(b[i]))
-      );
-    };
-
     switch (type) {
       case 'text':
         component = (
@@ -95,7 +132,19 @@ function GuidebookEditSection({
             content={content}
             placeholder={title}
             onChange={(changed: any[]) =>
-              setChanged(!arrayEquals(changed, content))
+              setChanged(!objectEquals(changed, content))
+            }
+          />
+        );
+        break;
+
+      case 'bio':
+        component = (
+          <GuidebookEditSectionPropertyBio
+            idPrefix={idPrefix}
+            propertyBio={section as GuidebookPropertyBio}
+            onChange={(changed: any) =>
+              setChanged(!objectEquals(changed, section))
             }
           />
         );

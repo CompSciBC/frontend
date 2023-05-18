@@ -53,13 +53,13 @@ export interface Property {
  */
 export interface KeyValue {
   key: string;
-  value: string | number;
+  value: string;
 }
 
 /**
  * The valid types of a guidebook section
  */
-export type GuidebookSectionType = 'text' | 'list' | 'keyValue';
+export type GuidebookSectionType = 'text' | 'list' | 'keyValue' | 'bio';
 
 /**
  * The base shape of a guidebook section
