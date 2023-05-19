@@ -12,13 +12,7 @@ export interface PlaceCardProps {
 function PlaceCard({ className, place }: PlaceCardProps) {
   const { resId } = useParams();
   const navigate = useNavigate();
-  const {
-    name,
-    openNow,
-    rating,
-    types,
-    photo
-  } = place;
+  const { name, openNow, rating, types, photo } = place;
 
   return (
     <Container className={className}>

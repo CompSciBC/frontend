@@ -44,20 +44,15 @@ function Places() {
     };
   }, [reservation, query]);
 
-
   useEffect(() => {
     let subscribed = true;
 
-    subscribed &&
-
-      places &&
-      setFilteredPlaces(places);
+    subscribed && places && setFilteredPlaces(places);
 
     return () => {
       subscribed = false;
     };
   }, [places]);
-
 
   const removeKeyword = useCallback(
     (keyword: string): RestaurantFilters => {
