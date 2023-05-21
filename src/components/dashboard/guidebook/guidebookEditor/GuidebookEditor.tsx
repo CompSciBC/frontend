@@ -85,14 +85,14 @@ function GuidebookEditor({ className }: GuidebookEditorProps) {
   }, [propId]);
 
   const handleSave = useCallback(
-    async (sectionId: string, update: any): Promise<boolean> => {
+    async (
+      sectionId: string,
+      update: GuidebookSection<any>
+    ): Promise<boolean> => {
       if (guidebook) {
         const updatedGuidebook: GuidebookDto = {
           ...guidebook,
-          [sectionId]: {
-            ...guidebook[sectionId],
-            content: update
-          }
+          [sectionId]: update
         };
         setGuidebook(updatedGuidebook);
         setGuidebookUpdated(true);

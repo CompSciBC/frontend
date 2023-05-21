@@ -53,7 +53,7 @@ function Guidebook({ className, propertyId }: GuidebookProps) {
 
       return (
         <StyledAccordionDropdown
-          label="•ABOUT•"
+          label={`•${guidebookInfo.propertyBio.title.toUpperCase()}•`}
           isOpen={true}
           content={
             <div>

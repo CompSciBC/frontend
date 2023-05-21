@@ -5,6 +5,7 @@ import {
   AlertColor,
   Button,
   ButtonGroup,
+  TextField,
   Tooltip
 } from '@mui/material';
 import { useEffect, useCallback, useState } from 'react';
@@ -12,7 +13,8 @@ import {
   ExpandMore,
   MoveDown,
   SaveOutlined,
-  DeleteOutlined
+  DeleteOutlined,
+  EditOutlined
 } from '@mui/icons-material';
 import styled from '@emotion/styled';
 import { theme } from '../../../../utils/styles';
@@ -36,7 +38,10 @@ export interface GuidebookEditSectionProps {
   sectionId: string;
   section: GuidebookSection<any>;
   onMoveDown?: Function;
-  onSave: (sectionId: string, update: any) => Promise<boolean>;
+  onSave: (
+    sectionId: string,
+    update: GuidebookSection<any>
+  ) => Promise<boolean>;
   onDelete?: (sectionId: string) => Promise<boolean>;
 }
 
@@ -59,6 +64,7 @@ function GuidebookEditSection({
   const [input, setInput] = useState<JSX.Element | null>(null);
   const [changed, setChanged] = useState(false);
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
+  const [editTitle, setEditTitle] = useState(false);
   const [alert, setAlert] = useState<{
     open: boolean;
     severity: AlertColor;
@@ -132,24 +138,26 @@ function GuidebookEditSection({
             onClick={(event) => {
               event.stopPropagation();
 
-              let update: any = null;
+              const update: GuidebookSection<any> = {
+                ...section
+              };
               const selector = `textarea[id^=${idPrefix}]`;
 
               switch (type) {
                 case 'text':
-                  update = getText(selector);
+                  update.content = getText(selector);
                   break;
 
                 case 'list':
-                  update = getArray(selector);
+                  update.content = getArray(selector);
                   break;
 
                 case 'keyValue':
-                  update = getKeyValues(selector);
+                  update.content = getKeyValues(selector);
                   break;
 
                 case 'bio':
-                  update = getUpdatedPropertyBio(idPrefix, content);
+                  update.content = getUpdatedPropertyBio(idPrefix, content);
                   break;
               }
 
@@ -192,6 +200,23 @@ function GuidebookEditSection({
     );
   }, []);
 
+  const handleChangeTitle = useCallback(() => {
+    const update: GuidebookSection<any> = {
+      ...section,
+      title: getText(`input[id^=${idPrefix}title]`)
+    };
+    onSave(sectionId, update).then((res) => {
+      if (res) setEditTitle(false);
+      else {
+        setAlert({
+          open: true,
+          severity: 'error',
+          message: 'Unable to save at this time. Please try again.'
+        });
+      }
+    });
+  }, [onSave]);
+
   return (
     <div className={className}>
       <Accordion expanded={expanded}>
@@ -216,7 +241,44 @@ function GuidebookEditSection({
                   <MoveDown />
                 </Button>
               </Tooltip>
-              <h5>{section.title}</h5>
+              {editTitle ? (
+                <>
+                  <TextField
+                    id={`${idPrefix}title`}
+                    size="small"
+                    defaultValue={title}
+                    onClick={(event) => event.stopPropagation()}
+                  />
+                  <Tooltip title="Save" arrow disableInteractive>
+                    <Button
+                      sx={{ minWidth: 'fit-content' }}
+                      size="small"
+                      onClick={(event) => {
+                        event.stopPropagation();
+                        handleChangeTitle();
+                      }}
+                    >
+                      <SaveOutlined />
+                    </Button>
+                  </Tooltip>
+                </>
+              ) : (
+                <>
+                  <h5>{section.title}</h5>
+                  <Tooltip title="Edit title" arrow disableInteractive>
+                    <Button
+                      sx={{ minWidth: 'fit-content' }}
+                      size="small"
+                      onClick={(event) => {
+                        event.stopPropagation();
+                        setEditTitle(true);
+                      }}
+                    >
+                      <EditOutlined fontSize="small" />
+                    </Button>
+                  </Tooltip>
+                </>
+              )}
               {!expanded && changed && (
                 <UnsavedChangesWrapper>(unsaved changes)</UnsavedChangesWrapper>
               )}
