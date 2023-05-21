@@ -6,7 +6,7 @@ import {
   Stack,
   Switch
 } from '@mui/material';
-import { GuidebookDto } from '../../../../utils/dtos';
+import { GuidebookDto, GuidebookSection } from '../../../../utils/dtos';
 import { useCallback, useEffect, useState } from 'react';
 import { theme } from '../../../../utils/styles';
 import GuidebookEditSection from './GuidebookEditSection';
@@ -14,6 +14,7 @@ import { useParams } from 'react-router-dom';
 import { server } from '../../../..';
 import AlertPopup from '../../../stuff/AlertPopup';
 import Guidebook from '../Guidebook';
+import AddSectionDialog from './AddSectionDialog';
 
 /**
  * Generates a object key name for a new custom guidebook section
@@ -154,6 +155,23 @@ function GuidebookEditor({ className }: GuidebookEditorProps) {
     [guidebook]
   );
 
+  const handleAddSection = useCallback(
+    (section: GuidebookSection<any>) => {
+      const newSectionId = `custom_${section.title.replace(' ', '')}`;
+
+      // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+      const newGuidebook = {
+        ...guidebook,
+        [newSectionId]: section,
+        sections: [...guidebook!.sections, newSectionId]
+      } as GuidebookDto;
+
+      setGuidebook(newGuidebook);
+      setGuidebookUpdated(true);
+    },
+    [guidebook]
+  );
+
   // post updated guidebook to api
   useEffect(() => {
     let subscribed = true;
@@ -195,7 +213,8 @@ function GuidebookEditor({ className }: GuidebookEditorProps) {
   return (
     <>
       <Container>
-        <Header>
+        <Header guestView={guestView}>
+          {!guestView && <AddSectionDialog onSubmit={handleAddSection} />}
           <FormControlLabel
             control={<Switch disableRipple />}
             label="View as Guest"
@@ -253,12 +272,12 @@ const Container = styled.div`
   position: relative;
 `;
 
-const Header = styled.div`
+const Header = styled.div<{ guestView: boolean }>`
   position: sticky;
   top: 0;
   z-index: 2;
   display: flex;
-  justify-content: end;
+  justify-content: ${(props) => (props.guestView ? 'end' : 'space-between')};
   width: 100%;
   padding: 8px 16px;
   background-color: ${theme.color.lightGray};

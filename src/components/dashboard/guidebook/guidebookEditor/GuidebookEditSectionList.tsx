@@ -174,7 +174,7 @@ function GuidebookEditSectionList({
             onClick={addItem}
           >
             <Add />
-            Add new item
+            Add Item
           </Button>
         </ListItem>
       </List>
