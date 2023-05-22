@@ -5,6 +5,7 @@ import {
   AlertColor,
   Button,
   ButtonGroup,
+  IconButton,
   TextField,
   Tooltip
 } from '@mui/material';
@@ -227,19 +228,19 @@ function GuidebookEditSection({
           <AccordionSummaryContent>
             <TitleContainer>
               <Tooltip title="Move down" arrow disableInteractive>
-                <Button
+                <IconButton
                   onClick={(event) => {
                     event.stopPropagation();
                     onMoveDown?.(sectionId);
                   }}
+                  color="primary"
                   sx={{
                     padding: '4px',
-                    minWidth: 'fit-content',
                     visibility: onMoveDown ? 'visible' : 'hidden'
                   }}
                 >
                   <MoveDown />
-                </Button>
+                </IconButton>
               </Tooltip>
               {editTitle ? (
                 <>
@@ -250,32 +251,32 @@ function GuidebookEditSection({
                     onClick={(event) => event.stopPropagation()}
                   />
                   <Tooltip title="Save" arrow disableInteractive>
-                    <Button
-                      sx={{ minWidth: 'fit-content' }}
+                    <IconButton
                       size="small"
+                      color="primary"
                       onClick={(event) => {
                         event.stopPropagation();
                         handleChangeTitle();
                       }}
                     >
                       <SaveOutlined />
-                    </Button>
+                    </IconButton>
                   </Tooltip>
                 </>
               ) : (
                 <>
                   <h5>{section.title}</h5>
                   <Tooltip title="Edit title" arrow disableInteractive>
-                    <Button
-                      sx={{ minWidth: 'fit-content' }}
+                    <IconButton
                       size="small"
+                      color="primary"
                       onClick={(event) => {
                         event.stopPropagation();
                         setEditTitle(true);
                       }}
                     >
                       <EditOutlined fontSize="small" />
-                    </Button>
+                    </IconButton>
                   </Tooltip>
                 </>
               )}

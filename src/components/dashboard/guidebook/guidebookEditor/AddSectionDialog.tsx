@@ -7,7 +7,8 @@ import {
   DialogContent,
   DialogTitle,
   MenuItem,
-  TextField
+  TextField,
+  Typography
 } from '@mui/material';
 import { useState } from 'react';
 import { GuidebookSection, GuidebookSectionType } from '../../../../utils/dtos';
@@ -67,10 +68,11 @@ function AddSectionDialog({ className, onSubmit }: AddSectionDialogProps) {
       <Button
         variant="outlined"
         color="primary"
+        size="small"
         startIcon={<Add />}
         onClick={() => setOpen(true)}
       >
-        Add Section
+        <Typography variant="button">Add Section</Typography>
       </Button>
       <Dialog className={className} open={open}>
         <DialogTitle>New Section</DialogTitle>

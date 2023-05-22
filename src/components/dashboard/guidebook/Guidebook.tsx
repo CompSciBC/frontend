@@ -12,7 +12,7 @@ import {
   Fragment
 } from 'react';
 import AppContext from '../../../context/AppContext';
-import { server } from '../../..';
+import { getGuidebookContent, getGuidebookImages } from './guidebookData';
 
 export interface GuidebookProps {
   className?: string;
@@ -29,16 +29,8 @@ function Guidebook({ className, propertyId }: GuidebookProps) {
 
     if (propID) {
       (async function () {
-        const response = await fetch(
-          `${server}/api/guidebook/${propID}/content`
-        );
-        subscribed && setGuidebookInfo(await response.json());
-      })();
-      (async function () {
-        const response = await fetch(
-          `${server}/api/guidebook/${propID}/images`
-        );
-        subscribed && setGuidebookImages(await response.json());
+        subscribed && setGuidebookInfo(await getGuidebookContent(propID));
+        subscribed && setGuidebookImages(await getGuidebookImages(propID));
       })();
     }
     return () => {

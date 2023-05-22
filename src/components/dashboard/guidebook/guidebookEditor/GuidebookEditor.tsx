@@ -11,10 +11,11 @@ import { useCallback, useEffect, useState } from 'react';
 import { theme } from '../../../../utils/styles';
 import GuidebookEditSection from './GuidebookEditSection';
 import { useParams } from 'react-router-dom';
-import { server } from '../../../..';
 import AlertPopup from '../../../stuff/AlertPopup';
 import Guidebook from '../Guidebook';
 import AddSectionDialog from './AddSectionDialog';
+import { getGuidebookContent, uploadGuidebookContent } from '../guidebookData';
+import GuidebookEditImages from './GuidebookEditImages';
 
 /**
  * Generates a object key name for a new custom guidebook section
@@ -71,11 +72,7 @@ function GuidebookEditor({ className }: GuidebookEditorProps) {
 
     if (propId) {
       (async function () {
-        fetch(`${server}/api/guidebook/${propId}/content`)
-          .then(async (res) => await res.json())
-          .then((gb: GuidebookDto) => {
-            subscribed && setGuidebook(gb);
-          });
+        subscribed && setGuidebook(await getGuidebookContent(propId));
       })();
     }
 
@@ -178,13 +175,7 @@ function GuidebookEditor({ className }: GuidebookEditorProps) {
 
     if (propId && guidebookUpdated && guidebook) {
       (async function () {
-        fetch(`${server}/api/guidebook/${propId}/content`, {
-          method: 'POST',
-          headers: {
-            'content-type': 'application/json'
-          },
-          body: JSON.stringify(guidebook)
-        })
+        uploadGuidebookContent(propId, guidebook)
           .then(() => {
             subscribed && setGuidebookUpdated(false);
             subscribed &&
@@ -212,51 +203,54 @@ function GuidebookEditor({ className }: GuidebookEditorProps) {
 
   return (
     <>
-      <Container>
-        <Header guestView={guestView}>
-          {!guestView && <AddSectionDialog onSubmit={handleAddSection} />}
-          <FormControlLabel
-            control={<Switch disableRipple />}
-            label="View as Guest"
-            labelPlacement="start"
-            onChange={() => setGuestView(!guestView)}
-          />
-        </Header>
-        {guestView ? (
-          <Guidebook propertyId={propId} />
-        ) : (
-          <EditorContainer className={className}>
-            <Box sx={{ width: '100%' }}>
-              {guidebook && (
-                <Stack>
-                  {guidebook.sections?.map((sectionId, i) => {
-                    return guidebook[sectionId] ? (
-                      <GuidebookEditSection
-                        key={sectionId}
-                        sectionId={sectionId}
-                        section={guidebook[sectionId]}
-                        onMoveDown={
-                          // last section will not have move down logic as it cannot move down further
-                          i < guidebook.sections.length - 1
-                            ? handleMoveDown
-                            : undefined
-                        }
-                        onSave={handleSave}
-                        onDelete={
-                          // only host's custom defined sections can be deleted
-                          isCustomGuidebookSection(sectionId)
-                            ? handleDelete
-                            : undefined
-                        }
-                      />
-                    ) : null;
-                  })}
-                </Stack>
-              )}
-            </Box>
-          </EditorContainer>
-        )}
-      </Container>
+      {propId && (
+        <Container>
+          <Header guestView={guestView}>
+            {!guestView && <AddSectionDialog onSubmit={handleAddSection} />}
+            <FormControlLabel
+              control={<Switch disableRipple />}
+              label="View as Guest"
+              labelPlacement="start"
+              onChange={() => setGuestView(!guestView)}
+            />
+          </Header>
+          {guestView ? (
+            <Guidebook propertyId={propId} />
+          ) : (
+            <EditorContainer className={className}>
+              <Box sx={{ width: '100%' }}>
+                {guidebook && (
+                  <Stack>
+                    {guidebook.sections?.map((sectionId, i) => {
+                      return guidebook[sectionId] ? (
+                        <GuidebookEditSection
+                          key={sectionId}
+                          sectionId={sectionId}
+                          section={guidebook[sectionId]}
+                          onMoveDown={
+                            // last section will not have move down logic as it cannot move down further
+                            i < guidebook.sections.length - 1
+                              ? handleMoveDown
+                              : undefined
+                          }
+                          onSave={handleSave}
+                          onDelete={
+                            // only host's custom defined sections can be deleted
+                            isCustomGuidebookSection(sectionId)
+                              ? handleDelete
+                              : undefined
+                          }
+                        />
+                      ) : null;
+                    })}
+                  </Stack>
+                )}
+                <GuidebookEditImages propId={propId} />
+              </Box>
+            </EditorContainer>
+          )}
+        </Container>
+      )}
       <AlertPopup
         open={alert.open}
         onClose={() => setAlert({ ...alert, open: false })}

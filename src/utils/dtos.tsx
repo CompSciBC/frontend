@@ -95,6 +95,22 @@ export type GuidebookDto = {
 };
 
 /**
+ * Metadata for a guidebook image
+ */
+export interface GuidebookImageMetadata {
+  name: string;
+  tags: string[];
+}
+
+/**
+ * Contains a list of image files and associated metadata (matching GuidebookImageMetadata.java)
+ */
+export interface GuidebookImageFiles {
+  files: FileList;
+  metadata: GuidebookImageMetadata[];
+}
+
+/**
  * Represents a contract agreement between a host and a guest to rent a property
  * for a specified period of time (matching Reservation.java)
  */
