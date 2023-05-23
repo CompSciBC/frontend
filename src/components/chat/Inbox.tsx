@@ -7,6 +7,7 @@ import styled from '@emotion/styled';
 import { theme } from '../../utils/styles';
 import { server } from '../..';
 import { SortedReservationDetailSet, Reservation } from '../../utils/dtos';
+import { useNavigate } from 'react-router-dom';
 
 let stompClient: any = null;
 let firstChatId: string = ' ';
@@ -43,6 +44,7 @@ function Inbox() {
   });
 
   const messageEndRef = useRef<null | HTMLDivElement>(null);
+  const navigate = useNavigate();
 
   /* scrol till the latest message. The latest message is popped up aitomatically
    */
@@ -57,6 +59,7 @@ function Inbox() {
   const [reservationIdLinksMap, setReservationIdLinks] = useState(
     new Map<string, string>()
   );
+ 
 
   /* use this trick to prevent double loading of data. It looks like that an additional loading erases GroupChat array.
   I have no idea why this not happened to Map. Probably, I'll put Group Chat into a Map */
@@ -142,6 +145,8 @@ function Inbox() {
     }
   }, [userData]);
 
+  
+
   const onConnected = (
     chats: ChatsServerResponse,
     reservationsMap: Map<string, Reservation>
@@ -151,14 +156,13 @@ function Inbox() {
     for (const chatId in chats) {
       const chatName = chatId;
       const messages = chats[chatId];
-      console.log('chatName', chatName);
+
       inboxChats.set(chatName, messages);
 
       const reservationId = chatName.includes('_')
         ? chatName.split('_')[0]
         : chatName;
 
-      //  console.log('reservationId', reservationId);
       if (chatName.includes('_')) {
         propertyName =
           'Host ' + reservationsMap.get(reservationId)!.property.name;
@@ -175,12 +179,14 @@ function Inbox() {
     setReservationIdLinks(reservationIdLinksMap);
 
     firstChatId = inboxChats.keys().next().value;
-    console.log(firstChatId);
     setTab(firstChatId);
+    // setActiveTab(firstChatId);   
+    console.log(firstChatTitle);
     currentChatTitle = chatTitlesMap.get(firstChatId)!;
 
     firstChatTitle = chatTitlesMap.keys().next().value;
-    console.log(firstChatTitle);
+    
+
 
     currentReservationIdLink = reservationIdLinksMap.get(currentChatTitle)!;
     console.log(currentReservationIdLink + 'curentLinkResId');
@@ -197,17 +203,25 @@ function Inbox() {
         <ChatList>
           {Array.from(chatTitlesMap.keys()).map((chatTitleKey, index) => {
             return (
-              <ChatRoom
+              <ChatRoomWrapper
+                isActive={tab === chatTitleKey}
                 key={index}
-                onClick={() => {
-                  currentChatTitle = chatTitlesMap.has(chatTitleKey)
-                    ? chatTitlesMap.get(chatTitleKey)!
-                    : '';
-                  setTab(chatTitleKey);
-                }}
               >
-                {chatTitlesMap.get(chatTitleKey)}
-              </ChatRoom>
+                <ChatRoom
+                  onClick={() => {              
+                    
+                    currentChatTitle = chatTitlesMap.has(chatTitleKey)
+                      ? chatTitlesMap.get(chatTitleKey)!
+                      : '';
+                    setTab(chatTitleKey);
+                    // setActiveTab(chatTitleKey);
+                                  
+                  }}
+                  
+                >
+                  {chatTitlesMap.get(chatTitleKey)}
+                </ChatRoom>
+              </ChatRoomWrapper>
             );
           })}
         </ChatList>
@@ -235,19 +249,21 @@ function Inbox() {
             ))}
             <LastMessage id="last-message" ref={messageEndRef}></LastMessage>
           </ChatMessages>
-          <SendMessage id="send-message">            
-                <SendButton
-                    type="button"                    
-                    onClick={() => {
-                      currentReservationIdLink = reservationIdLinksMap.has(currentChatTitle)
-                        ? reservationIdLinksMap.get(currentChatTitle)!
-                        : '';
-                      window.location.href = `http://localhost:3000/${currentReservationIdLink}/chat`;
-                    }}
-                  >
-                    To send a new message go to Chat page
-                  </SendButton>                           
-          
+          <SendMessage id="send-message">
+            <SendButton
+              type="button"
+              onClick={() => {
+                currentReservationIdLink = reservationIdLinksMap.has(
+                  currentChatTitle
+                )
+                  ? reservationIdLinksMap.get(currentChatTitle)!
+                  : '';
+
+                navigate(`/reservations/${currentReservationIdLink}/chat`);
+              }}
+            >
+              To send a new message go to Chat page
+            </SendButton>
           </SendMessage>
         </ChatContent>
       ) : (
@@ -266,7 +282,6 @@ const SideBar = styled.div`
   flex-direction: column;
   height: 100%;
   width: 250px;
-  //background-color: red;
   gap: 20px;
   padding: 16px;
 `;
@@ -302,7 +317,7 @@ const ChatList = styled.div`
 
 const ChatRoom = styled.button`
   display: flex;
-  background-color: #ffffff;
+  // background-color: 
   margin-top: 10px;
   margin-left: 10px;
   box-shadow: 0 3px 3px rgb(18 58 39 / 0.4);
@@ -310,7 +325,15 @@ const ChatRoom = styled.button`
   border-radius: 5px;
   padding: 10px;
   max-width: 200px;
-  border: none;
+  border: none;  
+`;
+
+const ChatRoomWrapper = styled.div<{ isActive: boolean }>`
+  display: flex;
+  background-color: ${(props) => (props.isActive ? '#ff0000' : '#ffffff')};
+  width: 100%;
+  margin: 10px 0;
+  justify-content: flex-start;
 `;
 const ChatName = styled.h1`
   display: flex;

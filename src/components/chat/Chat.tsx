@@ -222,15 +222,16 @@ function Chat() {
             {' '}
             Group Chat{' '}
           </ChatRoom>
-          {Array.from(privateChats.keys()).map((chatName, index) => (
-            <ChatRoom
-              key={index}
-              onClick={() => {
-                setTab(chatName);
-              }}
-            >
+          {Array.from(privateChats.keys()).map((chatName, index) => (            
+              <ChatRoom
+                key={index}
+                onClick={() => {
+                  setTab(chatName);
+                }}
+              >
               {chatName}
-            </ChatRoom>
+              </ChatRoom>
+           
           ))}
         </ChatList>
       </SideBar>
