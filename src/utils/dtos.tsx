@@ -49,24 +49,65 @@ export interface Property {
 }
 
 /**
+ * Represents a key/value data pair
+ */
+export interface KeyValue {
+  key: string;
+  value: string;
+}
+
+/**
+ * The valid types of a guidebook section
+ */
+export type GuidebookSectionType = 'text' | 'list' | 'keyValue' | 'bio';
+
+/**
+ * The base shape of a guidebook section
+ */
+export interface GuidebookSection<T> {
+  title: string;
+  type: GuidebookSectionType;
+  content: T;
+}
+
+/**
+ * The property bio information for a property guidebook
+ */
+export interface GuidebookPropertyBio {
+  about: string;
+  amenities: string[];
+  facts: KeyValue[];
+  checkInInstr?: string;
+  checkOutInstr?: string;
+}
+
+/**
  * Represents a guidebook json object that is used to save information from the Host
  * and displays to guests.
  */
-export interface GuidebookDto {
-  propertyID: string;
+export type GuidebookDto = {
+  propertyId: string;
   propertyName: string;
-  propertyType?: 'Cabin' | 'City' | 'Beach' | 'Mountain';
-  capacity: number;
-  pets: 'Allowed' | 'Not Allowed';
-  amenities?: string[];
-  propertyBio: string[];
-  faq?: Array<{ question: string; answer: string }>;
-  policies?: string[];
-  hostRecommended?: string[];
-  hostServices?: string[];
-  askGuestTheseQuestionsinSurvey?: any;
-  checkininstr?: string[];
-  checkoutinstr?: string[];
+  sections: string[];
+  propertyBio: GuidebookSection<GuidebookPropertyBio>;
+} & {
+  [key: string]: GuidebookSection<string | string[] | KeyValue[]>;
+};
+
+/**
+ * Metadata for a guidebook image
+ */
+export interface GuidebookImageMetadata {
+  name: string;
+  tags: string[];
+}
+
+/**
+ * Contains a list of image files and associated metadata (matching GuidebookImageMetadata.java)
+ */
+export interface GuidebookImageFiles {
+  files: FileList;
+  metadata: GuidebookImageMetadata[];
 }
 
 /**
@@ -177,4 +218,18 @@ export interface Message {
   me: boolean;
   time: Date;
   message: string;
+}
+
+export interface SurveyData {
+  reservationId: string;
+  property: Property;
+  guest: User;
+  qualityMetrics: {};
+  submissionTime: Date;
+  surveyResponse: string;
+}
+
+export interface SurveyMetrics {
+  hostId: string;
+  surveyResponses: SurveyData[];
 }

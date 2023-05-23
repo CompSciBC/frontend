@@ -6,12 +6,12 @@ import { Box } from '@mui/system';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs, { Dayjs } from 'dayjs';
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import propertiesJson from './mock_data_delete_later/properties.json';
+import HostContext from './hostContext';
 
 export interface GanttChartProps {
   hostId: string;
-  ganttStart: Date;
   ganttDuration: number;
 }
 
@@ -21,18 +21,15 @@ interface CellProps {
   cellWidth?: string;
 }
 
-export default function GanttChart({
-  hostId,
-  ganttStart,
-  ganttDuration
-}: GanttChartProps) {
+export default function GanttChart({ hostId, ganttDuration }: GanttChartProps) {
+  const things = useContext(HostContext);
+  // console.log(things);
+  // console.log(things?.reservations);
   const weekday = ['Sun.', 'Mon.', 'Tue.', 'Wed.', 'Thur.', 'Fri.', 'Sat.'];
   const colors = [theme.color.lime, theme.color.white];
   const rows = [];
   // const [startDate, setStartDate] = useState<Dayjs | null>(dayjs());
-  const [startDate, setStartDate] = useState<Dayjs | null>(
-    dayjs('03-01-2023', 'MM-DD-YYYY')
-  );
+  const [startDate, setStartDate] = useState<Dayjs | null>(dayjs());
   const properties = propertiesJson.data;
   const initialEndDate = startDate!.add(ganttDuration, 'day');
   const [endDate, setEndDate] = useState<Dayjs | null>(initialEndDate);
