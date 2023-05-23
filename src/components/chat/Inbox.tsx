@@ -59,7 +59,6 @@ function Inbox() {
   const [reservationIdLinksMap, setReservationIdLinks] = useState(
     new Map<string, string>()
   );
- 
 
   /* use this trick to prevent double loading of data. It looks like that an additional loading erases GroupChat array.
   I have no idea why this not happened to Map. Probably, I'll put Group Chat into a Map */
@@ -145,8 +144,6 @@ function Inbox() {
     }
   }, [userData]);
 
-  
-
   const onConnected = (
     chats: ChatsServerResponse,
     reservationsMap: Map<string, Reservation>
@@ -180,13 +177,11 @@ function Inbox() {
 
     firstChatId = inboxChats.keys().next().value;
     setTab(firstChatId);
-    // setActiveTab(firstChatId);   
+    // setActiveTab(firstChatId);
     console.log(firstChatTitle);
     currentChatTitle = chatTitlesMap.get(firstChatId)!;
 
     firstChatTitle = chatTitlesMap.keys().next().value;
-    
-
 
     currentReservationIdLink = reservationIdLinksMap.get(currentChatTitle)!;
     console.log(currentReservationIdLink + 'curentLinkResId');
@@ -203,21 +198,14 @@ function Inbox() {
         <ChatList>
           {Array.from(chatTitlesMap.keys()).map((chatTitleKey, index) => {
             return (
-              <ChatRoomWrapper
-                isActive={tab === chatTitleKey}
-                key={index}
-              >
+              <ChatRoomWrapper isActive={tab === chatTitleKey} key={index}>
                 <ChatRoom
-                  onClick={() => {              
-                    
+                  onClick={() => {
                     currentChatTitle = chatTitlesMap.has(chatTitleKey)
                       ? chatTitlesMap.get(chatTitleKey)!
                       : '';
                     setTab(chatTitleKey);
-                    // setActiveTab(chatTitleKey);
-                                  
                   }}
-                  
                 >
                   {chatTitlesMap.get(chatTitleKey)}
                 </ChatRoom>
@@ -317,7 +305,7 @@ const ChatList = styled.div`
 
 const ChatRoom = styled.button`
   display: flex;
-  // background-color: 
+  // background-color:
   margin-top: 10px;
   margin-left: 10px;
   box-shadow: 0 3px 3px rgb(18 58 39 / 0.4);
@@ -325,12 +313,12 @@ const ChatRoom = styled.button`
   border-radius: 5px;
   padding: 10px;
   max-width: 200px;
-  border: none;  
+  border: none;
 `;
 
 const ChatRoomWrapper = styled.div<{ isActive: boolean }>`
   display: flex;
-  background-color: ${(props) => (props.isActive ? '#ff0000' : '#ffffff')};
+  background-color: ${(props) => (props.isActive ? '#b61616' : '#ffffff')};
   width: 100%;
   margin: 10px 0;
   justify-content: flex-start;
