@@ -15,8 +15,8 @@ import { Container, Grid, Box } from '@mui/material';
 
 
 const columns: GridColDef[] = [
-    { field: 'id', headerName: 'ID', width: 70 },
-    { field: 'firstName', headerName: 'First name', width: 130 },
+    { field: 'reservationId', headerName: 'ID', width: 70 },
+    { field: 'submissionTime', headerName: 'First name', width: 130 },
     { field: 'lastName', headerName: 'Last name', width: 130 },
     {
       field: 'age',
@@ -68,12 +68,12 @@ function HostReviewsDashboard() {
             <Grid container wrap="nowrap" spacing={2}>
                 <Grid item xs={12}>
                     <WidgetTitle>
-                        <h3 style={{ float: 'left' }}> Your Week at a Glance </h3>
+                        <h3 style={{ float: 'left' }}> Reviews </h3>
                     </WidgetTitle>
                 </Grid>
             </Grid>
             <DataGrid
-                rows={rows}
+                rows={surveysJson.surveyResponses}
                 columns={columns}
                 initialState={{
                 pagination: {
