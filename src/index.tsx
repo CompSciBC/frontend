@@ -30,6 +30,7 @@ import SurveyView from './components/dashboard/review/SurveyComponent';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
 import Inbox from './components/chat/Inbox';
+import HostReviewsDashboard from './components/hostdashboard/HostReviewsDashboard';
 // import AppTestMode from './components/AppTestMode';
 
 // Configure React project with Amplify resources
@@ -74,7 +75,8 @@ export const routes = {
   restaurants: '/reservations/:resId/restaurants',
   eventsAndPlaces: '/reservations/:resId/eventsAndPlaces',
   map: '/reservations/:resId/map',
-  review: '/reservations/:resId/:guestId/review'
+  review: '/reservations/:resId/:guestId/review',
+  hostReviews: '/hostReviewsDashboard'
 };
 
 /**
@@ -131,6 +133,10 @@ const hostNavLinks: NavbarLink[] = [
   {
     name: 'Inbox',
     path: routes.inbox
+  },
+  {
+    name: 'Reviews',
+    path: routes.hostReviews
   }
 ];
 
@@ -255,6 +261,10 @@ const router = createBrowserRouter([
           {
             path: routes.review,
             element: <SurveyView />
+          },
+          {
+            path: routes.hostReviews,
+            element: <HostReviewsDashboard />
           }
         ]
       }
