@@ -53,13 +53,13 @@ export interface Property {
  */
 export interface KeyValue {
   key: string;
-  value: string | number;
+  value: string;
 }
 
 /**
  * The valid types of a guidebook section
  */
-export type GuidebookSectionType = 'text' | 'list' | 'keyValue';
+export type GuidebookSectionType = 'text' | 'list' | 'keyValue' | 'bio';
 
 /**
  * The base shape of a guidebook section
@@ -71,6 +71,17 @@ export interface GuidebookSection<T> {
 }
 
 /**
+ * The property bio information for a property guidebook
+ */
+export interface GuidebookPropertyBio {
+  about: string;
+  amenities: string[];
+  facts: KeyValue[];
+  checkInInstr?: string;
+  checkOutInstr?: string;
+}
+
+/**
  * Represents a guidebook json object that is used to save information from the Host
  * and displays to guests.
  */
@@ -78,15 +89,26 @@ export type GuidebookDto = {
   propertyId: string;
   propertyName: string;
   sections: string[];
-  propertyBio: GuidebookSection<string> & {
-    amenities: string[];
-    facts: KeyValue[];
-    checkInInstr?: string;
-    checkOutInstr?: string;
-  };
+  propertyBio: GuidebookSection<GuidebookPropertyBio>;
 } & {
   [key: string]: GuidebookSection<string | string[] | KeyValue[]>;
 };
+
+/**
+ * Metadata for a guidebook image
+ */
+export interface GuidebookImageMetadata {
+  name: string;
+  tags: string[];
+}
+
+/**
+ * Contains a list of image files and associated metadata (matching GuidebookImageMetadata.java)
+ */
+export interface GuidebookImageFiles {
+  files: FileList;
+  metadata: GuidebookImageMetadata[];
+}
 
 /**
  * Represents a contract agreement between a host and a guest to rent a property

@@ -1,11 +1,21 @@
 import styled from '@emotion/styled';
-import { Box, FormControlLabel, Stack, Switch } from '@mui/material';
-import { GuidebookDto } from '../../../../utils/dtos';
-import { useEffect, useState } from 'react';
+import {
+  AlertColor,
+  Box,
+  FormControlLabel,
+  Stack,
+  Switch
+} from '@mui/material';
+import { GuidebookDto, GuidebookSection } from '../../../../utils/dtos';
+import { useCallback, useEffect, useState } from 'react';
 import { theme } from '../../../../utils/styles';
 import GuidebookEditSection from './GuidebookEditSection';
 import { useParams } from 'react-router-dom';
-import { server } from '../../../..';
+import AlertPopup from '../../../stuff/AlertPopup';
+import Guidebook from '../Guidebook';
+import AddSectionDialog from './AddSectionDialog';
+import { getGuidebookContent, uploadGuidebookContent } from '../guidebookData';
+import GuidebookEditImages from './GuidebookEditImages';
 
 /**
  * Generates a object key name for a new custom guidebook section
@@ -41,7 +51,20 @@ function GuidebookEditor({ className }: GuidebookEditorProps) {
   const { propId } = useParams();
   const [guestView, setGuestView] = useState(false);
   const [guidebook, setGuidebook] = useState<GuidebookDto | null>(null);
-  const [order, setOrder] = useState<string[]>([]);
+
+  // true if guidebook has diverged from s3
+  // this is a hack to prevent calling the api on initial load of the guidebook
+  const [guidebookUpdated, setGuidebookUpdated] = useState(false);
+
+  const [alert, setAlert] = useState<{
+    open: boolean;
+    severity: AlertColor;
+    message: string;
+  }>({
+    open: false,
+    severity: 'error',
+    message: ''
+  });
 
   // retrieve guidebook content from api
   useEffect(() => {
@@ -49,12 +72,7 @@ function GuidebookEditor({ className }: GuidebookEditorProps) {
 
     if (propId) {
       (async function () {
-        fetch(`${server}/api/guidebook/${propId}/content`)
-          .then(async (res) => await res.json())
-          .then((gb: GuidebookDto) => {
-            subscribed && setGuidebook(gb);
-            subscribed && setOrder(gb.sections);
-          });
+        subscribed && setGuidebook(await getGuidebookContent(propId));
       })();
     }
 
@@ -63,113 +81,183 @@ function GuidebookEditor({ className }: GuidebookEditorProps) {
     };
   }, [propId]);
 
-  const handleSave = async (
-    sectionId: string,
-    update: any
-  ): Promise<boolean> => {
-    if (guidebook) {
-      const updatedGuidebook: GuidebookDto = {
-        ...guidebook,
-        [sectionId]: {
-          ...guidebook[sectionId],
-          content: update
-        }
-      };
-      setGuidebook(updatedGuidebook);
+  const handleSave = useCallback(
+    async (
+      sectionId: string,
+      update: GuidebookSection<any>
+    ): Promise<boolean> => {
+      if (guidebook) {
+        const updatedGuidebook: GuidebookDto = {
+          ...guidebook,
+          [sectionId]: update
+        };
+        setGuidebook(updatedGuidebook);
+        setGuidebookUpdated(true);
 
-      return true;
-    } else {
-      return false;
-    }
-  };
+        return true;
+      } else {
+        return false;
+      }
+    },
+    [guidebook]
+  );
 
-  const handleDelete = async (sectionId: string): Promise<boolean> => {
-    if (guidebook) {
-      const newSections = [...guidebook.sections];
-      const index = newSections.indexOf(sectionId);
-      if (index && index >= 0) newSections.splice(index, 1);
+  const handleDelete = useCallback(
+    async (sectionId: string): Promise<boolean> => {
+      if (guidebook) {
+        const newSections = [...guidebook.sections];
+        const index = newSections.indexOf(sectionId);
+        if (index && index >= 0) newSections.splice(index, 1);
+
+        // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+        const updatedGuidebook = {
+          ...guidebook,
+          sections: newSections
+        } as GuidebookDto;
+
+        // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+        delete updatedGuidebook[sectionId];
+
+        setGuidebook(updatedGuidebook);
+        setGuidebookUpdated(true);
+
+        return true;
+      } else {
+        return false;
+      }
+    },
+    [guidebook]
+  );
+
+  // swap index i and i+1
+  const handleMoveDown = useCallback(
+    (id: string) => {
+      if (guidebook) {
+        const i = guidebook.sections.indexOf(id);
+        const newOrder = [...guidebook.sections];
+        const current = newOrder[i];
+        newOrder[i] = newOrder[i + 1];
+        newOrder[i + 1] = current;
+
+        // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+        const updatedGuidebook = {
+          ...guidebook,
+          sections: newOrder
+        } as GuidebookDto;
+
+        setGuidebook(updatedGuidebook);
+        setGuidebookUpdated(true);
+      }
+    },
+    [guidebook]
+  );
+
+  const handleAddSection = useCallback(
+    (section: GuidebookSection<any>) => {
+      const newSectionId = `custom_${section.title.replace(' ', '')}`;
 
       // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-      const updatedGuidebook = {
+      const newGuidebook = {
         ...guidebook,
-        sections: newSections
+        [newSectionId]: section,
+        sections: [...guidebook!.sections, newSectionId]
       } as GuidebookDto;
 
-      // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
-      delete updatedGuidebook[sectionId];
-
-      setGuidebook(updatedGuidebook);
-
-      return true;
-    } else {
-      return false;
-    }
-  };
+      setGuidebook(newGuidebook);
+      setGuidebookUpdated(true);
+    },
+    [guidebook]
+  );
 
   // post updated guidebook to api
   useEffect(() => {
     let subscribed = true;
 
-    // TODO: post to api
-    subscribed && console.log(guidebook);
+    if (propId && guidebookUpdated && guidebook) {
+      (async function () {
+        uploadGuidebookContent(propId, guidebook)
+          .then(() => {
+            subscribed && setGuidebookUpdated(false);
+            subscribed &&
+              setAlert({
+                open: true,
+                severity: 'success',
+                message: 'Saved successfully.'
+              });
+          })
+          .catch((err) => {
+            subscribed &&
+              setAlert({
+                open: true,
+                severity: 'error',
+                message: err
+              });
+          });
+      })();
+    }
 
     return () => {
       subscribed = false;
     };
-  }, [guidebook]);
-
-  // swap index i and i+1
-  const handleMoveDown = (id: string) => {
-    const i = order.indexOf(id);
-    const newOrder = [...order];
-    const current = newOrder[i];
-    newOrder[i] = newOrder[i + 1];
-    newOrder[i + 1] = current;
-    setOrder(newOrder);
-    // TODO: immediately save this order change to the API
-  };
+  }, [guidebookUpdated]);
 
   return (
-    <Container>
-      <Header>
-        <FormControlLabel
-          control={<Switch disableRipple />}
-          label="View as Guest"
-          labelPlacement="start"
-          onChange={() => setGuestView(!guestView)}
-        />
-      </Header>
-      <EditorContainer className={className}>
-        <Box sx={{ width: '100%' }}>
-          {guidebook && (
-            <Stack>
-              {order.map((sectionId, i) => {
-                return guidebook[sectionId] ? (
-                  <GuidebookEditSection
-                    key={sectionId}
-                    sectionId={sectionId}
-                    section={guidebook[sectionId]}
-                    onMoveDown={
-                      // last section will not have move down logic as it cannot move down further
-                      i < order.length - 1
-                        ? () => handleMoveDown(sectionId)
-                        : undefined
-                    }
-                    onSave={handleSave}
-                    onDelete={
-                      // only host's custom defined sections can be deleted
-                      isCustomGuidebookSection(sectionId)
-                        ? handleDelete
-                        : undefined
-                    }
-                  />
-                ) : null;
-              })}
-            </Stack>
+    <>
+      {propId && (
+        <Container>
+          <Header guestView={guestView}>
+            {!guestView && <AddSectionDialog onSubmit={handleAddSection} />}
+            <FormControlLabel
+              control={<Switch disableRipple />}
+              label="View as Guest"
+              labelPlacement="start"
+              onChange={() => setGuestView(!guestView)}
+            />
+          </Header>
+          {guestView ? (
+            <Guidebook propertyId={propId} />
+          ) : (
+            <EditorContainer className={className}>
+              <Box sx={{ width: '100%' }}>
+                {guidebook && (
+                  <Stack>
+                    {guidebook.sections?.map((sectionId, i) => {
+                      return guidebook[sectionId] ? (
+                        <GuidebookEditSection
+                          key={sectionId}
+                          sectionId={sectionId}
+                          section={guidebook[sectionId]}
+                          onMoveDown={
+                            // last section will not have move down logic as it cannot move down further
+                            i < guidebook.sections.length - 1
+                              ? handleMoveDown
+                              : undefined
+                          }
+                          onSave={handleSave}
+                          onDelete={
+                            // only host's custom defined sections can be deleted
+                            isCustomGuidebookSection(sectionId)
+                              ? handleDelete
+                              : undefined
+                          }
+                        />
+                      ) : null;
+                    })}
+                  </Stack>
+                )}
+                <GuidebookEditImages propId={propId} />
+              </Box>
+            </EditorContainer>
           )}
-        </Box>
-      </EditorContainer>
-    </Container>
+        </Container>
+      )}
+      <AlertPopup
+        open={alert.open}
+        onClose={() => setAlert({ ...alert, open: false })}
+        severity={alert.severity}
+        message={alert.message}
+      />
+    </>
   );
 }
 
@@ -178,12 +266,12 @@ const Container = styled.div`
   position: relative;
 `;
 
-const Header = styled.div`
+const Header = styled.div<{ guestView: boolean }>`
   position: sticky;
   top: 0;
-  z-index: 1;
+  z-index: 2;
   display: flex;
-  justify-content: end;
+  justify-content: ${(props) => (props.guestView ? 'end' : 'space-between')};
   width: 100%;
   padding: 8px 16px;
   background-color: ${theme.color.lightGray};
