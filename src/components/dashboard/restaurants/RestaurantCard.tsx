@@ -1,8 +1,8 @@
 import styled from '@emotion/styled';
 import { theme } from '../../../utils/styles';
 import { Fragment } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { routes } from '../../..';
+import { useNavigate, useParams } from 'react-router-dom';
+import { paramRoute, routes } from '../../..';
 import { Restaurant } from '../../../utils/dtos';
 import Star from './Star';
 
@@ -12,6 +12,7 @@ export interface RestaurantCardProps {
 }
 
 function RestaurantCard({ className, restaurant }: RestaurantCardProps) {
+  const { resId } = useParams();
   const navigate = useNavigate();
   const {
     name,
@@ -75,7 +76,7 @@ function RestaurantCard({ className, restaurant }: RestaurantCardProps) {
               type="button"
               onClick={(event) => {
                 event.preventDefault();
-                navigate(routes.map);
+                navigate(paramRoute(routes.map, resId));
               }}
             >
               Get Directions
