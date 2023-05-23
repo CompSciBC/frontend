@@ -74,7 +74,7 @@ function HostLanding() {
     reservations,
     reviews
   });
-  
+
   // console.log('reservations');
   // console.log(reservations);
   // console.log('host');
