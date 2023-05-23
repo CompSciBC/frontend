@@ -39,13 +39,10 @@ function HostLanding() {
   const [reservationButton, setReservationButton] =
     useState<string>('getCurrent');
   const [reservations, setReservations] = useState<Reservation[]>([]);
-  
 
   const [reviews, setReviews] = useState<SurveyMetrics>();
   useEffect(() => {
-    fetch(`${server}/api/surveys/hostmetrics?id=${
-      user!.userId
-    }`)
+    fetch(`${server}/api/surveys/hostmetrics?id=${user!.userId}`)
       .then(async (res) => {
         return await res.json();
       })
@@ -105,11 +102,11 @@ function HostLanding() {
             Upcoming{' '}
           </button>
         </ReservationsButtons>
-        {reservations.length === 0?
+        {reservations.length === 0 ? (
           <Placeholder>
             <h3> You have no reservations at the moment </h3>
           </Placeholder>
-          :
+        ) : (
           <ReservationsScroll>
             {reservations.map((f, index) => (
               <ReservationCard
@@ -123,18 +120,18 @@ function HostLanding() {
               />
             ))}
           </ReservationsScroll>
-        }
+        )}
         <WidgetTitle>
           <h3 style={{ float: 'left' }}> Newest Reviews </h3>
           <a style={{ float: 'right' }} href="host-reservations">
             All reviews
           </a>
         </WidgetTitle>
-        {reviews?.surveyResponses.length === 0?
+        {reviews?.surveyResponses.length === 0 ? (
           <Placeholder>
             <h3> You have no reviews at the moment </h3>
           </Placeholder>
-          :
+        ) : (
           <Reviews>
             {reviews?.surveyResponses.map((f: any, index: any) => (
               <ReviewCard
@@ -147,7 +144,7 @@ function HostLanding() {
               />
             ))}
           </Reviews>
-        }
+        )}
         <WidgetTitle>
           <h3 style={{ float: 'left' }}> Your Week at a Glance </h3>
         </WidgetTitle>
@@ -215,7 +212,7 @@ const Placeholder = styled.div`
   justify-content: center;
   border-radius: 16px;
   ${theme.font.placeholder}
-  background-color: #FBFCFC 
+  background-color: #FBFCFC
 `;
 
 const WidgetTitle = styled.div`
