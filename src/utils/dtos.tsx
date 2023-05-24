@@ -225,6 +225,7 @@ export interface SurveyData {
   property: Property;
   guest: User;
   qualityMetrics: {};
+  qualityMetricsAverage: number;
   submissionTime: Date;
   surveyResponse: string;
 }

@@ -10,48 +10,111 @@ import { server } from '../../index';
 import { Reservation, SurveyData, SurveyMetrics, User } from '../../utils/dtos';
 import surveysJson from './mock_data_delete_later/surveys.json';
 import * as React from 'react';
-import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
-import { Container, Grid, Box, Button, Avatar } from '@mui/material';
+import { DataGrid, GridColDef, GridRenderCellParams, GridValueGetterParams } from '@mui/x-data-grid';
+import { Container, Grid, Box, Button, Avatar, Rating } from '@mui/material';
+import {
+  Favorite,
+  FavoriteBorder, Countertops, CountertopsOutlined, AccessTime, AccessTimeOutlined, MenuBook, MenuBookOutlined, LocationOn, LocationOnOutlined, Chair, ChairOutlined, CleaningServices, CleaningServicesOutlined, Sms, SmsOutlined, Paid, PaidOutlined
+} from '@mui/icons-material';
+
+interface metricsDecoration {
+  friendlyName: string;
+  filledIcon: React.ReactNode;
+  unfilledIcon: React.ReactNode;
+}
+
+const metricsColors = new Map<number, string>([
+    [1, theme.color.gray],
+    [2, theme.color.red],
+    [3, theme.color.orange],
+    [4, theme.color.yellow],
+    [5, theme.color.green]
+]);
+
+const metricsNames: Map<string, metricsDecoration> = new Map();
+metricsNames.set('amenities', {
+  friendlyName: 'Amenities',
+  filledIcon: <Countertops/>,
+  unfilledIcon: <CountertopsOutlined/>
+});
+metricsNames.set('value-for-money', {
+  friendlyName: 'Value for Money',
+  filledIcon: <Paid/>,
+  unfilledIcon: <PaidOutlined/>
+});
+metricsNames.set('host-communication-timeliness', {
+  friendlyName: 'Responsive Communication',
+  filledIcon: <AccessTime/>,
+  unfilledIcon: <AccessTimeOutlined/>
+});
+metricsNames.set('guidebook', {
+  friendlyName: 'Guidebook Helpfulness',
+  filledIcon: <MenuBook/>,
+  unfilledIcon: <MenuBookOutlined/>
+});
+metricsNames.set('location', {
+  friendlyName: 'Location',
+  filledIcon: <LocationOn/>,
+  unfilledIcon: <LocationOnOutlined/>
+});
+metricsNames.set('comfort', {
+  friendlyName: 'Comfort',
+  filledIcon: <Chair/>,
+  unfilledIcon: <ChairOutlined/>
+});
+metricsNames.set('cleanliness', {
+  friendlyName: 'Cleanliness',
+  filledIcon: <CleaningServices/>,
+  unfilledIcon: <CleaningServicesOutlined/>
+});
+metricsNames.set('host-communication-ease', {
+  friendlyName: 'Ease of Communication',
+  filledIcon: <Sms/>,
+  unfilledIcon: <SmsOutlined/>
+});
 
 const columns: GridColDef[] = [
   { field: 'id', headerName: 'ID', width: 50 },
   { field: 'property', headerName: 'Property', width: 200 },
-  { field: 'guest', headerName: 'Guest Name', width: 100,
+  {
+    field: 'guest',
+    headerName: 'Guest Name',
+    width: 120,
     renderCell: (params: GridRenderCellParams<User>) => (
-        <strong>
-            {/* {params.value} */}
-            <Avatar 
-                sx={{ bgcolor: theme.color.purple, width: 40, height: 40  }}
-            >
-                {params.value.firstName.charAt(0)}{params.value.lastName.charAt(0)}
-            </Avatar>
-            {/* <Button
-                variant="contained"
-                size="small"
-                style={{ marginLeft: 16 }}
-                tabIndex={params.hasFocus ? 0 : -1}
-            >
-                {params.value.firstName.charAt(0)}{params.value.lastName.charAt(0)}
-            </Button> */}
-        </strong>
-    ),
-    },
+      <strong>
+        {/* {params.value} */}
+        <Avatar sx={{ bgcolor: theme.color.purple, width: 40, height: 40 }}>
+          {params.value.firstName.charAt(0)}
+          {params.value.lastName.charAt(0)}
+        </Avatar>
+      </strong>
+    )
+  },
   { field: 'timestamp', headerName: 'Submission Time', width: 150 },
-//   {
-//     field: 'age',
-//     headerName: 'Age',
-//     type: 'number',
-//     width: 90
-//   },
-//   {
-//     field: 'fullName',
-//     headerName: 'Full name',
-//     description: 'This column has a value getter and is not sortable.',
-//     sortable: false,
-//     width: 160,
-//     valueGetter: (params: GridValueGetterParams) =>
-//       `${params.row.firstName || ''} ${params.row.lastName || ''}`
-//   }
+  { field: 'qualityMetricsAverage', headerName: 'Quality - Average Score', width: 200 },
+  {
+    field: 'qualityMetrics',
+    headerName: 'Quality Ratings',
+    sortable: false,
+    width: 300,
+    renderCell: (params: GridRenderCellParams<User>) => (
+      <strong>
+        <Box sx={{ width: 300, display: 'flex', alignItems: 'center' }}>
+          <Grid container spacing={1}>
+            {Object.keys(params.value).map((f: string, index: number) => (
+            //   <p key={index}>{metricsNames.get(f)?.friendlyName}</p>
+              <Grid key = {index} item xs={3} >
+                  <Box style={{ color: metricsColors.get(params.value[f]) }}>{metricsNames.get(f)?.filledIcon}</Box>
+                  <Box style={{ color: theme.color.gray }}>{params.value[f]}/5</Box>
+                  {/* <Box style={{ color: theme.color.gray }}>{params.value[f]}/5 {metricsNames.get(f)?.friendlyName}</Box> */}
+              </Grid>
+            ))}
+          </Grid>
+        </Box>
+      </strong>
+    )
+  },
+  
 ];
 
 // const rows = [
@@ -66,22 +129,23 @@ const columns: GridColDef[] = [
 //   { id: 9, lastName: 'Roxie', firstName: 'Harvey', age: 65 }
 // ];
 
-
 function createRows(surveyData: SurveyData[]) {
-    const rows = [];
+  const rows = [];
 
-    for (let i: number = 0; i < surveyData.length; i++) {
-        const s = surveyData[i];
-        rows.push({
-            id: i,
-            reservation: s.reservationId,
-            property: s.property.name,
-            guest: s.guest,
-            timestamp: `${s.submissionTime}`
-        });
-      }
-    return rows;
-};
+  for (let i: number = 0; i < surveyData.length; i++) {
+    const s = surveyData[i];
+    rows.push({
+      id: i,
+      reservation: s.reservationId,
+      property: s.property.name,
+      guest: s.guest,
+      timestamp: `${s.submissionTime}`,
+      qualityMetrics: s.qualityMetrics,
+      qualityMetricsAverage: s.qualityMetricsAverage
+    });
+  }
+  return rows;
+}
 
 function HostReviewsDashboard() {
   const { user } = useContext(AppContext);
@@ -90,9 +154,9 @@ function HostReviewsDashboard() {
   const [reservations, setReservations] = useState<Reservation[]>([]);
   const reviews: SurveyMetrics = JSON.parse(JSON.stringify(surveysJson));
   const surveyResponses = reviews.surveyResponses;
-//   console.log(surveyResponses);
-    const rows = createRows(surveyResponses);
-    // console.log(rows);
+  //   console.log(surveyResponses);
+  const rows = createRows(surveyResponses);
+  // console.log(rows);
 
   const [host, setHost] = useState<HostContextType>({
     reservations,
@@ -120,13 +184,15 @@ function HostReviewsDashboard() {
             }}
             pageSizeOptions={[5, 10, 15, 20]}
             // checkboxSelection
-            sx={{ 
-                m: 2,
-                '&.MuiDataGrid-root--densityComfortable .MuiDataGrid-cell': { py: '22px' },
+            sx={{
+              m: 2,
+              '&.MuiDataGrid-root--densityComfortable .MuiDataGrid-cell': {
+                py: '22px'
+              }
             }}
             getRowHeight={() => 'auto'}
             getEstimatedRowHeight={() => 200}
-            density='comfortable'
+            density="comfortable"
           />
         </Box>
       </Container>
