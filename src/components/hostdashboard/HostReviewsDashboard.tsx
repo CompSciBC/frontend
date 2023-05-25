@@ -10,12 +10,40 @@ import { server } from '../../index';
 import { Reservation, SurveyData, SurveyMetrics, User } from '../../utils/dtos';
 import surveysJson from './mock_data_delete_later/surveys.json';
 import * as React from 'react';
-import { DataGrid, GridColDef, GridRenderCellParams, GridValueGetterParams } from '@mui/x-data-grid';
-import { Container, Grid, Box, Button, Avatar, Rating } from '@mui/material';
+import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import {
-  Favorite,
-  FavoriteBorder, Countertops, CountertopsOutlined, AccessTime, AccessTimeOutlined, MenuBook, MenuBookOutlined, LocationOn, LocationOnOutlined, Chair, ChairOutlined, CleaningServices, CleaningServicesOutlined, Sms, SmsOutlined, Paid, PaidOutlined
+  Container,
+  Grid,
+  Box,
+  Button,
+  Avatar,
+  Rating,
+  Dialog,
+  DialogTitle,
+  DialogContentText,
+  TextField,
+  DialogContent,
+  DialogActions
+} from '@mui/material';
+import {
+  Countertops,
+  CountertopsOutlined,
+  AccessTime,
+  AccessTimeOutlined,
+  MenuBook,
+  MenuBookOutlined,
+  LocationOn,
+  LocationOnOutlined,
+  Chair,
+  ChairOutlined,
+  CleaningServices,
+  CleaningServicesOutlined,
+  Sms,
+  SmsOutlined,
+  Paid,
+  PaidOutlined
 } from '@mui/icons-material';
+import SurveyViewButton from './SurveyModel';
 
 interface metricsDecoration {
   friendlyName: string;
@@ -24,57 +52,56 @@ interface metricsDecoration {
 }
 
 const metricsColors = new Map<number, string>([
-    [1, theme.color.gray],
-    [2, theme.color.red],
-    [3, theme.color.orange],
-    [4, theme.color.yellow],
-    [5, theme.color.green]
+  [1, theme.color.gray],
+  [2, theme.color.red],
+  [3, theme.color.orange],
+  [4, theme.color.yellow],
+  [5, theme.color.green]
 ]);
-
 const metricsNames: Map<string, metricsDecoration> = new Map();
 metricsNames.set('amenities', {
   friendlyName: 'Amenities',
-  filledIcon: <Countertops/>,
-  unfilledIcon: <CountertopsOutlined/>
+  filledIcon: <Countertops />,
+  unfilledIcon: <CountertopsOutlined />
 });
 metricsNames.set('value-for-money', {
   friendlyName: 'Value for Money',
-  filledIcon: <Paid/>,
-  unfilledIcon: <PaidOutlined/>
+  filledIcon: <Paid />,
+  unfilledIcon: <PaidOutlined />
 });
 metricsNames.set('host-communication-timeliness', {
   friendlyName: 'Responsive Communication',
-  filledIcon: <AccessTime/>,
-  unfilledIcon: <AccessTimeOutlined/>
+  filledIcon: <AccessTime />,
+  unfilledIcon: <AccessTimeOutlined />
 });
 metricsNames.set('guidebook', {
   friendlyName: 'Guidebook Helpfulness',
-  filledIcon: <MenuBook/>,
-  unfilledIcon: <MenuBookOutlined/>
+  filledIcon: <MenuBook />,
+  unfilledIcon: <MenuBookOutlined />
 });
 metricsNames.set('location', {
   friendlyName: 'Location',
-  filledIcon: <LocationOn/>,
-  unfilledIcon: <LocationOnOutlined/>
+  filledIcon: <LocationOn />,
+  unfilledIcon: <LocationOnOutlined />
 });
 metricsNames.set('comfort', {
   friendlyName: 'Comfort',
-  filledIcon: <Chair/>,
-  unfilledIcon: <ChairOutlined/>
+  filledIcon: <Chair />,
+  unfilledIcon: <ChairOutlined />
 });
 metricsNames.set('cleanliness', {
   friendlyName: 'Cleanliness',
-  filledIcon: <CleaningServices/>,
-  unfilledIcon: <CleaningServicesOutlined/>
+  filledIcon: <CleaningServices />,
+  unfilledIcon: <CleaningServicesOutlined />
 });
 metricsNames.set('host-communication-ease', {
   friendlyName: 'Ease of Communication',
-  filledIcon: <Sms/>,
-  unfilledIcon: <SmsOutlined/>
+  filledIcon: <Sms />,
+  unfilledIcon: <SmsOutlined />
 });
 
 const columns: GridColDef[] = [
-  { field: 'id', headerName: 'ID', width: 50 },
+  { field: 'id', headerName: 'ID', width: 100 },
   { field: 'property', headerName: 'Property', width: 200 },
   {
     field: 'guest',
@@ -91,7 +118,11 @@ const columns: GridColDef[] = [
     )
   },
   { field: 'timestamp', headerName: 'Submission Time', width: 150 },
-  { field: 'qualityMetricsAverage', headerName: 'Quality - Average Score', width: 200 },
+  {
+    field: 'qualityMetricsAverage',
+    headerName: 'Quality - Average Score',
+    width: 200
+  },
   {
     field: 'qualityMetrics',
     headerName: 'Quality Ratings',
@@ -102,11 +133,13 @@ const columns: GridColDef[] = [
         <Box sx={{ width: 300, display: 'flex', alignItems: 'center' }}>
           <Grid container spacing={1}>
             {Object.keys(params.value).map((f: string, index: number) => (
-            //   <p key={index}>{metricsNames.get(f)?.friendlyName}</p>
-              <Grid key = {index} item xs={3} >
-                  <Box style={{ color: metricsColors.get(params.value[f]) }}>{metricsNames.get(f)?.filledIcon}</Box>
-                  <Box style={{ color: theme.color.gray }}>{params.value[f]}/5</Box>
-                  {/* <Box style={{ color: theme.color.gray }}>{params.value[f]}/5 {metricsNames.get(f)?.friendlyName}</Box> */}
+              <Grid key={index} item xs={3}>
+                <Box style={{ color: metricsColors.get(params.value[f]) }}>
+                  {metricsNames.get(f)?.filledIcon}
+                </Box>
+                <Box style={{ color: theme.color.gray }}>
+                  {params.value[f]}/5
+                </Box>
               </Grid>
             ))}
           </Grid>
@@ -114,34 +147,58 @@ const columns: GridColDef[] = [
       </strong>
     )
   },
-  
+  {
+    field: 'surveyResponse',
+    headerName: 'Survey Response',
+    sortable: false,
+    width: 300,
+    renderCell: (params: GridRenderCellParams<SurveyData>) => (
+      <strong>
+        <Box sx={{ width: 300, display: 'flex', alignItems: 'center' }}>
+          <Grid container spacing={1}>
+            <SurveyViewButton 
+                state={true} 
+                content={params.value}
+                surveyMetadata = {params.row} />
+          </Grid>
+        </Box>
+      </strong>
+    )
+  }
 ];
 
-// const rows = [
-//   { id: 1, lastName: 'Snow', firstName: 'Jon', age: 35 },
-//   { id: 2, lastName: 'Lannister', firstName: 'Cersei', age: 42 },
-//   { id: 3, lastName: 'Lannister', firstName: 'Jaime', age: 45 },
-//   { id: 4, lastName: 'Stark', firstName: 'Arya', age: 16 },
-//   { id: 5, lastName: 'Targaryen', firstName: 'Daenerys', age: null },
-//   { id: 6, lastName: 'Melisandre', firstName: null, age: 150 },
-//   { id: 7, lastName: 'Clifford', firstName: 'Ferrara', age: 44 },
-//   { id: 8, lastName: 'Frances', firstName: 'Rossini', age: 36 },
-//   { id: 9, lastName: 'Roxie', firstName: 'Harvey', age: 65 }
-// ];
+const months: string[] = [
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December'
+];
 
 function createRows(surveyData: SurveyData[]) {
   const rows = [];
 
   for (let i: number = 0; i < surveyData.length; i++) {
     const s = surveyData[i];
+    const submissionTime = new Date(s.submissionTime);
     rows.push({
-      id: i,
+      id: i + 1,
       reservation: s.reservationId,
       property: s.property.name,
       guest: s.guest,
-      timestamp: `${s.submissionTime}`,
+      timestamp: `${
+        months[submissionTime.getMonth()]
+      } ${submissionTime.getFullYear()}`,
       qualityMetrics: s.qualityMetrics,
-      qualityMetricsAverage: s.qualityMetricsAverage
+      qualityMetricsAverage: s.qualityMetricsAverage,
+      surveyResponse: s.surveyResponse
     });
   }
   return rows;
@@ -165,7 +222,7 @@ function HostReviewsDashboard() {
 
   return (
     <HostProvider value={host}>
-      <Container maxWidth="lg">
+      <Container maxWidth="xl">
         <Box sx={{ mt: 5 }}>
           <Grid container wrap="nowrap" spacing={2}>
             <Grid item xs={12}>
@@ -187,8 +244,9 @@ function HostReviewsDashboard() {
             sx={{
               m: 2,
               '&.MuiDataGrid-root--densityComfortable .MuiDataGrid-cell': {
-                py: '22px'
-              }
+                py: '10px'
+              },
+              boxShadow: 1
             }}
             getRowHeight={() => 'auto'}
             getEstimatedRowHeight={() => 200}
@@ -201,65 +259,6 @@ function HostReviewsDashboard() {
 }
 
 export default HostReviewsDashboard;
-
-const ReservationsButtons = styled.div`
-  width: 80vw;
-  display: flex;
-  overflow-x: scroll;
-  button {
-    background-color: white;
-    border: 1px solid black;
-    color: black; // text color
-    text-align: center;
-    display: inline-block;
-    margin: 0px 4px;
-    border-radius: 16px;
-    padding: 10px;
-    ${theme.font.button}
-
-    :hover {
-      filter: brightness(0.9) contrast(1.2);
-      border-color: dodgerblue;
-      color: dodgerblue;
-    }
-
-    :focus {
-      background-color: dodgerblue;
-      color: white;
-      border: 1px dodgerblue;
-    }
-  }
-`;
-
-const ReservationsScroll = styled.div`
-  width: 80vw;
-  height: 200px;
-  overflow-x: scroll;
-  white-space: nowrap;
-`;
-
-const Reviews = styled.div`
-  width: 80vw;
-  height: 240px;
-  overflow-x: scroll;
-  white-space: nowrap;
-  display: inline-block;
-  align-items: center;
-  justify-content: space-evenly;
-`;
-
-const Placeholder = styled.div`
-  width: 80vw;
-  height: 200px;
-  align-items: center;
-  padding: 75px;
-
-  text-align: center;
-  justify-content: center;
-  border-radius: 16px;
-  ${theme.font.placeholder}
-  background-color: #FBFCFC
-`;
 
 const WidgetTitle = styled.div`
   width: 80vw;
