@@ -37,7 +37,10 @@ export default function SurveyViewButton(props: SurveyViewButtonProps) {
         View
       </Button>
       <Dialog open={open} onClose={handleClose} fullWidth maxWidth="lg">
-        <DialogTitle>Survey submitted by {props.surveyMetadata.guest.firstName} {props.surveyMetadata.guest.lastName} on  {metadata.timestamp}</DialogTitle>
+        <DialogTitle>
+          Survey submitted by {props.surveyMetadata.guest.firstName}{' '}
+          {props.surveyMetadata.guest.lastName} on {metadata.timestamp}
+        </DialogTitle>
         <DialogContent>
           <DialogContentText>
             <h6>Property: {metadata.property}</h6>

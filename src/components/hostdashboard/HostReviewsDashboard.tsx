@@ -11,20 +11,7 @@ import { Reservation, SurveyData, SurveyMetrics, User } from '../../utils/dtos';
 import surveysJson from './mock_data_delete_later/surveys.json';
 import * as React from 'react';
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
-import {
-  Container,
-  Grid,
-  Box,
-  Button,
-  Avatar,
-  Rating,
-  Dialog,
-  DialogTitle,
-  DialogContentText,
-  TextField,
-  DialogContent,
-  DialogActions
-} from '@mui/material';
+import { Container, Grid, Box, Avatar } from '@mui/material';
 import {
   Countertops,
   CountertopsOutlined,
@@ -44,6 +31,7 @@ import {
   PaidOutlined
 } from '@mui/icons-material';
 import SurveyViewButton from './SurveyModel';
+import {LineGraphVis, PieChartVis} from './ReviewsVisualizations';
 
 interface metricsDecoration {
   friendlyName: string;
@@ -156,10 +144,11 @@ const columns: GridColDef[] = [
       <strong>
         <Box sx={{ width: 300, display: 'flex', alignItems: 'center' }}>
           <Grid container spacing={1}>
-            <SurveyViewButton 
-                state={true} 
-                content={params.value}
-                surveyMetadata = {params.row} />
+            <SurveyViewButton
+              state={true}
+              content={params.value}
+              surveyMetadata={params.row}
+            />
           </Grid>
         </Box>
       </strong>
@@ -223,7 +212,26 @@ function HostReviewsDashboard() {
   return (
     <HostProvider value={host}>
       <Container maxWidth="xl">
-        <Box sx={{ mt: 5 }}>
+        <Box sx={{ mt: 10 }}>
+             <Grid container spacing={2}> 
+                <Grid item xs={12}>
+                    <WidgetTitle>
+                        <h3 style={{ float: 'left' }}> Visualizations </h3>
+                    </WidgetTitle>
+                </Grid>
+                <Grid item xs={4}>
+                    <LineGraphVis/>
+                </Grid>
+                <Grid item xs={4}>
+                    <p> Hello </p>
+                    <PieChartVis/>
+                </Grid>
+             
+             </Grid>
+            
+        </Box>
+        <Box sx={{ mt: 10 }}>
+          
           <Grid container wrap="nowrap" spacing={2}>
             <Grid item xs={12}>
               <WidgetTitle>
