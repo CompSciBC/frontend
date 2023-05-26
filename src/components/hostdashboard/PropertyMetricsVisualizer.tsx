@@ -23,23 +23,29 @@ export function PropertyMetricsVisualizer({
     };
     return(
         <Box sx={{ mt: 2 }}>
-            <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                value={age}
-                label="Age"
-                onChange={handleChange}
-            >
-                <MenuItem value={10}>Ten</MenuItem>
-                <MenuItem value={20}>Twenty</MenuItem>
-                <MenuItem value={30}>Thirty</MenuItem>
-            </Select>
+            <Grid container spacing={2} sx={{ mb: 2 }}>
+                <Grid item xs={12} sm={3} md={3} lg={3}>
+                    <InputLabel id="property-select-label">Property</InputLabel>
+                    <Select
+                        labelId="property-select-label"
+                        value={age}
+                        label="Property"
+                        onChange={handleChange}
+                        fullWidth
+                        variant="standard"
+                    >
+                        {Object.keys(pieChartDataList).map((propertyName, index) => (
+                            <MenuItem key= {index} value={propertyName}>{propertyName}</MenuItem>
+                        ))}
+                    </Select>
+                </Grid>
+            </Grid>
             <Grid container spacing={2}>
                 {Object.keys(pieChartDataList).map((property, index) => (
-                <Grid key={index} item xs={4}>
-                    <p> {property} </p>
-                    <PieChartVis />
-                </Grid>
+                    <Grid key={index} item xs={4}>
+                        <p> {property} </p>
+                        <PieChartVis />
+                    </Grid>
                 ))}
             </Grid>
         </Box>

@@ -432,7 +432,7 @@
       }
   ],
   "pieChartData": {
-      "Property(id=HDPID0000JTN, hostId=652ac46b-f438-45e6-95c0-bb7cc6029db8, name=Hieu's Luxury Joshua Tree Desert Oasis, address=Address(line1=West Desert View Drive, line2=Property 3, city=Joshua Tree, stateProvince=CA, postalCode=92252, country=USA))": [
+      "Hieu's Luxury Joshua Tree Desert Oasis": [
           {
               "name": "amenities",
               "count": 7,
@@ -516,7 +516,7 @@
               }
           }
       ],
-      "Property(id=HDPID0000QCH, hostId=652ac46b-f438-45e6-95c0-bb7cc6029db8, name=Hieu's Quartz Cavern Wellness Retreat, address=Address(line1=377 Cavern Route Rd, line2=null, city=Salt Lake City, stateProvince=Utah, postalCode=84101, country=United States))": [
+      "Hieu's Quartz Cavern Wellness Retreat": [
           {
               "name": "amenities",
               "count": 3,
@@ -589,7 +589,7 @@
               }
           }
       ],
-      "Property(id=HDPID0000PNC, hostId=652ac46b-f438-45e6-95c0-bb7cc6029db8, name=Hieu's Idaho Wilderness Cabin, address=Address(line1=188 Eagle Nest Wide Rd, line2=null, city=Sandpoint, stateProvince=Idaho, postalCode=83864, country=United States))": [
+      "Hieu's Idaho Wilderness Cabin": [
           {
               "name": "amenities",
               "count": 1,
