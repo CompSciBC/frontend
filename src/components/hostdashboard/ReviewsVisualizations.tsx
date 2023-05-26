@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import React from "react";
+import React from 'react';
 import {
   AreaChart,
   Area,
@@ -10,47 +10,47 @@ import {
   Pie,
   Cell,
   PieChart
-} from "recharts";
+} from 'recharts';
 
 const data = [
   {
-    name: "Page A",
+    name: 'Page A',
     uv: 4000,
     pv: 2400,
     amt: 2400
   },
   {
-    name: "Page B",
+    name: 'Page B',
     uv: 3000,
     pv: 1398,
     amt: 2210
   },
   {
-    name: "Page C",
+    name: 'Page C',
     uv: 2000,
     pv: 9800,
     amt: 2290
   },
   {
-    name: "Page D",
+    name: 'Page D',
     uv: 2780,
     pv: 3908,
     amt: 2000
   },
   {
-    name: "Page E",
+    name: 'Page E',
     uv: 1890,
     pv: 4800,
     amt: 2181
   },
   {
-    name: "Page F",
+    name: 'Page F',
     uv: 2390,
     pv: 3800,
     amt: 2500
   },
   {
-    name: "Page G",
+    name: 'Page G',
     uv: 3490,
     pv: 4300,
     amt: 2100
@@ -89,47 +89,44 @@ export function LineGraphVis() {
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
 
 interface PieChartDatum {
-    name: string,
-    value: number
+  name: string;
+  value: number;
 }
 
 export function PieChartVis() {
-    // const data:PieChartDatum[] = [];
-    // for (const key in pieChartData) {
-    //     data.push(
-    //         {
-    //             name: pieChartData[key].toString(),
-    //             value: pieChartData[key],
-    //         }
-    //     );
-    // }
-    // console.log(data);
-    const data1 = [
-        { name: 'Group A', value: 400 },
-        { name: 'Group B', value: 300 },
-        { name: 'Group C', value: 300 },
-        { name: 'Group D', value: 200 },
-      ];
-    return (
-        <PieChart width={300} height={300}>
-            <Pie
-                data={data1}
-                startAngle={180}
-                endAngle={0}
-                innerRadius={60}
-                outerRadius={80}
-                fill="#8884d8"
-                paddingAngle={5}
-                dataKey="value"
-                label
-            >
-                {data1.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                ))}
-            </Pie>
-        </PieChart>
-        
-    );
-  }
-
-
+  // const data:PieChartDatum[] = [];
+  // for (const key in pieChartData) {
+  //     data.push(
+  //         {
+  //             name: pieChartData[key].toString(),
+  //             value: pieChartData[key],
+  //         }
+  //     );
+  // }
+  // console.log(data);
+  const data1 = [
+    { name: 'Group A', value: 400 },
+    { name: 'Group B', value: 300 },
+    { name: 'Group C', value: 300 },
+    { name: 'Group D', value: 200 }
+  ];
+  return (
+    <PieChart width={300} height={300}>
+      <Pie
+        data={data1}
+        startAngle={180}
+        endAngle={0}
+        innerRadius={60}
+        outerRadius={80}
+        fill="#8884d8"
+        paddingAngle={5}
+        dataKey="value"
+        label
+      >
+        {data1.map((entry, index) => (
+          <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+        ))}
+      </Pie>
+    </PieChart>
+  );
+}

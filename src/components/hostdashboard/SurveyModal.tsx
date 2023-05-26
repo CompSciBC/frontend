@@ -43,9 +43,10 @@ export default function SurveyViewButton(props: SurveyViewButtonProps) {
         </DialogTitle>
         <DialogContent>
           <DialogContentText>
-            <h6>Property: {metadata.property}</h6>
-            <h6>ReservationId: {metadata.reservation}</h6>
+            <p> Property: {metadata.property} </p>
+            <p> ReservationId: {metadata.reservation} </p>
           </DialogContentText>
+
           <Survey model={survey} />
         </DialogContent>
         <DialogActions>

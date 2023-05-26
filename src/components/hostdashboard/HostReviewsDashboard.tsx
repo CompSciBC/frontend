@@ -30,8 +30,8 @@ import {
   Paid,
   PaidOutlined
 } from '@mui/icons-material';
-import SurveyViewButton from './SurveyModel';
-import {LineGraphVis, PieChartVis} from './ReviewsVisualizations';
+import SurveyViewButton from './SurveyModal';
+import { LineGraphVis, PieChartVis } from './ReviewsVisualizations';
 
 interface metricsDecoration {
   friendlyName: string;
@@ -201,7 +201,7 @@ function HostReviewsDashboard() {
   const reviews: SurveyMetrics = JSON.parse(JSON.stringify(surveysJson));
   const surveyResponses = reviews.surveyResponses;
   const pieChartDataList = reviews.pieChartData;
-    console.log(reviews);
+  console.log(reviews);
   const rows = createRows(surveyResponses);
   // console.log(rows);
 
@@ -213,38 +213,34 @@ function HostReviewsDashboard() {
   return (
     <HostProvider value={host}>
       <Container maxWidth="xl">
-      <Box sx={{ mt: 10 }}>
-             <Grid container spacing={2}> 
-                <Grid item xs={12}>
-                    <WidgetTitle>
-                        <h3 style={{ float: 'left' }}> Visualizations </h3>
-                    </WidgetTitle>
-                </Grid>
+        <Box sx={{ mt: 10 }}>
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <WidgetTitle>
+                <h3 style={{ float: 'left' }}> Visualizations </h3>
+              </WidgetTitle>
             </Grid>
+          </Grid>
         </Box>
-            
+
         <Box sx={{ mt: 2 }}>
-             <Grid container spacing={2}> 
-                {/* <Grid item xs={5}>
+          <Grid container spacing={2}>
+            {/* <Grid item xs={5}>
                     <LineGraphVis/>
                 </Grid> */}
-                {/* <Grid item xs={5}>
+            {/* <Grid item xs={5}>
                     <p>{JSON.stringify(pieChartDataList)}</p>
                 </Grid> */}
-                
-                {pieChartDataList.map((data, index) => (
-                    <Grid key={index} item xs={4}>
-                        <p> Hello </p>
-                        <PieChartVis/>
-                    </Grid>
-                ))}
-                
-             
-             </Grid>
-            
+
+            {pieChartDataList.map((data, index) => (
+              <Grid key={index} item xs={4}>
+                <p> Hello </p>
+                <PieChartVis />
+              </Grid>
+            ))}
+          </Grid>
         </Box>
         <Box sx={{ mt: 10 }}>
-          
           <Grid container wrap="nowrap" spacing={2}>
             <Grid item xs={12}>
               <WidgetTitle>

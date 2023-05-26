@@ -1,519 +1,519 @@
 {
   "hostId": "652ac46b-f438-45e6-95c0-bb7cc6029db8",
   "surveyResponses": [
-      {
-          "reservationId": "4de873c3-0423-414a-949a-ffc5f2cc8de2",
-          "guest": {
-              "userID": "902f3550-1b7c-4826-b303-2aed6982f79b",
-              "email": "matthew.granger@bellevuecollege.edu",
-              "firstName": "Demo",
-              "joinedOn": "2023-03-14",
-              "lastName": "Guest",
-              "phone": "+19999999999",
-              "role": "guest",
-              "username": "demoguest"
-          },
-          "property": {
-              "id": "HDPID0000JTN",
-              "hostId": "652ac46b-f438-45e6-95c0-bb7cc6029db8",
-              "name": "Hieu's Luxury Joshua Tree Desert Oasis",
-              "address": {
-                  "line1": "West Desert View Drive",
-                  "line2": "Property 3",
-                  "city": "Joshua Tree",
-                  "stateProvince": "CA",
-                  "postalCode": "92252",
-                  "country": "USA"
-              }
-          },
-          "qualityMetrics": {
-              "amenities": 5,
-              "value-for-money": 3,
-              "host-communication-timeliness": 2,
-              "guidebook": 5,
-              "location": 3,
-              "comfort": 1,
-              "cleanliness": 3,
-              "host-communication-ease": 5
-          },
-          "qualityMetricsAverage": 3.375,
-          "submissionTime": "2023-05-22T19:28:41",
-          "surveyResponse": "{\"quality-rental\": {\"cleanliness\": 3, \"comfort\": 1, \"location\": 3, \"value-for-money\": 3, \"host-communication-ease\": 5, \"host-communication-timeliness\": 2, \"amenities\": 5, \"guidebook\": 5}, \"have-additional-thoughts\": false, \"suggestions-bmg\": \"Option for travel insurance coverage\"}"
+    {
+      "reservationId": "4de873c3-0423-414a-949a-ffc5f2cc8de2",
+      "guest": {
+        "userID": "902f3550-1b7c-4826-b303-2aed6982f79b",
+        "email": "matthew.granger@bellevuecollege.edu",
+        "firstName": "Demo",
+        "joinedOn": "2023-03-14",
+        "lastName": "Guest",
+        "phone": "+19999999999",
+        "role": "guest",
+        "username": "demoguest"
       },
-      {
-          "reservationId": "4de873c3-0423-414a-949a-ffc5f2cc8de2",
-          "guest": {
-              "userID": "ec1f8784-77f5-4c4f-84c7-7eee4db0f0e2",
-              "email": "hieu.do@bellevuecollege.edu",
-              "firstName": "Hieu",
-              "joinedOn": "2023-02-27",
-              "lastName": "Do",
-              "phone": "+11234567890",
-              "role": "guest",
-              "username": "hndo_guest4"
-          },
-          "property": {
-              "id": "HDPID0000JTN",
-              "hostId": "652ac46b-f438-45e6-95c0-bb7cc6029db8",
-              "name": "Hieu's Luxury Joshua Tree Desert Oasis",
-              "address": {
-                  "line1": "West Desert View Drive",
-                  "line2": "Property 3",
-                  "city": "Joshua Tree",
-                  "stateProvince": "CA",
-                  "postalCode": "92252",
-                  "country": "USA"
-              }
-          },
-          "qualityMetrics": {
-              "amenities": 1,
-              "value-for-money": 2,
-              "host-communication-timeliness": 5,
-              "guidebook": 4,
-              "location": 1,
-              "comfort": 3,
-              "cleanliness": 4,
-              "host-communication-ease": 3
-          },
-          "qualityMetricsAverage": 2.875,
-          "submissionTime": "2023-05-22T19:28:41",
-          "surveyResponse": "{\"quality-rental\": {\"cleanliness\": 4, \"comfort\": 3, \"location\": 1, \"value-for-money\": 2, \"host-communication-ease\": 3, \"host-communication-timeliness\": 5, \"amenities\": 1, \"guidebook\": 4}, \"discovery-source\": \"other\", \"discovery-source-Comment\": \"Hometogo\"}"
+      "property": {
+        "id": "HDPID0000JTN",
+        "hostId": "652ac46b-f438-45e6-95c0-bb7cc6029db8",
+        "name": "Hieu's Luxury Joshua Tree Desert Oasis",
+        "address": {
+          "line1": "West Desert View Drive",
+          "line2": "Property 3",
+          "city": "Joshua Tree",
+          "stateProvince": "CA",
+          "postalCode": "92252",
+          "country": "USA"
+        }
       },
-      {
-          "reservationId": "5cbd1059-4142-477d-85f6-674d1003b38e",
-          "guest": {
-              "userID": "ec1f8784-77f5-4c4f-84c7-7eee4db0f0e2",
-              "email": "hieu.do@bellevuecollege.edu",
-              "firstName": "Hieu",
-              "joinedOn": "2023-02-27",
-              "lastName": "Do",
-              "phone": "+11234567890",
-              "role": "guest",
-              "username": "hndo_guest4"
-          },
-          "property": {
-              "id": "HDPID0000QCH",
-              "hostId": "652ac46b-f438-45e6-95c0-bb7cc6029db8",
-              "name": "Hieu's Quartz Cavern Wellness Retreat",
-              "address": {
-                  "line1": "377 Cavern Route Rd",
-                  "line2": null,
-                  "city": "Salt Lake City",
-                  "stateProvince": "Utah",
-                  "postalCode": "84101",
-                  "country": "United States"
-              }
-          },
-          "qualityMetrics": {
-              "amenities": 3,
-              "value-for-money": 3,
-              "host-communication-timeliness": 2,
-              "guidebook": 3,
-              "location": 4,
-              "comfort": 2,
-              "cleanliness": 2,
-              "host-communication-ease": 5
-          },
-          "qualityMetricsAverage": 3.0,
-          "submissionTime": "2023-05-22T19:28:41",
-          "surveyResponse": "{\"quality-rental\": {\"cleanliness\": 2, \"comfort\": 2, \"location\": 4, \"value-for-money\": 3, \"host-communication-ease\": 5, \"host-communication-timeliness\": 2, \"amenities\": 3, \"guidebook\": 3}, \"discovery-source\": \"other\", \"discovery-source-Comment\": \"Agoda Homes\", \"suggestions-bmg\": \"Better guidance for resolving disputes\"}"
+      "qualityMetrics": {
+        "amenities": 5,
+        "value-for-money": 3,
+        "host-communication-timeliness": 2,
+        "guidebook": 5,
+        "location": 3,
+        "comfort": 1,
+        "cleanliness": 3,
+        "host-communication-ease": 5
       },
-      {
-          "reservationId": "27e52a7c-e88a-497e-bf9a-a430fa820224",
-          "guest": {
-              "userID": "ec1f8784-77f5-4c4f-84c7-7eee4db0f0e2",
-              "email": "hieu.do@bellevuecollege.edu",
-              "firstName": "Hieu",
-              "joinedOn": "2023-02-27",
-              "lastName": "Do",
-              "phone": "+11234567890",
-              "role": "guest",
-              "username": "hndo_guest4"
-          },
-          "property": {
-              "id": "HDPID0000JTN",
-              "hostId": "652ac46b-f438-45e6-95c0-bb7cc6029db8",
-              "name": "Hieu's Luxury Joshua Tree Desert Oasis",
-              "address": {
-                  "line1": "West Desert View Drive",
-                  "line2": "Property 3",
-                  "city": "Joshua Tree",
-                  "stateProvince": "CA",
-                  "postalCode": "92252",
-                  "country": "USA"
-              }
-          },
-          "qualityMetrics": {
-              "amenities": 5,
-              "value-for-money": 2,
-              "host-communication-timeliness": 2,
-              "guidebook": 5,
-              "location": 5,
-              "comfort": 5,
-              "cleanliness": 5,
-              "host-communication-ease": 2
-          },
-          "qualityMetricsAverage": 3.875,
-          "submissionTime": "2023-05-22T19:28:41",
-          "surveyResponse": "{\"quality-rental\": {\"cleanliness\": 5, \"comfort\": 5, \"location\": 5, \"value-for-money\": 2, \"host-communication-ease\": 2, \"host-communication-timeliness\": 2, \"amenities\": 5, \"guidebook\": 5}, \"suggestions-bmg\": \"Option for instant booking\"}"
+      "qualityMetricsAverage": 3.375,
+      "submissionTime": "2023-05-22T19:28:41",
+      "surveyResponse": "{\"quality-rental\": {\"cleanliness\": 3, \"comfort\": 1, \"location\": 3, \"value-for-money\": 3, \"host-communication-ease\": 5, \"host-communication-timeliness\": 2, \"amenities\": 5, \"guidebook\": 5}, \"have-additional-thoughts\": false, \"suggestions-bmg\": \"Option for travel insurance coverage\"}"
+    },
+    {
+      "reservationId": "4de873c3-0423-414a-949a-ffc5f2cc8de2",
+      "guest": {
+        "userID": "ec1f8784-77f5-4c4f-84c7-7eee4db0f0e2",
+        "email": "hieu.do@bellevuecollege.edu",
+        "firstName": "Hieu",
+        "joinedOn": "2023-02-27",
+        "lastName": "Do",
+        "phone": "+11234567890",
+        "role": "guest",
+        "username": "hndo_guest4"
       },
-      {
-          "reservationId": "4de873c3-0423-414a-949a-ffc5f2cc8de2",
-          "guest": {
-              "userID": "b29a176d-4deb-4f5c-af7c-314987361ce3",
-              "email": "matthew.granger@bellevuecollege.edu",
-              "firstName": "Matthew",
-              "joinedOn": "2023-02-22",
-              "lastName": "Granger",
-              "phone": "+11234567890",
-              "role": "guest",
-              "username": "mg12"
-          },
-          "property": {
-              "id": "HDPID0000JTN",
-              "hostId": "652ac46b-f438-45e6-95c0-bb7cc6029db8",
-              "name": "Hieu's Luxury Joshua Tree Desert Oasis",
-              "address": {
-                  "line1": "West Desert View Drive",
-                  "line2": "Property 3",
-                  "city": "Joshua Tree",
-                  "stateProvince": "CA",
-                  "postalCode": "92252",
-                  "country": "USA"
-              }
-          },
-          "qualityMetrics": {
-              "amenities": 5,
-              "value-for-money": 5,
-              "host-communication-timeliness": 4,
-              "guidebook": 5,
-              "location": 3,
-              "comfort": 2,
-              "cleanliness": 5,
-              "host-communication-ease": 1
-          },
-          "qualityMetricsAverage": 3.75,
-          "submissionTime": "2023-05-22T19:28:41",
-          "surveyResponse": "{\"quality-rental\": {\"cleanliness\": 5, \"comfort\": 2, \"location\": 3, \"value-for-money\": 5, \"host-communication-ease\": 1, \"host-communication-timeliness\": 4, \"amenities\": 5, \"guidebook\": 5}, \"suggestions-rental\": \"Efficient and reliable maintenance staff\"}"
+      "property": {
+        "id": "HDPID0000JTN",
+        "hostId": "652ac46b-f438-45e6-95c0-bb7cc6029db8",
+        "name": "Hieu's Luxury Joshua Tree Desert Oasis",
+        "address": {
+          "line1": "West Desert View Drive",
+          "line2": "Property 3",
+          "city": "Joshua Tree",
+          "stateProvince": "CA",
+          "postalCode": "92252",
+          "country": "USA"
+        }
       },
-      {
-          "reservationId": "78e2fa01-7da9-4c1a-b86b-a07399abc60b",
-          "guest": {
-              "userID": "ec1f8784-77f5-4c4f-84c7-7eee4db0f0e2",
-              "email": "hieu.do@bellevuecollege.edu",
-              "firstName": "Hieu",
-              "joinedOn": "2023-02-27",
-              "lastName": "Do",
-              "phone": "+11234567890",
-              "role": "guest",
-              "username": "hndo_guest4"
-          },
-          "property": {
-              "id": "HDPID0000PNC",
-              "hostId": "652ac46b-f438-45e6-95c0-bb7cc6029db8",
-              "name": "Hieu's Idaho Wilderness Cabin",
-              "address": {
-                  "line1": "188 Eagle Nest Wide Rd",
-                  "line2": null,
-                  "city": "Sandpoint",
-                  "stateProvince": "Idaho",
-                  "postalCode": "83864",
-                  "country": "United States"
-              }
-          },
-          "qualityMetrics": {
-              "amenities": 5,
-              "value-for-money": 5,
-              "host-communication-timeliness": 4,
-              "guidebook": 1,
-              "location": 5,
-              "comfort": 5,
-              "cleanliness": 1,
-              "host-communication-ease": 2
-          },
-          "qualityMetricsAverage": 3.5,
-          "submissionTime": "2023-05-22T19:28:41",
-          "surveyResponse": "{\"quality-rental\": {\"cleanliness\": 1, \"comfort\": 5, \"location\": 5, \"value-for-money\": 5, \"host-communication-ease\": 2, \"host-communication-timeliness\": 4, \"amenities\": 5, \"guidebook\": 1}, \"suggestions-rental\": \"Transparent and itemized billing\"}"
+      "qualityMetrics": {
+        "amenities": 1,
+        "value-for-money": 2,
+        "host-communication-timeliness": 5,
+        "guidebook": 4,
+        "location": 1,
+        "comfort": 3,
+        "cleanliness": 4,
+        "host-communication-ease": 3
       },
-      {
-          "reservationId": "27e52a7c-e88a-497e-bf9a-a430fa820224",
-          "guest": {
-              "userID": "902f3550-1b7c-4826-b303-2aed6982f79b",
-              "email": "matthew.granger@bellevuecollege.edu",
-              "firstName": "Demo",
-              "joinedOn": "2023-03-14",
-              "lastName": "Guest",
-              "phone": "+19999999999",
-              "role": "guest",
-              "username": "demoguest"
-          },
-          "property": {
-              "id": "HDPID0000JTN",
-              "hostId": "652ac46b-f438-45e6-95c0-bb7cc6029db8",
-              "name": "Hieu's Luxury Joshua Tree Desert Oasis",
-              "address": {
-                  "line1": "West Desert View Drive",
-                  "line2": "Property 3",
-                  "city": "Joshua Tree",
-                  "stateProvince": "CA",
-                  "postalCode": "92252",
-                  "country": "USA"
-              }
-          },
-          "qualityMetrics": {
-              "amenities": 3,
-              "value-for-money": 5,
-              "host-communication-timeliness": 4,
-              "guidebook": 1,
-              "location": 1,
-              "comfort": 2,
-              "cleanliness": 1,
-              "host-communication-ease": 5
-          },
-          "qualityMetricsAverage": 2.75,
-          "submissionTime": "2023-05-22T19:28:41",
-          "surveyResponse": "{\"booking-platform\": \"other\", \"booking-platform-Comment\": \"9flats\", \"quality-rental\": {\"cleanliness\": 1, \"comfort\": 2, \"location\": 1, \"value-for-money\": 5, \"host-communication-ease\": 5, \"host-communication-timeliness\": 4, \"amenities\": 3, \"guidebook\": 1}}"
+      "qualityMetricsAverage": 2.875,
+      "submissionTime": "2023-05-22T19:28:41",
+      "surveyResponse": "{\"quality-rental\": {\"cleanliness\": 4, \"comfort\": 3, \"location\": 1, \"value-for-money\": 2, \"host-communication-ease\": 3, \"host-communication-timeliness\": 5, \"amenities\": 1, \"guidebook\": 4}, \"discovery-source\": \"other\", \"discovery-source-Comment\": \"Hometogo\"}"
+    },
+    {
+      "reservationId": "5cbd1059-4142-477d-85f6-674d1003b38e",
+      "guest": {
+        "userID": "ec1f8784-77f5-4c4f-84c7-7eee4db0f0e2",
+        "email": "hieu.do@bellevuecollege.edu",
+        "firstName": "Hieu",
+        "joinedOn": "2023-02-27",
+        "lastName": "Do",
+        "phone": "+11234567890",
+        "role": "guest",
+        "username": "hndo_guest4"
       },
-      {
-          "reservationId": "776e8cfb-509f-4d05-adfb-61507dc14aff",
-          "guest": {
-              "userID": "b29a176d-4deb-4f5c-af7c-314987361ce3",
-              "email": "matthew.granger@bellevuecollege.edu",
-              "firstName": "Matthew",
-              "joinedOn": "2023-02-22",
-              "lastName": "Granger",
-              "phone": "+11234567890",
-              "role": "guest",
-              "username": "mg12"
-          },
-          "property": {
-              "id": "HDPID0000QCH",
-              "hostId": "652ac46b-f438-45e6-95c0-bb7cc6029db8",
-              "name": "Hieu's Quartz Cavern Wellness Retreat",
-              "address": {
-                  "line1": "377 Cavern Route Rd",
-                  "line2": null,
-                  "city": "Salt Lake City",
-                  "stateProvince": "Utah",
-                  "postalCode": "84101",
-                  "country": "United States"
-              }
-          },
-          "qualityMetrics": {
-              "amenities": 4,
-              "value-for-money": 1,
-              "host-communication-timeliness": 4,
-              "guidebook": 1,
-              "location": 4,
-              "comfort": 5,
-              "cleanliness": 5,
-              "host-communication-ease": 2
-          },
-          "qualityMetricsAverage": 3.25,
-          "submissionTime": "2023-05-22T19:28:41",
-          "surveyResponse": "{\"quality-rental\": {\"cleanliness\": 5, \"comfort\": 5, \"location\": 4, \"value-for-money\": 1, \"host-communication-ease\": 2, \"host-communication-timeliness\": 4, \"amenities\": 4, \"guidebook\": 1}}"
+      "property": {
+        "id": "HDPID0000QCH",
+        "hostId": "652ac46b-f438-45e6-95c0-bb7cc6029db8",
+        "name": "Hieu's Quartz Cavern Wellness Retreat",
+        "address": {
+          "line1": "377 Cavern Route Rd",
+          "line2": null,
+          "city": "Salt Lake City",
+          "stateProvince": "Utah",
+          "postalCode": "84101",
+          "country": "United States"
+        }
       },
-      {
-          "reservationId": "e234b2fd-01c5-4aa0-880c-eecee29e2087",
-          "guest": {
-              "userID": "ec1f8784-77f5-4c4f-84c7-7eee4db0f0e2",
-              "email": "hieu.do@bellevuecollege.edu",
-              "firstName": "Hieu",
-              "joinedOn": "2023-02-27",
-              "lastName": "Do",
-              "phone": "+11234567890",
-              "role": "guest",
-              "username": "hndo_guest4"
-          },
-          "property": {
-              "id": "HDPID0000JTN",
-              "hostId": "652ac46b-f438-45e6-95c0-bb7cc6029db8",
-              "name": "Hieu's Luxury Joshua Tree Desert Oasis",
-              "address": {
-                  "line1": "West Desert View Drive",
-                  "line2": "Property 3",
-                  "city": "Joshua Tree",
-                  "stateProvince": "CA",
-                  "postalCode": "92252",
-                  "country": "USA"
-              }
-          },
-          "qualityMetrics": {
-              "amenities": 1,
-              "value-for-money": 1,
-              "host-communication-timeliness": 3,
-              "guidebook": 3,
-              "location": 4,
-              "comfort": 4,
-              "cleanliness": 2,
-              "host-communication-ease": 2
-          },
-          "qualityMetricsAverage": 2.5,
-          "submissionTime": "2023-05-22T19:28:41",
-          "surveyResponse": "{\"booking-platform\": \"other\", \"booking-platform-Comment\": \"Hometogo\", \"quality-rental\": {\"cleanliness\": 2, \"comfort\": 4, \"location\": 4, \"value-for-money\": 1, \"host-communication-ease\": 2, \"host-communication-timeliness\": 3, \"amenities\": 1, \"guidebook\": 3}, \"discovery-source\": \"other\", \"discovery-source-Comment\": \"Booking.com\"}"
+      "qualityMetrics": {
+        "amenities": 3,
+        "value-for-money": 3,
+        "host-communication-timeliness": 2,
+        "guidebook": 3,
+        "location": 4,
+        "comfort": 2,
+        "cleanliness": 2,
+        "host-communication-ease": 5
       },
-      {
-          "reservationId": "776e8cfb-509f-4d05-adfb-61507dc14aff",
-          "guest": {
-              "userID": "ec1f8784-77f5-4c4f-84c7-7eee4db0f0e2",
-              "email": "hieu.do@bellevuecollege.edu",
-              "firstName": "Hieu",
-              "joinedOn": "2023-02-27",
-              "lastName": "Do",
-              "phone": "+11234567890",
-              "role": "guest",
-              "username": "hndo_guest4"
-          },
-          "property": {
-              "id": "HDPID0000QCH",
-              "hostId": "652ac46b-f438-45e6-95c0-bb7cc6029db8",
-              "name": "Hieu's Quartz Cavern Wellness Retreat",
-              "address": {
-                  "line1": "377 Cavern Route Rd",
-                  "line2": null,
-                  "city": "Salt Lake City",
-                  "stateProvince": "Utah",
-                  "postalCode": "84101",
-                  "country": "United States"
-              }
-          },
-          "qualityMetrics": {
-              "amenities": 1,
-              "value-for-money": 2,
-              "host-communication-timeliness": 3,
-              "guidebook": 4,
-              "location": 5,
-              "comfort": 1,
-              "cleanliness": 1,
-              "host-communication-ease": 3
-          },
-          "qualityMetricsAverage": 2.5,
-          "submissionTime": "2023-05-22T19:28:41",
-          "surveyResponse": "{\"booking-platform\": \"other\", \"booking-platform-Comment\": \"Interhome\", \"quality-rental\": {\"cleanliness\": 1, \"comfort\": 1, \"location\": 5, \"value-for-money\": 2, \"host-communication-ease\": 3, \"host-communication-timeliness\": 3, \"amenities\": 1, \"guidebook\": 4}, \"discovery-source\": \"other\", \"discovery-source-Comment\": \"Booking.com\", \"suggestions-bmg\": \"Better management of booking conflicts\"}"
+      "qualityMetricsAverage": 3.0,
+      "submissionTime": "2023-05-22T19:28:41",
+      "surveyResponse": "{\"quality-rental\": {\"cleanliness\": 2, \"comfort\": 2, \"location\": 4, \"value-for-money\": 3, \"host-communication-ease\": 5, \"host-communication-timeliness\": 2, \"amenities\": 3, \"guidebook\": 3}, \"discovery-source\": \"other\", \"discovery-source-Comment\": \"Agoda Homes\", \"suggestions-bmg\": \"Better guidance for resolving disputes\"}"
+    },
+    {
+      "reservationId": "27e52a7c-e88a-497e-bf9a-a430fa820224",
+      "guest": {
+        "userID": "ec1f8784-77f5-4c4f-84c7-7eee4db0f0e2",
+        "email": "hieu.do@bellevuecollege.edu",
+        "firstName": "Hieu",
+        "joinedOn": "2023-02-27",
+        "lastName": "Do",
+        "phone": "+11234567890",
+        "role": "guest",
+        "username": "hndo_guest4"
       },
-      {
-          "reservationId": "e234b2fd-01c5-4aa0-880c-eecee29e2087",
-          "guest": {
-              "userID": "902f3550-1b7c-4826-b303-2aed6982f79b",
-              "email": "matthew.granger@bellevuecollege.edu",
-              "firstName": "Demo",
-              "joinedOn": "2023-03-14",
-              "lastName": "Guest",
-              "phone": "+19999999999",
-              "role": "guest",
-              "username": "demoguest"
-          },
-          "property": {
-              "id": "HDPID0000JTN",
-              "hostId": "652ac46b-f438-45e6-95c0-bb7cc6029db8",
-              "name": "Hieu's Luxury Joshua Tree Desert Oasis",
-              "address": {
-                  "line1": "West Desert View Drive",
-                  "line2": "Property 3",
-                  "city": "Joshua Tree",
-                  "stateProvince": "CA",
-                  "postalCode": "92252",
-                  "country": "USA"
-              }
-          },
-          "qualityMetrics": {
-              "amenities": 1,
-              "value-for-money": 1,
-              "host-communication-timeliness": 2,
-              "guidebook": 4,
-              "location": 2,
-              "comfort": 3,
-              "cleanliness": 3,
-              "host-communication-ease": 3
-          },
-          "qualityMetricsAverage": 2.375,
-          "submissionTime": "2023-05-22T19:28:41",
-          "surveyResponse": "{\"quality-rental\": {\"cleanliness\": 3, \"comfort\": 3, \"location\": 2, \"value-for-money\": 1, \"host-communication-ease\": 3, \"host-communication-timeliness\": 2, \"amenities\": 1, \"guidebook\": 4}, \"suggestions-rental\": \"Better natural lighting in the rental\", \"discovery-source\": \"other\", \"discovery-source-Comment\": \"Agoda Homes\", \"quality-bmg\": {\"communication-needs-are-met\": 4, \"information-needs-are-met\": 5, \"ease-of-use\": 2, \"improvements-required\": 4}}"
-      }
+      "property": {
+        "id": "HDPID0000JTN",
+        "hostId": "652ac46b-f438-45e6-95c0-bb7cc6029db8",
+        "name": "Hieu's Luxury Joshua Tree Desert Oasis",
+        "address": {
+          "line1": "West Desert View Drive",
+          "line2": "Property 3",
+          "city": "Joshua Tree",
+          "stateProvince": "CA",
+          "postalCode": "92252",
+          "country": "USA"
+        }
+      },
+      "qualityMetrics": {
+        "amenities": 5,
+        "value-for-money": 2,
+        "host-communication-timeliness": 2,
+        "guidebook": 5,
+        "location": 5,
+        "comfort": 5,
+        "cleanliness": 5,
+        "host-communication-ease": 2
+      },
+      "qualityMetricsAverage": 3.875,
+      "submissionTime": "2023-05-22T19:28:41",
+      "surveyResponse": "{\"quality-rental\": {\"cleanliness\": 5, \"comfort\": 5, \"location\": 5, \"value-for-money\": 2, \"host-communication-ease\": 2, \"host-communication-timeliness\": 2, \"amenities\": 5, \"guidebook\": 5}, \"suggestions-bmg\": \"Option for instant booking\"}"
+    },
+    {
+      "reservationId": "4de873c3-0423-414a-949a-ffc5f2cc8de2",
+      "guest": {
+        "userID": "b29a176d-4deb-4f5c-af7c-314987361ce3",
+        "email": "matthew.granger@bellevuecollege.edu",
+        "firstName": "Matthew",
+        "joinedOn": "2023-02-22",
+        "lastName": "Granger",
+        "phone": "+11234567890",
+        "role": "guest",
+        "username": "mg12"
+      },
+      "property": {
+        "id": "HDPID0000JTN",
+        "hostId": "652ac46b-f438-45e6-95c0-bb7cc6029db8",
+        "name": "Hieu's Luxury Joshua Tree Desert Oasis",
+        "address": {
+          "line1": "West Desert View Drive",
+          "line2": "Property 3",
+          "city": "Joshua Tree",
+          "stateProvince": "CA",
+          "postalCode": "92252",
+          "country": "USA"
+        }
+      },
+      "qualityMetrics": {
+        "amenities": 5,
+        "value-for-money": 5,
+        "host-communication-timeliness": 4,
+        "guidebook": 5,
+        "location": 3,
+        "comfort": 2,
+        "cleanliness": 5,
+        "host-communication-ease": 1
+      },
+      "qualityMetricsAverage": 3.75,
+      "submissionTime": "2023-05-22T19:28:41",
+      "surveyResponse": "{\"quality-rental\": {\"cleanliness\": 5, \"comfort\": 2, \"location\": 3, \"value-for-money\": 5, \"host-communication-ease\": 1, \"host-communication-timeliness\": 4, \"amenities\": 5, \"guidebook\": 5}, \"suggestions-rental\": \"Efficient and reliable maintenance staff\"}"
+    },
+    {
+      "reservationId": "78e2fa01-7da9-4c1a-b86b-a07399abc60b",
+      "guest": {
+        "userID": "ec1f8784-77f5-4c4f-84c7-7eee4db0f0e2",
+        "email": "hieu.do@bellevuecollege.edu",
+        "firstName": "Hieu",
+        "joinedOn": "2023-02-27",
+        "lastName": "Do",
+        "phone": "+11234567890",
+        "role": "guest",
+        "username": "hndo_guest4"
+      },
+      "property": {
+        "id": "HDPID0000PNC",
+        "hostId": "652ac46b-f438-45e6-95c0-bb7cc6029db8",
+        "name": "Hieu's Idaho Wilderness Cabin",
+        "address": {
+          "line1": "188 Eagle Nest Wide Rd",
+          "line2": null,
+          "city": "Sandpoint",
+          "stateProvince": "Idaho",
+          "postalCode": "83864",
+          "country": "United States"
+        }
+      },
+      "qualityMetrics": {
+        "amenities": 5,
+        "value-for-money": 5,
+        "host-communication-timeliness": 4,
+        "guidebook": 1,
+        "location": 5,
+        "comfort": 5,
+        "cleanliness": 1,
+        "host-communication-ease": 2
+      },
+      "qualityMetricsAverage": 3.5,
+      "submissionTime": "2023-05-22T19:28:41",
+      "surveyResponse": "{\"quality-rental\": {\"cleanliness\": 1, \"comfort\": 5, \"location\": 5, \"value-for-money\": 5, \"host-communication-ease\": 2, \"host-communication-timeliness\": 4, \"amenities\": 5, \"guidebook\": 1}, \"suggestions-rental\": \"Transparent and itemized billing\"}"
+    },
+    {
+      "reservationId": "27e52a7c-e88a-497e-bf9a-a430fa820224",
+      "guest": {
+        "userID": "902f3550-1b7c-4826-b303-2aed6982f79b",
+        "email": "matthew.granger@bellevuecollege.edu",
+        "firstName": "Demo",
+        "joinedOn": "2023-03-14",
+        "lastName": "Guest",
+        "phone": "+19999999999",
+        "role": "guest",
+        "username": "demoguest"
+      },
+      "property": {
+        "id": "HDPID0000JTN",
+        "hostId": "652ac46b-f438-45e6-95c0-bb7cc6029db8",
+        "name": "Hieu's Luxury Joshua Tree Desert Oasis",
+        "address": {
+          "line1": "West Desert View Drive",
+          "line2": "Property 3",
+          "city": "Joshua Tree",
+          "stateProvince": "CA",
+          "postalCode": "92252",
+          "country": "USA"
+        }
+      },
+      "qualityMetrics": {
+        "amenities": 3,
+        "value-for-money": 5,
+        "host-communication-timeliness": 4,
+        "guidebook": 1,
+        "location": 1,
+        "comfort": 2,
+        "cleanliness": 1,
+        "host-communication-ease": 5
+      },
+      "qualityMetricsAverage": 2.75,
+      "submissionTime": "2023-05-22T19:28:41",
+      "surveyResponse": "{\"booking-platform\": \"other\", \"booking-platform-Comment\": \"9flats\", \"quality-rental\": {\"cleanliness\": 1, \"comfort\": 2, \"location\": 1, \"value-for-money\": 5, \"host-communication-ease\": 5, \"host-communication-timeliness\": 4, \"amenities\": 3, \"guidebook\": 1}}"
+    },
+    {
+      "reservationId": "776e8cfb-509f-4d05-adfb-61507dc14aff",
+      "guest": {
+        "userID": "b29a176d-4deb-4f5c-af7c-314987361ce3",
+        "email": "matthew.granger@bellevuecollege.edu",
+        "firstName": "Matthew",
+        "joinedOn": "2023-02-22",
+        "lastName": "Granger",
+        "phone": "+11234567890",
+        "role": "guest",
+        "username": "mg12"
+      },
+      "property": {
+        "id": "HDPID0000QCH",
+        "hostId": "652ac46b-f438-45e6-95c0-bb7cc6029db8",
+        "name": "Hieu's Quartz Cavern Wellness Retreat",
+        "address": {
+          "line1": "377 Cavern Route Rd",
+          "line2": null,
+          "city": "Salt Lake City",
+          "stateProvince": "Utah",
+          "postalCode": "84101",
+          "country": "United States"
+        }
+      },
+      "qualityMetrics": {
+        "amenities": 4,
+        "value-for-money": 1,
+        "host-communication-timeliness": 4,
+        "guidebook": 1,
+        "location": 4,
+        "comfort": 5,
+        "cleanliness": 5,
+        "host-communication-ease": 2
+      },
+      "qualityMetricsAverage": 3.25,
+      "submissionTime": "2023-05-22T19:28:41",
+      "surveyResponse": "{\"quality-rental\": {\"cleanliness\": 5, \"comfort\": 5, \"location\": 4, \"value-for-money\": 1, \"host-communication-ease\": 2, \"host-communication-timeliness\": 4, \"amenities\": 4, \"guidebook\": 1}}"
+    },
+    {
+      "reservationId": "e234b2fd-01c5-4aa0-880c-eecee29e2087",
+      "guest": {
+        "userID": "ec1f8784-77f5-4c4f-84c7-7eee4db0f0e2",
+        "email": "hieu.do@bellevuecollege.edu",
+        "firstName": "Hieu",
+        "joinedOn": "2023-02-27",
+        "lastName": "Do",
+        "phone": "+11234567890",
+        "role": "guest",
+        "username": "hndo_guest4"
+      },
+      "property": {
+        "id": "HDPID0000JTN",
+        "hostId": "652ac46b-f438-45e6-95c0-bb7cc6029db8",
+        "name": "Hieu's Luxury Joshua Tree Desert Oasis",
+        "address": {
+          "line1": "West Desert View Drive",
+          "line2": "Property 3",
+          "city": "Joshua Tree",
+          "stateProvince": "CA",
+          "postalCode": "92252",
+          "country": "USA"
+        }
+      },
+      "qualityMetrics": {
+        "amenities": 1,
+        "value-for-money": 1,
+        "host-communication-timeliness": 3,
+        "guidebook": 3,
+        "location": 4,
+        "comfort": 4,
+        "cleanliness": 2,
+        "host-communication-ease": 2
+      },
+      "qualityMetricsAverage": 2.5,
+      "submissionTime": "2023-05-22T19:28:41",
+      "surveyResponse": "{\"booking-platform\": \"other\", \"booking-platform-Comment\": \"Hometogo\", \"quality-rental\": {\"cleanliness\": 2, \"comfort\": 4, \"location\": 4, \"value-for-money\": 1, \"host-communication-ease\": 2, \"host-communication-timeliness\": 3, \"amenities\": 1, \"guidebook\": 3}, \"discovery-source\": \"other\", \"discovery-source-Comment\": \"Booking.com\"}"
+    },
+    {
+      "reservationId": "776e8cfb-509f-4d05-adfb-61507dc14aff",
+      "guest": {
+        "userID": "ec1f8784-77f5-4c4f-84c7-7eee4db0f0e2",
+        "email": "hieu.do@bellevuecollege.edu",
+        "firstName": "Hieu",
+        "joinedOn": "2023-02-27",
+        "lastName": "Do",
+        "phone": "+11234567890",
+        "role": "guest",
+        "username": "hndo_guest4"
+      },
+      "property": {
+        "id": "HDPID0000QCH",
+        "hostId": "652ac46b-f438-45e6-95c0-bb7cc6029db8",
+        "name": "Hieu's Quartz Cavern Wellness Retreat",
+        "address": {
+          "line1": "377 Cavern Route Rd",
+          "line2": null,
+          "city": "Salt Lake City",
+          "stateProvince": "Utah",
+          "postalCode": "84101",
+          "country": "United States"
+        }
+      },
+      "qualityMetrics": {
+        "amenities": 1,
+        "value-for-money": 2,
+        "host-communication-timeliness": 3,
+        "guidebook": 4,
+        "location": 5,
+        "comfort": 1,
+        "cleanliness": 1,
+        "host-communication-ease": 3
+      },
+      "qualityMetricsAverage": 2.5,
+      "submissionTime": "2023-05-22T19:28:41",
+      "surveyResponse": "{\"booking-platform\": \"other\", \"booking-platform-Comment\": \"Interhome\", \"quality-rental\": {\"cleanliness\": 1, \"comfort\": 1, \"location\": 5, \"value-for-money\": 2, \"host-communication-ease\": 3, \"host-communication-timeliness\": 3, \"amenities\": 1, \"guidebook\": 4}, \"discovery-source\": \"other\", \"discovery-source-Comment\": \"Booking.com\", \"suggestions-bmg\": \"Better management of booking conflicts\"}"
+    },
+    {
+      "reservationId": "e234b2fd-01c5-4aa0-880c-eecee29e2087",
+      "guest": {
+        "userID": "902f3550-1b7c-4826-b303-2aed6982f79b",
+        "email": "matthew.granger@bellevuecollege.edu",
+        "firstName": "Demo",
+        "joinedOn": "2023-03-14",
+        "lastName": "Guest",
+        "phone": "+19999999999",
+        "role": "guest",
+        "username": "demoguest"
+      },
+      "property": {
+        "id": "HDPID0000JTN",
+        "hostId": "652ac46b-f438-45e6-95c0-bb7cc6029db8",
+        "name": "Hieu's Luxury Joshua Tree Desert Oasis",
+        "address": {
+          "line1": "West Desert View Drive",
+          "line2": "Property 3",
+          "city": "Joshua Tree",
+          "stateProvince": "CA",
+          "postalCode": "92252",
+          "country": "USA"
+        }
+      },
+      "qualityMetrics": {
+        "amenities": 1,
+        "value-for-money": 1,
+        "host-communication-timeliness": 2,
+        "guidebook": 4,
+        "location": 2,
+        "comfort": 3,
+        "cleanliness": 3,
+        "host-communication-ease": 3
+      },
+      "qualityMetricsAverage": 2.375,
+      "submissionTime": "2023-05-22T19:28:41",
+      "surveyResponse": "{\"quality-rental\": {\"cleanliness\": 3, \"comfort\": 3, \"location\": 2, \"value-for-money\": 1, \"host-communication-ease\": 3, \"host-communication-timeliness\": 2, \"amenities\": 1, \"guidebook\": 4}, \"suggestions-rental\": \"Better natural lighting in the rental\", \"discovery-source\": \"other\", \"discovery-source-Comment\": \"Agoda Homes\", \"quality-bmg\": {\"communication-needs-are-met\": 4, \"information-needs-are-met\": 5, \"ease-of-use\": 2, \"improvements-required\": 4}}"
+    }
   ],
   "pieChartData": [
-      {
-          "name": "amenities",
-          "count": 11,
-          "ratingFrequencyMap": {
-              "1": 4,
-              "3": 2,
-              "4": 1,
-              "5": 4
-          }
-      },
-      {
-          "name": "value-for-money",
-          "count": 11,
-          "ratingFrequencyMap": {
-              "1": 3,
-              "2": 3,
-              "3": 2,
-              "5": 3
-          }
-      },
-      {
-          "name": "host-communication-timeliness",
-          "count": 11,
-          "ratingFrequencyMap": {
-              "2": 4,
-              "3": 2,
-              "4": 4,
-              "5": 1
-          }
-      },
-      {
-          "name": "guidebook",
-          "count": 11,
-          "ratingFrequencyMap": {
-              "1": 3,
-              "3": 2,
-              "4": 3,
-              "5": 3
-          }
-      },
-      {
-          "name": "location",
-          "count": 11,
-          "ratingFrequencyMap": {
-              "1": 2,
-              "2": 1,
-              "3": 2,
-              "4": 3,
-              "5": 3
-          }
-      },
-      {
-          "name": "comfort",
-          "count": 11,
-          "ratingFrequencyMap": {
-              "1": 2,
-              "2": 3,
-              "3": 2,
-              "4": 1,
-              "5": 3
-          }
-      },
-      {
-          "name": "cleanliness",
-          "count": 11,
-          "ratingFrequencyMap": {
-              "1": 3,
-              "2": 2,
-              "3": 2,
-              "4": 1,
-              "5": 3
-          }
-      },
-      {
-          "name": "host-communication-ease",
-          "count": 11,
-          "ratingFrequencyMap": {
-              "1": 1,
-              "2": 4,
-              "3": 3,
-              "5": 3
-          }
+    {
+      "name": "amenities",
+      "count": 11,
+      "ratingFrequencyMap": {
+        "1": 4,
+        "3": 2,
+        "4": 1,
+        "5": 4
       }
+    },
+    {
+      "name": "value-for-money",
+      "count": 11,
+      "ratingFrequencyMap": {
+        "1": 3,
+        "2": 3,
+        "3": 2,
+        "5": 3
+      }
+    },
+    {
+      "name": "host-communication-timeliness",
+      "count": 11,
+      "ratingFrequencyMap": {
+        "2": 4,
+        "3": 2,
+        "4": 4,
+        "5": 1
+      }
+    },
+    {
+      "name": "guidebook",
+      "count": 11,
+      "ratingFrequencyMap": {
+        "1": 3,
+        "3": 2,
+        "4": 3,
+        "5": 3
+      }
+    },
+    {
+      "name": "location",
+      "count": 11,
+      "ratingFrequencyMap": {
+        "1": 2,
+        "2": 1,
+        "3": 2,
+        "4": 3,
+        "5": 3
+      }
+    },
+    {
+      "name": "comfort",
+      "count": 11,
+      "ratingFrequencyMap": {
+        "1": 2,
+        "2": 3,
+        "3": 2,
+        "4": 1,
+        "5": 3
+      }
+    },
+    {
+      "name": "cleanliness",
+      "count": 11,
+      "ratingFrequencyMap": {
+        "1": 3,
+        "2": 2,
+        "3": 2,
+        "4": 1,
+        "5": 3
+      }
+    },
+    {
+      "name": "host-communication-ease",
+      "count": 11,
+      "ratingFrequencyMap": {
+        "1": 1,
+        "2": 4,
+        "3": 3,
+        "5": 3
+      }
+    }
   ]
 }
