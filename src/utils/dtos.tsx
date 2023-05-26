@@ -230,7 +230,14 @@ export interface SurveyData {
   surveyResponse: string;
 }
 
+export interface PieChartData {
+  name: string;
+  count: number;
+  ratingFrequencyMap: { [key: string]: number };
+}
+
 export interface SurveyMetrics {
   hostId: string;
   surveyResponses: SurveyData[];
+  pieChartData: PieChartData[];
 }

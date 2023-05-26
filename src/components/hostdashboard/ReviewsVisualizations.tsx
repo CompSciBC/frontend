@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React from "react";
 import {
   AreaChart,
@@ -78,12 +79,13 @@ export function LineGraphVis() {
   );
 }
 
-const pieChartData: { [key: string]: number }= {
-    "1": 3,
-    "3": 2,
-    "4": 3,
-    "5": 3
-};
+// const pieChartData: { [key: string]: number }= {
+//     "1": 3,
+//     "3": 2,
+//     "4": 3,
+//     "5": 3
+// };
+
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
 
 interface PieChartDatum {
@@ -92,20 +94,26 @@ interface PieChartDatum {
 }
 
 export function PieChartVis() {
-    const data:PieChartDatum[] = [];
-    for (const key in pieChartData) {
-        data.push(
-            {
-                name: pieChartData[key].toString(),
-                value: pieChartData[key],
-            }
-        );
-    }
-    console.log(data);
+    // const data:PieChartDatum[] = [];
+    // for (const key in pieChartData) {
+    //     data.push(
+    //         {
+    //             name: pieChartData[key].toString(),
+    //             value: pieChartData[key],
+    //         }
+    //     );
+    // }
+    // console.log(data);
+    const data1 = [
+        { name: 'Group A', value: 400 },
+        { name: 'Group B', value: 300 },
+        { name: 'Group C', value: 300 },
+        { name: 'Group D', value: 200 },
+      ];
     return (
-        <PieChart width={400} height={400}>
+        <PieChart width={300} height={300}>
             <Pie
-                data={data}
+                data={data1}
                 startAngle={180}
                 endAngle={0}
                 innerRadius={60}
@@ -115,7 +123,7 @@ export function PieChartVis() {
                 dataKey="value"
                 label
             >
-                {data.map((entry, index) => (
+                {data1.map((entry, index) => (
                 <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                 ))}
             </Pie>
