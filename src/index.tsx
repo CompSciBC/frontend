@@ -70,7 +70,7 @@ export const routes = {
   guidebookEdit: '/hostLanding/:propId/guidebook/edit',
   invite: '/reservations/:resId/invite',
   chat: '/reservations/:resId/chat',
-  inbox: 'inbox/:userId',
+  inbox: '/inbox',
   weather: '/reservations/:resId/weather',
   restaurants: '/reservations/:resId/restaurants',
   eventsAndPlaces: '/reservations/:resId/eventsAndPlaces',

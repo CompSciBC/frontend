@@ -19,7 +19,9 @@ interface Message {
   senderName: String;
   message: String;
   receiverName: String | undefined;
+  receiverId: String | undefined;
   chatId: String;
+  userId: String;
 }
 
 interface ChatsServerResponse {
@@ -28,11 +30,13 @@ interface ChatsServerResponse {
 
 function Chat() {
   const { user } = useContext(AppContext);
+  const { reservation } = useContext(AppContext);
 
   const { resId } = useParams() as { resId: string };
 
   const [userData, setUserData] = useState({
     username: user!.username,
+    userId: user!.userId,
     isHost: false,
     receivername: '',
     connected: false,
@@ -88,7 +92,6 @@ function Chat() {
       })
         .then(async (response) => await response.json())
         .then((chats: ChatsServerResponse) => {
-          // const Sock = new SockJS('http://localhost:8080/ws');
           const Sock = new SockJS(`${server}/ws`);
 
           stompClient = over(Sock);
@@ -108,7 +111,7 @@ function Chat() {
     stompClient.subscribe(`/group/${resId}`, onGroupMessage);
     // subscribe to private message
     stompClient.subscribe(
-      `/user/${userData.username}/private/${resId}`,
+      `/user/${userData.userId}/private/${resId}`,
       onPrivateMessage
     );
 
@@ -155,19 +158,24 @@ function Chat() {
   const sendMessage = () => {
     let chatId: string = '';
     let receiverName: string | undefined;
+    let receiverId: string | undefined;
+    console.log(reservation);
 
     if (tab === groupChatName) {
       chatId = resId; // Group chat Id is Reservation id.
       receiverName = undefined; // No message receiver for a group chat
+      receiverId = reservation!.property.hostId; // get a hostId for saving a group messafe in a host inbox
     } else {
       // private chat
       if (userData.isHost) {
         // For a host, Tab is the receiver guest.
         chatId = `${resId}_${tab}`;
         receiverName = tab;
+        receiverId = undefined;
       } else {
         chatId = `${resId}_${userData.username}`;
-        receiverName = hostUserName;
+        receiverName = undefined;
+        receiverId = reservation!.property.hostId;
       }
     }
 
@@ -178,7 +186,9 @@ function Chat() {
         reservationId: resId,
         timestamp: new Date().getTime(),
         receiverName,
-        chatId
+        receiverId,
+        chatId,
+        userId: userData.userId
       };
 
       if (tab === groupChatName) {
