@@ -16,20 +16,24 @@ export interface PropertyMetricsVisualizerProps {
 export function PropertyMetricsVisualizer({
     pieChartDataList
   }: PropertyMetricsVisualizerProps){
-    const [age, setAge] = React.useState('');
+    const propertyNames: string[] = Object.keys(pieChartDataList);
+    const [property, setProperty] = React.useState(propertyNames.at(0));
 
     const handleChange = (event: SelectChangeEvent) => {
-        setAge(event.target.value);
+        setProperty(event.target.value);
     };
+
+    
+
     return(
         <Box sx={{ mt: 2 }}>
             <Grid container spacing={2} sx={{ mb: 2 }}>
                 <Grid item xs={12} sm={3} md={3} lg={3}>
-                    <InputLabel id="property-select-label">Property</InputLabel>
+                    {/* <InputLabel id="property-select-label">Property</InputLabel> */}
                     <Select
-                        labelId="property-select-label"
-                        value={age}
-                        label="Property"
+                        // labelId="property-select-label"
+                        value={property}
+                        // label="Property"
                         onChange={handleChange}
                         fullWidth
                         variant="standard"
@@ -41,12 +45,10 @@ export function PropertyMetricsVisualizer({
                 </Grid>
             </Grid>
             <Grid container spacing={2}>
-                {Object.keys(pieChartDataList).map((property, index) => (
-                    <Grid key={index} item xs={4}>
-                        <p> {property} </p>
-                        <PieChartVis />
-                    </Grid>
-                ))}
+                <PieChartVis/>
+                {/* {Object.keys(pieChartDataList).map((property, index) => (
+                    <PieChartVis key={index}/>
+                ))} */}
             </Grid>
         </Box>
         

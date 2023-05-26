@@ -11,6 +11,8 @@ import {
   Cell,
   PieChart
 } from 'recharts';
+import { PieChartData } from '../../utils/dtos';
+import { Grid } from '@mui/material';
 
 const data = [
   {
@@ -79,18 +81,109 @@ export function LineGraphVis() {
   );
 }
 
-// const pieChartData: { [key: string]: number }= {
-//     "1": 3,
-//     "3": 2,
-//     "4": 3,
-//     "5": 3
-// };
+const pieChartData: PieChartData[] = [
+    {
+        "name": "amenities",
+        "count": 7,
+        "ratingFrequencyMap": {
+            "1": 3,
+            "3": 1,
+            "5": 3
+        }
+    },
+    {
+        "name": "value-for-money",
+        "count": 7,
+        "ratingFrequencyMap": {
+            "1": 2,
+            "2": 2,
+            "3": 1,
+            "5": 2
+        }
+    },
+    {
+        "name": "host-communication-timeliness",
+        "count": 7,
+        "ratingFrequencyMap": {
+            "2": 3,
+            "3": 1,
+            "4": 2,
+            "5": 1
+        }
+    },
+    {
+        "name": "guidebook",
+        "count": 7,
+        "ratingFrequencyMap": {
+            "1": 1,
+            "3": 1,
+            "4": 2,
+            "5": 3
+        }
+    },
+    {
+        "name": "location",
+        "count": 7,
+        "ratingFrequencyMap": {
+            "1": 2,
+            "2": 1,
+            "3": 2,
+            "4": 1,
+            "5": 1
+        }
+    },
+    {
+        "name": "comfort",
+        "count": 7,
+        "ratingFrequencyMap": {
+            "1": 1,
+            "2": 2,
+            "3": 2,
+            "4": 1,
+            "5": 1
+        }
+    },
+    {
+        "name": "cleanliness",
+        "count": 7,
+        "ratingFrequencyMap": {
+            "1": 1,
+            "2": 1,
+            "3": 2,
+            "4": 1,
+            "5": 2
+        }
+    },
+    {
+        "name": "host-communication-ease",
+        "count": 7,
+        "ratingFrequencyMap": {
+            "1": 1,
+            "2": 2,
+            "3": 2,
+            "5": 2
+        }
+    }
+];
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
 
 interface PieChartDatum {
   name: string;
   value: number;
+}
+
+function convertToChartDataFormat(ratingFrequencyMap: { [key: string]: number }): PieChartDatum[]{
+    const data:PieChartDatum[] = [];
+     for (const key in ratingFrequencyMap) {
+      data.push(
+          {
+              name: key,
+              value: ratingFrequencyMap[key],
+          }
+      );
+  }
+    return data;
 }
 
 export function PieChartVis() {
@@ -104,29 +197,43 @@ export function PieChartVis() {
   //     );
   // }
   // console.log(data);
-  const data1 = [
-    { name: 'Group A', value: 400 },
-    { name: 'Group B', value: 300 },
-    { name: 'Group C', value: 300 },
-    { name: 'Group D', value: 200 }
-  ];
+//   const data1 = [
+//     { name: 'Group A', value: 400 },
+//     { name: 'Group B', value: 300 },
+//     { name: 'Group C', value: 300 },
+//     { name: 'Group D', value: 200 }
+//   ];
   return (
-    <PieChart width={300} height={300}>
-      <Pie
-        data={data1}
-        startAngle={180}
-        endAngle={0}
-        innerRadius={60}
-        outerRadius={80}
-        fill="#8884d8"
-        paddingAngle={5}
-        dataKey="value"
-        label
-      >
-        {data1.map((entry, index) => (
-          <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-        ))}
-      </Pie>
-    </PieChart>
+    <>
+        {pieChartData.map((metricData, index) => {
+            const data = convertToChartDataFormat(metricData.ratingFrequencyMap);
+            return (
+            
+                <Grid key = {index} item xs={12} sm={12} md={6} lg={3}>
+                    <p >{metricData.name}</p>
+                    <PieChart width={300} height={300}>
+                        <Pie
+                            data={data}
+                            startAngle={180}
+                            endAngle={0}
+                            innerRadius={60}
+                            outerRadius={80}
+                            fill="#8884d8"
+                            paddingAngle={5}
+                            dataKey="value"
+                            label
+                        >
+                            {data.map((entry, index) => (
+                            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                            ))}
+                        </Pie>
+                    </PieChart>
+                </Grid>
+            );
+        })}
+        
+    </>
+    
+    
   );
 }
