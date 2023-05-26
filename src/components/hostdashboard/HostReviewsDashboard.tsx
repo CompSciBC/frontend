@@ -32,6 +32,7 @@ import {
 } from '@mui/icons-material';
 import SurveyViewButton from './SurveyModal';
 import { LineGraphVis, PieChartVis } from './ReviewsVisualizations';
+import { PropertyMetricsVisualizer } from './PropertyMetricsVisualizer';
 
 interface metricsDecoration {
   friendlyName: string;
@@ -223,23 +224,7 @@ function HostReviewsDashboard() {
           </Grid>
         </Box>
 
-        <Box sx={{ mt: 2 }}>
-          <Grid container spacing={2}>
-            {/* <Grid item xs={5}>
-                    <LineGraphVis/>
-                </Grid> */}
-            {/* <Grid item xs={5}>
-                    <p>{JSON.stringify(pieChartDataList)}</p>
-                </Grid> */}
-
-            {pieChartDataList.map((data, index) => (
-              <Grid key={index} item xs={4}>
-                <p> Hello </p>
-                <PieChartVis />
-              </Grid>
-            ))}
-          </Grid>
-        </Box>
+        <PropertyMetricsVisualizer pieChartDataList={pieChartDataList}/>
         <Box sx={{ mt: 10 }}>
           <Grid container wrap="nowrap" spacing={2}>
             <Grid item xs={12}>
