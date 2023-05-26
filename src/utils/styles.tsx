@@ -19,6 +19,13 @@ export const theme = {
       'font: normal normal 400 13px/20px "Reem Kufi", sans-serif; text-decoration: underline;'
   },
   color: {
+    // Begin BMG Coloring section
+    BMGdarkblue: '#142340',
+    BMGnavyblue: '#023059',
+    BMGteal: '#50A4AB',
+    BMGyellow: '#FBC70D',
+    BMGyellow2: '#F2B90F',
+    
     black: '#000000',
     white: '#ffffff',
     blue: '#2E7CF6',
