@@ -44,6 +44,20 @@ export function PropertyMetricsVisualizer({
                         ))}
                     </Select>
                 </Grid>
+                <Grid item xs={12} sm={5} md={5} lg={5}>
+                </Grid>
+                <Grid item xs={12} sm={3} md={3} lg={3} display='flex'>
+                    <p>&nbsp;Negative&nbsp;</p>
+                    <Box
+                        sx={{
+                            width: 300,
+                            height: 20,
+                            background: 'linear-gradient(to right, #ff4545, #ffa534, #ffe234, #b7dd29, #57e32c)',
+                        }}
+                    />
+                    <p>&nbsp;Positive&nbsp;</p>
+                </Grid>
+                
             </Grid>
 
             <Grid container spacing={2}>
@@ -51,6 +65,7 @@ export function PropertyMetricsVisualizer({
                     <PieChartVis key={index} propertyQualityMetrics = {metrics}/>
                 ))}
             </Grid>
+            
         </Box>
         
     );
