@@ -239,5 +239,5 @@ export interface PieChartData {
 export interface SurveyMetrics {
   hostId: string;
   surveyResponses: SurveyData[];
-  pieChartData: { [key: string]: PieChartData};
+  pieChartData: { [key: string]: PieChartData[]};
 }

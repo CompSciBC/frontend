@@ -10,19 +10,22 @@ import { Grid } from '@mui/material';
 import { PieChartVis } from './ReviewsVisualizations';
 
 export interface PropertyMetricsVisualizerProps {
-    pieChartDataList: { [key: string]: PieChartData}
+    pieChartDataList: { [key: string]: PieChartData[]}
+    // pieChartDataList: Map<string, PieChartData[]>
 }
 
 export function PropertyMetricsVisualizer({
     pieChartDataList
   }: PropertyMetricsVisualizerProps){
     const propertyNames: string[] = Object.keys(pieChartDataList);
-    const [property, setProperty] = React.useState(propertyNames.at(0));
+    const [property, setProperty] = React.useState<string>(propertyNames.at(0)!);
 
+    const [pieChartData, setPieChartData] = React.useState<PieChartData[]>(pieChartDataList[property]);
     const handleChange = (event: SelectChangeEvent) => {
         setProperty(event.target.value);
+        setPieChartData(pieChartDataList[property]);
     };
-
+    // console.log(pieChartData);
     
 
     return(
@@ -31,9 +34,7 @@ export function PropertyMetricsVisualizer({
                 <Grid item xs={12} sm={3} md={3} lg={3}>
                     {/* <InputLabel id="property-select-label">Property</InputLabel> */}
                     <Select
-                        // labelId="property-select-label"
                         value={property}
-                        // label="Property"
                         onChange={handleChange}
                         fullWidth
                         variant="standard"
@@ -44,11 +45,11 @@ export function PropertyMetricsVisualizer({
                     </Select>
                 </Grid>
             </Grid>
+
             <Grid container spacing={2}>
-                <PieChartVis/>
-                {/* {Object.keys(pieChartDataList).map((property, index) => (
-                    <PieChartVis key={index}/>
-                ))} */}
+                {pieChartData.map((metrics, index) => (
+                    <PieChartVis key={index} propertyQualityMetrics = {metrics}/>
+                ))}
             </Grid>
         </Box>
         
