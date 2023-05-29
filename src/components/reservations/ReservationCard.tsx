@@ -5,15 +5,23 @@ import { paramRoute, routes } from '../../index';
 import { Reservation } from '../../utils/dtos';
 import { useMemo } from 'react';
 import * as React from 'react';
-import { Card, CardContent, Typography, Link as ReservationLink, CardActionArea } from '@mui/material';
+import {
+  Card,
+  CardContent,
+  Typography,
+  Link as ReservationLink,
+  CardActionArea
+} from '@mui/material';
 
 interface ReservationCardProps {
   className?: string;
   reservation: Reservation;
 }
 
-
-export default function ReservationCard({ className, reservation }: ReservationCardProps) {
+export default function ReservationCard({
+  className,
+  reservation
+}: ReservationCardProps) {
   const { id, checkIn, property } = reservation;
 
   const checkInDate = new Date(checkIn).toLocaleDateString('default', {
@@ -56,17 +64,21 @@ export default function ReservationCard({ className, reservation }: ReservationC
         /> */}
         <CardContent>
           <Typography gutterBottom variant="h5" component="div">
-          {`Check In: ${checkInDate}`}
+            {`Check In: ${checkInDate}`}
           </Typography>
           <Typography gutterBottom variant="h5" component="div">
-          {checkInTime}
+            {checkInTime}
           </Typography>
           <Typography variant="body2" color="text.secondary">
-          {`Your Rental: ${address}`}
+            {`Your Rental: ${address}`}
           </Typography>
-          <ReservationLink href={paramRoute(routes.dashboard, id)} target="_blank" rel="noopener noreferrer">
-          View Reservation
-        </ReservationLink>
+          <ReservationLink
+            href={paramRoute(routes.dashboard, id)}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            View Reservation
+          </ReservationLink>
         </CardContent>
       </CardActionArea>
     </Card>
