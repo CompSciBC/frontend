@@ -18,20 +18,12 @@ import { Reservation, SurveyMetrics } from '../../utils/dtos';
 // http://localhost:8080/api/reservations/checkinonorbeforecheckoutafter?index=host&id=652ac46b-f438-45e6-95c0-bb7cc6029db8&primaryOnly=true&checkInCutOff=2023-05-14T00:00:00.000&checkOutCutOff=2023-05-14T00:00:00.000
 
 // http://localhost:8080/api/surveys/hostmetrics?id=652ac46b-f438-45e6-95c0-bb7cc6029db8
-import surveysJson from './mock_data_delete_later/surveys.json';
 
 function HostLanding() {
   const { user } = useContext(AppContext);
   // const reservations = reservationsJson.data;
   // const surveys = JSON.stringify(surveysJson);
   // const reviews: SurveyMetrics = JSON.parse(surveys);
-  const photos = [
-    '/images/mountain-cabin.jpg',
-    '/images/beach-house.jpg',
-    '/images/downtown-apartment.jpg',
-    '/images/log-cabin-interior.jpg',
-    '/images/seattle-loft.jpg'
-  ];
   // console.log('reservations');
   // console.log(JSON.stringify(reservationsJson));
   // console.log('reviews');
@@ -48,9 +40,10 @@ function HostLanding() {
       })
       .then((data) => {
         setReviews(data);
-        // console.log(reviews);
       });
   }, []);
+  // console.log('reviews');
+  // console.log(reviews);
 
   useEffect(() => {
     const tomorrow = new Date();
@@ -81,8 +74,11 @@ function HostLanding() {
     reservations,
     reviews
   });
+
   // console.log('reservations');
   // console.log(reservations);
+  // console.log('host');
+  // console.log(host);
   return (
     <HostProvider value={host}>
       <Container>
@@ -123,7 +119,7 @@ function HostLanding() {
         )}
         <WidgetTitle>
           <h3 style={{ float: 'left' }}> Newest Reviews </h3>
-          <a style={{ float: 'right' }} href="host-reservations">
+          <a style={{ float: 'right' }} href="hostReviewsDashboard">
             All reviews
           </a>
         </WidgetTitle>

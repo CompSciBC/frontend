@@ -23,7 +23,7 @@ export const guestSurveyJson = {
         },
         {
           type: 'matrix',
-          name: 'quality',
+          name: 'quality-rental',
           title:
             'Please rate the following aspects of your stay on a scale of 1-5, where 1 is "very poor" and 5 is "excellent"',
           isRequired: true,
@@ -90,7 +90,7 @@ export const guestSurveyJson = {
         },
         {
           type: 'matrix',
-          name: 'quality',
+          name: 'quality-bmg',
           title: 'Please score the following aspects of BeMyGuest',
           columns: [1, 2, 3, 4, 5],
           rows: [
