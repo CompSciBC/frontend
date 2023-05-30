@@ -105,7 +105,7 @@ const columns: GridColDef[] = [
       </strong>
     )
   },
-  { field: 'timestamp', headerName: 'Submission Time', width: 150 },
+  { field: 'timestamp', headerName: 'Submission Date', width: 150 },
   {
     field: 'qualityMetricsAverage',
     headerName: 'Quality - Average Score',
