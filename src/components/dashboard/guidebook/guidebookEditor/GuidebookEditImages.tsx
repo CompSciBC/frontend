@@ -16,7 +16,7 @@ import {
   deleteGuidebookImage
 } from '../guidebookData';
 import { AddPhotoAlternateOutlined, Delete } from '@mui/icons-material';
-import { GuidebookImageFiles } from '../../../../utils/dtos';
+import { GuidebookImage, GuidebookImageFiles } from '../../../../utils/dtos';
 import ConfirmCancelDialog from '../../../stuff/ConfirmCancelDialog';
 import AlertPopup from '../../../stuff/AlertPopup';
 
@@ -26,9 +26,9 @@ export interface GuidebookEditImagesProps {
 }
 
 function GuidebookEditImages({ className, propId }: GuidebookEditImagesProps) {
-  const [guidebookImages, setGuidebookImages] = useState<string[]>([]);
+  const [guidebookImages, setGuidebookImages] = useState<GuidebookImage[]>([]);
   const [addImagesOpen, setAddImagesOpen] = useState(false);
-  const [deleteImage, setDeleteImage] = useState<string | null>(null);
+  const [deleteImage, setDeleteImage] = useState<GuidebookImage | null>(null);
   const [alert, setAlert] = useState<{
     open: boolean;
     severity: AlertColor;
@@ -75,7 +75,7 @@ function GuidebookEditImages({ className, propId }: GuidebookEditImagesProps) {
 
   const handleDeleteImage = () => {
     if (deleteImage) {
-      deleteGuidebookImage(deleteImage).then((res) => {
+      deleteGuidebookImage(deleteImage.url).then((res) => {
         if (res) {
           // remove deleted image from list
           setGuidebookImages(
@@ -129,16 +129,20 @@ function GuidebookEditImages({ className, propId }: GuidebookEditImagesProps) {
             )}
           </ListSubheader>
         </ImageListItem>
-        {guidebookImages?.map((item, i) => {
+        {guidebookImages?.map((image) => {
+          const { url, metadata } = image;
           return (
-            <ImageListItem key={item}>
-              <img src={item} loading="lazy" />
+            <ImageListItem key={url}>
+              <img src={url} loading="lazy" />
               <ImageListItemBar
-                // TODO: get filename and tags from API
-                title={i}
-                subtitle={i}
+                title={metadata.name}
+                subtitle={metadata.tags.reduce(
+                  (prev: string, curr: string) =>
+                    prev ? `${prev}, ${curr}` : curr,
+                  ''
+                )}
                 actionIcon={
-                  <IconButton onClick={() => setDeleteImage(item)}>
+                  <IconButton onClick={() => setDeleteImage(image)}>
                     <Delete sx={{ color: 'white' }} />
                   </IconButton>
                 }

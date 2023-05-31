@@ -111,6 +111,14 @@ export interface GuidebookImageFiles {
 }
 
 /**
+ * Represents a Guidebook image (matching GuidebookImage.java)
+ */
+export interface GuidebookImage {
+  url: string;
+  metadata: GuidebookImageMetadata;
+}
+
+/**
  * Represents a contract agreement between a host and a guest to rent a property
  * for a specified period of time (matching Reservation.java)
  */
@@ -239,5 +247,5 @@ export interface PieChartData {
 export interface SurveyMetrics {
   hostId: string;
   surveyResponses: SurveyData[];
-  pieChartData: { [key: string]: PieChartData[]};
+  pieChartData: { [key: string]: PieChartData[] };
 }
