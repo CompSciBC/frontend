@@ -6,6 +6,7 @@ export interface GuidebookEditSectionTextProps {
   content: string;
   placeholder?: string;
   onChange: (changed: string) => void;
+  rows?: number;
 }
 
 /**
@@ -19,7 +20,8 @@ function GuidebookEditSectionText({
   id,
   content,
   placeholder,
-  onChange
+  onChange,
+  rows = 12
 }: GuidebookEditSectionTextProps) {
   return (
     <TextField
@@ -29,12 +31,15 @@ function GuidebookEditSectionText({
       multiline
       size="small"
       /*
-        setting rows to fixed size to avoid too many rerenders error. Ideally, would like to have
-        minRows/maxRows that dynamically adjusts the content in the textarea, however, this is causing
-        an infinite rerender loop. See SO question:
+        Error: "MUI: Too many re-renders. The layout is unstable. TextareaAutosize limits the number of renders to prevent an infinite loop."
+
+        Setting rows to a fixed size to avoid the above error. Ideally, would like to have dynamically adjusting height using minRows/maxRows,
+        however, this is causing an infinite rerender loop.
+      
+        See SO question:
         https://stackoverflow.com/questions/64837884/material-ui-too-many-re-renders-the-layout-is-unstable-textareaautosize-limit
       */
-      rows={12}
+      rows={rows}
       defaultValue={content}
       placeholder={placeholder}
       onChange={(event) => onChange(event.target.value)}
