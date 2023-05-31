@@ -1,10 +1,8 @@
 import {
   AlertColor,
   Button,
-  IconButton,
   ImageList,
   ImageListItem,
-  ImageListItemBar,
   ListSubheader,
   Typography
 } from '@mui/material';
@@ -15,10 +13,11 @@ import {
   uploadGuidebookImages,
   deleteGuidebookImage
 } from '../guidebookData';
-import { AddPhotoAlternateOutlined, Delete } from '@mui/icons-material';
+import { AddPhotoAlternateOutlined } from '@mui/icons-material';
 import { GuidebookImage, GuidebookImageFiles } from '../../../../utils/dtos';
 import ConfirmCancelDialog from '../../../stuff/ConfirmCancelDialog';
 import AlertPopup from '../../../stuff/AlertPopup';
+import GuidebookEditImage from './GuidebookEditImage';
 
 export interface GuidebookEditImagesProps {
   className?: string;
@@ -129,27 +128,13 @@ function GuidebookEditImages({ className, propId }: GuidebookEditImagesProps) {
             )}
           </ListSubheader>
         </ImageListItem>
-        {guidebookImages?.map((image) => {
-          const { url, metadata } = image;
-          return (
-            <ImageListItem key={url}>
-              <img src={url} loading="lazy" />
-              <ImageListItemBar
-                title={metadata.name}
-                subtitle={metadata.tags.reduce(
-                  (prev: string, curr: string) =>
-                    prev ? `${prev}, ${curr}` : curr,
-                  ''
-                )}
-                actionIcon={
-                  <IconButton onClick={() => setDeleteImage(image)}>
-                    <Delete sx={{ color: 'white' }} />
-                  </IconButton>
-                }
-              />
-            </ImageListItem>
-          );
-        })}
+        {guidebookImages?.map((image) => (
+          <GuidebookEditImage
+            key={image.url}
+            image={image}
+            onDelete={() => setDeleteImage(image)}
+          />
+        ))}
       </ImageList>
       <ConfirmCancelDialog
         open={!!deleteImage}

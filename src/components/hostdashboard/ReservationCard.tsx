@@ -28,6 +28,7 @@ export default function ReservationCard({
   const checkOutDate = new Date(reservationEndDate);
   const chatLink = `/reservations/${reservationId}/chat`;
   const [propertyPhoto, setPropertyPhoto] = useState<string>();
+  const [visible, setVisible] = useState(false);
   useEffect(() => {
     fetch(`${server}/api/guidebook/${propertyId}/images/featured`).then(
       async (res) => {
@@ -55,7 +56,7 @@ export default function ReservationCard({
     })();
   }, [primaryGuestEmail]);
   return (
-    <Container>
+    <Container visible={visible}>
       <GuestInfo>
         {newGuest ? <h6>{primaryGuest}</h6> : <h5>{primaryGuest}</h5>}
         <p>
@@ -64,7 +65,7 @@ export default function ReservationCard({
         </p>
       </GuestInfo>
       <ImageContainer>
-        <img src={propertyPhoto} />
+        <img src={propertyPhoto} onLoad={() => setVisible(true)} />
       </ImageContainer>
       {newGuest ? (
         <InviteButton to={chatLink}> 📨 &nbsp;Invite </InviteButton>
@@ -79,10 +80,11 @@ export default function ReservationCard({
   );
 }
 
-const Container = styled.div`
+const Container = styled.div<{ visible: boolean }>`
   /* padding: 20px 0; */
   margin: 0px 6px;
-  display: inline-block;
+  /* display: inline-block; */
+  display: ${(props) => (props.visible ? 'inline-block' : 'none')};
   width: 300px;
   height: 175px;
   border: 1px solid grey;
