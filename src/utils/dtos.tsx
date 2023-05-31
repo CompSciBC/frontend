@@ -95,6 +95,23 @@ export type GuidebookDto = {
 };
 
 /**
+ * Represents a place that a guest can view that is nearby their property rental.
+ * (Matching Place.java)
+ */
+export interface Place {
+  name: string;
+  openNow: boolean;
+  rating: number;
+  types: string[];
+  loc: { latitude: string; longitude: string };
+  vicinity: string;
+  priceLvl: number;
+  placeID: string;
+  userPhotoReference: string;
+  photo: any;
+}
+
+/*
  * Metadata for a guidebook image
  */
 export interface GuidebookImageMetadata {
