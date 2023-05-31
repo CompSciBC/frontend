@@ -1,12 +1,10 @@
 import { useState, useEffect, useContext } from 'react';
 import { GoogleMap, useLoadScript, MarkerF } from '@react-google-maps/api';
 import styled from '@emotion/styled';
-// import { useParams } from "react-router-dom";
 import AppContext from '../../../context/AppContext';
-// import { Address } from "../../../utils/dtos";
 import { server } from '../../../index';
 
-interface Location {
+export interface Location {
   latitude: number;
   longitude: number;
 }
@@ -18,15 +16,10 @@ function Map() {
   };
 
   const { reservation } = useContext(AppContext);
-  // const { resId } = useParams() as { resId: string };
   const [location, setLocation] = useState<Location>(coordinates); // location is a variable but Location is an interface (object)
 
-  useEffect(() => {
-    // let subscribed = true;
-    // let address:Address;
-    // if (reservationDetail && subscribed) {
-    const address = reservation!.property.address;
-    /// }
+  useEffect(() => {   
+    const address = reservation!.property.address; 
 
     const addressLocation = [
       address?.line1,
@@ -46,10 +39,7 @@ function Map() {
       })
       .then((data) => {
         setLocation(data);
-      });
-    // return () => {
-    //   subscribed = false;
-    // };
+      });  
   }, [reservation]);
 
   console.log('Setting center');
