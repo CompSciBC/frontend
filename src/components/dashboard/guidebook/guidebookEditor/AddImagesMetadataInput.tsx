@@ -9,7 +9,7 @@ const tagOptions = [
   'Bathroom',
   'Bedroom',
   'Master Bedroom',
-  'Ariel',
+  'Aerial',
   'Garage'
 ];
 
