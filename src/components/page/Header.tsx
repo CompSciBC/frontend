@@ -77,7 +77,7 @@ function Header({
     // </NavParentFrame>
     <AppBar
       position="static"
-      style={{ background: 'linear-gradient(to right, #F4F269, #5CB270)' }}
+      style={{ background: 'linear-gradient(to right, #023059, #50A4AB, #FBC70D)' }}
     >
       <Container maxWidth="xl">
         <Toolbar disableGutters>
@@ -92,7 +92,7 @@ function Header({
             sx={{
               mr: 2,
               display: { xs: 'none', md: 'flex' },
-              fontFamily: 'monospace',
+              fontFamily: 'Roboto',
               fontWeight: 700,
               letterSpacing: '.3rem',
               color: 'black',
@@ -152,7 +152,7 @@ function Header({
               mr: 2,
               display: { xs: 'flex', md: 'none' },
               flexGrow: 1,
-              fontFamily: 'monospace',
+              fontFamily: 'Roboto',
               fontWeight: 700,
               letterSpacing: '.3rem',
               color: 'black',
