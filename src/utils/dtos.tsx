@@ -225,11 +225,19 @@ export interface SurveyData {
   property: Property;
   guest: User;
   qualityMetrics: {};
+  qualityMetricsAverage: number;
   submissionTime: Date;
   surveyResponse: string;
+}
+
+export interface PieChartData {
+  name: string;
+  count: number;
+  ratingFrequencyMap: { [key: string]: number };
 }
 
 export interface SurveyMetrics {
   hostId: string;
   surveyResponses: SurveyData[];
+  pieChartData: { [key: string]: PieChartData[]};
 }
