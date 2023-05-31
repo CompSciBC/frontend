@@ -1,10 +1,8 @@
 import {
   AlertColor,
   Button,
-  IconButton,
   ImageList,
   ImageListItem,
-  ImageListItemBar,
   ListSubheader,
   Typography
 } from '@mui/material';
@@ -15,10 +13,11 @@ import {
   uploadGuidebookImages,
   deleteGuidebookImage
 } from '../guidebookData';
-import { AddPhotoAlternateOutlined, Delete } from '@mui/icons-material';
-import { GuidebookImageFiles } from '../../../../utils/dtos';
+import { AddPhotoAlternateOutlined } from '@mui/icons-material';
+import { GuidebookImage, GuidebookImageFiles } from '../../../../utils/dtos';
 import ConfirmCancelDialog from '../../../stuff/ConfirmCancelDialog';
 import AlertPopup from '../../../stuff/AlertPopup';
+import GuidebookEditImage from './GuidebookEditImage';
 
 export interface GuidebookEditImagesProps {
   className?: string;
@@ -26,9 +25,9 @@ export interface GuidebookEditImagesProps {
 }
 
 function GuidebookEditImages({ className, propId }: GuidebookEditImagesProps) {
-  const [guidebookImages, setGuidebookImages] = useState<string[]>([]);
+  const [guidebookImages, setGuidebookImages] = useState<GuidebookImage[]>([]);
   const [addImagesOpen, setAddImagesOpen] = useState(false);
-  const [deleteImage, setDeleteImage] = useState<string | null>(null);
+  const [deleteImage, setDeleteImage] = useState<GuidebookImage | null>(null);
   const [alert, setAlert] = useState<{
     open: boolean;
     severity: AlertColor;
@@ -75,7 +74,7 @@ function GuidebookEditImages({ className, propId }: GuidebookEditImagesProps) {
 
   const handleDeleteImage = () => {
     if (deleteImage) {
-      deleteGuidebookImage(deleteImage).then((res) => {
+      deleteGuidebookImage(deleteImage.url).then((res) => {
         if (res) {
           // remove deleted image from list
           setGuidebookImages(
@@ -129,23 +128,13 @@ function GuidebookEditImages({ className, propId }: GuidebookEditImagesProps) {
             )}
           </ListSubheader>
         </ImageListItem>
-        {guidebookImages?.map((item, i) => {
-          return (
-            <ImageListItem key={item}>
-              <img src={item} loading="lazy" />
-              <ImageListItemBar
-                // TODO: get filename and tags from API
-                title={i}
-                subtitle={i}
-                actionIcon={
-                  <IconButton onClick={() => setDeleteImage(item)}>
-                    <Delete sx={{ color: 'white' }} />
-                  </IconButton>
-                }
-              />
-            </ImageListItem>
-          );
-        })}
+        {guidebookImages?.map((image) => (
+          <GuidebookEditImage
+            key={image.url}
+            image={image}
+            onDelete={() => setDeleteImage(image)}
+          />
+        ))}
       </ImageList>
       <ConfirmCancelDialog
         open={!!deleteImage}

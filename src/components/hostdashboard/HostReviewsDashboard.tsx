@@ -7,7 +7,13 @@ import AppContext from '../../context/AppContext';
 import { useContext, useState, useEffect, useRef } from 'react';
 import { HostProvider, HostContextType } from './hostContext';
 import { server } from '../../index';
-import { PieChartData, Reservation, SurveyData, SurveyMetrics, User } from '../../utils/dtos';
+import {
+  PieChartData,
+  Reservation,
+  SurveyData,
+  SurveyMetrics,
+  User
+} from '../../utils/dtos';
 import surveysJson from './mock_data_delete_later/surveys.json';
 import * as React from 'react';
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
@@ -172,26 +178,24 @@ const months: string[] = [
 ];
 
 function createRows(surveyData: SurveyData[]) {
-  
-    const rows = [];
-    for (let i: number = 0; i < surveyData.length; i++) {
-        const s = surveyData[i];
-        const submissionTime = new Date(s.submissionTime);
-        rows.push({
-            id: i + 1,
-            reservation: s.reservationId,
-            property: s.property.name,
-            guest: s.guest,
-            timestamp: `${
-            months[submissionTime.getMonth()]
-            } ${submissionTime.getFullYear()}`,
-            qualityMetrics: s.qualityMetrics,
-            qualityMetricsAverage: s.qualityMetricsAverage,
-            surveyResponse: s.surveyResponse
-        });
-        }
-        return rows;
-  
+  const rows = [];
+  for (let i: number = 0; i < surveyData.length; i++) {
+    const s = surveyData[i];
+    const submissionTime = new Date(s.submissionTime);
+    rows.push({
+      id: i + 1,
+      reservation: s.reservationId,
+      property: s.property.name,
+      guest: s.guest,
+      timestamp: `${
+        months[submissionTime.getMonth()]
+      } ${submissionTime.getFullYear()}`,
+      qualityMetrics: s.qualityMetrics,
+      qualityMetricsAverage: s.qualityMetricsAverage,
+      surveyResponse: s.surveyResponse
+    });
+  }
+  return rows;
 }
 
 function HostReviewsDashboard() {
@@ -210,52 +214,51 @@ function HostReviewsDashboard() {
   if (reviews !== undefined) {
     const rows = createRows(reviews.surveyResponses);
     return (
-        <Container maxWidth="xl">
-            <Box sx={{ mt: 10 }}>
-              <Grid container spacing={2}>
-                <Grid item xs={12}>
-                  <WidgetTitle>
-                    <h3 style={{ float: 'left' }}> Visualizations </h3>
-                  </WidgetTitle>
-                </Grid>
-              </Grid>
-            </Box>
-            <PropertyMetricsVisualizer pieChartDataList={reviews.pieChartData}/>
-            <Box sx={{ mt: 0 }}>
-              <Grid container wrap="nowrap" spacing={2}>
-                <Grid item xs={12}>
-                  <WidgetTitle>
-                    <h3 style={{ float: 'left' }}> Reviews </h3>
-                  </WidgetTitle>
-                </Grid>
-              </Grid>
-              <DataGrid
-                rows={rows}
-                columns={columns}
-                initialState={{
-                  pagination: {
-                    paginationModel: { page: 0, pageSize: 5 }
-                  }
-                }}
-                pageSizeOptions={[5, 10, 15, 20]}
-                sx={{
-                  m: 2,
-                  '&.MuiDataGrid-root--densityComfortable .MuiDataGrid-cell': {
-                    py: '10px'
-                  },
-                  boxShadow: 1
-                }}
-                getRowHeight={() => 'auto'}
-                getEstimatedRowHeight={() => 200}
-                density="comfortable"
-              />
-            </Box>
-          </Container>
-      );
+      <Container maxWidth="xl">
+        <Box sx={{ mt: 10 }}>
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <WidgetTitle>
+                <h3 style={{ float: 'left' }}> Visualizations </h3>
+              </WidgetTitle>
+            </Grid>
+          </Grid>
+        </Box>
+        <PropertyMetricsVisualizer pieChartDataList={reviews.pieChartData} />
+        <Box sx={{ mt: 0 }}>
+          <Grid container wrap="nowrap" spacing={2}>
+            <Grid item xs={12}>
+              <WidgetTitle>
+                <h3 style={{ float: 'left' }}> Reviews </h3>
+              </WidgetTitle>
+            </Grid>
+          </Grid>
+          <DataGrid
+            rows={rows}
+            columns={columns}
+            initialState={{
+              pagination: {
+                paginationModel: { page: 0, pageSize: 5 }
+              }
+            }}
+            pageSizeOptions={[5, 10, 15, 20]}
+            sx={{
+              m: 2,
+              '&.MuiDataGrid-root--densityComfortable .MuiDataGrid-cell': {
+                py: '10px'
+              },
+              boxShadow: 1
+            }}
+            getRowHeight={() => 'auto'}
+            getEstimatedRowHeight={() => 200}
+            density="comfortable"
+          />
+        </Box>
+      </Container>
+    );
   } else {
-    return (<></>);
+    return <></>;
   }
-  
 }
 
 export default HostReviewsDashboard;

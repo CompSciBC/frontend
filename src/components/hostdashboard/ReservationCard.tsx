@@ -2,7 +2,7 @@
 import styled from '@emotion/styled';
 import { theme } from '../../utils/styles';
 import { Link } from 'react-router-dom';
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import { server } from '../../index';
 import { User } from '../../utils/dtos';
 import Button from '@mui/material/Button';
@@ -27,15 +27,14 @@ export default function ReservationCard({
   const checkInDate = new Date(reservationStartDate);
   const checkOutDate = new Date(reservationEndDate);
   const chatLink = `/reservations/${reservationId}/chat`;
-  const [propertyPhoto, setPropertyPhoto] = useState();
-  useMemo(() => {
-    fetch(`${server}/api/guidebook/${propertyId}/images`)
-      .then(async (res) => {
-        return await res.json();
-      })
-      .then((data) => {
-        setPropertyPhoto(data[0]);
-      });
+  const [propertyPhoto, setPropertyPhoto] = useState<string>();
+  const [visible, setVisible] = useState(false);
+  useEffect(() => {
+    fetch(`${server}/api/guidebook/${propertyId}/images/featured`).then(
+      async (res) => {
+        setPropertyPhoto(await res.text());
+      }
+    );
   }, [propertyId]);
   const [primaryGuest, setPrimaryGuest] = useState<string>();
   const [newGuest, setNewGuest] = useState<boolean>(false);
@@ -57,7 +56,7 @@ export default function ReservationCard({
     })();
   }, [primaryGuestEmail]);
   return (
-    <Container>
+    <Container visible={visible}>
       <GuestInfo>
         {newGuest ? <h6>{primaryGuest}</h6> : <h5>{primaryGuest}</h5>}
         <p>
@@ -66,7 +65,7 @@ export default function ReservationCard({
         </p>
       </GuestInfo>
       <ImageContainer>
-        <img src={propertyPhoto} />
+        <img src={propertyPhoto} onLoad={() => setVisible(true)} />
       </ImageContainer>
       {newGuest ? (
         <InviteButton to={chatLink}> 📨 &nbsp;Invite </InviteButton>
@@ -81,10 +80,11 @@ export default function ReservationCard({
   );
 }
 
-const Container = styled.div`
+const Container = styled.div<{ visible: boolean }>`
   /* padding: 20px 0; */
   margin: 0px 6px;
-  display: inline-block;
+  /* display: inline-block; */
+  display: ${(props) => (props.visible ? 'inline-block' : 'none')};
   width: 300px;
   height: 175px;
   border: 1px solid grey;
