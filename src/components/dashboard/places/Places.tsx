@@ -4,7 +4,7 @@ import { useEffect, useState, useContext, useCallback } from 'react';
 import AppContext from '../../../context/AppContext';
 import { Place, RestaurantFilters } from '../../../utils/dtos';
 import getPlaces from './getPlaces';
-import SearchBar from '../../search/SearchBar';
+// import SearchBar from '../../search/SearchBar';
 import CloseX from '../../page/CloseX';
 import PlaceCard from './PlaceCard';
 
@@ -70,7 +70,7 @@ function Places() {
     <Container>
       <ContentContainer>
         <h2>Nearby Places</h2>
-        <StyledSearchBar
+        {/* <StyledSearchBar
           handleSubmit={(text: string) => {
             const { address } = reservation!.property;
 
@@ -83,7 +83,7 @@ function Places() {
               setQuery({ address, keywords });
             }
           }}
-        />
+        /> */}
         <QueryContainer>
           <TagTrack>
             {query?.keywords?.map((k) => (
@@ -132,7 +132,7 @@ const ContentContainer = styled.div`
   }
 `;
 
-const StyledSearchBar = styled(SearchBar)``;
+// const StyledSearchBar = styled(SearchBar)``;
 
 const QueryContainer = styled.div`
   display: flex;

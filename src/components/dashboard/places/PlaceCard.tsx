@@ -111,7 +111,7 @@ const Stars = styled.div`
   align-items: center;
   justify-content: space-between;
   padding: 4px 8px;
-  background-color: ${theme.color.green};
+  background-color: ${theme.color.BMGdarkblue};
   ${theme.font.caption}
   color: white;
 
