@@ -5,11 +5,72 @@ export const guestSurveyJson = {
   logoFit: 'cover',
   logoPosition: 'right',
   title: 'Guest Experience Feedback Survey',
-  description: 'Your opinion matters to us!',
+  description: `Thank you for choosing to stay with us. We hope that you enjoyed your time here and that you had a comfortable and memorable experience. We would appreciate it if you could take a few minutes to complete this satisfaction survey to help us improve our service.`,
   elements: [
     {
       type: 'panel',
       name: 'panel1',
+      title: 'Please Rate Your Rental Experience',
+      elements: [
+        {
+          type: 'radiogroup',
+          name: 'booking-platform',
+          title: 'Where did you find this listing?',
+          choices: ['Expedia.com', 'Vrbo', 'Airbnb'],
+          showOtherItem: true,
+          otherPlaceholder: 'Please specify...',
+          otherText: 'Other'
+        },
+        {
+          type: 'matrix',
+          name: 'quality-rental',
+          title:
+            'Please rate the following aspects of your stay on a scale of 1-5, where 1 is "very poor" and 5 is "excellent"',
+          isRequired: true,
+          columns: [1, 2, 3, 4, 5],
+          rows: [
+            { text: 'Cleanliness', value: 'cleanliness' },
+            { text: 'Comfort', value: 'comfort' },
+            { text: 'Location', value: 'location' },
+            { text: 'Value for money', value: 'value-for-money' },
+            {
+              text: 'Ease of communication with host',
+              value: 'host-communication-ease'
+            },
+            {
+              text: 'Timeliness of communication with host',
+              value: 'host-communication-timeliness'
+            },
+            { text: 'Amenities match expectations', value: 'amenities' },
+            { text: 'Guidebook information is complete', value: 'guidebook' }
+          ],
+          columnMinWidth: '40px',
+          rowTitleWidth: '300px'
+        },
+        {
+          type: 'comment',
+          name: 'suggestions-rental',
+          title:
+            'What would make you more satisfied with your rental experience?'
+        },
+        {
+          type: 'boolean',
+          name: 'have-additional-thoughts',
+          title:
+            'Is there anything else you would like to share about your experience?'
+        },
+        {
+          type: 'comment',
+          name: 'additional-thoughts',
+          visibleIf: '{have-additional-thoughts} = true',
+          titleLocation: 'hidden',
+          placeholder: 'Please share your thoughts...'
+        }
+      ]
+    },
+    {
+      type: 'panel',
+      name: 'panel2',
       title: 'Please Rate The BeMyGuest Application',
       elements: [
         {
@@ -29,7 +90,7 @@ export const guestSurveyJson = {
         },
         {
           type: 'matrix',
-          name: 'quality',
+          name: 'quality-bmg',
           title: 'Please score the following aspects of BeMyGuest',
           columns: [1, 2, 3, 4, 5],
           rows: [
@@ -77,57 +138,6 @@ export const guestSurveyJson = {
           title: 'What would make you more satisfied with BeMyGuest?'
         }
       ]
-    },
-    {
-      type: 'panel',
-      name: 'panel2',
-      title: 'Please Rate Your Rental Experience',
-      elements: [
-        {
-          type: 'radiogroup',
-          name: 'booking-platform',
-          title: 'Where did you find this listing?',
-          choices: ['Expedia.com', 'Vrbo', 'Airbnb'],
-          showOtherItem: true,
-          otherPlaceholder: 'Please specify...',
-          otherText: 'Other'
-        },
-        {
-          type: 'matrix',
-          name: 'quality',
-          title: 'Please score the following aspects of your stay',
-          columns: [1, 2, 3, 4, 5],
-          rows: [
-            {
-              text: 'Easy of communication with Host',
-              value: 'host-communication'
-            },
-            { text: 'Cleanliness', value: 'cleanliness' },
-            { text: 'Amenities match expectations', value: 'amenities' },
-            { text: 'Guidebook information is complete', value: 'guidebook' }
-          ],
-          columnMinWidth: '40px',
-          rowTitleWidth: '300px'
-        },
-        {
-          type: 'comment',
-          name: 'suggestions-rental',
-          title:
-            'What would make you more satisfied with your rental experience?'
-        },
-        {
-          type: 'boolean',
-          name: 'have-additional-thoughts',
-          title: "Is there anything you'd like to add?"
-        },
-        {
-          type: 'comment',
-          name: 'additional-thoughts',
-          visibleIf: '{have-additional-thoughts} = true',
-          titleLocation: 'hidden',
-          placeholder: 'Please share your thoughts...'
-        }
-      ]
     }
   ],
   showProgressBar: 'top',
@@ -136,4 +146,8 @@ export const guestSurveyJson = {
   width: '85%',
   completedHtml:
     '<p><h4>Thank you for your feedback!</h4></p><p>Navigating back to Dashboard in 3...2...1...</p>'
+};
+
+export const guestSurveyQuestionsMap = {
+  'discovery-source': 'How did you first hear about us?'
 };

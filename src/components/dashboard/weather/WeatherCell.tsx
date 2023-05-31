@@ -11,17 +11,17 @@ import WeatherForecastTile from './WeatherForecastTile';
 import DashboardCellWrapper from '../DashboardCellWrapper';
 
 function WeatherCell({ className, cell }: DashboardCellProps) {
-  const { reservationDetail } = useContext(AppContext);
+  const { reservation } = useContext(AppContext);
   const [forecast, setForecast] = useState<Forecast[]>([]);
 
   useEffect(() => {
     let subscribed = true;
 
     (async function () {
-      if (reservationDetail?.property.address) {
+      if (reservation?.property.address) {
         subscribed &&
           setForecast(
-            await getWeatherForecast(reservationDetail?.property.address, 5)
+            await getWeatherForecast(reservation?.property.address, 5)
           );
       }
     })();
@@ -29,16 +29,14 @@ function WeatherCell({ className, cell }: DashboardCellProps) {
     return () => {
       subscribed = false;
     };
-  }, [reservationDetail]);
+  }, [reservation]);
 
   return (
     <Container
       className={className}
       cell={cell}
       child={
-        <DashboardCellLink
-          to={paramRoute(routes.weather, reservationDetail?.id)}
-        >
+        <DashboardCellLink to={paramRoute(routes.weather, reservation?.id)}>
           {forecast.map((f) => (
             <WeatherForecastTile
               key={f.number}

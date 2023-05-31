@@ -7,14 +7,14 @@ import RectangularCardLink from './RectangularCardLink';
 import { theme } from '../../../utils/styles';
 
 function Weather() {
-  const { reservationDetail } = useContext(AppContext);
+  const { reservation } = useContext(AppContext);
   const [forecast, setForecast] = useState<Forecast[]>([]);
 
   useEffect(() => {
     (async function () {
-      if (reservationDetail?.property.address) {
+      if (reservation?.property.address) {
         setForecast(
-          await getWeatherForecast(reservationDetail?.property.address, 14)
+          await getWeatherForecast(reservation?.property.address, 14)
         );
       }
     })();

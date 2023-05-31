@@ -19,16 +19,18 @@ import Reservations from './components/reservations/Reservations';
 import AddReservation from './components/reservations/AddReservation';
 import Dashboard from './components/dashboard/Dashboard';
 import Guidebook from './components/dashboard/guidebook/Guidebook';
+import GuidebookEditor from './components/dashboard/guidebook/guidebookEditor/GuidebookEditor';
 import Invite from './components/dashboard/invite/Invite';
 import Chat from './components/chat/Chat';
 import Weather from './components/dashboard/weather/Weather';
 import Restaurants from './components/dashboard/restaurants/Restaurants';
-import EventsAndPlaces from './components/dashboard/eventsAndPlaces/EventsAndPlaces';
+import Places from './components/dashboard/places/Places';
 import Map from './components/dashboard/map/Map';
 import SurveyView from './components/dashboard/review/SurveyComponent';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
 import Inbox from './components/chat/Inbox';
+import HostReviewsDashboard from './components/hostdashboard/HostReviewsDashboard';
 // import AppTestMode from './components/AppTestMode';
 
 // Configure React project with Amplify resources
@@ -65,14 +67,16 @@ export const routes = {
   addReservation: '/reservations/add/:resId',
   dashboard: '/reservations/:resId/dashboard',
   guidebook: '/reservations/:resId/guidebook',
+  guidebookEdit: '/hostLanding/:propId/guidebook/edit',
   invite: '/reservations/:resId/invite',
   chat: '/reservations/:resId/chat',
-  inbox: 'inbox/:userId',
+  inbox: '/inbox',
   weather: '/reservations/:resId/weather',
   restaurants: '/reservations/:resId/restaurants',
-  eventsAndPlaces: '/reservations/:resId/eventsAndPlaces',
+  places: '/reservations/:resId/places',
   map: '/reservations/:resId/map',
-  review: '/reservations/:resId/:guestId/review'
+  review: '/reservations/:resId/:guestId/review',
+  hostReviews: '/hostReviewsDashboard'
 };
 
 /**
@@ -106,7 +110,7 @@ const noAuthNavLinks: NavbarLink[] = [
   }
 ];
 
-const authNavLinks: NavbarLink[] = [
+const guestNavLinks: NavbarLink[] = [
   {
     name: 'Reservations',
     path: routes.reservations
@@ -114,7 +118,29 @@ const authNavLinks: NavbarLink[] = [
   {
     name: 'Inbox',
     path: routes.inbox
+  }
+];
+
+const hostNavLinks: NavbarLink[] = [
+  {
+    name: 'Dashboard',
+    path: routes.hostLanding
   },
+  {
+    name: 'Manage Listings',
+    path: routes.error
+  },
+  {
+    name: 'Inbox',
+    path: routes.inbox
+  },
+  {
+    name: 'Reviews',
+    path: routes.hostReviews
+  }
+];
+
+const avatarLinks: NavbarLink[] = [
   {
     name: 'Profile',
     path: routes.profile
@@ -129,7 +155,12 @@ const router = createBrowserRouter([
   {
     element: (
       <AppContextProvider>
-        <App noAuthNavLinks={noAuthNavLinks} authNavLinks={authNavLinks} />
+        <App
+          noAuthNavLinks={noAuthNavLinks}
+          guestNavLinks={guestNavLinks}
+          hostNavLinks={hostNavLinks}
+          avatarLinks={avatarLinks}
+        />
         {/* <AppTestMode /> */}
       </AppContextProvider>
     ),
@@ -196,6 +227,10 @@ const router = createBrowserRouter([
             element: <Guidebook />
           },
           {
+            path: routes.guidebookEdit,
+            element: <GuidebookEditor />
+          },
+          {
             path: routes.invite,
             element: <Invite />
           },
@@ -216,8 +251,8 @@ const router = createBrowserRouter([
             element: <Restaurants />
           },
           {
-            path: routes.eventsAndPlaces,
-            element: <EventsAndPlaces />
+            path: routes.places,
+            element: <Places />
           },
           {
             path: routes.map,
@@ -226,6 +261,10 @@ const router = createBrowserRouter([
           {
             path: routes.review,
             element: <SurveyView />
+          },
+          {
+            path: routes.hostReviews,
+            element: <HostReviewsDashboard />
           }
         ]
       }

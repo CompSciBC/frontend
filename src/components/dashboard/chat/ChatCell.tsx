@@ -7,13 +7,13 @@ import { DashboardCellProps } from '../Dashboard';
 import DashboardCellClickable from '../DashboardCellClickable';
 
 function ChatCell({ className, cell }: DashboardCellProps) {
-  const { reservationDetail } = useContext(AppContext);
+  const { reservation } = useContext(AppContext);
 
   return (
     <Container
       className={className}
       cell={cell}
-      to={paramRoute(routes.chat, reservationDetail?.id)}
+      to={paramRoute(routes.chat, reservation?.id)}
       child={'Chat'}
     />
   );

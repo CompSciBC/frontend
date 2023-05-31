@@ -9,6 +9,7 @@ export const theme = {
     heading: 'font: normal normal 700 20px/26px Roboto, sans-serif;',
     subHeading: 'font: normal normal 700 14px/16px Roboto, sans-serif;',
     body: 'font: normal normal 400 16px/20px "Reem Kufi", sans-serif;',
+    placeholder: 'font: normal normal lighter 30px/34px "Krub", sans-serif;',
     guidebookBody: 'font: normal normal 400 18px/22px "Reem Kufi", sans-serif;',
     button: 'font: normal normal 500 16px/20px "Reem Kufi", sans-serif;',
     caption: 'font: normal normal 400 13px/20px "Reem Kufi", sans-serif;',
@@ -18,19 +19,27 @@ export const theme = {
       'font: normal normal 400 13px/20px "Reem Kufi", sans-serif; text-decoration: underline;'
   },
   color: {
+    // Begin BMG Coloring section
+    BMGdarkblue: '#142340',
+    BMGnavyblue: '#023059',
+    BMGteal: '#50A4AB',
+    BMGyellow: '#FBC70D',
+    BMGyellow2: '#F2B90F',
+
     black: '#000000',
     white: '#ffffff',
     blue: '#2E7CF6',
     purple: '#A281CE',
     red: '#FF6058',
-    green: '#27CA40',
+    green: '#76BA1B',
     lime: '#AEF359',
-    orange: '#FFC130',
-    yellow: '#F4FF47',
+    orange: '#ffa500',
+    yellow: '#FFD700',
     teal: '#3EA0AF',
     lightBlue: '#2EC7F6',
     lightGray: '#E9E9E9',
-    gray: '#646464'
+    gray: '#646464',
+    lightGreen: '#A4DE02'
   },
   screen: {
     small: '@media only screen and (max-width: 700px)',

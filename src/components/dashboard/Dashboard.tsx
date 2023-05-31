@@ -8,7 +8,7 @@ import GuidebookCell from './guidebook/GuidebookCell';
 import InviteCell from './invite/InviteCell';
 import WeatherCell from './weather/WeatherCell';
 import RestaurantsCell from './restaurants/RestaurantsCell';
-import EventsAndPlacesCell from './eventsAndPlaces/EventsAndPlacesCell';
+import PlacesCell from './places/PlacesCell';
 import ChatCell from './chat/ChatCell';
 import ChatPreview from './chat/ChatPreview';
 import MapCell from './map/MapCell';
@@ -32,15 +32,15 @@ const review = 'review';
 
 function Dashboard() {
   const { resId } = useParams();
-  const { reservationDetail } = useContext(AppContext);
+  const { reservation } = useContext(AppContext);
   const [checkCellVisible, setCheckCellVisible] = useState(false);
 
   // determine if check-in/out cell is visible
   useEffect(() => {
     let subscribed = true;
 
-    if (reservationDetail) {
-      const { checkIn, checkOut } = reservationDetail;
+    if (reservation) {
+      const { checkIn, checkOut } = reservation;
 
       // convert date/time strings to pure dates (with no time)
       const checkInDate = new Date(checkIn).setHours(0, 0, 0, 0);
@@ -57,7 +57,7 @@ function Dashboard() {
     return () => {
       subscribed = false;
     };
-  }, [reservationDetail]);
+  }, [reservation]);
 
   const infoCell = <InfoCell cell={info} />;
   const checkCell = checkCellVisible ? <CheckInCell cell={check} /> : null;
@@ -65,7 +65,7 @@ function Dashboard() {
   const inviteCell = <InviteCell cell={invite} />;
   const weatherCell = <WeatherCell cell={weather} />;
   const restCell = <RestaurantsCell n={2} cell={rest} />;
-  const eventCell = <EventsAndPlacesCell n={2} cell={event} />;
+  const eventCell = <PlacesCell n={2} cell={event} />;
   const chatCell = <ChatCell cell={chat} />;
   const chatPreviewCell = <ChatPreview n={3} cell={chat} />;
   const mapCell = <MapCell cell={map} />;
@@ -94,8 +94,8 @@ function Dashboard() {
   const layout = useMemo(() => {
     let container: JSX.Element;
 
-    if (reservationDetail?.id !== resId) {
-      // prevent split-second flash of dashboard components while reservationDetail loads;
+    if (reservation?.id !== resId) {
+      // prevent split-second flash of dashboard components while reservation loads;
       // i.e., display a blank screen
       container = <></>;
     } else if (width <= 700) {
@@ -150,7 +150,7 @@ function Dashboard() {
     }
 
     return container;
-  }, [width, resId, reservationDetail, reviewCell]);
+  }, [width, resId, reservation, reviewCell]);
 
   return layout;
 }

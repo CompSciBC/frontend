@@ -49,24 +49,90 @@ export interface Property {
 }
 
 /**
+ * Represents a key/value data pair
+ */
+export interface KeyValue {
+  key: string;
+  value: string;
+}
+
+/**
+ * The valid types of a guidebook section
+ */
+export type GuidebookSectionType = 'text' | 'list' | 'keyValue' | 'bio';
+
+/**
+ * The base shape of a guidebook section
+ */
+export interface GuidebookSection<T> {
+  title: string;
+  type: GuidebookSectionType;
+  content: T;
+}
+
+/**
+ * The property bio information for a property guidebook
+ */
+export interface GuidebookPropertyBio {
+  about: string;
+  amenities: string[];
+  facts: KeyValue[];
+  checkInInstr?: string;
+  checkOutInstr?: string;
+}
+
+/**
  * Represents a guidebook json object that is used to save information from the Host
  * and displays to guests.
  */
-export interface GuidebookDto {
-  propertyID: string;
+export type GuidebookDto = {
+  propertyId: string;
   propertyName: string;
-  propertyType?: 'Cabin' | 'City' | 'Beach' | 'Mountain';
-  capacity: number;
-  pets: 'Allowed' | 'Not Allowed';
-  amenities?: string[];
-  propertyBio: string[];
-  faq?: Array<{ question: string; answer: string }>;
-  policies?: string[];
-  hostRecommended?: string[];
-  hostServices?: string[];
-  askGuestTheseQuestionsinSurvey?: any;
-  checkininstr?: string[];
-  checkoutinstr?: string[];
+  sections: string[];
+  propertyBio: GuidebookSection<GuidebookPropertyBio>;
+} & {
+  [key: string]: GuidebookSection<string | string[] | KeyValue[]>;
+};
+
+/**
+ * Represents a place that a guest can view that is nearby their property rental.
+ * (Matching Place.java)
+ */
+export interface Place {
+  name: string;
+  openNow: boolean;
+  rating: number;
+  types: string[];
+  loc: { latitude: string; longitude: string };
+  vicinity: string;
+  priceLvl: number;
+  placeID: string;
+  userPhotoReference: string;
+  photo: any;
+}
+
+/*
+ * Metadata for a guidebook image
+ */
+export interface GuidebookImageMetadata {
+  name: string;
+  tags: string[];
+}
+
+/**
+ * Contains a list of image files and associated metadata (matching GuidebookImageMetadata.java)
+ */
+export interface GuidebookImageFiles {
+  files: FileList;
+  metadata: GuidebookImageMetadata[];
+}
+
+/**
+ * Represents a Guidebook image (matching GuidebookImage.java)
+ */
+export interface GuidebookImage {
+  url: string;
+  metadata: GuidebookImageMetadata;
 }
 
 /**
@@ -84,15 +150,7 @@ export interface Reservation {
   reasonForStay: string;
   inviteCode: string;
   checkedIn: boolean;
-}
-
-/**
- * A reservation object containing additional details about its associated property
- * (matching ReservationDetail.java)
- */
-export interface ReservationDetail extends Reservation {
   property: Property;
-  image?: string;
 }
 
 /**
@@ -105,11 +163,11 @@ export interface ReservationDetail extends Reservation {
 export type ReservationStatus = 'current' | 'upcoming' | 'past';
 
 /**
- * An object containing reservation/property objects grouped by status type
+ * An object containing reservation objects grouped by status type
  * (current, upcoming, past)
  */
 export type SortedReservationDetailSet = {
-  [key in ReservationStatus]: ReservationDetail[];
+  [key in ReservationStatus]: Reservation[];
 };
 
 /**
@@ -185,4 +243,26 @@ export interface Message {
   me: boolean;
   time: Date;
   message: string;
+}
+
+export interface SurveyData {
+  reservationId: string;
+  property: Property;
+  guest: User;
+  qualityMetrics: {};
+  qualityMetricsAverage: number;
+  submissionTime: Date;
+  surveyResponse: string;
+}
+
+export interface PieChartData {
+  name: string;
+  count: number;
+  ratingFrequencyMap: { [key: string]: number };
+}
+
+export interface SurveyMetrics {
+  hostId: string;
+  surveyResponses: SurveyData[];
+  pieChartData: { [key: string]: PieChartData[] };
 }

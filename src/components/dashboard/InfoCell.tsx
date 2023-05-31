@@ -6,19 +6,19 @@ import { DashboardCellProps } from './Dashboard';
 import DashboardCellWrapper from './DashboardCellWrapper';
 
 function InfoCell({ className, cell }: DashboardCellProps) {
-  const { reservationDetail } = useContext(AppContext);
+  const { reservation } = useContext(AppContext);
 
   return (
     <Container
       className={className}
       cell={cell}
       child={
-        reservationDetail && (
+        reservation && (
           <>
-            <PropertyName>{reservationDetail.property.name}</PropertyName>
+            <PropertyName>{reservation.property.name}</PropertyName>
             <PropertyAddress>
-              {reservationDetail.property.address.line1}{' '}
-              {reservationDetail.property.address.line2}
+              {reservation.property.address.line1}{' '}
+              {reservation.property.address.line2}
             </PropertyAddress>
           </>
         )

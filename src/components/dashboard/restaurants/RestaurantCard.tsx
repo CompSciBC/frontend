@@ -1,8 +1,8 @@
 import styled from '@emotion/styled';
 import { theme } from '../../../utils/styles';
 import { Fragment } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { routes } from '../../..';
+import { useNavigate, useParams } from 'react-router-dom';
+import { paramRoute, routes } from '../../..';
 import { Restaurant } from '../../../utils/dtos';
 import Star from './Star';
 
@@ -12,6 +12,7 @@ export interface RestaurantCardProps {
 }
 
 function RestaurantCard({ className, restaurant }: RestaurantCardProps) {
+  const { resId } = useParams();
   const navigate = useNavigate();
   const {
     name,
@@ -75,7 +76,7 @@ function RestaurantCard({ className, restaurant }: RestaurantCardProps) {
               type="button"
               onClick={(event) => {
                 event.preventDefault();
-                navigate(routes.map);
+                navigate(paramRoute(routes.map, resId));
               }}
             >
               Get Directions
@@ -151,7 +152,7 @@ const Stars = styled.div`
   align-items: center;
   justify-content: space-between;
   padding: 4px 8px;
-  background-color: ${theme.color.green};
+  background-color: ${theme.color.BMGdarkblue};
   ${theme.font.caption}
   color: white;
 
@@ -189,6 +190,7 @@ const CategoryTag = styled.div`
 `;
 
 const CardFooter = styled.div`
+  float: right;
   flex-grow: 1;
   display: flex;
   align-items: end;
@@ -208,6 +210,7 @@ const CardFooter = styled.div`
 `;
 
 const FooterButton = styled.button`
+  float: right;
   padding: 4px 8px;
   border: 1px solid ${theme.color.lightGray};
   border-radius: 4px;
