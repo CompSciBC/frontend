@@ -30,7 +30,7 @@ function HostLanding() {
   // console.log(JSON.stringify(reviews));
   const [reservationButton, setReservationButton] =
     useState<string>('getCurrent');
-  const [reservations, setReservations] = useState<Reservation[]>([]);
+  const [reservations, setReservations] = useState<Reservation[] | null>([]);
 
   const [reviews, setReviews] = useState<SurveyMetrics>();
   useEffect(() => {
@@ -62,11 +62,18 @@ function HostLanding() {
     }
     fetch(queryString)
       .then(async (res) => {
+        if (res.status === 404) {
+          throw new Error(`API returned an error: ${res.status}`);
+        }
         return await res.json();
       })
       .then((data) => {
         // console.log(data);
         setReservations(data.data);
+      })
+      .catch((error) => {
+        console.log(error);
+        setReservations(null);
       });
   }, [reservationButton]);
 
@@ -75,10 +82,6 @@ function HostLanding() {
     reviews
   });
 
-  // console.log('reservations');
-  // console.log(reservations);
-  // console.log('host');
-  // console.log(host);
   return (
     <HostProvider value={host}>
       <Container>
@@ -98,7 +101,7 @@ function HostLanding() {
             Upcoming{' '}
           </button>
         </ReservationsButtons>
-        {reservations.length === 0 ? (
+        {reservations === null ? (
           <Placeholder>
             <h3> You have no reservations at the moment </h3>
           </Placeholder>
