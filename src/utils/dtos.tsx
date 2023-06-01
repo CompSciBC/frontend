@@ -95,6 +95,23 @@ export type GuidebookDto = {
 };
 
 /**
+ * Represents a place that a guest can view that is nearby their property rental.
+ * (Matching Place.java)
+ */
+export interface Place {
+  name: string;
+  openNow: boolean;
+  rating: number;
+  types: string[];
+  loc: { latitude: string; longitude: string };
+  vicinity: string;
+  priceLvl: number;
+  placeID: string;
+  userPhotoReference: string;
+  photo: any;
+}
+
+/*
  * Metadata for a guidebook image
  */
 export interface GuidebookImageMetadata {
@@ -108,6 +125,14 @@ export interface GuidebookImageMetadata {
 export interface GuidebookImageFiles {
   files: FileList;
   metadata: GuidebookImageMetadata[];
+}
+
+/**
+ * Represents a Guidebook image (matching GuidebookImage.java)
+ */
+export interface GuidebookImage {
+  url: string;
+  metadata: GuidebookImageMetadata;
 }
 
 /**
@@ -225,11 +250,19 @@ export interface SurveyData {
   property: Property;
   guest: User;
   qualityMetrics: {};
+  qualityMetricsAverage: number;
   submissionTime: Date;
   surveyResponse: string;
+}
+
+export interface PieChartData {
+  name: string;
+  count: number;
+  ratingFrequencyMap: { [key: string]: number };
 }
 
 export interface SurveyMetrics {
   hostId: string;
   surveyResponses: SurveyData[];
+  pieChartData: { [key: string]: PieChartData[] };
 }

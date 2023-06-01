@@ -1,5 +1,9 @@
 import { server } from '../../..';
-import { GuidebookDto, GuidebookImageFiles } from '../../../utils/dtos';
+import {
+  GuidebookDto,
+  GuidebookImage,
+  GuidebookImageFiles
+} from '../../../utils/dtos';
 
 /**
  * Fetches the guidebook content for the identified property
@@ -18,9 +22,11 @@ export const getGuidebookContent = async (
  * Fetches the images for the identified property
  *
  * @param propId A property id
- * @returns A promise for a list of image urls
+ * @returns A promise for an array of guidebook images
  */
-export const getGuidebookImages = async (propId: string): Promise<string[]> => {
+export const getGuidebookImages = async (
+  propId: string
+): Promise<GuidebookImage[]> => {
   const response = await fetch(`${server}/api/guidebook/${propId}/images`);
   return await response.json();
 };
@@ -51,12 +57,12 @@ export const uploadGuidebookContent = async (
  *
  * @param propId A property id
  * @param imageFiles A list of files
- * @returns True if the save was successful, or false otherwise
+ * @returns A promise for an array of guidebook images
  */
 export const uploadGuidebookImages = async (
   propId: string,
   imageFiles: GuidebookImageFiles
-): Promise<boolean> => {
+): Promise<GuidebookImage[]> => {
   const { files, metadata } = imageFiles;
   const body = new FormData();
 
@@ -70,5 +76,18 @@ export const uploadGuidebookImages = async (
     // https://stackoverflow.com/questions/36005436/the-request-was-rejected-because-no-multipart-boundary-was-found-in-springboot
     body
   });
-  return (await response.json()).length > 0;
+  return await response.json();
+};
+
+/**
+ * Deletes the image with the given src attribute
+ *
+ * @param src The src attribute of an image
+ * @returns True if the deletion was successful, or false otherwise
+ */
+export const deleteGuidebookImage = async (src: string): Promise<boolean> => {
+  const response = await fetch(`${server}/api/guidebook/images?url=${src}`, {
+    method: 'DELETE'
+  });
+  return response.status === 204;
 };

@@ -25,20 +25,21 @@ export const theme = {
     BMGteal: '#50A4AB',
     BMGyellow: '#FBC70D',
     BMGyellow2: '#F2B90F',
-    
+
     black: '#000000',
     white: '#ffffff',
     blue: '#2E7CF6',
     purple: '#A281CE',
     red: '#FF6058',
-    green: '#27CA40',
+    green: '#76BA1B',
     lime: '#AEF359',
-    orange: '#FFC130',
-    yellow: '#F4FF47',
+    orange: '#ffa500',
+    yellow: '#FFD700',
     teal: '#3EA0AF',
     lightBlue: '#2EC7F6',
     lightGray: '#E9E9E9',
-    gray: '#646464'
+    gray: '#646464',
+    lightGreen: '#A4DE02'
   },
   screen: {
     small: '@media only screen and (max-width: 700px)',

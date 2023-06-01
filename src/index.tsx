@@ -23,12 +23,13 @@ import Invite from './components/dashboard/invite/Invite';
 import Chat from './components/chat/Chat';
 import Weather from './components/dashboard/weather/Weather';
 import Restaurants from './components/dashboard/restaurants/Restaurants';
-import EventsAndPlaces from './components/dashboard/eventsAndPlaces/EventsAndPlaces';
+import Places from './components/dashboard/places/Places';
 import Map from './components/dashboard/map/Map';
 import SurveyView from './components/dashboard/review/SurveyComponent';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
 import Inbox from './components/chat/Inbox';
+import HostReviewsDashboard from './components/hostdashboard/HostReviewsDashboard';
 // import AppTestMode from './components/AppTestMode';
 
 // Configure React project with Amplify resources
@@ -70,9 +71,10 @@ export const routes = {
   inbox: '/inbox',
   weather: '/reservations/:resId/weather',
   restaurants: '/reservations/:resId/restaurants',
-  eventsAndPlaces: '/reservations/:resId/eventsAndPlaces',
+  places: '/reservations/:resId/places',
   map: '/reservations/:resId/map',
-  review: '/reservations/:resId/:guestId/review'
+  review: '/reservations/:resId/:guestId/review',
+  hostReviews: '/hostReviewsDashboard'
 };
 
 /**
@@ -129,6 +131,10 @@ const hostNavLinks: NavbarLink[] = [
   {
     name: 'Inbox',
     path: routes.inbox
+  },
+  {
+    name: 'Reviews',
+    path: routes.hostReviews
   }
 ];
 
@@ -239,8 +245,8 @@ const router = createBrowserRouter([
             element: <Restaurants />
           },
           {
-            path: routes.eventsAndPlaces,
-            element: <EventsAndPlaces />
+            path: routes.places,
+            element: <Places />
           },
           {
             path: routes.map,
@@ -249,6 +255,10 @@ const router = createBrowserRouter([
           {
             path: routes.review,
             element: <SurveyView />
+          },
+          {
+            path: routes.hostReviews,
+            element: <HostReviewsDashboard />
           }
         ]
       }
