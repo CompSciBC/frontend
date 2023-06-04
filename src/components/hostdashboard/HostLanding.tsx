@@ -10,6 +10,7 @@ import { useContext, useState, useEffect, useRef } from 'react';
 import { HostProvider, HostContextType } from './hostContext';
 import { server } from '../../index';
 import { Reservation, SurveyMetrics } from '../../utils/dtos';
+import { Button, ImageList, Typography } from '@mui/material';
 
 // http://localhost:8080/api/reservations/checkoutafter?index=host&id=652ac46b-f438-45e6-95c0-bb7cc6029db8&primaryOnly=true&checkOutCutOff=2023-05-13T00:00:00.000
 // Upcoming
@@ -92,14 +93,45 @@ function HostLanding() {
           </a>
         </WidgetTitle>
         <ReservationsButtons>
-          <button autoFocus onClick={() => setReservationButton('getCurrent')}>
+          <Button
+            autoFocus
+            size="small"
+            variant="outlined"
+            onClick={() => setReservationButton('getCurrent')}
+            sx={{ bgcolor: theme.color.lightGray }}
+          >
+            <Typography
+              gutterBottom
+              variant="body1"
+              component="div"
+              color="gray"
+            >
+              Currently hosting
+            </Typography>
+          </Button>
+          <Button
+            size="small"
+            variant="outlined"
+            sx={{ bgcolor: theme.color.lightGray }}
+            onClick={() => setReservationButton('getUpcoming')}
+          >
+            <Typography
+              gutterBottom
+              variant="body1"
+              component="div"
+              color="gray"
+            >
+              Upcoming
+            </Typography>
+          </Button>
+          {/* <button autoFocus onClick={() => setReservationButton('getCurrent')}>
             {' '}
             Currently hosting{' '}
           </button>
           <button onClick={() => setReservationButton('getUpcoming')}>
             {' '}
             Upcoming{' '}
-          </button>
+          </button> */}
         </ReservationsButtons>
         {reservations === null ? (
           <Placeholder>
@@ -161,7 +193,7 @@ const ReservationsButtons = styled.div`
   overflow-x: scroll;
   button {
     background-color: white;
-    border: 1px solid black;
+    border: none;
     color: black; // text color
     text-align: center;
     display: inline-block;
@@ -172,28 +204,28 @@ const ReservationsButtons = styled.div`
 
     :hover {
       filter: brightness(0.9) contrast(1.2);
-      border-color: dodgerblue;
-      color: dodgerblue;
+      border-color: gray;
+      color: gray;
     }
 
     :focus {
-      background-color: dodgerblue;
-      color: white;
-      border: 1px dodgerblue;
+      background-color: lightgray;
+      color: black;
+      border: 1px none;
     }
   }
 `;
 
 const ReservationsScroll = styled.div`
   width: 80vw;
-  height: 200px;
-  overflow-x: scroll;
+  height: 375px;
+  overflow-y: scroll;
   white-space: nowrap;
 `;
 
 const Reviews = styled.div`
   width: 80vw;
-  height: 240px;
+  height: 250px;
   overflow-x: scroll;
   white-space: nowrap;
   display: inline-block;

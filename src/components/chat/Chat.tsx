@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 import React, { useState, useRef, useEffect, useContext } from 'react';
 import AppContext from '../../context/AppContext';
@@ -7,6 +8,9 @@ import { useParams } from 'react-router-dom';
 import styled from '@emotion/styled';
 import { theme } from '../../utils/styles';
 import { server } from '../..';
+import { Avatar, Box, Button, Container, Grid, IconButton, TextField, ToggleButton, ToggleButtonGroup, Typography } from '@mui/material';
+import SendIcon from '@mui/icons-material/Send';
+
 
 let stompClient: any = null;
 const hostUserName: string = 'Host Chat';
@@ -46,10 +50,12 @@ function Chat() {
 
   const messageEndRef = useRef<null | HTMLDivElement>(null);
 
+  const element = document.getElementById("last-message");
   /* scrol till the latest message. The latest message is popped up aitomatically
    */
   useEffect(() => {
     messageEndRef.current?.scrollIntoView();
+    element?.scrollIntoView();
   }, [userData.message, userData.connected]);
 
   /* use a map object where key is a receiver and value is a message
@@ -207,87 +213,122 @@ function Chat() {
     }
   };
 
+  const [view, setView] = React.useState('Group');
+
   return (
-    <Container>
-      <SideBar>
-        <SideBarHeader>
-          <ChatHeader>Chats</ChatHeader>
-        </SideBarHeader>
-        <ChatList>
-          <ChatRoom
+    <Container maxWidth="lg" sx={{ mt: 2 }}>
+      <Grid container spacing={2}>
+        <Grid item xs={3}>
+          <Typography variant='h6' >
+            Conversations
+          </Typography>
+          <Button
+            variant="outlined"
+            fullWidth
             onClick={() => {
               setTab('Group');
             }}
+            sx={{mt : 1}}
           >
             {' '}
             Group Chat{' '}
-          </ChatRoom>
+          </Button>
           {Array.from(privateChats.keys()).map((chatName, index) => (
-            <ChatRoom
+            <Button
               key={index}
+              fullWidth
+              variant="outlined"
               onClick={() => {
                 setTab(chatName);
               }}
+              sx={{mt : 1}}
             >
               {chatName}
-            </ChatRoom>
+            </Button>
           ))}
-        </ChatList>
-      </SideBar>
-      <ChatContent>
-        <ChatName>{tab === groupChatName ? groupHeader : tab} </ChatName>
-        <ChatMessages id="chat-messages">
+        </Grid>
+        <Grid item xs={9}>
+        <Box sx={{ width: '100%' }}>
+          <Typography variant='h6' >
+            {tab === groupChatName ? groupHeader : tab} 
+          </Typography>
+        </Box>
+        <Box sx={{ overflowY: 'scroll', p: 2, borderRadius: '5px', backgroundColor: '#FAF9F6', height: '50vh' }}>
+          
           {(tab === groupChatName
             ? [...groupChat]
             : [...privateChats.get(tab)!]
           ).map((message: any, index) => (
-            <MessageBlockWrapper
-              self={message.senderName === userData.username}
+            <Box
+              sx={{display: 'flex', justifyContent: message.senderName === userData.username ? 'flex-end' : 'flex-start'}}
               key={index}
             >
-              <MessageBlock id="message-block">
-                {message.senderName !== userData.username && (
-                  <Avatar>{message.senderName}</Avatar>
-                )}
-                {message.senderName === userData.username && (
-                  <AvatarSelf>{message.senderName}</AvatarSelf>
-                )}
-                <MessageData id="message-data">{message.message}</MessageData>
-              </MessageBlock>
-            </MessageBlockWrapper>
+              <Box
+                sx={{
+                  width: '45%',
+                  p: 1,
+                  m: 0.25,
+                  borderRadius: 2,
+                  backgroundColor: message.senderName === userData.username ? '#FFD95A' : theme.color.lightGray,
+                  color: message.senderName === userData.username ? '#4C3D3D' : theme.color.black
+                }}
+              >
+                <Typography variant='h6' style={{ fontSize: '16px' }}>
+                  {message.senderName}
+                </Typography>
+                <Typography variant='body1'>
+                  {message.message}
+                </Typography>
+              </Box>
+            </Box>
           ))}
+          <h1 ref={messageEndRef}>A React article for Latin readers</h1>
           <LastMessage id="last-message" ref={messageEndRef}></LastMessage>
-        </ChatMessages>
-        <SendMessage id="send-message">
-          <Input
-            id="input"
-            userType={userData.username}
-            placeholder="enter the message"
-            value={userData.message}
-            onChange={handleMessage}
-          />
-          <SendButton type="button" onClick={sendMessage}>
-            send
-          </SendButton>
-        </SendMessage>
-      </ChatContent>
+        </Box>
+      
+      <Box sx={{ p: 2, borderRadius: '16px', height: '20vh', alignContent: 'flex-end'}}>
+        <Grid container spacing={2}>
+          <Grid item xs={11}>
+            <TextField
+              fullWidth
+              id="input"
+              multiline
+              placeholder="enter the message"
+              value={userData.message}
+              onChange={handleMessage}
+              maxRows={4}
+            />
+          </Grid>
+          <Grid item xs={1}>
+            <IconButton aria-label="send" onClick={sendMessage} size="large">
+              <SendIcon style={{ color: theme.color.BMGdarkblue }}/>
+            </IconButton>
+          </Grid>
+        </Grid>
+      </Box>
+      
+      
+      
+        </Grid>
+      </Grid>
+      
     </Container>
   );
 }
-const Container = styled.div`
-  display: flex;
-  width: 100%;
-  height: 100%;
-`;
-const SideBar = styled.div`
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  width: 250px;
-  //background-color: red;
-  gap: 20px;
-  padding: 16px;
-`;
+// const Container = styled.div`
+//   display: flex;
+//   width: 100%;
+//   height: 100%;
+// `;
+// const SideBar = styled.div`
+//   display: flex;
+//   flex-direction: column;
+//   height: 100%;
+//   width: 250px;
+//   background-color: red;
+//   gap: 20px;
+//   padding: 16px;
+// `;
 const ChatContent = styled.div`
   display: flex;
   flex-direction: column;
@@ -352,10 +393,13 @@ const ChatMessages = styled.div`
 `;
 
 const MessageBlockWrapper = styled.div<{ self: boolean }>`
+  
   display: flex;
+  background-color: red;
   justify-content: ${(props) => (props.self ? 'end' : '')};
   width: 100%;
   margin: 10px 0;
+  
 `;
 
 const MessageBlock = styled.div`
@@ -378,20 +422,20 @@ const Input = styled.input<{ userType: string }>`
   border-radius: 15px;
   ${theme.font.body}
 `;
-const Avatar = styled.div`
-  display: flex;
-  color: #c5c752;
-  ${theme.screen.small} {
-    width: 100%;
-  }
-`;
-const AvatarSelf = styled.div`
-  display: flex;
-  color: #52a782;
-  ${theme.screen.small} {
-    width: 100%;
-  }
-`;
+// const Avatar = styled.div`
+//   display: flex;
+//   color: #c5c752;
+//   ${theme.screen.small} {
+//     width: 100%;
+//   }
+// `;
+// const AvatarSelf = styled.div`
+//   display: flex;
+//   color: #52a782;
+//   ${theme.screen.small} {
+//     width: 100%;
+//   }
+// `;
 const MessageData = styled.li`
   display: flex;
   max-width: fit-content;
@@ -402,6 +446,7 @@ const MessageData = styled.li`
 const SendMessage = styled.div`
   width: 75%;
   display: flex;
+  background-color: red;
 `;
 const SendButton = styled.button`
   border: none;
