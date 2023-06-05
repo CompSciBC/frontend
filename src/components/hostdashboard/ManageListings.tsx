@@ -26,7 +26,7 @@ export function ManageListings() {
       <Grid container spacing={2}>
         <Grid item xs={12}>
           <WidgetTitle>
-            <h3 style={{ float: 'left' }}> Visualizations </h3>
+            <h3 style={{ float: 'left' }}> Manage Listings </h3>
           </WidgetTitle>
         </Grid>
         {properties?.map((p: Property, index: number) => {
