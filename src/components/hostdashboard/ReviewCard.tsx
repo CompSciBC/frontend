@@ -108,8 +108,8 @@ export default function ReviewCard({
               alt="Remy Sharp"
               src="/static/images/avatar/1.jpg"
               sx={{
-                bgcolor: theme.color.lightGray,
-                color: theme.color.gray,
+                bgcolor: theme.color.BMGteal,
+                color: theme.color.white,
                 width: 55,
                 height: 55
               }}
