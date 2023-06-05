@@ -133,7 +133,7 @@ function HostLanding() {
             Upcoming{' '}
           </button> */}
         </ReservationsButtons>
-        {(reservations === null || reservations.length === 0) ? (
+        {reservations === null || reservations.length === 0 ? (
           <Placeholder>
             <h3> You have no reservations at the moment </h3>
           </Placeholder>

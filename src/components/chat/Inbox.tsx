@@ -10,7 +10,19 @@ import { theme } from '../../utils/styles';
 import { server } from '../..';
 import { SortedReservationDetailSet, Reservation } from '../../utils/dtos';
 import { useNavigate } from 'react-router-dom';
-import { Avatar, Box, Button, ButtonBase, Container, Grid, IconButton, TextField, ToggleButton, ToggleButtonGroup, Typography } from '@mui/material';
+import {
+  Avatar,
+  Box,
+  Button,
+  ButtonBase,
+  Container,
+  Grid,
+  IconButton,
+  TextField,
+  ToggleButton,
+  ToggleButtonGroup,
+  Typography
+} from '@mui/material';
 
 let stompClient: any = null;
 let firstChatId: string = ' ';
@@ -196,9 +208,7 @@ function Inbox() {
     <Container maxWidth="lg" sx={{ mt: 2 }}>
       <Grid container spacing={2}>
         <Grid item xs={3}>
-          <Typography variant='h6' >
-            Inbox
-          </Typography>
+          <Typography variant="h6">Inbox</Typography>
           {Array.from(chatTitlesMap.keys()).map((chatTitleKey, index) => (
             <Button
               key={index}
@@ -210,76 +220,90 @@ function Inbox() {
                   : '';
                 setTab(chatTitleKey);
               }}
-              sx={{mt : 1}}
+              sx={{ mt: 1 }}
             >
               {chatTitlesMap.get(chatTitleKey)}
             </Button>
           ))}
         </Grid>
         <Grid item xs={9}>
-        {tab !== '' && inboxChats.has(tab) ? (
-           <Box sx={{ width: '100%' }}>
-          
-            <Typography variant='h6' >
-              {currentChatTitle}
-            </Typography>
-             <Box sx={{ overflowY: 'scroll', p: 2, borderRadius: '5px', backgroundColor: '#FAF9F6', height: '70vh' }}>
-          
-          {[...inboxChats.get(tab)!].map((message: any, index) => (
-            <Box
-              sx={{display: 'flex', justifyContent: message.senderName === userData.username ? 'flex-end' : 'flex-start'}}
-              key={index}
-            >
+          {tab !== '' && inboxChats.has(tab) ? (
+            <Box sx={{ width: '100%' }}>
+              <Typography variant="h6">{currentChatTitle}</Typography>
               <Box
                 sx={{
-                  width: '45%',
-                  p: 1,
-                  m: 0.25,
-                  borderRadius: 2,
-                  backgroundColor: message.senderName === userData.username ? '#FFD95A' : theme.color.lightGray,
-                  color: message.senderName === userData.username ? '#4C3D3D' : theme.color.black
+                  overflowY: 'scroll',
+                  p: 2,
+                  borderRadius: '5px',
+                  backgroundColor: '#FAF9F6',
+                  height: '70vh'
                 }}
               >
-                <Typography variant='h6' style={{ fontSize: '16px' }}>
-                  {message.senderName}
-                </Typography>
-                <Typography variant='body1'>
-                  {message.message}
-                </Typography>
+                {[...inboxChats.get(tab)!].map((message: any, index) => (
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      justifyContent:
+                        message.senderName === userData.username
+                          ? 'flex-end'
+                          : 'flex-start'
+                    }}
+                    key={index}
+                  >
+                    <Box
+                      sx={{
+                        width: '45%',
+                        p: 1,
+                        m: 0.25,
+                        borderRadius: 2,
+                        backgroundColor:
+                          message.senderName === userData.username
+                            ? '#FFD95A'
+                            : theme.color.lightGray,
+                        color:
+                          message.senderName === userData.username
+                            ? '#4C3D3D'
+                            : theme.color.black
+                      }}
+                    >
+                      <Typography variant="h6" style={{ fontSize: '16px' }}>
+                        {message.senderName}
+                      </Typography>
+                      <Typography variant="body1">{message.message}</Typography>
+                    </Box>
+                  </Box>
+                ))}
+                <LastMessage
+                  id="last-message"
+                  ref={messageEndRef}
+                ></LastMessage>
               </Box>
             </Box>
-          ))}
-          <LastMessage id="last-message" ref={messageEndRef}></LastMessage>
-        </Box>
-          </Box>
-            ) : (
-              <br />
-            )}
-       
-       
-      
-       <Button
-          fullWidth
-          variant="contained"
-          color="info"
-          onClick={() => {
-            currentReservationIdLink = reservationIdLinksMap.has(
-              currentChatTitle
-            )
-              ? reservationIdLinksMap.get(currentChatTitle)!
-              : '';
+          ) : (
+            <br />
+          )}
 
-            navigate(`/reservations/${currentReservationIdLink}/chat`);
-          }}
-          sx={{mt: 1}}
-        >
-          <Typography variant='h6' style={{ fontSize: '16px' }}>
-            To send a new message go to Chat page
-          </Typography>
-        </Button>
+          <Button
+            fullWidth
+            variant="contained"
+            color="info"
+            onClick={() => {
+              currentReservationIdLink = reservationIdLinksMap.has(
+                currentChatTitle
+              )
+                ? reservationIdLinksMap.get(currentChatTitle)!
+                : '';
+
+              navigate(`/reservations/${currentReservationIdLink}/chat`);
+            }}
+            sx={{ mt: 1 }}
+          >
+            <Typography variant="h6" style={{ fontSize: '16px' }}>
+              To send a new message go to Chat page
+            </Typography>
+          </Button>
         </Grid>
       </Grid>
-      
     </Container>
   );
 }
