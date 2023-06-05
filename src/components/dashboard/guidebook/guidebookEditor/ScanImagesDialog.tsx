@@ -217,6 +217,9 @@ function ScanImagesDialog({
                 </SuggestionsWrapper>
               </DialogContent>
               <DialogActions>
+                <ImageCounter>{`${imageIndex + 1}/${
+                  images.length
+                }`}</ImageCounter>
                 <Button onClick={handlePrevious} disabled={imageIndex === 0}>
                   Previous
                 </Button>
@@ -271,6 +274,12 @@ const SuggestionsWrapper = styled.div`
 const Confidence = styled.span`
   font-size: small;
   color: rgba(1, 1, 1, 0.33);
+`;
+
+const ImageCounter = styled.div`
+  margin: 0 auto 0 16px;
+  font-size: 12px;
+  color: rgba(0, 0, 0, 0.75);
 `;
 
 export default ScanImagesDialog;
