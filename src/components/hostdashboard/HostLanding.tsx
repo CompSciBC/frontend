@@ -10,7 +10,7 @@ import { useContext, useState, useEffect, useRef } from 'react';
 import { HostProvider, HostContextType } from './hostContext';
 import { server } from '../../index';
 import { Reservation, SurveyMetrics } from '../../utils/dtos';
-import { Button, ImageList, Typography } from '@mui/material';
+import { Button, ImageList, ToggleButton, ToggleButtonGroup, Typography } from '@mui/material';
 
 // http://localhost:8080/api/reservations/checkoutafter?index=host&id=652ac46b-f438-45e6-95c0-bb7cc6029db8&primaryOnly=true&checkOutCutOff=2023-05-13T00:00:00.000
 // Upcoming
@@ -83,6 +83,12 @@ function HostLanding() {
     reviews
   });
   console.log(reservations);
+  const handleReservationButtonSelection = (
+    event: React.MouseEvent<HTMLElement>,
+    newSelection: string,
+  ) => {
+    setReservationButton(newSelection);
+  };
   return (
     <HostProvider value={host}>
       <Container>
@@ -93,12 +99,38 @@ function HostLanding() {
           </a>
         </WidgetTitle>
         <ReservationsButtons>
-          <Button
-            autoFocus
+        <ToggleButtonGroup
+          value={reservationButton}
+          exclusive
+          onChange={handleReservationButtonSelection}
+          color="primary"
+        >
+          <ToggleButton value="getCurrent">
+            <Typography
+              gutterBottom
+              variant="body1"
+              component="div"
+              color="gray"
+            >
+              Currently hosting
+            </Typography>
+          </ToggleButton>
+          <ToggleButton value="getUpcoming">
+            <Typography
+              gutterBottom
+              variant="body1"
+              component="div"
+              color="gray"
+            >
+              Upcoming
+            </Typography>
+          </ToggleButton>
+        </ToggleButtonGroup>
+          {/* <Button
             size="small"
-            variant="outlined"
+            variant="contained"
             onClick={() => setReservationButton('getCurrent')}
-            sx={{ bgcolor: theme.color.lightGray }}
+            sx={{ color: reservationButton === 'getCurrent'? theme.color.blue : theme.color.lightGray }}
           >
             <Typography
               gutterBottom
@@ -123,7 +155,7 @@ function HostLanding() {
             >
               Upcoming
             </Typography>
-          </Button>
+          </Button> */}
           {/* <button autoFocus onClick={() => setReservationButton('getCurrent')}>
             {' '}
             Currently hosting{' '}
@@ -201,18 +233,6 @@ const ReservationsButtons = styled.div`
     border-radius: 16px;
     padding: 10px;
     ${theme.font.button}
-
-    :hover {
-      filter: brightness(0.9) contrast(1.2);
-      border-color: gray;
-      color: gray;
-    }
-
-    :focus {
-      background-color: lightgray;
-      color: black;
-      border: 1px none;
-    }
   }
 `;
 
