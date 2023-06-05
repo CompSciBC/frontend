@@ -23,7 +23,6 @@ interface SelectedSuggestions {
   [key: string]: boolean;
 }
 
-const IMAGE_SIZE = 552;
 const BOX_COLORS: BoxColor[] = [
   { fill: '#00FF00', font: 'black' }, // lime
   { fill: '#00FFFF', font: 'black' }, // cyan
@@ -150,8 +149,6 @@ function ScanImagesDialog({
                           key={`${name}-${i}`}
                           name={name}
                           box={box}
-                          height={IMAGE_SIZE}
-                          width={IMAGE_SIZE}
                           color={BOX_COLORS[colorIndex]}
                         />
                       );
@@ -253,13 +250,14 @@ function ScanImagesDialog({
 
 const ImageWrapper = styled.div`
   position: relative;
+  width: 552px;
+  max-width: 100%;
+  aspect-ratio: 1/1;
+  margin-bottom: 16px;
 
   img {
-    position: relative;
-    width: ${`${IMAGE_SIZE}px`};
-    max-width: 100%;
-    aspect-ratio: 1/1;
-    margin-bottom: 16px;
+    width: 100%;
+    height: 100%;
   }
 `;
 

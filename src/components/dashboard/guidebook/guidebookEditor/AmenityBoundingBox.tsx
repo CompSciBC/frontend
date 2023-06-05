@@ -10,8 +10,6 @@ export interface AmenityBoundingBoxProps {
   className?: string;
   name: string;
   box: BoundingBox;
-  height: number;
-  width: number;
   color: BoxColor;
 }
 
@@ -19,19 +17,10 @@ function AmenityBoundingBox({
   className,
   name,
   box,
-  height,
-  width,
   color
 }: AmenityBoundingBoxProps) {
-  const boundingBox: BoundingBox = {
-    height: box.height * height,
-    width: box.width * width,
-    top: box.top * height,
-    left: box.left * width
-  };
-
   return (
-    <AmenityBox className={className} color={color} {...boundingBox}>
+    <AmenityBox className={className} color={color} {...box}>
       <div>{name}</div>
     </AmenityBox>
   );
@@ -39,18 +28,18 @@ function AmenityBoundingBox({
 
 const AmenityBox = styled.div<{ color: BoxColor } & BoundingBox>`
   position: absolute;
-  height: ${(props) => `${props.height}px`};
-  width: ${(props) => `${props.width}px`};
-  top: ${(props) => `${props.top}px`};
-  left: ${(props) => `${props.left}px`};
+  height: ${(props) => `${props.height * 100}%`};
+  width: ${(props) => `${props.width * 100}%`};
+  top: ${(props) => `${props.top * 100}%`};
+  left: ${(props) => `${props.left * 100}%`};
   border: ${(props) => `2px solid ${props.color.fill}`};
   background-color: transparent;
 
   div {
     position: absolute;
     // if label is too close to top of image, push label down inside box
-    bottom: ${(props) => (props.top < 15 ? undefined : '100%')};
-    top: ${(props) => (props.top >= 15 ? undefined : 0)};
+    bottom: ${(props) => (props.top * 100 < 15 ? undefined : '100%')};
+    top: ${(props) => (props.top * 100 >= 15 ? undefined : 0)};
     left: -2px; // account for border width
     font-size: 10px;
     padding: 0 4px;
