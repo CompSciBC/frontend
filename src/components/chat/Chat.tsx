@@ -50,12 +50,10 @@ function Chat() {
 
   const messageEndRef = useRef<null | HTMLDivElement>(null);
 
-  const element = document.getElementById("last-message");
   /* scrol till the latest message. The latest message is popped up aitomatically
    */
   useEffect(() => {
     messageEndRef.current?.scrollIntoView();
-    element?.scrollIntoView();
   }, [userData.message, userData.connected]);
 
   /* use a map object where key is a receiver and value is a message
@@ -282,7 +280,6 @@ function Chat() {
               </Box>
             </Box>
           ))}
-          <h1 ref={messageEndRef}>A React article for Latin readers</h1>
           <LastMessage id="last-message" ref={messageEndRef}></LastMessage>
         </Box>
       
@@ -306,9 +303,6 @@ function Chat() {
           </Grid>
         </Grid>
       </Box>
-      
-      
-      
         </Grid>
       </Grid>
       
