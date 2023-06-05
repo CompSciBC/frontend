@@ -268,10 +268,21 @@ export interface SurveyMetrics {
 }
 
 /**
+ * The bounding box surrounding an amenity suggestion
+ */
+export interface BoundingBox {
+  height: number;
+  width: number;
+  top: number;
+  left: number;
+}
+
+/**
  * An amenity suggestion based on image recognition (matching AmenitySuggestion.java)
  */
 export interface AmenitySuggestion {
   name: string;
   confidence: number;
   parents: string[];
+  boxes: BoundingBox[];
 }

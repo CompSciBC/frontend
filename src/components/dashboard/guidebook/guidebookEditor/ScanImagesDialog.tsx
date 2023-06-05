@@ -17,10 +17,20 @@ import { getGuidebookImages } from '../guidebookData';
 import { useParams } from 'react-router-dom';
 import styled from '@emotion/styled';
 import { server } from '../../../..';
+import AmenityBoundingBox, { BoxColor } from './AmenityBoundingBox';
 
 interface SelectedSuggestions {
   [key: string]: boolean;
 }
+
+const IMAGE_SIZE = 552;
+const BOX_COLORS: BoxColor[] = [
+  { fill: '#7CFC00', font: 'black' }, // lawngreen
+  { fill: '#00FFFF', font: 'black' }, // aqua
+  { fill: '#FFD700', font: 'black' }, // gold
+  { fill: '#FF00FF', font: 'white' } // magenta
+];
+let colorIndex = -1;
 
 export interface ScanImagesDialogProps {
   className?: string;
@@ -124,12 +134,30 @@ function ScanImagesDialog({
           {imageIndex >= 0 ? (
             <>
               <DialogContent>
-                <Image
-                  src={images?.[imageIndex]?.url}
-                  // don't fetch suggestions until image has loaded;
-                  // image is slow and UI looks weird if suggestions appear before image
-                  onLoad={() => getSuggestions(imageIndex)}
-                />
+                <ImageWrapper>
+                  <img
+                    src={images?.[imageIndex]?.url}
+                    // don't fetch suggestions until image has loaded;
+                    // image is slow and UI looks weird if suggestions appear before image
+                    onLoad={() => getSuggestions(imageIndex)}
+                  />
+                  {suggestions?.[imageIndex]?.map(({ name, boxes }) => {
+                    return boxes.map((box, i) => {
+                      colorIndex = (colorIndex + 1) % BOX_COLORS.length;
+
+                      return (
+                        <AmenityBoundingBox
+                          key={`${name}-${i}`}
+                          name={name}
+                          box={box}
+                          height={IMAGE_SIZE}
+                          width={IMAGE_SIZE}
+                          color={BOX_COLORS[colorIndex]}
+                        />
+                      );
+                    });
+                  })}
+                </ImageWrapper>
                 Suggested Amenities
                 <SuggestionsWrapper>
                   {loading ? (
@@ -220,11 +248,16 @@ function ScanImagesDialog({
   );
 }
 
-const Image = styled.img`
-  width: 552px;
-  max-width: 100%;
-  aspect-ratio: 1/1;
-  margin-bottom: 16px;
+const ImageWrapper = styled.div`
+  position: relative;
+
+  img {
+    position: relative;
+    width: ${`${IMAGE_SIZE}px`};
+    max-width: 100%;
+    aspect-ratio: 1/1;
+    margin-bottom: 16px;
+  }
 `;
 
 const SuggestionsWrapper = styled.div`
