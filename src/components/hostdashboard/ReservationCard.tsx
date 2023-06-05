@@ -2,7 +2,7 @@
 import styled from '@emotion/styled';
 import { theme } from '../../utils/styles';
 import { Link } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { server } from '../../index';
 import { User } from '../../utils/dtos';
 import Button from '@mui/material/Button';
@@ -13,6 +13,9 @@ import {
   CardMedia,
   Typography
 } from '@mui/material';
+import Modal from '../Modal';
+import SendInviteForm from '../dashboard/invite/SendInviteForm';
+import AppContext from '../../context/AppContext';
 
 export interface ReservationCardProps {
   reservationId: string;
@@ -31,6 +34,7 @@ export default function ReservationCard({
   reservationStartDate,
   reservationEndDate
 }: ReservationCardProps) {
+  const { user } = useContext(AppContext);
   const checkInDate = new Date(reservationStartDate);
   const checkOutDate = new Date(reservationEndDate);
   const chatLink = `/reservations/${reservationId}/chat`;
@@ -73,6 +77,9 @@ export default function ReservationCard({
       setAction('message');
     }
   });
+
+  const [emailFormOpen, setEmailFormOpen] = useState(false);
+  console.log(primaryGuestEmail);
   return (
     <Card
       sx={{ width: 275, display: 'inline-block', mr: 2 }}
@@ -110,10 +117,36 @@ export default function ReservationCard({
             variant="body1"
             component="div"
             color="white"
+            onClick={() => {
+              if (action === 'email') {
+                setEmailFormOpen(true);
+              }
+            }}
           >
             {action}
           </Typography>
         </Button>
+        {emailFormOpen && (
+          <Modal
+            content={
+              <SendInviteForm
+                onClose={() => setEmailFormOpen(false)}
+                resId={reservationId}
+                guestName={(() => {
+                  const { firstName, lastName } = user!;
+                  let name = '';
+
+                  if (typeof firstName === 'string') name += `${firstName}`;
+                  if (typeof lastName === 'string') name += ` ${lastName}`;
+
+                  return name;
+                })()}
+                recipientEmail={primaryGuestEmail}
+              />
+            }
+            blur={true}
+          />
+        )}
       </CardActions>
     </Card>
   );

@@ -95,6 +95,7 @@ function HostLanding() {
   ) => {
     setReservationButton(newSelection);
   };
+
   return (
     <HostProvider value={host}>
       <Container>

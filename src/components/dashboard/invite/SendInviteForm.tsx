@@ -17,6 +17,7 @@ export interface SendInviteFormProps {
   resId: string;
   guestName: string;
   onClose: CallableFunction;
+  recipientEmail?: string
 }
 
 /**
@@ -29,7 +30,8 @@ function SendInviteForm({
   className,
   resId,
   guestName,
-  onClose
+  onClose,
+  recipientEmail
 }: SendInviteFormProps) {
   const recipientsInputId = 'invite-recipients';
   const messageInputId = 'invite-message';
@@ -147,6 +149,7 @@ function SendInviteForm({
               type="email"
               placeholder="Enter multiple separated with commas"
               onBlur={handleBlur}
+              value={recipientEmail}
             />
           </Field>
           <Field>
