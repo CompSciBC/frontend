@@ -123,7 +123,7 @@ export default function ReviewCard({
               gutterBottom
               variant="body1"
               component="div"
-              color={theme.color.gray}
+              color={theme.color.BMGteal}
               sx={{ fontSize: 16, fontWeight: 'medium' }}
             >
               {guest.firstName} {guest.lastName}
