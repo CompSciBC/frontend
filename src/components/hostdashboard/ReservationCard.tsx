@@ -110,13 +110,18 @@ export default function ReservationCard({
         </Typography>
       </CardContent>
       <CardActions>
-        <Button size="small" variant="outlined" sx={{ bgcolor: color }} onClick={() => {
-              if (action === 'email') {
-                setEmailFormOpen(true);
-              } else if (action === 'message') {
-                navigate(`/reservations/${reservationId}/chat`);
-              }
-            }}>
+        <Button
+          size="small"
+          variant="outlined"
+          sx={{ bgcolor: color }}
+          onClick={() => {
+            if (action === 'email') {
+              setEmailFormOpen(true);
+            } else if (action === 'message') {
+              navigate(`/reservations/${reservationId}/chat`);
+            }
+          }}
+        >
           <Typography
             gutterBottom
             variant="body1"
