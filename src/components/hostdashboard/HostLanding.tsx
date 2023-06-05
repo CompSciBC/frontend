@@ -88,7 +88,6 @@ function HostLanding() {
     reservations,
     reviews
   });
-  console.log(reservations);
   const handleReservationButtonSelection = (
     event: React.MouseEvent<HTMLElement>,
     newSelection: string

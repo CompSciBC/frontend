@@ -1,7 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import styled from '@emotion/styled';
 import { theme } from '../../utils/styles';
-import { Link } from 'react-router-dom';
 import { useState, useEffect, useContext } from 'react';
 import { server } from '../../index';
 import { User } from '../../utils/dtos';
@@ -16,6 +14,7 @@ import {
 import Modal from '../Modal';
 import SendInviteForm from '../dashboard/invite/SendInviteForm';
 import AppContext from '../../context/AppContext';
+import { useNavigate } from 'react-router-dom';
 
 export interface ReservationCardProps {
   reservationId: string;
@@ -79,7 +78,7 @@ export default function ReservationCard({
   });
 
   const [emailFormOpen, setEmailFormOpen] = useState(false);
-  console.log(primaryGuestEmail);
+  const navigate = useNavigate();
   return (
     <Card
       sx={{ width: 275, display: 'inline-block', mr: 2 }}
@@ -111,17 +110,18 @@ export default function ReservationCard({
         </Typography>
       </CardContent>
       <CardActions>
-        <Button size="small" variant="outlined" sx={{ bgcolor: color }}>
+        <Button size="small" variant="outlined" sx={{ bgcolor: color }} onClick={() => {
+              if (action === 'email') {
+                setEmailFormOpen(true);
+              } else if (action === 'message') {
+                navigate(`/reservations/${reservationId}/chat`);
+              }
+            }}>
           <Typography
             gutterBottom
             variant="body1"
             component="div"
             color="white"
-            onClick={() => {
-              if (action === 'email') {
-                setEmailFormOpen(true);
-              }
-            }}
           >
             {action}
           </Typography>

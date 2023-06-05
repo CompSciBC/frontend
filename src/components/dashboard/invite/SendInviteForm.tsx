@@ -17,7 +17,7 @@ export interface SendInviteFormProps {
   resId: string;
   guestName: string;
   onClose: CallableFunction;
-  recipientEmail?: string
+  recipientEmail?: string;
 }
 
 /**
