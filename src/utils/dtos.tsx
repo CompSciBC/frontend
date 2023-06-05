@@ -266,3 +266,12 @@ export interface SurveyMetrics {
   surveyResponses: SurveyData[];
   pieChartData: { [key: string]: PieChartData[] };
 }
+
+/**
+ * An amenity suggestion based on image recognition (matching AmenitySuggestion.java)
+ */
+export interface AmenitySuggestion {
+  name: string;
+  confidence: number;
+  parents: string[];
+}
