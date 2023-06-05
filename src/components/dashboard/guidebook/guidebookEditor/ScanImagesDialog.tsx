@@ -25,8 +25,8 @@ interface SelectedSuggestions {
 
 const IMAGE_SIZE = 552;
 const BOX_COLORS: BoxColor[] = [
-  { fill: '#7CFC00', font: 'black' }, // lawngreen
-  { fill: '#00FFFF', font: 'black' }, // aqua
+  { fill: '#00FF00', font: 'black' }, // lime
+  { fill: '#00FFFF', font: 'black' }, // cyan
   { fill: '#FFD700', font: 'black' }, // gold
   { fill: '#FF00FF', font: 'white' } // magenta
 ];
