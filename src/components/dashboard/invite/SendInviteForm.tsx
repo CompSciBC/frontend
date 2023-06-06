@@ -149,7 +149,7 @@ function SendInviteForm({
               type="email"
               placeholder="Enter multiple separated with commas"
               onBlur={handleBlur}
-              value={recipientEmail}
+              defaultValue={recipientEmail}
             />
           </Field>
           <Field>
