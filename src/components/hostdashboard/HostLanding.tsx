@@ -8,8 +8,9 @@ import GanttChart from './GanttChart';
 import AppContext from '../../context/AppContext';
 import { useContext, useState, useEffect, useRef } from 'react';
 import { HostProvider, HostContextType } from './hostContext';
-import { server } from '../../index';
+import { routes, server } from '../../index';
 import { Reservation, SurveyMetrics } from '../../utils/dtos';
+import { Link } from 'react-router-dom';
 
 // http://localhost:8080/api/reservations/checkoutafter?index=host&id=652ac46b-f438-45e6-95c0-bb7cc6029db8&primaryOnly=true&checkOutCutOff=2023-05-13T00:00:00.000
 // Upcoming
@@ -119,9 +120,9 @@ function HostLanding() {
         )}
         <WidgetTitle>
           <h3 style={{ float: 'left' }}> Newest Reviews </h3>
-          <a style={{ float: 'right' }} href="hostReviewsDashboard">
+          <Link style={{ float: 'right' }} to={routes.hostReviews}>
             All reviews
-          </a>
+          </Link>
         </WidgetTitle>
         {reviews?.surveyResponses.length === 0 ? (
           <Placeholder>
