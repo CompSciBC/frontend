@@ -30,7 +30,7 @@ export function ManageListings() {
           </WidgetTitle>
         </Grid>
         {properties?.map((p: Property, index: number) => {
-          return <PropertyCard key={index} property={p} />;
+          return <PropertyCard key={p.id} property={p} />;
         })}
       </Grid>
     </Container>
