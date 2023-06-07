@@ -69,7 +69,7 @@ function HostLanding() {
     }
     fetch(queryString)
       .then(async (res) => {
-        if (res.status === 404) {
+        if (res.status >= 400) {
           throw new Error(`API returned an error: ${res.status}`);
         }
         return await res.json();

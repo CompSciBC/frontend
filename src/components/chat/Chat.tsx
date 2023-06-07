@@ -265,7 +265,7 @@ function Chat() {
               p: 2,
               borderRadius: '5px',
               backgroundColor: '#FAF9F6',
-              height: '50vh'
+              height: '80vh'
             }}
           >
             {(tab === groupChatName
