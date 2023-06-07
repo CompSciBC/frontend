@@ -31,6 +31,7 @@ import './index.css';
 import reportWebVitals from './reportWebVitals';
 import Inbox from './components/chat/Inbox';
 import HostReviewsDashboard from './components/hostdashboard/HostReviewsDashboard';
+import HostReservationsDashboard from './components/hostdashboard/HostReservationsDashboard';
 // import AppTestMode from './components/AppTestMode';
 
 // Configure React project with Amplify resources
@@ -76,7 +77,8 @@ export const routes = {
   places: '/reservations/:resId/places',
   map: '/reservations/:resId/map',
   review: '/reservations/:resId/:guestId/review',
-  hostReviews: '/hostReviewsDashboard'
+  hostReviews: '/hostReviewsDashboard',
+  hostReservations: '/hostReservationsDashboard'
 };
 
 /**
@@ -137,6 +139,10 @@ const hostNavLinks: NavbarLink[] = [
   {
     name: 'Reviews',
     path: routes.hostReviews
+  },
+  {
+    name: 'Reservations',
+    path: routes.hostReservations
   }
 ];
 
@@ -265,6 +271,10 @@ const router = createBrowserRouter([
           {
             path: routes.hostReviews,
             element: <HostReviewsDashboard />
+          },
+          {
+            path: routes.hostReservations,
+            element: <HostReservationsDashboard />
           }
         ]
       }
