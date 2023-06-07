@@ -16,7 +16,6 @@ const groupChatName: string = 'Group';
 const groupHeader: string = 'Group Chat';
 // let isActive: boolean = true;
 
-
 interface Message {
   reservationId: String;
   timestamp: Number;
@@ -138,17 +137,14 @@ function Chat() {
   };
 
   const changeActiveTab = (chatName: string) => {
-    setTab(chatName);  
-    console.log("My chatName is ", chatName);
-    console.log("My active tab is", tab);
+    setTab(chatName);
+    console.log('My chatName is ', chatName);
+    console.log('My active tab is', tab);
     notification.set(chatName, false);
     setNotification(notification);
-    
-    
-    console.log("My active tab_1 is", tab);
 
+    console.log('My active tab_1 is', tab);
   };
-
 
   const onGroupMessage = (payload: any) => {
     const payloadData = JSON.parse(payload.body);
@@ -156,9 +152,8 @@ function Chat() {
     setGroupChat([...groupChat]);
     const sender = payloadData.senderName;
     const receiver = payloadData.receiverName;
-    console.log("Public Char Receiver is ", receiver);
-    console.log("Public Char sender is ", sender);
-    
+    console.log('Public Char Receiver is ', receiver);
+    console.log('Public Char sender is ', sender);
 
     if (tab !== groupChatName && receiver !== sender) {
       notification.set(groupChatName, true);
@@ -173,9 +168,9 @@ function Chat() {
     const chatId = payloadData.chatId;
     const sender = payloadData.senderName;
     const receiver = payloadData.receiverName;
-    console.log("Private Char Receiver is ", receiver);
-    console.log("Private Char sender is ", sender);
-    
+    console.log('Private Char Receiver is ', receiver);
+    console.log('Private Char sender is ', sender);
+
     const chatName = userData.isHost ? chatId.split('_')[1] : hostUserName;
 
     privateChats.get(chatName)!.push(payloadData);
@@ -189,7 +184,6 @@ function Chat() {
     setNotification(notification);
   };
 
- 
   const onError = (err: any) => {
     console.log(err);
   };
@@ -259,15 +253,14 @@ function Chat() {
         </SideBarHeader>
         <ChatList>
           <ChatRoomWrapper
-                    
             isNotification={notification.get(groupChatName) ?? false}
           >
             <ChatRoom
               onClick={() => {
-                console.log("My onClick tab", tab);
+                console.log('My onClick tab', tab);
                 // setTab(groupChatName);
-                console.log("My onClick tab_1", tab);
-                changeActiveTab(groupChatName);                
+                console.log('My onClick tab_1', tab);
+                changeActiveTab(groupChatName);
               }}
             >
               {' '}
@@ -276,18 +269,17 @@ function Chat() {
           </ChatRoomWrapper>
 
           {Array.from(privateChats.keys()).map((chatName, index) => (
-            <ChatRoomWrapper                 
+            <ChatRoomWrapper
               isNotification={notification.get(chatName) ?? false}
               key={index}
-              
             >
               <ChatRoom
                 key={index}
                 onClick={() => {
-                  console.log("My onClick tab", tab);
-                  // setTab(chatName);                  
-                  console.log("My onClick tab_1", tab);
-                  changeActiveTab(chatName);                  
+                  console.log('My onClick tab', tab);
+                  // setTab(chatName);
+                  console.log('My onClick tab_1', tab);
+                  changeActiveTab(chatName);
                 }}
               >
                 {chatName}

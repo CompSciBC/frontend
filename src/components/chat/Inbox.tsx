@@ -160,10 +160,13 @@ function Inbox() {
         ? chatName.split('_')[0]
         : chatName;
 
-      if (chatName.includes('_')) {
+      if (chatName.includes('_') && user?.role === 'guest') {
         propertyName =
           'Host ' + reservationsMap.get(reservationId)!.property.name;
-      } else {
+      } else if (chatName.includes('_') && user?.role === 'host') {
+        propertyName = chatName.split('_')[1] + ' ' + reservationsMap.get(reservationId)!.property.name;
+      }
+      else {
         propertyName =
           'Group ' + reservationsMap.get(reservationId)!.property.name;
       }
@@ -232,11 +235,7 @@ function Inbox() {
                     <AvatarSelf>{message.senderName}</AvatarSelf>
                   )}
                   <MessageData id="message-data">{message.message}</MessageData>
-                </MessageBlock>
-                <LastMessage
-                  id="last-message"
-                  ref={messageEndRef}
-                ></LastMessage>
+                </MessageBlock>                
               </MessageBlockWrapper>
             ))}
             <LastMessage id="last-message" ref={messageEndRef}></LastMessage>
