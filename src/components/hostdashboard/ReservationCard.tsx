@@ -36,9 +36,10 @@ export default function ReservationCard({
   const { user } = useContext(AppContext);
   const checkInDate = new Date(reservationStartDate);
   const checkOutDate = new Date(reservationEndDate);
-  const chatLink = `/reservations/${reservationId}/chat`;
   const [propertyPhoto, setPropertyPhoto] = useState<string>();
-  const [visible, setVisible] = useState(false);
+  const [color, setColor] = useState<string>();
+  const [action, setAction] = useState<string>();
+
   useEffect(() => {
     fetch(`${server}/api/guidebook/${propertyId}/images/featured`).then(
       async (res) => {
@@ -47,7 +48,6 @@ export default function ReservationCard({
     );
   }, [propertyId]);
   const [primaryGuest, setPrimaryGuest] = useState<string>();
-  const [newGuest, setNewGuest] = useState<boolean>(false);
   useEffect(() => {
     (async function () {
       const response = await fetch(
@@ -58,24 +58,16 @@ export default function ReservationCard({
       try {
         const primaryGuestName = `${data.firstName} ${data.lastName}`;
         setPrimaryGuest(primaryGuestName);
-        setNewGuest(false);
+        setColor(theme.color.BMGnavyblue);
+        setAction('message');
       } catch {
         setPrimaryGuest(primaryGuestEmail);
-        setNewGuest(true);
+        setColor(theme.color.teal);
+        setAction('email');
       }
     })();
   }, [primaryGuestEmail]);
-  const [color, setColor] = useState<string>();
-  const [action, setAction] = useState<string>();
-  useEffect(() => {
-    if (newGuest) {
-      setColor(theme.color.teal);
-      setAction('email');
-    } else {
-      setColor(theme.color.BMGnavyblue);
-      setAction('message');
-    }
-  });
+  
 
   const [emailFormOpen, setEmailFormOpen] = useState(false);
   const navigate = useNavigate();
