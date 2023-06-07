@@ -76,18 +76,14 @@ function HostLanding() {
     reviews
   });
 
-  // console.log('reservations');
-  // console.log(reservations);
-  // console.log('host');
-  // console.log(host);
   return (
     <HostProvider value={host}>
       <Container>
         <WidgetTitle>
           <h3 style={{ float: 'left' }}> Your Reservations </h3>
-          <a style={{ float: 'right' }} href="host-reservations">
+          <Link style={{ float: 'right' }} to={routes.hostReservations}>
             All reservations
-          </a>
+          </Link>
         </WidgetTitle>
         <ReservationsButtons>
           <button autoFocus onClick={() => setReservationButton('getCurrent')}>
