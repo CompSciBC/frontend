@@ -14,12 +14,12 @@ import {
 } from '../../utils/dtos';
 import * as React from 'react';
 import { DataGrid, GridColDef, GridRenderCellParams,  } from '@mui/x-data-grid';
-import { Container, Grid, Box, Typography, } from '@mui/material';
+import { Container, Grid, Box, Typography, Button, } from '@mui/material';
 import { Link } from 'react-router-dom';
 
 
 const columns: GridColDef[] = [
-  { field: 'id', headerName: 'ID', width: 75 },
+  { field: 'id', headerName: 'ID', width: 200 },
   { 
     field: 'property', headerName: 'Property', width: 200,
     renderCell: (params: GridRenderCellParams<Property>) => (
@@ -36,7 +36,20 @@ const columns: GridColDef[] = [
   { field: 'checkIn', headerName: 'Check-in Date', width: 200 },
   { field: 'checkOut', headerName: 'Check-out Date', width: 200 },
   { field: 'reasonForStay', headerName: 'Reason for Stay', width: 200 },
-  { field: 'checkedIn', headerName: 'Checked-in?', width: 200 },
+  { field: 'checkedIn', headerName: 'Checked-in?', width: 150 },
+  { 
+    field: 'chatLink', headerName: 'Chat', width: 100,
+    renderCell: (params: GridRenderCellParams<String>) => (
+      <strong>
+        <Link style={{ float: 'right', textDecoration: 'none', color: theme.color.BMGteal }} to={params.value}>
+          <Button size="small" variant='outlined'>
+            Chat
+          </Button>
+        </Link>
+      </strong>
+    )
+  },
+  
 ];
 
 const months: string[] = [
@@ -54,6 +67,10 @@ const months: string[] = [
   'December'
 ];
 
+const checkEmailRegEx = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/gi;
+
+
+
 function createRows(reservations: Reservation[]) {
   const rows = [];
   for (let i: number = 0; i < reservations.length; i++) {
@@ -61,7 +78,7 @@ function createRows(reservations: Reservation[]) {
     const checkInDate = new Date(res.checkIn);
     const checkOutDate = new Date(res.checkOut);
     rows.push({
-      id: i + 1,
+      id: res.id,
       property: res.property,
       numGuests: res.numGuests,
       checkIn: `${
@@ -72,6 +89,7 @@ function createRows(reservations: Reservation[]) {
       } ${checkOutDate.getDate()}, ${checkOutDate.getFullYear()}`,
       reasonForStay: res.reasonForStay,
       checkedIn: res.checkedIn? JSON.stringify(res.checkedIn) : 'unknown',
+      chatLink: checkEmailRegEx.test(res.guestId) ?  `/reservations/${res.id}/chat`: `/reservations/${res.id}/chat`,
     });
   }
   return rows;
