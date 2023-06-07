@@ -210,7 +210,6 @@ function HostReviewsDashboard() {
         setReviews(data);
       });
   }, []);
-  console.log(reviews);
   if (reviews !== undefined) {
     const rows = createRows(reviews.surveyResponses);
     return (

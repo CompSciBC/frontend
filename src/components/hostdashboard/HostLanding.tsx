@@ -10,6 +10,13 @@ import { useContext, useState, useEffect, useRef } from 'react';
 import { HostProvider, HostContextType } from './hostContext';
 import { routes, server } from '../../index';
 import { Reservation, SurveyMetrics } from '../../utils/dtos';
+import {
+  Button,
+  ImageList,
+  ToggleButton,
+  ToggleButtonGroup,
+  Typography
+} from '@mui/material';
 import { Link } from 'react-router-dom';
 
 // http://localhost:8080/api/reservations/checkoutafter?index=host&id=652ac46b-f438-45e6-95c0-bb7cc6029db8&primaryOnly=true&checkOutCutOff=2023-05-13T00:00:00.000
@@ -31,7 +38,7 @@ function HostLanding() {
   // console.log(JSON.stringify(reviews));
   const [reservationButton, setReservationButton] =
     useState<string>('getCurrent');
-  const [reservations, setReservations] = useState<Reservation[]>([]);
+  const [reservations, setReservations] = useState<Reservation[] | null>([]);
 
   const [reviews, setReviews] = useState<SurveyMetrics>();
   useEffect(() => {
@@ -63,11 +70,18 @@ function HostLanding() {
     }
     fetch(queryString)
       .then(async (res) => {
+        if (res.status >= 400) {
+          throw new Error(`API returned an error: ${res.status}`);
+        }
         return await res.json();
       })
       .then((data) => {
         // console.log(data);
         setReservations(data.data);
+      })
+      .catch((error) => {
+        console.log(error);
+        setReservations(null);
       });
   }, [reservationButton]);
 
@@ -75,11 +89,13 @@ function HostLanding() {
     reservations,
     reviews
   });
+  const handleReservationButtonSelection = (
+    event: React.MouseEvent<HTMLElement>,
+    newSelection: string
+  ) => {
+    setReservationButton(newSelection);
+  };
 
-  // console.log('reservations');
-  // console.log(reservations);
-  // console.log('host');
-  // console.log(host);
   return (
     <HostProvider value={host}>
       <Container>
@@ -90,16 +106,35 @@ function HostLanding() {
           </a>
         </WidgetTitle>
         <ReservationsButtons>
-          <button autoFocus onClick={() => setReservationButton('getCurrent')}>
-            {' '}
-            Currently hosting{' '}
-          </button>
-          <button onClick={() => setReservationButton('getUpcoming')}>
-            {' '}
-            Upcoming{' '}
-          </button>
+          <ToggleButtonGroup
+            value={reservationButton}
+            exclusive
+            onChange={handleReservationButtonSelection}
+            color="primary"
+          >
+            <ToggleButton value="getCurrent">
+              <Typography
+                gutterBottom
+                variant="body1"
+                component="div"
+                color="gray"
+              >
+                Currently hosting
+              </Typography>
+            </ToggleButton>
+            <ToggleButton value="getUpcoming">
+              <Typography
+                gutterBottom
+                variant="body1"
+                component="div"
+                color="gray"
+              >
+                Upcoming
+              </Typography>
+            </ToggleButton>
+          </ToggleButtonGroup>
         </ReservationsButtons>
-        {reservations.length === 0 ? (
+        {reservations === null || reservations.length === 0 ? (
           <Placeholder>
             <h3> You have no reservations at the moment </h3>
           </Placeholder>
@@ -159,7 +194,7 @@ const ReservationsButtons = styled.div`
   overflow-x: scroll;
   button {
     background-color: white;
-    border: 1px solid black;
+    border: none;
     color: black; // text color
     text-align: center;
     display: inline-block;
@@ -167,31 +202,19 @@ const ReservationsButtons = styled.div`
     border-radius: 16px;
     padding: 10px;
     ${theme.font.button}
-
-    :hover {
-      filter: brightness(0.9) contrast(1.2);
-      border-color: dodgerblue;
-      color: dodgerblue;
-    }
-
-    :focus {
-      background-color: dodgerblue;
-      color: white;
-      border: 1px dodgerblue;
-    }
   }
 `;
 
 const ReservationsScroll = styled.div`
   width: 80vw;
-  height: 200px;
-  overflow-x: scroll;
+  height: 375px;
+  overflow-y: scroll;
   white-space: nowrap;
 `;
 
 const Reviews = styled.div`
   width: 80vw;
-  height: 240px;
+  height: 250px;
   overflow-x: scroll;
   white-space: nowrap;
   display: inline-block;
