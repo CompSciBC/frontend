@@ -38,16 +38,20 @@ const columns: GridColDef[] = [
   { field: 'reasonForStay', headerName: 'Reason for Stay', width: 200 },
   { field: 'checkedIn', headerName: 'Checked-in?', width: 150 },
   { 
-    field: 'chatLink', headerName: 'Chat', width: 100,
-    renderCell: (params: GridRenderCellParams<String>) => (
-      <strong>
-        <Link style={{ float: 'right', textDecoration: 'none', color: theme.color.BMGteal }} to={params.value}>
-          <Button size="small" variant='outlined'>
-            Chat
-          </Button>
-        </Link>
-      </strong>
-    )
+    field: 'chatLink', headerName: '', width: 100,
+    renderCell: (params: GridRenderCellParams<String>) => {
+      if (params.value !== "") {
+        return(
+            <strong>
+              <Link style={{ float: 'right', textDecoration: 'none', color: theme.color.BMGteal }} to={params.value}>
+                <Button size="small" variant='outlined'>
+                  Chat
+                </Button>
+              </Link>
+            </strong>
+        );
+      }
+    }
   },
   
 ];
@@ -89,7 +93,7 @@ function createRows(reservations: Reservation[]) {
       } ${checkOutDate.getDate()}, ${checkOutDate.getFullYear()}`,
       reasonForStay: res.reasonForStay,
       checkedIn: res.checkedIn? JSON.stringify(res.checkedIn) : 'unknown',
-      chatLink: checkEmailRegEx.test(res.guestId) ?  `/reservations/${res.id}/chat`: `/reservations/${res.id}/chat`,
+      chatLink: checkEmailRegEx.test(res.guestId) ?  "" : `/reservations/${res.id}/chat`,
     });
   }
   return rows;
