@@ -1,11 +1,20 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import styled from '@emotion/styled';
 import { theme } from '../../utils/styles';
-import { Link } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { server } from '../../index';
 import { User } from '../../utils/dtos';
 import Button from '@mui/material/Button';
+import {
+  Card,
+  CardActions,
+  CardContent,
+  CardMedia,
+  Typography
+} from '@mui/material';
+import Modal from '../Modal';
+import SendInviteForm from '../dashboard/invite/SendInviteForm';
+import AppContext from '../../context/AppContext';
+import { useNavigate } from 'react-router-dom';
 
 export interface ReservationCardProps {
   reservationId: string;
@@ -24,11 +33,13 @@ export default function ReservationCard({
   reservationStartDate,
   reservationEndDate
 }: ReservationCardProps) {
+  const { user } = useContext(AppContext);
   const checkInDate = new Date(reservationStartDate);
   const checkOutDate = new Date(reservationEndDate);
-  const chatLink = `/reservations/${reservationId}/chat`;
   const [propertyPhoto, setPropertyPhoto] = useState<string>();
-  const [visible, setVisible] = useState(false);
+  const [color, setColor] = useState<string>();
+  const [action, setAction] = useState<string>();
+
   useEffect(() => {
     fetch(`${server}/api/guidebook/${propertyId}/images/featured`).then(
       async (res) => {
@@ -37,7 +48,6 @@ export default function ReservationCard({
     );
   }, [propertyId]);
   const [primaryGuest, setPrimaryGuest] = useState<string>();
-  const [newGuest, setNewGuest] = useState<boolean>(false);
   useEffect(() => {
     (async function () {
       const response = await fetch(
@@ -48,149 +58,93 @@ export default function ReservationCard({
       try {
         const primaryGuestName = `${data.firstName} ${data.lastName}`;
         setPrimaryGuest(primaryGuestName);
-        setNewGuest(false);
+        setColor(theme.color.BMGnavyblue);
+        setAction('message');
       } catch {
         setPrimaryGuest(primaryGuestEmail);
-        setNewGuest(true);
+        setColor(theme.color.teal);
+        setAction('email');
       }
     })();
   }, [primaryGuestEmail]);
+  
+
+  const [emailFormOpen, setEmailFormOpen] = useState(false);
+  const navigate = useNavigate();
   return (
-    <Container visible={visible}>
-      <GuestInfo>
-        {newGuest ? <h6>{primaryGuest}</h6> : <h5>{primaryGuest}</h5>}
-        <p>
-          {checkInDate.getMonth() + 1}/{checkInDate.getDate()} —{' '}
-          {checkOutDate.getMonth() + 1}/{checkOutDate.getDate()}
-        </p>
-      </GuestInfo>
-      <ImageContainer>
-        <img src={propertyPhoto} onLoad={() => setVisible(true)} />
-      </ImageContainer>
-      {newGuest ? (
-        <InviteButton to={chatLink}> 📨 &nbsp;Invite </InviteButton>
-      ) : (
-        <MessageButton to={chatLink}> 💬 &nbsp; Message </MessageButton>
-      )}
-      <PropertyName>
-        {' '}
-        <p> {propertyName} </p>{' '}
-      </PropertyName>
-    </Container>
+    <Card
+      sx={{ width: 275, display: 'inline-block', mr: 2 }}
+      variant="outlined"
+    >
+      <CardMedia
+        sx={{ height: 135 }}
+        image={propertyPhoto}
+        title={propertyName}
+        component="img"
+      />
+      <CardContent>
+        <Typography gutterBottom variant="caption" component="div">
+          {propertyName}
+        </Typography>
+        <Typography
+          gutterBottom
+          variant="h6"
+          color={color}
+          component="div"
+          sx={{ mt: 2 }}
+        >
+          {primaryGuest}
+        </Typography>
+        <Typography variant="body1" color="text.secondary">
+          Check-in: {checkInDate.getMonth() + 1}/{checkInDate.getDate()}
+          <br />
+          Check-out: {checkOutDate.getMonth() + 1}/{checkOutDate.getDate()}
+        </Typography>
+      </CardContent>
+      <CardActions>
+        <Button
+          size="small"
+          variant="outlined"
+          sx={{ bgcolor: color }}
+          onClick={() => {
+            if (action === 'email') {
+              setEmailFormOpen(true);
+            } else if (action === 'message') {
+              navigate(`/reservations/${reservationId}/chat`);
+            }
+          }}
+        >
+          <Typography
+            gutterBottom
+            variant="body1"
+            component="div"
+            color="white"
+          >
+            {action}
+          </Typography>
+        </Button>
+        {emailFormOpen && (
+          <Modal
+            content={
+              <SendInviteForm
+                onClose={() => setEmailFormOpen(false)}
+                resId={reservationId}
+                guestName={(() => {
+                  const { firstName, lastName } = user!;
+                  let name = '';
+
+                  if (typeof firstName === 'string') name += `${firstName}`;
+                  if (typeof lastName === 'string') name += ` ${lastName}`;
+
+                  return name;
+                })()}
+                recipientEmail={primaryGuestEmail}
+              />
+            }
+            blur={true}
+          />
+        )}
+      </CardActions>
+    </Card>
   );
 }
-
-const Container = styled.div<{ visible: boolean }>`
-  /* padding: 20px 0; */
-  margin: 0px 6px;
-  /* display: inline-block; */
-  display: ${(props) => (props.visible ? 'inline-block' : 'none')};
-  width: 300px;
-  height: 175px;
-  border: 1px solid grey;
-  border-radius: 16px;
-`;
-
-const MessageButton = styled(Link)`
-  position: relative;
-  top: 12%;
-  right: 96%;
-  background: ${theme.color.red};
-  height: 20;
-  width: 40%;
-  text-align: center;
-  display: inline-block;
-  border-radius: 16px;
-  padding: 10px;
-  text-transform: uppercase;
-  ${theme.font.subHeading}
-  text-decoration: none;
-  color: ${theme.color.white};
-`;
-
-const InviteButton = styled(Link)`
-  position: relative;
-  top: 12%;
-  right: 96%;
-  background: ${theme.color.purple};
-  height: 20;
-  width: 40%;
-  text-align: center;
-  display: inline-block;
-  border-radius: 16px;
-  padding: 10px;
-  text-transform: uppercase;
-  ${theme.font.subHeading}
-  text-decoration: none;
-  color: ${theme.color.white};
-`;
-
-const PropertyName = styled.div`
-  position: relative;
-  bottom: 5%;
-  left: 50%;
-  width: 45%;
-  /* background: pink; */
-  text-align: center;
-  white-space: initial; //make text wrap to next line
-  ${theme.font.caption}
-  font-weight: bold;
-  color: ${theme.color.gray};
-
-  p {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-`;
-
-const GuestInfo = styled.div`
-  position: relative;
-  top: 0%;
-  left: 0%;
-  padding: 10% 0%;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  white-space: nowrap;
-  height: 120px;
-  width: 45%;
-  text-align: center;
-  display: inline-block;
-
-  h6 {
-    ${theme.font.displaySmall}
-    font-weight: bold;
-    color: ${theme.color.purple};
-  }
-
-  h5 {
-    ${theme.font.displaySmall}
-    font-weight: bold;
-    color: ${theme.color.red};
-  }
-
-  p {
-    ${theme.font.body}
-  }
-`;
-
-const ImageContainer = styled.div`
-  position: relative;
-  top: 0px;
-  left: 0.5px;
-  height: 120px;
-  width: 55%;
-  display: inline-block;
-
-  img {
-    width: 100%;
-    height: 100%;
-    display: block; // remove extra space below image
-    object-fit: cover;
-    border-radius: 0px 16px 0px 0px;
-    float: right;
-
-    /* margin-left: auto;
-    margin-right: auto; */
-  }
-`;

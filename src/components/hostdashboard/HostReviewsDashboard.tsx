@@ -210,12 +210,11 @@ function HostReviewsDashboard() {
         setReviews(data);
       });
   }, []);
-  console.log(reviews);
   if (reviews !== undefined) {
     const rows = createRows(reviews.surveyResponses);
     return (
       <Container maxWidth="xl">
-        <Box sx={{ mt: 10 }}>
+        <Box sx={{ mt: 2 }}>
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <WidgetTitle>

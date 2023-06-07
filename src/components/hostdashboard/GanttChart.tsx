@@ -26,7 +26,7 @@ export default function GanttChart({ hostId, ganttDuration }: GanttChartProps) {
   // console.log(things);
   // console.log(things?.reservations);
   const weekday = ['Sun.', 'Mon.', 'Tue.', 'Wed.', 'Thur.', 'Fri.', 'Sat.'];
-  const colors = [theme.color.lime, theme.color.white];
+  const colors = [theme.color.yellow, theme.color.white];
   const rows = [];
   // const [startDate, setStartDate] = useState<Dayjs | null>(dayjs());
   const [startDate, setStartDate] = useState<Dayjs | null>(dayjs());

@@ -13,7 +13,6 @@ import ForgotPassword from './components/auth/ForgotPassword';
 import Logout from './components/auth/Logout';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 import HostLanding from './components/hostdashboard/HostLanding';
-import GuestLanding from './components/home/GuestLanding';
 import Profile from './components/profile/Profile';
 import Reservations from './components/reservations/Reservations';
 import AddReservation from './components/reservations/AddReservation';
@@ -31,6 +30,7 @@ import './index.css';
 import reportWebVitals from './reportWebVitals';
 import Inbox from './components/chat/Inbox';
 import HostReviewsDashboard from './components/hostdashboard/HostReviewsDashboard';
+import { ManageListings } from './components/hostdashboard/ManageListings';
 // import AppTestMode from './components/AppTestMode';
 
 // Configure React project with Amplify resources
@@ -61,13 +61,12 @@ export const routes = {
   forgotPassword: '/forgotPassword',
   logout: '/logout',
   hostLanding: '/hostLanding',
-  guestLanding: '/guestLanding',
   profile: '/profile',
   reservations: '/reservations',
   addReservation: '/reservations/add/:resId',
   dashboard: '/reservations/:resId/dashboard',
   guidebook: '/reservations/:resId/guidebook',
-  guidebookEdit: '/hostLanding/:propId/guidebook/edit',
+  guidebookEdit: '/manageListings/:propId/guidebook/edit',
   invite: '/reservations/:resId/invite',
   chat: '/reservations/:resId/chat',
   inbox: '/inbox',
@@ -76,7 +75,8 @@ export const routes = {
   places: '/reservations/:resId/places',
   map: '/reservations/:resId/map',
   review: '/reservations/:resId/:guestId/review',
-  hostReviews: '/hostReviewsDashboard'
+  hostReviews: '/hostReviewsDashboard',
+  manageListings: '/manageListings'
 };
 
 /**
@@ -128,7 +128,7 @@ const hostNavLinks: NavbarLink[] = [
   },
   {
     name: 'Manage Listings',
-    path: routes.error
+    path: routes.manageListings
   },
   {
     name: 'Inbox',
@@ -203,10 +203,6 @@ const router = createBrowserRouter([
             element: <HostLanding />
           },
           {
-            path: routes.guestLanding,
-            element: <GuestLanding />
-          },
-          {
             path: routes.profile,
             element: <Profile />
           },
@@ -265,6 +261,10 @@ const router = createBrowserRouter([
           {
             path: routes.hostReviews,
             element: <HostReviewsDashboard />
+          },
+          {
+            path: routes.manageListings,
+            element: <ManageListings />
           }
         ]
       }
