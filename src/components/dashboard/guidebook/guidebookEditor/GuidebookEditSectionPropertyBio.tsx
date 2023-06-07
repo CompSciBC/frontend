@@ -1,10 +1,11 @@
-import { GuidebookPropertyBio } from '../../../../utils/dtos';
+import { GuidebookPropertyBio, KeyValue } from '../../../../utils/dtos';
 import GuidebookEditSectionText from './GuidebookEditSectionText';
 import GuidebookEditSectionList from './GuidebookEditSectionList';
 import styled from '@emotion/styled';
 import { theme } from '../../../../utils/styles';
 import { useState } from 'react';
 import { getArray, getKeyValues, getText } from '../../../../utils/functions';
+import ScanImagesDialog from './ScanImagesDialog';
 
 /**
  * Generates an id for the property bio input element
@@ -61,11 +62,10 @@ function GuidebookEditSectionPropertyBio({
   onChange
 }: GuidebookEditSectionPropertyBioProps) {
   const [bio, setBio] = useState(content);
-  const { about, amenities, facts, checkInInstr, checkOutInstr } = content;
+  const { about, facts, checkInInstr, checkOutInstr } = content;
 
   const handleChange = (field: keyof GuidebookPropertyBio, update: any) => {
-    const updatedBio: GuidebookPropertyBio = { ...bio };
-    updatedBio[field] = update;
+    const updatedBio: GuidebookPropertyBio = { ...bio, [field]: update };
     setBio(updatedBio);
     onChange(updatedBio);
   };
@@ -109,13 +109,22 @@ function GuidebookEditSectionPropertyBio({
       </ColumnContainer>
       <ColumnContainer>
         <SectionBorder>
-          <h6>Amenities</h6>
+          <AmenityHeader>
+            Amenities
+            <ScanImagesDialog
+              existingAmenities={bio.amenities}
+              onSubmit={(additions: string[]) => {
+                const updatedAmenities = [...bio.amenities, ...additions];
+                handleChange('amenities', updatedAmenities);
+              }}
+            />
+          </AmenityHeader>
           <GuidebookEditSectionList
             type="list"
             idPrefix={getInputId(idPrefix, 'amenities')}
-            content={amenities}
+            content={bio.amenities}
             placeholder="Amenity"
-            onChange={(changed: any[]) => handleChange('amenities', changed)}
+            onChange={(changed: string[]) => handleChange('amenities', changed)}
           />
         </SectionBorder>
         <SectionBorder>
@@ -124,7 +133,7 @@ function GuidebookEditSectionPropertyBio({
             type="keyValue"
             idPrefix={getInputId(idPrefix, 'facts')}
             content={facts}
-            onChange={(changed: any[]) => handleChange('facts', changed)}
+            onChange={(changed: KeyValue[]) => handleChange('facts', changed)}
           />
         </SectionBorder>
       </ColumnContainer>
@@ -163,6 +172,11 @@ const ColumnContainer = styled.div`
       width: 100%;
     }
   }
+`;
+
+const AmenityHeader = styled.h6`
+  display: flex;
+  justify-content: space-between;
 `;
 
 export default GuidebookEditSectionPropertyBio;

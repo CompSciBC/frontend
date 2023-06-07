@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Property } from '../../utils/dtos';
-import { server } from '../../index';
+import { paramRoute, routes, server } from '../../index';
 import {
   Card,
   CardContent,
@@ -49,16 +49,16 @@ export default function ReservationCard({ property }: PropertyCardProps) {
           </Typography>
         </CardContent>
         <Button
-            fullWidth
-            onClick={() => {
-              if (property.id) {
-                navigate(`/hostLanding/${property.id}/guidebook/edit`);
-              }
-            }}
-          >
-            {' '}
-            Edit{' '}
-          </Button>
+          fullWidth
+          onClick={() => {
+            if (property.id) {
+              navigate(paramRoute(routes.guidebookEdit, property.id));
+            }
+          }}
+        >
+          {' '}
+          Edit{' '}
+        </Button>
       </Card>
     </Grid>
   );
