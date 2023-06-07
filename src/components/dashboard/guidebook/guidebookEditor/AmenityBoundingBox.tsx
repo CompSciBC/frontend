@@ -6,6 +6,10 @@ export interface BoxColor {
   font: string;
 }
 
+interface AmenityBoxStyle extends BoundingBox {
+  color: BoxColor;
+}
+
 export interface AmenityBoundingBoxProps {
   className?: string;
   name: string;
@@ -26,7 +30,7 @@ function AmenityBoundingBox({
   );
 }
 
-const AmenityBox = styled.div<{ color: BoxColor } & BoundingBox>`
+const AmenityBox = styled.div<AmenityBoxStyle>`
   position: absolute;
   height: ${(props) => `${props.height * 100}%`};
   width: ${(props) => `${props.width * 100}%`};
