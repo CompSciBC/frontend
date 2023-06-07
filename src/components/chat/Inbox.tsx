@@ -233,6 +233,10 @@ function Inbox() {
                   )}
                   <MessageData id="message-data">{message.message}</MessageData>
                 </MessageBlock>
+                <LastMessage
+                  id="last-message"
+                  ref={messageEndRef}
+                ></LastMessage>
               </MessageBlockWrapper>
             ))}
             <LastMessage id="last-message" ref={messageEndRef}></LastMessage>

@@ -18,8 +18,8 @@ function Map() {
   const { reservation } = useContext(AppContext);
   const [location, setLocation] = useState<Location>(coordinates); // location is a variable but Location is an interface (object)
 
-  useEffect(() => {   
-    const address = reservation!.property.address; 
+  useEffect(() => {
+    const address = reservation!.property.address;
 
     const addressLocation = [
       address?.line1,
@@ -39,7 +39,7 @@ function Map() {
       })
       .then((data) => {
         setLocation(data);
-      });  
+      });
   }, [reservation]);
 
   console.log('Setting center');

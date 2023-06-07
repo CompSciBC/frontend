@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-redeclare */
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 import React, { useState, useRef, useEffect, useContext } from 'react';
 import AppContext from '../../context/AppContext';
@@ -7,11 +8,14 @@ import { useParams } from 'react-router-dom';
 import styled from '@emotion/styled';
 import { theme } from '../../utils/styles';
 import { server } from '../..';
+import { Message } from '@mui/icons-material';
 
 let stompClient: any = null;
 const hostUserName: string = 'Host Chat';
 const groupChatName: string = 'Group';
 const groupHeader: string = 'Group Chat';
+// let isActive: boolean = true;
+
 
 interface Message {
   reservationId: String;
@@ -58,6 +62,9 @@ function Chat() {
     new Map<string, Message[]>()
   );
   const [groupChat, setGroupChat] = useState<Message[]>([]);
+  const [notification, setNotification] = useState<Map<string, boolean>>(
+    new Map()
+  );
 
   /* use this trick to prevent double loading of data. It looks like that an additional loading erases GroupChat array.
   I have no idea why this not happened to Map. Probably, I'll put Group Chat into a Map */
@@ -114,12 +121,11 @@ function Chat() {
       `/user/${userData.userId}/private/${resId}`,
       onPrivateMessage
     );
+    // notification.set(groupChatName, false);
 
     const groupMesages = chats[resId];
     groupChat.push(...groupMesages);
     setGroupChat([...groupChat]);
-    // setGroupChat([...groupChat, ...groupMesages]);
-
     for (const chatId in chats) {
       if (chatId === resId) {
         continue;
@@ -131,21 +137,59 @@ function Chat() {
     setPrivateChats(privateChats);
   };
 
+  const changeActiveTab = (chatName: string) => {
+    setTab(chatName);  
+    console.log("My chatName is ", chatName);
+    console.log("My active tab is", tab);
+    notification.set(chatName, false);
+    setNotification(notification);
+    
+    
+    console.log("My active tab_1 is", tab);
+
+  };
+
+
   const onGroupMessage = (payload: any) => {
     const payloadData = JSON.parse(payload.body);
     groupChat.push(payloadData as never);
     setGroupChat([...groupChat]);
+    const sender = payloadData.senderName;
+    const receiver = payloadData.receiverName;
+    console.log("Public Char Receiver is ", receiver);
+    console.log("Public Char sender is ", sender);
+    
+
+    if (tab !== groupChatName && receiver !== sender) {
+      notification.set(groupChatName, true);
+      console.log('Group Chat my tab ', tab);
+      console.log('Group Chat my chatName ', groupChatName);
+    }
+    setNotification(notification);
   };
 
   const onPrivateMessage = (payload: any) => {
     const payloadData: Message = JSON.parse(payload.body);
     const chatId = payloadData.chatId;
+    const sender = payloadData.senderName;
+    const receiver = payloadData.receiverName;
+    console.log("Private Char Receiver is ", receiver);
+    console.log("Private Char sender is ", sender);
+    
     const chatName = userData.isHost ? chatId.split('_')[1] : hostUserName;
 
     privateChats.get(chatName)!.push(payloadData);
     setPrivateChats(new Map(privateChats));
+
+    if (tab !== chatName && sender !== receiver) {
+      notification.set(chatName, true);
+      console.log('Private Chat my tab ', tab);
+      console.log('Private Chat my chatName ', chatName);
+    }
+    setNotification(notification);
   };
 
+ 
   const onError = (err: any) => {
     console.log(err);
   };
@@ -214,23 +258,41 @@ function Chat() {
           <ChatHeader>Chats</ChatHeader>
         </SideBarHeader>
         <ChatList>
-          <ChatRoom
-            onClick={() => {
-              setTab('Group');
-            }}
+          <ChatRoomWrapper
+                    
+            isNotification={notification.get(groupChatName) ?? false}
           >
-            {' '}
-            Group Chat{' '}
-          </ChatRoom>
-          {Array.from(privateChats.keys()).map((chatName, index) => (
             <ChatRoom
-              key={index}
               onClick={() => {
-                setTab(chatName);
+                console.log("My onClick tab", tab);
+                // setTab(groupChatName);
+                console.log("My onClick tab_1", tab);
+                changeActiveTab(groupChatName);                
               }}
             >
-              {chatName}
+              {' '}
+              Group Chat{' '}
             </ChatRoom>
+          </ChatRoomWrapper>
+
+          {Array.from(privateChats.keys()).map((chatName, index) => (
+            <ChatRoomWrapper                 
+              isNotification={notification.get(chatName) ?? false}
+              key={index}
+              
+            >
+              <ChatRoom
+                key={index}
+                onClick={() => {
+                  console.log("My onClick tab", tab);
+                  // setTab(chatName);                  
+                  console.log("My onClick tab_1", tab);
+                  changeActiveTab(chatName);                  
+                }}
+              >
+                {chatName}
+              </ChatRoom>
+            </ChatRoomWrapper>
           ))}
         </ChatList>
       </SideBar>
@@ -287,6 +349,14 @@ const SideBar = styled.div`
   //background-color: red;
   gap: 20px;
   padding: 16px;
+`;
+const ChatRoomWrapper = styled.div<{ isNotification: boolean }>`
+  display: flex;
+  background-color: ${(props) =>
+    props.isNotification ? '#b61616' : '#ffffff'};
+  width: 100%;
+  margin: 10px 0;
+  justify-content: flex-start;
 `;
 const ChatContent = styled.div`
   display: flex;
