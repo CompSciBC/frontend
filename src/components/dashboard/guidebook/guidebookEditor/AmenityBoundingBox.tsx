@@ -7,7 +7,7 @@ export interface BoxColor {
 }
 
 interface AmenityBoxStyle extends BoundingBox {
-  color: BoxColor;
+  colorx: BoxColor;
 }
 
 export interface AmenityBoundingBoxProps {
@@ -24,7 +24,7 @@ function AmenityBoundingBox({
   color
 }: AmenityBoundingBoxProps) {
   return (
-    <AmenityBox className={className} color={color} {...box}>
+    <AmenityBox className={className} colorx={color} {...box}>
       <div>{name}</div>
     </AmenityBox>
   );
@@ -36,7 +36,7 @@ const AmenityBox = styled.div<AmenityBoxStyle>`
   width: ${(props) => `${props.width * 100}%`};
   top: ${(props) => `${props.top * 100}%`};
   left: ${(props) => `${props.left * 100}%`};
-  border: ${(props) => `2px solid ${props.color.fill}`};
+  border: ${(props) => `2px solid ${props.colorx.fill}`};
   background-color: transparent;
 
   div {
@@ -47,8 +47,8 @@ const AmenityBox = styled.div<AmenityBoxStyle>`
     left: -2px; // account for border width
     font-size: 10px;
     padding: 0 4px;
-    background-color: ${(props) => props.color.fill};
-    color: ${(props) => props.color.font};
+    background-color: ${(props) => props.colorx.fill};
+    color: ${(props) => props.colorx.font};
   }
 `;
 
