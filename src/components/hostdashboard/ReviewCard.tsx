@@ -52,33 +52,6 @@ export default function ReviewCard({
   averageRating = averageRating / Object.keys(qualityMetrics).length;
   // console.log(averageRating);
   return (
-    // <Container>
-    //   <ReviewQuote>
-    //     <h5> {property.name}</h5>
-    //     <Rating
-    //       name="half-rating-read"
-    //       value={averageRating}
-    //       precision={0.5}
-    //       readOnly
-    //     />
-    //     {/* <p> {averageRating} / 5 </p> */}
-    //   </ReviewQuote>
-    //   <UserLogo>
-    //     <p>
-    //       {guest.firstName.charAt(0)}
-    //       {guest.lastName.charAt(0)}
-    //     </p>
-    //   </UserLogo>
-    //   <SurveyMetadata>
-    //     <h6>
-    //       {guest.firstName} {guest.lastName}
-    //     </h6>
-    //     <p>
-    //       {month[timestamp.getMonth()]} {timestamp.getDate()},{' '}
-    //       {timestamp.getFullYear()}
-    //     </p>
-    //   </SurveyMetadata>
-    // </Container>
     <Card
       sx={{ width: 275, display: 'inline-block', mr: 2 }}
       variant="outlined"
@@ -99,7 +72,7 @@ export default function ReviewCard({
           precision={0.5}
           readOnly
         />
-        <p> {averageRating} / 5 </p>
+        <p> {averageRating.toPrecision(2)} </p>
 
         <CardHeader
           avatar={
