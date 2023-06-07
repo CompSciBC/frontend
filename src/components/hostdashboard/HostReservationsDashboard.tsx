@@ -33,8 +33,8 @@ const columns: GridColDef[] = [
     )
   },
   { field: 'numGuests', headerName: 'Number of Guests', width: 150 },
-  { field: 'checkIn', headerName: 'Check-in Date', width: 200 },
-  { field: 'checkOut', headerName: 'Check-out Date', width: 200 },
+  { field: 'checkIn', headerName: 'Check-in Date', width: 150 },
+  { field: 'checkOut', headerName: 'Check-out Date', width: 150 },
   { field: 'reasonForStay', headerName: 'Reason for Stay', width: 200 },
   { field: 'checkedIn', headerName: 'Checked-in?', width: 150 },
   { 
