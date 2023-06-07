@@ -241,7 +241,7 @@ function Inbox() {
                   p: 2,
                   borderRadius: '5px',
                   backgroundColor: '#FAF9F6',
-                  height: '70vh'
+                  height: '80vh'
                 }}
               >
                 {[...inboxChats.get(tab)!].map((message: any, index) => (

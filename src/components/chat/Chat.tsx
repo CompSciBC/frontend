@@ -265,7 +265,7 @@ function Chat() {
               p: 2,
               borderRadius: '5px',
               backgroundColor: '#FAF9F6',
-              height: '80vh'
+              height: '70vh'
             }}
           >
             {(tab === groupChatName
@@ -312,7 +312,7 @@ function Chat() {
             sx={{
               p: 2,
               borderRadius: '16px',
-              height: '20vh',
+              height: '10vh',
               alignContent: 'flex-end'
             }}
           >
