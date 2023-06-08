@@ -6,26 +6,30 @@ import { theme } from '../../utils/styles';
 import AppContext from '../../context/AppContext';
 import { useContext, useState, useEffect, useRef } from 'react';
 import { HostProvider, HostContextType } from './hostContext';
-import { server } from '../../index';
-import {
-  Property,
-  Reservation,
-
-} from '../../utils/dtos';
+import { paramRoute, routes, server } from '../../index';
+import { Property, Reservation } from '../../utils/dtos';
 import * as React from 'react';
-import { DataGrid, GridColDef, GridRenderCellParams,  } from '@mui/x-data-grid';
-import { Container, Grid, Box, Typography, Button, } from '@mui/material';
+import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
+import { Container, Grid, Box, Typography, Button } from '@mui/material';
 import { Link } from 'react-router-dom';
-
 
 const columns: GridColDef[] = [
   { field: 'id', headerName: 'ID', width: 200 },
-  { 
-    field: 'property', headerName: 'Property', width: 200,
+  {
+    field: 'property',
+    headerName: 'Property',
+    width: 200,
     renderCell: (params: GridRenderCellParams<Property>) => (
       <strong>
-        <Link style={{ float: 'right', textDecoration: 'none', color: theme.color.BMGteal }} to={`/hostLanding/${params.value.id}/guidebook/edit`}>
-          <Typography sx={{ fontWeight: 500 }} variant='body2'>
+        <Link
+          style={{
+            float: 'right',
+            textDecoration: 'none',
+            color: theme.color.BMGteal
+          }}
+          to={paramRoute(routes.guidebookEdit, params.value.id)}
+        >
+          <Typography sx={{ fontWeight: 500 }} variant="body2">
             {params.value.name}
           </Typography>
         </Link>
@@ -37,23 +41,31 @@ const columns: GridColDef[] = [
   { field: 'checkOut', headerName: 'Check-out Date', width: 150 },
   { field: 'reasonForStay', headerName: 'Reason for Stay', width: 200 },
   { field: 'checkedIn', headerName: 'Checked-in?', width: 150 },
-  { 
-    field: 'chatLink', headerName: '', width: 100,
+  {
+    field: 'chatLink',
+    headerName: '',
+    width: 100,
     renderCell: (params: GridRenderCellParams<String>) => {
-      if (params.value !== "") {
-        return(
-            <strong>
-              <Link style={{ float: 'right', textDecoration: 'none', color: theme.color.BMGteal }} to={params.value}>
-                <Button size="small" variant='outlined'>
-                  Chat
-                </Button>
-              </Link>
-            </strong>
+      if (params.value !== '') {
+        return (
+          <strong>
+            <Link
+              style={{
+                float: 'right',
+                textDecoration: 'none',
+                color: theme.color.BMGteal
+              }}
+              to={params.value}
+            >
+              <Button size="small" variant="outlined">
+                Chat
+              </Button>
+            </Link>
+          </strong>
         );
       }
     }
-  },
-  
+  }
 ];
 
 const months: string[] = [
@@ -71,9 +83,8 @@ const months: string[] = [
   'December'
 ];
 
-const checkEmailRegEx = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/gi;
-
-
+const checkEmailRegEx =
+  /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/gi;
 
 function createRows(reservations: Reservation[]) {
   const rows = [];
@@ -92,8 +103,10 @@ function createRows(reservations: Reservation[]) {
         months[checkOutDate.getMonth()]
       } ${checkOutDate.getDate()}, ${checkOutDate.getFullYear()}`,
       reasonForStay: res.reasonForStay,
-      checkedIn: res.checkedIn? JSON.stringify(res.checkedIn) : 'unknown',
-      chatLink: checkEmailRegEx.test(res.guestId) ?  "" : `/reservations/${res.id}/chat`,
+      checkedIn: res.checkedIn ? JSON.stringify(res.checkedIn) : 'unknown',
+      chatLink: checkEmailRegEx.test(res.guestId)
+        ? ''
+        : `/reservations/${res.id}/chat`
     });
   }
   return rows;
@@ -111,7 +124,7 @@ function HostReservationsDashboard() {
         setReservations(data.data);
       });
   }, []);
-  
+
   if (reservations !== undefined) {
     const rows = createRows(reservations);
     return (
