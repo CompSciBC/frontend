@@ -13,7 +13,6 @@ import ForgotPassword from './components/auth/ForgotPassword';
 import Logout from './components/auth/Logout';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 import HostLanding from './components/hostdashboard/HostLanding';
-import GuestLanding from './components/home/GuestLanding';
 import Profile from './components/profile/Profile';
 import Reservations from './components/reservations/Reservations';
 import AddReservation from './components/reservations/AddReservation';
@@ -63,13 +62,12 @@ export const routes = {
   forgotPassword: '/forgotPassword',
   logout: '/logout',
   hostLanding: '/hostLanding',
-  guestLanding: '/guestLanding',
   profile: '/profile',
   reservations: '/reservations',
   addReservation: '/reservations/add/:resId',
   dashboard: '/reservations/:resId/dashboard',
   guidebook: '/reservations/:resId/guidebook',
-  guidebookEdit: '/hostLanding/:propId/guidebook/edit',
+  guidebookEdit: '/manageListings/:propId/guidebook/edit',
   invite: '/reservations/:resId/invite',
   chat: '/reservations/:resId/chat',
   inbox: '/inbox',
@@ -209,10 +207,6 @@ const router = createBrowserRouter([
           {
             path: routes.hostLanding,
             element: <HostLanding />
-          },
-          {
-            path: routes.guestLanding,
-            element: <GuestLanding />
           },
           {
             path: routes.profile,
