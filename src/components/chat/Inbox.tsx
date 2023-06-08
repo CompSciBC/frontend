@@ -182,11 +182,10 @@ function Inbox() {
           propertyName =
             'Group ' + reservationsMap.get(reservationId)!.property.name;
         }
-      } catch(Error) {
+      } catch (Error) {
         console.log(Error);
-      };
-      
-      
+      }
+
       console.log('chatTitle', propertyName);
       chatTitlesMap.set(chatName, propertyName);
       reservationIdLinksMap.set(propertyName, reservationId);
