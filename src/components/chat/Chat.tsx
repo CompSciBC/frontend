@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-redeclare */
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 import React, { useState, useRef, useEffect, useContext } from 'react';
@@ -8,7 +9,19 @@ import { useParams } from 'react-router-dom';
 import styled from '@emotion/styled';
 import { theme } from '../../utils/styles';
 import { server } from '../..';
-import { Message } from '@mui/icons-material';
+import {
+  Avatar,
+  Box,
+  Button,
+  Container,
+  Grid,
+  IconButton,
+  TextField,
+  ToggleButton,
+  ToggleButtonGroup,
+  Typography
+} from '@mui/material';
+import SendIcon from '@mui/icons-material/Send';
 
 let stompClient: any = null;
 const hostUserName: string = 'Host Chat';
@@ -245,111 +258,143 @@ function Chat() {
     }
   };
 
-  return (
-    <Container>
-      <SideBar>
-        <SideBarHeader>
-          <ChatHeader>Chats</ChatHeader>
-        </SideBarHeader>
-        <ChatList>
-          <ChatRoomWrapper
-            isNotification={notification.get(groupChatName) ?? false}
-          >
-            <ChatRoom
-              onClick={() => {
-                console.log('My onClick tab', tab);
-                // setTab(groupChatName);
-                console.log('My onClick tab_1', tab);
-                changeActiveTab(groupChatName);
-              }}
-            >
-              {' '}
-              Group Chat{' '}
-            </ChatRoom>
-          </ChatRoomWrapper>
+  const [view, setView] = React.useState('Group');
 
+  return (
+    <Container maxWidth="lg" sx={{ mt: 2 }}>
+      <Grid container spacing={2}>
+        <Grid item xs={3}>
+          <Typography variant="h6">Conversations</Typography>
+          <Button
+            variant="outlined"
+            fullWidth
+            onClick={() => {
+              setTab('Group');
+            }}
+            sx={{ mt: 1 }}
+          >
+            {' '}
+            Group Chat{' '}
+          </Button>
           {Array.from(privateChats.keys()).map((chatName, index) => (
-            <ChatRoomWrapper
-              isNotification={notification.get(chatName) ?? false}
+            <Button
               key={index}
+              fullWidth
+              variant="outlined"
+              onClick={() => {
+                setTab(chatName);
+              }}
+              sx={{ mt: 1 }}
             >
-              <ChatRoom
-                key={index}
-                onClick={() => {
-                  console.log('My onClick tab', tab);
-                  // setTab(chatName);
-                  console.log('My onClick tab_1', tab);
-                  changeActiveTab(chatName);
+              {chatName}
+            </Button>
+          ))}
+        </Grid>
+        <Grid item xs={9}>
+          <Box sx={{ width: '100%' }}>
+            <Typography variant="h6">
+              {tab === groupChatName ? groupHeader : tab}
+            </Typography>
+          </Box>
+          <Box
+            sx={{
+              overflowY: 'scroll',
+              p: 2,
+              borderRadius: '5px',
+              backgroundColor: '#FAF9F6',
+              height: '70vh'
+            }}
+          >
+            {(tab === groupChatName
+              ? [...groupChat]
+              : [...privateChats.get(tab)!]
+            ).map((message: any, index) => (
+              <Box
+                sx={{
+                  display: 'flex',
+                  justifyContent:
+                    message.senderName === userData.username
+                      ? 'flex-end'
+                      : 'flex-start'
                 }}
+                key={index}
               >
-                {chatName}
-              </ChatRoom>
-            </ChatRoomWrapper>
-          ))}
-        </ChatList>
-      </SideBar>
-      <ChatContent>
-        <ChatName>{tab === groupChatName ? groupHeader : tab} </ChatName>
-        <ChatMessages id="chat-messages">
-          {(tab === groupChatName
-            ? [...groupChat]
-            : [...privateChats.get(tab)!]
-          ).map((message: any, index) => (
-            <MessageBlockWrapper
-              self={message.senderName === userData.username}
-              key={index}
-            >
-              <MessageBlock id="message-block">
-                {message.senderName !== userData.username && (
-                  <Avatar>{message.senderName}</Avatar>
-                )}
-                {message.senderName === userData.username && (
-                  <AvatarSelf>{message.senderName}</AvatarSelf>
-                )}
-                <MessageData id="message-data">{message.message}</MessageData>
-              </MessageBlock>
-            </MessageBlockWrapper>
-          ))}
-          <LastMessage id="last-message" ref={messageEndRef}></LastMessage>
-        </ChatMessages>
-        <SendMessage id="send-message">
-          <Input
-            id="input"
-            userType={userData.username}
-            placeholder="enter the message"
-            value={userData.message}
-            onChange={handleMessage}
-          />
-          <SendButton type="button" onClick={sendMessage}>
-            send
-          </SendButton>
-        </SendMessage>
-      </ChatContent>
+                <Box
+                  sx={{
+                    width: '45%',
+                    p: 1,
+                    m: 0.25,
+                    borderRadius: 2,
+                    backgroundColor:
+                      message.senderName === userData.username
+                        ? '#FFD95A'
+                        : theme.color.lightGray,
+                    color:
+                      message.senderName === userData.username
+                        ? '#4C3D3D'
+                        : theme.color.black
+                  }}
+                >
+                  <Typography variant="h6" style={{ fontSize: '16px' }}>
+                    {message.senderName}
+                  </Typography>
+                  <Typography variant="body1">{message.message}</Typography>
+                </Box>
+              </Box>
+            ))}
+            <LastMessage id="last-message" ref={messageEndRef}></LastMessage>
+          </Box>
+
+          <Box
+            sx={{
+              p: 2,
+              borderRadius: '16px',
+              height: '10vh',
+              alignContent: 'flex-end'
+            }}
+          >
+            <Grid container spacing={2}>
+              <Grid item xs={11}>
+                <TextField
+                  fullWidth
+                  id="input"
+                  multiline
+                  placeholder="enter the message"
+                  value={userData.message}
+                  onChange={handleMessage}
+                  maxRows={4}
+                />
+              </Grid>
+              <Grid item xs={1}>
+                <IconButton
+                  aria-label="send"
+                  onClick={sendMessage}
+                  size="large"
+                >
+                  <SendIcon style={{ color: theme.color.BMGdarkblue }} />
+                </IconButton>
+              </Grid>
+            </Grid>
+          </Box>
+        </Grid>
+      </Grid>
     </Container>
   );
 }
-const Container = styled.div`
-  display: flex;
-  width: 100%;
-  height: 100%;
-`;
-const SideBar = styled.div`
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  width: 250px;
-  //background-color: red;
-  gap: 20px;
-  padding: 16px;
-`;
-const ChatRoomWrapper = styled.div<{ isNotification: boolean }>`
-  display: flex;
-  background-color: ${(props) =>
-    props.isNotification ? '#b61616' : '#ffffff'};
-  width: 100%;
-  margin: 10px 0;
-  justify-content: flex-start;
-`;
+// const Container = styled.div`
+//   display: flex;
+//   width: 100%;
+//   height: 100%;
+// `;
+// const SideBar = styled.div`
+//   display: flex;
+//   flex-direction: column;
+//   height: 100%;
+//   width: 250px;
+//   background-color: red;
+//   gap: 20px;
+//   padding: 16px;
+// `;
 const ChatContent = styled.div`
   display: flex;
   flex-direction: column;
@@ -415,6 +460,7 @@ const ChatMessages = styled.div`
 
 const MessageBlockWrapper = styled.div<{ self: boolean }>`
   display: flex;
+  background-color: red;
   justify-content: ${(props) => (props.self ? 'end' : '')};
   width: 100%;
   margin: 10px 0;
@@ -440,20 +486,20 @@ const Input = styled.input<{ userType: string }>`
   border-radius: 15px;
   ${theme.font.body}
 `;
-const Avatar = styled.div`
-  display: flex;
-  color: #c5c752;
-  ${theme.screen.small} {
-    width: 100%;
-  }
-`;
-const AvatarSelf = styled.div`
-  display: flex;
-  color: #52a782;
-  ${theme.screen.small} {
-    width: 100%;
-  }
-`;
+// const Avatar = styled.div`
+//   display: flex;
+//   color: #c5c752;
+//   ${theme.screen.small} {
+//     width: 100%;
+//   }
+// `;
+// const AvatarSelf = styled.div`
+//   display: flex;
+//   color: #52a782;
+//   ${theme.screen.small} {
+//     width: 100%;
+//   }
+// `;
 const MessageData = styled.li`
   display: flex;
   max-width: fit-content;
@@ -464,6 +510,7 @@ const MessageData = styled.li`
 const SendMessage = styled.div`
   width: 75%;
   display: flex;
+  background-color: red;
 `;
 const SendButton = styled.button`
   border: none;

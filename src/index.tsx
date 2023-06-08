@@ -13,7 +13,6 @@ import ForgotPassword from './components/auth/ForgotPassword';
 import Logout from './components/auth/Logout';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 import HostLanding from './components/hostdashboard/HostLanding';
-import GuestLanding from './components/home/GuestLanding';
 import Profile from './components/profile/Profile';
 import Reservations from './components/reservations/Reservations';
 import AddReservation from './components/reservations/AddReservation';
@@ -24,12 +23,14 @@ import Invite from './components/dashboard/invite/Invite';
 import Chat from './components/chat/Chat';
 import Weather from './components/dashboard/weather/Weather';
 import Restaurants from './components/dashboard/restaurants/Restaurants';
-import EventsAndPlaces from './components/dashboard/eventsAndPlaces/EventsAndPlaces';
+import Places from './components/dashboard/places/Places';
 import Map from './components/dashboard/map/Map';
 import SurveyView from './components/dashboard/review/SurveyComponent';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
 import Inbox from './components/chat/Inbox';
+import HostReviewsDashboard from './components/hostdashboard/HostReviewsDashboard';
+import { ManageListings } from './components/hostdashboard/ManageListings';
 // import AppTestMode from './components/AppTestMode';
 
 // Configure React project with Amplify resources
@@ -60,21 +61,22 @@ export const routes = {
   forgotPassword: '/forgotPassword',
   logout: '/logout',
   hostLanding: '/hostLanding',
-  guestLanding: '/guestLanding',
   profile: '/profile',
   reservations: '/reservations',
   addReservation: '/reservations/add/:resId',
   dashboard: '/reservations/:resId/dashboard',
   guidebook: '/reservations/:resId/guidebook',
-  guidebookEdit: '/hostLanding/:propId/guidebook/edit',
+  guidebookEdit: '/manageListings/:propId/guidebook/edit',
   invite: '/reservations/:resId/invite',
   chat: '/reservations/:resId/chat',
   inbox: '/inbox',
   weather: '/reservations/:resId/weather',
   restaurants: '/reservations/:resId/restaurants',
-  eventsAndPlaces: '/reservations/:resId/eventsAndPlaces',
+  places: '/reservations/:resId/places',
   map: '/reservations/:resId/map',
-  review: '/reservations/:resId/:guestId/review'
+  review: '/reservations/:resId/:guestId/review',
+  hostReviews: '/hostReviewsDashboard',
+  manageListings: '/manageListings'
 };
 
 /**
@@ -126,11 +128,15 @@ const hostNavLinks: NavbarLink[] = [
   },
   {
     name: 'Manage Listings',
-    path: routes.error
+    path: routes.manageListings
   },
   {
     name: 'Inbox',
     path: routes.inbox
+  },
+  {
+    name: 'Reviews',
+    path: routes.hostReviews
   }
 ];
 
@@ -197,10 +203,6 @@ const router = createBrowserRouter([
             element: <HostLanding />
           },
           {
-            path: routes.guestLanding,
-            element: <GuestLanding />
-          },
-          {
             path: routes.profile,
             element: <Profile />
           },
@@ -245,8 +247,8 @@ const router = createBrowserRouter([
             element: <Restaurants />
           },
           {
-            path: routes.eventsAndPlaces,
-            element: <EventsAndPlaces />
+            path: routes.places,
+            element: <Places />
           },
           {
             path: routes.map,
@@ -255,6 +257,14 @@ const router = createBrowserRouter([
           {
             path: routes.review,
             element: <SurveyView />
+          },
+          {
+            path: routes.hostReviews,
+            element: <HostReviewsDashboard />
+          },
+          {
+            path: routes.manageListings,
+            element: <ManageListings />
           }
         ]
       }

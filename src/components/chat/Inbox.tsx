@@ -1,4 +1,6 @@
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
 import React, { useState, useRef, useEffect, useContext } from 'react';
 import AppContext from '../../context/AppContext';
 import { over } from 'stompjs';
@@ -8,6 +10,19 @@ import { theme } from '../../utils/styles';
 import { server } from '../..';
 import { SortedReservationDetailSet, Reservation } from '../../utils/dtos';
 import { useNavigate } from 'react-router-dom';
+import {
+  Avatar,
+  Box,
+  Button,
+  ButtonBase,
+  Container,
+  Grid,
+  IconButton,
+  TextField,
+  ToggleButton,
+  ToggleButtonGroup,
+  Typography
+} from '@mui/material';
 
 let stompClient: any = null;
 let firstChatId: string = ' ';
@@ -159,17 +174,19 @@ function Inbox() {
       const reservationId = chatName.includes('_')
         ? chatName.split('_')[0]
         : chatName;
-
-      if (chatName.includes('_') && user?.role === 'guest') {
-        propertyName =
-          'Host ' + reservationsMap.get(reservationId)!.property.name;
-      } else if (chatName.includes('_') && user?.role === 'host') {
-        propertyName = chatName.split('_')[1] + ' ' + reservationsMap.get(reservationId)!.property.name;
-      }
-      else {
-        propertyName =
-          'Group ' + reservationsMap.get(reservationId)!.property.name;
-      }
+      try {
+        if (chatName.includes('_')) {
+          propertyName =
+            'Host ' + reservationsMap.get(reservationId)!.property.name;
+        } else {
+          propertyName =
+            'Group ' + reservationsMap.get(reservationId)!.property.name;
+        }
+      } catch(Error) {
+        console.log(Error);
+      };
+      
+      
       console.log('chatTitle', propertyName);
       chatTitlesMap.set(chatName, propertyName);
       reservationIdLinksMap.set(propertyName, reservationId);
@@ -193,81 +210,113 @@ function Inbox() {
   };
 
   return (
-    <Container>
-      <SideBar>
-        <SideBarHeader>
-          <ChatHeader>Inbox</ChatHeader>
-        </SideBarHeader>
-        <ChatList>
-          {Array.from(chatTitlesMap.keys()).map((chatTitleKey, index) => {
-            return (
-              <ChatRoomWrapper isActive={tab === chatTitleKey} key={index}>
-                <ChatRoom
-                  onClick={() => {
-                    currentChatTitle = chatTitlesMap.has(chatTitleKey)
-                      ? chatTitlesMap.get(chatTitleKey)!
-                      : '';
-                    setTab(chatTitleKey);
-                  }}
-                >
-                  {chatTitlesMap.get(chatTitleKey)}
-                </ChatRoom>
-              </ChatRoomWrapper>
-            );
-          })}
-        </ChatList>
-      </SideBar>
-
-      {tab !== '' && inboxChats.has(tab) ? (
-        <ChatContent>
-          <ChatName> {currentChatTitle} </ChatName>
-          <ChatMessages id="chat-messages">
-            {[...inboxChats.get(tab)!].map((message: any, index) => (
-              <MessageBlockWrapper
-                self={message.senderName === userData.username}
-                key={index}
-              >
-                <MessageBlock id="message-block">
-                  {message.senderName !== userData.username && (
-                    <Avatar>{message.senderName}</Avatar>
-                  )}
-                  {message.senderName === userData.username && (
-                    <AvatarSelf>{message.senderName}</AvatarSelf>
-                  )}
-                  <MessageData id="message-data">{message.message}</MessageData>
-                </MessageBlock>                
-              </MessageBlockWrapper>
-            ))}
-            <LastMessage id="last-message" ref={messageEndRef}></LastMessage>
-          </ChatMessages>
-          <SendMessage id="send-message">
-            <SendButton
-              type="button"
+    <Container maxWidth="lg" sx={{ mt: 2 }}>
+      <Grid container spacing={2}>
+        <Grid item xs={3}>
+          <Typography variant="h6">Inbox</Typography>
+          {Array.from(chatTitlesMap.keys()).map((chatTitleKey, index) => (
+            <Button
+              key={index}
+              fullWidth
+              variant="outlined"
               onClick={() => {
-                currentReservationIdLink = reservationIdLinksMap.has(
-                  currentChatTitle
-                )
-                  ? reservationIdLinksMap.get(currentChatTitle)!
+                currentChatTitle = chatTitlesMap.has(chatTitleKey)
+                  ? chatTitlesMap.get(chatTitleKey)!
                   : '';
-
-                navigate(`/reservations/${currentReservationIdLink}/chat`);
+                setTab(chatTitleKey);
               }}
+              sx={{ mt: 1 }}
             >
+              {chatTitlesMap.get(chatTitleKey)}
+            </Button>
+          ))}
+        </Grid>
+        <Grid item xs={9}>
+          {tab !== '' && inboxChats.has(tab) ? (
+            <Box sx={{ width: '100%' }}>
+              <Typography variant="h6">{currentChatTitle}</Typography>
+              <Box
+                sx={{
+                  overflowY: 'scroll',
+                  p: 2,
+                  borderRadius: '5px',
+                  backgroundColor: '#FAF9F6',
+                  height: '80vh'
+                }}
+              >
+                {[...inboxChats.get(tab)!].map((message: any, index) => (
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      justifyContent:
+                        message.senderName === userData.username
+                          ? 'flex-end'
+                          : 'flex-start'
+                    }}
+                    key={index}
+                  >
+                    <Box
+                      sx={{
+                        width: '45%',
+                        p: 1,
+                        m: 0.25,
+                        borderRadius: 2,
+                        backgroundColor:
+                          message.senderName === userData.username
+                            ? '#FFD95A'
+                            : theme.color.lightGray,
+                        color:
+                          message.senderName === userData.username
+                            ? '#4C3D3D'
+                            : theme.color.black
+                      }}
+                    >
+                      <Typography variant="h6" style={{ fontSize: '16px' }}>
+                        {message.senderName}
+                      </Typography>
+                      <Typography variant="body1">{message.message}</Typography>
+                    </Box>
+                  </Box>
+                ))}
+                <LastMessage
+                  id="last-message"
+                  ref={messageEndRef}
+                ></LastMessage>
+              </Box>
+            </Box>
+          ) : (
+            <br />
+          )}
+
+          <Button
+            fullWidth
+            variant="contained"
+            color="info"
+            onClick={() => {
+              currentReservationIdLink = reservationIdLinksMap.has(
+                currentChatTitle
+              )
+                ? reservationIdLinksMap.get(currentChatTitle)!
+                : '';
+
+              navigate(`/reservations/${currentReservationIdLink}/chat`);
+            }}
+            sx={{ mt: 1 }}
+          >
+            <Typography variant="h6" style={{ fontSize: '16px' }}>
               To send a new message go to Chat page
-            </SendButton>
-          </SendMessage>
-        </ChatContent>
-      ) : (
-        <br />
-      )}
+            </Typography>
+          </Button>
+        </Grid>
+      </Grid>
     </Container>
   );
 }
-const Container = styled.div`
-  display: flex;
-  width: 100%;
-  height: 100%;
-`;
+// const Container = styled.div`
+//   display: flex;
+//   width: 100%;
+//   height: 100%;
+// `;
 const SideBar = styled.div`
   display: flex;
   flex-direction: column;
@@ -369,13 +418,13 @@ const MessageBlock = styled.div`
   background-color: #ffffff;
 `;
 
-const Avatar = styled.div`
-  display: flex;
-  color: #c5c752;
-  ${theme.screen.small} {
-    width: 100%;
-  }
-`;
+// const Avatar = styled.div`
+//   display: flex;
+//   color: #c5c752;
+//   ${theme.screen.small} {
+//     width: 100%;
+//   }
+// `;
 const AvatarSelf = styled.div`
   display: flex;
   color: #52a782;

@@ -47,7 +47,7 @@ export function redirectAfterLogin(
     if ([routes.login, routes.signUp].includes(location.pathname)) {
       switch (role) {
         case 'guest':
-          path = routes.guestLanding;
+          path = routes.reservations;
           break;
 
         case 'host':
