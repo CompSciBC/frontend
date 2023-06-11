@@ -135,28 +135,30 @@ function ScanImagesDialog({
             <>
               <DialogContent>
                 <ImageWrapper>
-                  <img
-                    src={images?.[imageIndex]?.url}
-                    // don't fetch suggestions until image has loaded;
-                    // image is slow and UI looks weird if suggestions appear before image
-                    onLoad={() => getSuggestions(imageIndex)}
-                  />
-                  {suggestions?.[imageIndex]?.map(({ name, boxes }) => {
-                    return boxes.map((box, i) => {
-                      colorIndex = (colorIndex + 1) % BOX_COLORS.length;
+                  <div>
+                    <img
+                      src={images?.[imageIndex]?.url}
+                      // don't fetch suggestions until image has loaded;
+                      // image is slow and UI looks weird if suggestions appear before image
+                      onLoad={() => getSuggestions(imageIndex)}
+                    />
+                    {suggestions?.[imageIndex]?.map(({ name, boxes }) => {
+                      return boxes.map((box, i) => {
+                        colorIndex = (colorIndex + 1) % BOX_COLORS.length;
 
-                      return (
-                        <AmenityBoundingBox
-                          key={`${name}-${i}`}
-                          name={name}
-                          box={box}
-                          color={BOX_COLORS[colorIndex]}
-                        />
-                      );
-                    });
-                  })}
+                        return (
+                          <AmenityBoundingBox
+                            key={`${name}-${i}`}
+                            name={name}
+                            box={box}
+                            color={BOX_COLORS[colorIndex]}
+                          />
+                        );
+                      });
+                    })}
+                  </div>
                 </ImageWrapper>
-                Suggested Amenities
+                <SuggestionsTitle>Suggested Amenities</SuggestionsTitle>
                 <SuggestionsWrapper>
                   {loading ? (
                     <Box
@@ -250,19 +252,44 @@ function ScanImagesDialog({
 }
 
 const ImageWrapper = styled.div`
-  position: relative;
-  width: 552px;
-  max-width: 100%;
+  display: flex;
+  justify-content: center;
+  /*
+    these are the fixed heights on the dialog component
+    32px dialog padding-top
+    64px dialog title
+    16px img wrapper margin bottom
+    24px suggestions title
+    192px suggestion wrapper
+    20px dialog content padding bottom
+    52.5px dialog actions
+    32px dialog padding-bottom
+  */
+  --remaining-space: calc(
+    100vh - 32px - 64px - 16px - 24px - 192px - 20px - 52.5px - 32px
+  );
+  max-height: var(--remaining-space);
+  width: 100%;
   aspect-ratio: 1/1;
-  margin-bottom: 16px;
 
-  img {
-    width: 100%;
-    height: 100%;
+  > div {
+    position: relative;
+
+    img {
+      max-height: var(--remaining-space);
+      max-width: 100%;
+      aspect-ratio: 1/1;
+    }
   }
 `;
 
+const SuggestionsTitle = styled.div`
+  margin-top: 16px;
+`;
+
 const SuggestionsWrapper = styled.div`
+  width: 552px;
+  max-width: 100%;
   height: 192px;
   overflow-y: scroll;
   padding: 8px 16px;
