@@ -120,6 +120,7 @@ const guestNavLinks: NavbarLink[] = [
   {
     name: 'Inbox',
     path: routes.inbox
+  },
   {
     name: 'About',
     path: routes.about
@@ -146,11 +147,12 @@ const hostNavLinks: NavbarLink[] = [
   {
     name: 'Reservations',
     path: routes.hostReservations
-  }  {
+  },
+  {
     name: 'About',
     path: routes.about
   },
-;
+];
 
 const avatarLinks: NavbarLink[] = [
   {
