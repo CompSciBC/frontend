@@ -79,8 +79,7 @@ function Header({
       position="static"
       style={{ background: 'linear-gradient(to right, #023059, #50A4AB, #FBC70D)', fontFamily: 'Helvetica'}}
     >
-      <Container maxWidth="xl">
-        <Toolbar disableGutters>
+      <Toolbar disableGutters sx={{mx: 5}}>
           <Logo to={routes.home}>
             <img src={logo} alt="logo" />
           </Logo>
@@ -209,7 +208,6 @@ function Header({
             <></>
           )}
         </Toolbar>
-      </Container>
     </AppBar>
   );
 }
