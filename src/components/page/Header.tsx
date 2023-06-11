@@ -79,7 +79,7 @@ function Header({
       position="static"
       style={{ background: 'linear-gradient(to right, #023059, #50A4AB, #FBC70D)', fontFamily: 'Helvetica'}}
     >
-      <Toolbar disableGutters sx={{mx: 5}}>
+      <Toolbar disableGutters sx={{mx: 10}}>
           <Logo to={routes.home}>
             <img src={logo} alt="logo" />
           </Logo>
