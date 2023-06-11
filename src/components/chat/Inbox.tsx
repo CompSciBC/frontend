@@ -174,18 +174,14 @@ function Inbox() {
       const reservationId = chatName.includes('_')
         ? chatName.split('_')[0]
         : chatName;
-      try {
-        if (chatName.includes('_')) {
-          propertyName =
-            'Host ' + reservationsMap.get(reservationId)!.property.name;
-        } else {
-          propertyName =
-            'Group ' + reservationsMap.get(reservationId)!.property.name;
-        }
-      } catch (Error) {
-        console.log(Error);
-      }
 
+      if (chatName.includes('_')) {
+        propertyName =
+          'Host ' + reservationsMap.get(reservationId)!.property.name;
+      } else {
+        propertyName =
+          'Group ' + reservationsMap.get(reservationId)!.property.name;
+      }
       console.log('chatTitle', propertyName);
       chatTitlesMap.set(chatName, propertyName);
       reservationIdLinksMap.set(propertyName, reservationId);
