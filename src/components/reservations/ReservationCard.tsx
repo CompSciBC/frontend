@@ -1,7 +1,7 @@
 // import styled from '@emotion/styled';
 // import { theme } from '../../utils/styles';
 // import { Link } from 'react-router-dom';
-import { paramRoute, routes } from '../../index';
+import { paramRoute, routes, server } from '../../index';
 import { Reservation } from '../../utils/dtos';
 import { useMemo } from 'react';
 import * as React from 'react';
@@ -9,9 +9,10 @@ import {
   Card,
   CardContent,
   Typography,
-  Link as ReservationLink,
-  CardActionArea
+  CardActionArea,
+  CardMedia
 } from '@mui/material';
+import { Link } from 'react-router-dom';
 
 interface ReservationCardProps {
   className?: string;
@@ -22,7 +23,7 @@ export default function ReservationCard({
   className,
   reservation
 }: ReservationCardProps) {
-  const { id, checkIn, property } = reservation;
+  const { id, checkIn, property, checkOut } = reservation;
 
   const checkInDate = new Date(checkIn).toLocaleDateString('default', {
     weekday: 'short',
@@ -33,6 +34,17 @@ export default function ReservationCard({
   const checkInTime = new Date(checkIn).toLocaleTimeString('default', {
     timeStyle: 'short'
   });
+
+  const checkOutDate = new Date(checkOut).toLocaleDateString('default', {
+    weekday: 'short',
+    month: 'short',
+    day: 'numeric'
+  });
+
+  const checkOutTime = new Date(checkOut).toLocaleTimeString('default', {
+    timeStyle: 'short'
+  });
+
 
   const address = useMemo(() => {
     let addressString = '';
@@ -52,36 +64,43 @@ export default function ReservationCard({
     }
     return addressString;
   }, [reservation]);
-
+  const [propertyPhoto, setPropertyPhoto] = React.useState<string>();
+  React.useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+    fetch(`${server}/api/guidebook/${property.id}/images/featured`).then(
+      async (res) => {
+        setPropertyPhoto(await res.text());
+      }
+    );
+  }, []);
   return (
-    <Card sx={{ maxWidth: 345 }}>
+    <Link to={paramRoute(routes.dashboard, id)} style={{textDecoration: 'none'}}>
+      <Card sx={{ maxWidth: 400, height: '100%'}}>
       <CardActionArea>
-        {/* <CardMedia
+        <CardMedia
           component="img"
           height="140"
-          image="/static/images/cards/contemplative-reptile.jpg"
-          alt="green iguana"
-        /> */}
+          image={propertyPhoto}
+          alt={property.id}
+        />
         <CardContent>
-          <Typography gutterBottom variant="h5" component="div">
-            {`Check In: ${checkInDate}`}
-          </Typography>
-          <Typography gutterBottom variant="h5" component="div">
-            {checkInTime}
+          <Typography variant="body1" color="text.secondary" sx={{ fontWeight: 'bold' }}>
+            {`${property.name}`}
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            {`Your Rental: ${address}`}
+            {`${address}`}
           </Typography>
-          <ReservationLink
-            href={paramRoute(routes.dashboard, id)}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            View Reservation
-          </ReservationLink>
+          <Typography gutterBottom variant="h6" component="div" sx={{mt: 3}}>
+            {`Check In: ${checkInDate}, ${checkInTime}`}
+          </Typography>
+          <Typography gutterBottom variant="h6" component="div">
+            {`Check Out: ${checkOutDate}, ${checkOutTime}`}
+          </Typography>
+          
         </CardContent>
       </CardActionArea>
     </Card>
+    </Link>
   );
 }
 

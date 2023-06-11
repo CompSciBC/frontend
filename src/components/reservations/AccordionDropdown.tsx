@@ -24,7 +24,6 @@ function AccordionDropdown({
   smallLineStyling
 }: AccordionDropdownProps) {
   const [open, setOpen] = useState<boolean>(isOpen);
-
   return (
     <div className={className}>
       <Header
@@ -40,7 +39,9 @@ function AccordionDropdown({
           <ChevronDown />
         </ChevronWrapper>
       </Header>
-      <DropdownContent open={open}>{content}</DropdownContent>
+      <DropdownContent open={open}>
+        {content}
+      </DropdownContent>
     </div>
   );
 }
