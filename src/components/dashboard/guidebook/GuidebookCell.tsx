@@ -20,7 +20,7 @@ function GuidebookCell({ className, cell }: DashboardCellProps) {
 }
 
 const Container = styled(DashboardCellClickable)`
-  background-color: ${theme.color.red};
+  background-color: ${theme.color.BMGdarkblue};
 `;
 
 export default memo(GuidebookCell);

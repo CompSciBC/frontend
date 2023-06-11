@@ -25,7 +25,7 @@ export const theme = {
     BMGteal: '#50A4AB',
     BMGyellow: '#FBC70D',
     BMGyellow2: '#F2B90F',
-    gold: '#a98600',
+gold: '#a98600',
     black: '#000000',
     white: '#ffffff',
     blue: '#2E7CF6',

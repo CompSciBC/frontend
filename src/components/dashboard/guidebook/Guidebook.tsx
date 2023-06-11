@@ -260,7 +260,7 @@ const ContainerCarousel = styled.div`
   display: flex;
   flex-direction: column;
   row-gap: 10px;
-  background-color: #393939;
+  background-color: ${theme.color.BMGdarkblue};
   margin-left: auto;
   margin-right: auto;
   ${theme.screen.small} {
