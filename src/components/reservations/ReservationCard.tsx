@@ -75,11 +75,11 @@ export default function ReservationCard({
   }, []);
   return (
     <Link to={paramRoute(routes.dashboard, id)} style={{textDecoration: 'none'}}>
-      <Card sx={{ maxWidth: 400, height: '100%'}}>
+      <Card sx={{ width: '100%', height: '100%'}}>
       <CardActionArea>
         <CardMedia
           component="img"
-          height="140"
+          height="200"
           image={propertyPhoto}
           alt={property.id}
         />
@@ -90,10 +90,10 @@ export default function ReservationCard({
           <Typography variant="body2" color="text.secondary">
             {`${address}`}
           </Typography>
-          <Typography gutterBottom variant="h6" component="div" sx={{mt: 3}}>
+          <Typography gutterBottom variant="h6" component="div" sx={{mt: 3, fontSize: '18px'}}>
             {`Check In: ${checkInDate}, ${checkInTime}`}
           </Typography>
-          <Typography gutterBottom variant="h6" component="div">
+          <Typography gutterBottom variant="h6" component="div" sx={{fontSize: '18px'}}>
             {`Check Out: ${checkOutDate}, ${checkOutTime}`}
           </Typography>
           

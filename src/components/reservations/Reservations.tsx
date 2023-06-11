@@ -134,11 +134,12 @@ const Container = styled.div`
 const Header = styled.div`
   position: relative;
   display: flex;
-  justify-content: center;
-  min-width: 512px;
-  text-align: center;
+  /* justify-content: center; */
+  padding-bottom: 20px;
+  min-width: 85vw;
+  /* text-align: center; */
   height: 32px;
-
+  
   ${theme.screen.small} {
     width: 100%;
     min-width: auto;

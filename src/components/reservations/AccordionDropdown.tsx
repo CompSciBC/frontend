@@ -25,7 +25,8 @@ function AccordionDropdown({
 }: AccordionDropdownProps) {
   const [open, setOpen] = useState<boolean>(isOpen);
   return (
-    <div className={className}>
+    <div className={className} style={{paddingTop: '20px'}}
+    >
       <Header
         type="button"
         onClick={() => {
