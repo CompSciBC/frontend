@@ -67,7 +67,6 @@ export default function ReservationCard({
       }
     })();
   }, [primaryGuestEmail]);
-  
 
   const [emailFormOpen, setEmailFormOpen] = useState(false);
   const navigate = useNavigate();
