@@ -101,9 +101,9 @@ function HostLanding() {
       <Container>
         <WidgetTitle>
           <h3 style={{ float: 'left' }}> Your Reservations </h3>
-          <a style={{ float: 'right' }} href="host-reservations">
+          <Link style={{ float: 'right' }} to={routes.hostReservations}>
             All reservations
-          </a>
+          </Link>
         </WidgetTitle>
         <ReservationsButtons>
           <ToggleButtonGroup

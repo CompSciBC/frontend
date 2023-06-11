@@ -30,6 +30,7 @@ import './index.css';
 import reportWebVitals from './reportWebVitals';
 import Inbox from './components/chat/Inbox';
 import HostReviewsDashboard from './components/hostdashboard/HostReviewsDashboard';
+import HostReservationsDashboard from './components/hostdashboard/HostReservationsDashboard';
 import { ManageListings } from './components/hostdashboard/ManageListings';
 // import AppTestMode from './components/AppTestMode';
 
@@ -76,6 +77,7 @@ export const routes = {
   map: '/reservations/:resId/map',
   review: '/reservations/:resId/:guestId/review',
   hostReviews: '/hostReviewsDashboard',
+  hostReservations: '/hostReservationsDashboard',
   manageListings: '/manageListings'
 };
 
@@ -118,7 +120,6 @@ const guestNavLinks: NavbarLink[] = [
   {
     name: 'Inbox',
     path: routes.inbox
-  },
   {
     name: 'About',
     path: routes.about
@@ -143,10 +144,13 @@ const hostNavLinks: NavbarLink[] = [
     path: routes.hostReviews
   },
   {
+    name: 'Reservations',
+    path: routes.hostReservations
+  }  {
     name: 'About',
     path: routes.about
   },
-];
+;
 
 const avatarLinks: NavbarLink[] = [
   {
@@ -269,6 +273,10 @@ const router = createBrowserRouter([
           {
             path: routes.hostReviews,
             element: <HostReviewsDashboard />
+          },
+          {
+            path: routes.hostReservations,
+            element: <HostReservationsDashboard />
           },
           {
             path: routes.manageListings,
