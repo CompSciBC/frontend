@@ -77,7 +77,7 @@ function Header({
     // </NavParentFrame>
     <AppBar
       position="static"
-      style={{ background: 'linear-gradient(to right, #023059, #50A4AB, #FBC70D)' }}
+      style={{ background: 'linear-gradient(to right, #023059, #50A4AB, #FBC70D)', fontFamily: 'Helvetica'}}
     >
       <Container maxWidth="xl">
         <Toolbar disableGutters>
@@ -85,6 +85,7 @@ function Header({
             <img src={logo} alt="logo" />
           </Logo>
           <Typography
+            ml={1}
             variant="h6"
             noWrap
             component="a"
@@ -92,10 +93,9 @@ function Header({
             sx={{
               mr: 2,
               display: { xs: 'none', md: 'flex' },
-              fontFamily: 'Roboto',
-              fontWeight: 700,
+              fontWeight: 500,
               letterSpacing: '.3rem',
-              color: 'black',
+              color: 'white',
               textDecoration: 'none'
             }}
           >
@@ -152,10 +152,10 @@ function Header({
               mr: 2,
               display: { xs: 'flex', md: 'none' },
               flexGrow: 1,
-              fontFamily: 'Roboto',
+              fontFamily: 'roboto',
               fontWeight: 700,
               letterSpacing: '.3rem',
-              color: 'black',
+              color: 'white',
               textDecoration: 'none'
             }}
           >
@@ -166,7 +166,7 @@ function Header({
               <Button
                 key={link.name}
                 onClick={() => navigateToPage(link.path)}
-                sx={{ my: 2, color: 'black', display: 'block' }}
+                sx={{ my: 2, color: 'white', display: 'block' }}
               >
                 {link.name}
               </Button>
@@ -214,59 +214,6 @@ function Header({
   );
 }
 
-const NavParentFrame = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  overflow: hidden;
-  background-color: white;
-  width: 100%;
-  height: 60px;
-  box-shadow: 1px 1px 5px #aaaaaa;
-`;
-
-const IconHomeLinkFrame = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  padding: 0px;
-  gap: 10px;
-  overflow: hidden;
-  flex: 1 61%;
-  padding: 0 10px;
-  order: 0;
-  flex-grow: 0;
-`;
-
-const NavLinksFrame = styled.div`
-  justify-content: flex-end;
-  align-items: right;
-  display: inline-block;
-  text-align: center;
-  color: rgb(0, 0, 0);
-  text-decoration: none;
-`;
-
-const NavFrame = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  position: relative;
-  overflow: hidden;
-  height: 60px;
-  background: linear-gradient(
-    180deg,
-    rgba(250, 206, 214, 0.69) 1.56%,
-    rgba(249, 250, 206, 0.523639) 17.19%,
-    rgba(206, 250, 231, 0.69) 45.31%,
-    rgba(206, 242, 250, 0.327031) 71.35%
-  );
-  flex: none;
-  order: 1;
-  align-self: stretch;
-  flex-grow: 1;
-`;
-
 const Logo = styled(Link)`
   ${theme.screen.small} {
     display: none;
@@ -277,22 +224,6 @@ const Logo = styled(Link)`
   }
 `;
 
-const StyledHamburgerMenu = styled(HamburgerMenu)`
-  display: none;
 
-  ${theme.screen.small} {
-    display: block;
-  }
-`;
-
-const Nav = styled(Navbar)`
-  ${theme.screen.small} {
-    display: none;
-  }
-  ${theme.font.bodyLink}
-  text-align: center;
-  text-decoration-line: underline;
-  text-transform: uppercase;
-`;
 
 export default Header;
