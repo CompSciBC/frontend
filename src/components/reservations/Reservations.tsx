@@ -71,7 +71,7 @@ function Reservations() {
   const getCards = (status: ReservationStatus) => (
     <Grid container spacing={5}>
       {resDetails?.[status].map((resProp) => (
-        <Grid item key={resProp.id} xs={12} sm={12} md={4} xl={3}>
+        <Grid item key={resProp.id} xs={12} sm={12} md={4}>
           <ReservationCard reservation={resProp} />
         </Grid>
       ))}
