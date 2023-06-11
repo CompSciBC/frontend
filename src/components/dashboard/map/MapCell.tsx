@@ -5,14 +5,20 @@ import AppContext from '../../../context/AppContext';
 import { paramRoute, routes, server } from '../../..';
 import { DashboardCellProps } from '../Dashboard';
 import DashboardCellClickable from '../DashboardCellClickable';
-import { useLoadScript } from '@react-google-maps/api';
+import { GoogleMap, MarkerF, useLoadScript } from '@react-google-maps/api';
+import DashboardCellWrapper from '../DashboardCellWrapper';
 
 export interface Location {
   latitude: number;
   longitude: number;
 }
 
-function MapCell({ className, cell }: DashboardCellProps) {
+export interface MapCellProps extends DashboardCellProps {
+  interactive: boolean;
+  zoom: number;
+}
+
+function MapCell({ className, cell, interactive, zoom }: MapCellProps) {
   const coordinates: Location = {
     latitude: 0.0,
     longitude: 0.0
@@ -58,20 +64,46 @@ function MapCell({ className, cell }: DashboardCellProps) {
   const myKey = process.env.REACT_APP_GOOGLE_MAPS_KEY as string;
 
   if (!isLoaded) return <div>Loading...</div>;
-  // const url = `https://maps.googleapis.com/maps/api/staticmap?center=${center.lat},${center.lng}&zoom=20&size=400x300&markers=${center.lat},${center.lng}`;
-  const url = `https://maps.googleapis.com/maps/api/staticmap?center=${center.lat},${center.lng}&zoom=20&size=400x300&markers=${center.lat},${center.lng}&key=myKey`;
-  console.log(url);
-  return (
-    <Container
-      className={className}
-      cell={cell}
-      to={paramRoute(routes.map, reservation?.id)}
-      img={url}
-    />
-  );
+  else if (interactive) {
+    return (
+      <InteractiveContainer
+        cell={cell}
+        child={
+          <GoogleMap
+            mapContainerClassName="map-container"
+            zoom={zoom}
+            center={center}
+          >
+            <MarkerF key="marker1" position={center} />
+          </GoogleMap>
+        }
+      ></InteractiveContainer>
+    );
+  } else {
+    const url = `https://maps.googleapis.com/maps/api/staticmap?center=${center.lat},${center.lng}&zoom=${zoom}&size=400x300&markers=${center.lat},${center.lng}&key=${myKey}`;
+
+    return (
+      <StaticContainer
+        className={className}
+        cell={cell}
+        to={paramRoute(routes.map, reservation?.id)}
+        img={url}
+      />
+    );
+  }
 }
 
-const Container = styled(DashboardCellClickable)<{ img: string }>`
+const InteractiveContainer = styled(DashboardCellWrapper)`
+  width: 100%;
+  height: 100%;
+
+  .map-container {
+    width: 100%;
+    height: 100%;
+  }
+`;
+
+const StaticContainer = styled(DashboardCellClickable)<{ img: string }>`
   background-image: ${(props) => `url(${props.img})`};
   background-size: cover;
   background-position: center;

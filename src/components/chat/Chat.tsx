@@ -1,41 +1,56 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 import React, { useState, useRef, useEffect, useContext } from 'react';
 import AppContext from '../../context/AppContext';
 import { over } from 'stompjs';
 import SockJS from 'sockjs-client';
+import { useParams } from 'react-router-dom';
 import styled from '@emotion/styled';
 import { theme } from '../../utils/styles';
 import { server } from '../..';
-import { SortedReservationDetailSet, Reservation } from '../../utils/dtos';
-import { useNavigate } from 'react-router-dom';
+import {
+  Avatar,
+  Box,
+  Button,
+  Container,
+  Grid,
+  IconButton,
+  TextField,
+  ToggleButton,
+  ToggleButtonGroup,
+  Typography
+} from '@mui/material';
+import SendIcon from '@mui/icons-material/Send';
 
 let stompClient: any = null;
-let firstChatId: string = ' ';
-let firstChatTitle: string = ' ';
-let currentChatTitle: string = '';
-let propertyName: string = '';
-let firstReservationIdLink: string = '';
-let currentReservationIdLink: string = '';
+const hostUserName: string = 'Host Chat';
+const groupChatName: string = 'Group';
+const groupHeader: string = 'Group Chat';
 
 interface Message {
-  reservationId: string;
+  reservationId: String;
   timestamp: Number;
-  senderName: string;
-  message: string;
-  receiverName: string | undefined;
-  chatId: string;
-  userId: string;
+  senderName: String;
+  message: String;
+  receiverName: String | undefined;
+  receiverId: String | undefined;
+  chatId: String;
+  userId: String;
 }
 
 interface ChatsServerResponse {
   [id: string]: Message[];
 }
 
-function Inbox() {
+function Chat() {
   const { user } = useContext(AppContext);
+  const { reservation } = useContext(AppContext);
+
+  const { resId } = useParams() as { resId: string };
+
   const [userData, setUserData] = useState({
-    userId: user!.userId,
     username: user!.username,
+    userId: user!.userId,
     isHost: false,
     receivername: '',
     connected: false,
@@ -44,7 +59,6 @@ function Inbox() {
   });
 
   const messageEndRef = useRef<null | HTMLDivElement>(null);
-  const navigate = useNavigate();
 
   /* scrol till the latest message. The latest message is popped up aitomatically
    */
@@ -54,11 +68,10 @@ function Inbox() {
 
   /* use a map object where key is a receiver and value is a message
    */
-  const [inboxChats, setInboxChats] = useState(new Map<string, Message[]>());
-  const [chatTitlesMap, setChatTitlesMap] = useState(new Map<string, string>());
-  const [reservationIdLinksMap, setReservationIdLinks] = useState(
-    new Map<string, string>()
+  const [privateChats, setPrivateChats] = useState(
+    new Map<string, Message[]>()
   );
+  const [groupChat, setGroupChat] = useState<Message[]>([]);
 
   /* use this trick to prevent double loading of data. It looks like that an additional loading erases GroupChat array.
   I have no idea why this not happened to Map. Probably, I'll put Group Chat into a Map */
@@ -66,20 +79,7 @@ function Inbox() {
   const [pageState] = useState<{ loaded: boolean }>({ loaded: false });
   /* set as a string
    */
-  const [tab, setTab] = useState('');
-
-  const onError = (err: any) => {
-    console.log(err);
-  };
-
-  const onInboxMessage = (payload: any) => {
-    const payloadData: Message = JSON.parse(payload.body);
-    console.log(payloadData);
-    const chatName: string = payloadData.chatId;
-
-    inboxChats.get(chatName)!.push(payloadData);
-    setInboxChats(new Map(inboxChats));
-  };
+  const [tab, setTab] = useState(groupChatName);
 
   useEffect(() => {
     setUserData({
@@ -97,187 +97,267 @@ function Inbox() {
     }
     if (userData.userLoaded) {
       pageState.loaded = true;
-      // Join two API calls for messages and reservation details
-      // define urls for API calls
-      const loadUrl = `${server}/api/chat/load/inbox/${userData.userId}`;
-      const reservationUrl = `${server}/api/reservations-by-status?index=${user?.role}&id=${user?.userId}`;
-
-      // load promise for both calls
-      // these promises are then passed as an array to Promise.all(), which waits for both promises to resolve before continuing.
-      // Once both promises are resolved, the then() callback for Promise.all() is called with an array of the results from both promises.
-
-      const loadPromise = fetch(loadUrl, {
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json' }
-      }).then(async (response) => await response.json());
-
-      const reservationPromise = fetch(reservationUrl, {
+      const loadUrl: string = userData.isHost
+        ? `${server}/api/chat/load/host/${resId}`
+        : `${server}/api/chat/load/guest/${resId}/${userData.username}`;
+      fetch(loadUrl, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' }
       })
         .then(async (response) => await response.json())
-        .then((responseJson) => {
-          const data: SortedReservationDetailSet = responseJson.data[0];
-          const reservations: Reservation[] = Object.values(data).flat();
-          const reservationMap = new Map<string, Reservation>();
-          for (const reservation of reservations) {
-            reservationMap.set(reservation.id, reservation);
-          }
-          // Return the reservationMap in the promise to be accessed by Promise.all
-          return reservationMap;
-        });
-
-      Promise.all([loadPromise, reservationPromise]).then(
-        ([chats, reservationsMap]) => {
+        .then((chats: ChatsServerResponse) => {
           const Sock = new SockJS(`${server}/ws`);
 
           stompClient = over(Sock);
           stompClient.connect(
             {},
             () => {
-              onConnected(chats, reservationsMap);
+              onConnected(chats);
             },
             onError
           );
-        }
-      );
+        });
     }
   }, [userData]);
 
-  const onConnected = (
-    chats: ChatsServerResponse,
-    reservationsMap: Map<string, Reservation>
-  ) => {
-    stompClient.subscribe(`/user/${userData.userId}/inbox`, onInboxMessage);
+  const onConnected = (chats: ChatsServerResponse) => {
+    // subscribe to group message
+    stompClient.subscribe(`/group/${resId}`, onGroupMessage);
+    // subscribe to private message
+    stompClient.subscribe(
+      `/user/${userData.userId}/private/${resId}`,
+      onPrivateMessage
+    );
+
+    const groupMesages = chats[resId];
+    groupChat.push(...groupMesages);
+    setGroupChat([...groupChat]);
+    // setGroupChat([...groupChat, ...groupMesages]);
 
     for (const chatId in chats) {
-      const chatName = chatId;
-      const messages = chats[chatId];
-
-      inboxChats.set(chatName, messages);
-
-      const reservationId = chatName.includes('_')
-        ? chatName.split('_')[0]
-        : chatName;
-
-      if (chatName.includes('_') && user?.role === 'guest') {
-        propertyName =
-          'Host ' + reservationsMap.get(reservationId)!.property.name;
-      } else if (chatName.includes('_') && user?.role === 'host') {
-        propertyName =
-          chatName.split('_')[1] +
-          ' ' +
-          reservationsMap.get(reservationId)!.property.name;
-      } else {
-        propertyName =
-          'Group ' + reservationsMap.get(reservationId)!.property.name;
+      if (chatId === resId) {
+        continue;
       }
-      console.log('chatTitle', propertyName);
-      chatTitlesMap.set(chatName, propertyName);
-      reservationIdLinksMap.set(propertyName, reservationId);
+      const chatName = userData.isHost ? chatId.split('_')[1] : hostUserName;
+      const messages = chats[chatId];
+      privateChats.set(chatName, messages);
     }
-    setInboxChats(inboxChats);
-    setChatTitlesMap(chatTitlesMap);
-    setReservationIdLinks(reservationIdLinksMap);
-
-    firstChatId = inboxChats.keys().next().value;
-    setTab(firstChatId);
-    // setActiveTab(firstChatId);
-    console.log(firstChatTitle);
-    currentChatTitle = chatTitlesMap.get(firstChatId)!;
-
-    firstChatTitle = chatTitlesMap.keys().next().value;
-
-    currentReservationIdLink = reservationIdLinksMap.get(currentChatTitle)!;
-    console.log(currentReservationIdLink + 'curentLinkResId');
-    firstReservationIdLink = reservationIdLinksMap.keys().next().value;
-    console.log(firstReservationIdLink + 'FirstResIdLink');
+    setPrivateChats(privateChats);
   };
 
-  return (
-    <Container>
-      <SideBar>
-        <SideBarHeader>
-          <ChatHeader>Inbox</ChatHeader>
-        </SideBarHeader>
-        <ChatList>
-          {Array.from(chatTitlesMap.keys()).map((chatTitleKey, index) => {
-            return (
-              <ChatRoomWrapper isActive={tab === chatTitleKey} key={index}>
-                <ChatRoom
-                  onClick={() => {
-                    currentChatTitle = chatTitlesMap.has(chatTitleKey)
-                      ? chatTitlesMap.get(chatTitleKey)!
-                      : '';
-                    setTab(chatTitleKey);
-                  }}
-                >
-                  {chatTitlesMap.get(chatTitleKey)}
-                </ChatRoom>
-              </ChatRoomWrapper>
-            );
-          })}
-        </ChatList>
-      </SideBar>
+  const onGroupMessage = (payload: any) => {
+    const payloadData = JSON.parse(payload.body);
+    groupChat.push(payloadData as never);
+    setGroupChat([...groupChat]);
+  };
 
-      {tab !== '' && inboxChats.has(tab) ? (
-        <ChatContent>
-          <ChatName> {currentChatTitle} </ChatName>
-          <ChatMessages id="chat-messages">
-            {[...inboxChats.get(tab)!].map((message: any, index) => (
-              <MessageBlockWrapper
-                self={message.senderName === userData.username}
+  const onPrivateMessage = (payload: any) => {
+    const payloadData: Message = JSON.parse(payload.body);
+    const chatId = payloadData.chatId;
+    const chatName = userData.isHost ? chatId.split('_')[1] : hostUserName;
+
+    privateChats.get(chatName)!.push(payloadData);
+    setPrivateChats(new Map(privateChats));
+  };
+
+  const onError = (err: any) => {
+    console.log(err);
+  };
+
+  const handleMessage = (event: any) => {
+    const { value } = event.target;
+    setUserData({ ...userData, message: value });
+  };
+
+  const sendMessage = () => {
+    let chatId: string = '';
+    let receiverName: string | undefined;
+    let receiverId: string | undefined;
+    console.log(reservation);
+
+    if (tab === groupChatName) {
+      chatId = resId; // Group chat Id is Reservation id.
+      receiverName = undefined; // No message receiver for a group chat
+      receiverId = reservation!.property.hostId; // get a hostId for saving a group messafe in a host inbox
+    } else {
+      // private chat
+      if (userData.isHost) {
+        // For a host, Tab is the receiver guest.
+        chatId = `${resId}_${tab}`;
+        receiverName = tab;
+        receiverId = undefined;
+      } else {
+        chatId = `${resId}_${userData.username}`;
+        receiverName = undefined;
+        receiverId = reservation!.property.hostId;
+      }
+    }
+
+    if (stompClient) {
+      const chatMessage: Message = {
+        senderName: userData.username,
+        message: userData.message,
+        reservationId: resId,
+        timestamp: new Date().getTime(),
+        receiverName,
+        receiverId,
+        chatId,
+        userId: userData.userId
+      };
+
+      if (tab === groupChatName) {
+        groupChat.push(chatMessage);
+        stompClient.send('/app/group-message', {}, JSON.stringify(chatMessage));
+      } else {
+        privateChats.get(tab)!.push(chatMessage);
+        stompClient.send(
+          '/app/private-message',
+          {},
+          JSON.stringify(chatMessage)
+        );
+      }
+
+      setUserData({ ...userData, message: '' });
+    }
+  };
+
+  const [view, setView] = React.useState('Group');
+
+  return (
+    <Container maxWidth="lg" sx={{ mt: 2 }}>
+      <Grid container spacing={2}>
+        <Grid item xs={3}>
+          <Typography variant="h6">Conversations</Typography>
+          <Button
+            variant="outlined"
+            fullWidth
+            onClick={() => {
+              setTab('Group');
+            }}
+            sx={{ mt: 1 }}
+          >
+            {' '}
+            Group Chat{' '}
+          </Button>
+          {Array.from(privateChats.keys()).map((chatName, index) => (
+            <Button
+              key={index}
+              fullWidth
+              variant="outlined"
+              onClick={() => {
+                setTab(chatName);
+              }}
+              sx={{ mt: 1 }}
+            >
+              {chatName}
+            </Button>
+          ))}
+        </Grid>
+        <Grid item xs={9}>
+          <Box sx={{ width: '100%' }}>
+            <Typography variant="h6">
+              {tab === groupChatName ? groupHeader : tab}
+            </Typography>
+          </Box>
+          <Box
+            sx={{
+              overflowY: 'scroll',
+              p: 2,
+              borderRadius: '5px',
+              backgroundColor: '#FAF9F6',
+              height: '70vh'
+            }}
+          >
+            {(tab === groupChatName
+              ? [...groupChat]
+              : [...privateChats.get(tab)!]
+            ).map((message: any, index) => (
+              <Box
+                sx={{
+                  display: 'flex',
+                  justifyContent:
+                    message.senderName === userData.username
+                      ? 'flex-end'
+                      : 'flex-start'
+                }}
                 key={index}
               >
-                <MessageBlock id="message-block">
-                  {message.senderName !== userData.username && (
-                    <Avatar>{message.senderName}</Avatar>
-                  )}
-                  {message.senderName === userData.username && (
-                    <AvatarSelf>{message.senderName}</AvatarSelf>
-                  )}
-                  <MessageData id="message-data">{message.message}</MessageData>
-                </MessageBlock>
-              </MessageBlockWrapper>
+                <Box
+                  sx={{
+                    width: '45%',
+                    p: 1,
+                    m: 0.25,
+                    borderRadius: 2,
+                    backgroundColor:
+                      message.senderName === userData.username
+                        ? '#FFD95A'
+                        : theme.color.lightGray,
+                    color:
+                      message.senderName === userData.username
+                        ? '#4C3D3D'
+                        : theme.color.black
+                  }}
+                >
+                  <Typography variant="h6" style={{ fontSize: '16px' }}>
+                    {message.senderName}
+                  </Typography>
+                  <Typography variant="body1">{message.message}</Typography>
+                </Box>
+              </Box>
             ))}
             <LastMessage id="last-message" ref={messageEndRef}></LastMessage>
-          </ChatMessages>
-          <SendMessage id="send-message">
-            <SendButton
-              type="button"
-              onClick={() => {
-                currentReservationIdLink = reservationIdLinksMap.has(
-                  currentChatTitle
-                )
-                  ? reservationIdLinksMap.get(currentChatTitle)!
-                  : '';
+          </Box>
 
-                navigate(`/reservations/${currentReservationIdLink}/chat`);
-              }}
-            >
-              To send a new message go to Chat page
-            </SendButton>
-          </SendMessage>
-        </ChatContent>
-      ) : (
-        <br />
-      )}
+          <Box
+            sx={{
+              p: 2,
+              borderRadius: '16px',
+              height: '10vh',
+              alignContent: 'flex-end'
+            }}
+          >
+            <Grid container spacing={2}>
+              <Grid item xs={11}>
+                <TextField
+                  fullWidth
+                  id="input"
+                  multiline
+                  placeholder="enter the message"
+                  value={userData.message}
+                  onChange={handleMessage}
+                  maxRows={4}
+                />
+              </Grid>
+              <Grid item xs={1}>
+                <IconButton
+                  aria-label="send"
+                  onClick={sendMessage}
+                  size="large"
+                >
+                  <SendIcon style={{ color: theme.color.BMGdarkblue }} />
+                </IconButton>
+              </Grid>
+            </Grid>
+          </Box>
+        </Grid>
+      </Grid>
     </Container>
   );
 }
-const Container = styled.div`
-  display: flex;
-  width: 100%;
-  height: 100%;
-`;
-const SideBar = styled.div`
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  width: 250px;
-  gap: 20px;
-  padding: 16px;
-`;
+// const Container = styled.div`
+//   display: flex;
+//   width: 100%;
+//   height: 100%;
+// `;
+// const SideBar = styled.div`
+//   display: flex;
+//   flex-direction: column;
+//   height: 100%;
+//   width: 250px;
+//   background-color: red;
+//   gap: 20px;
+//   padding: 16px;
+// `;
 const ChatContent = styled.div`
   display: flex;
   flex-direction: column;
@@ -310,29 +390,18 @@ const ChatList = styled.div`
 
 const ChatRoom = styled.button`
   display: flex;
-  // background-color:
-  margin-top: 10px;
-  margin-left: 10px;
+  background-color: #ffffff;
+  margin-top: 13px;
   box-shadow: 0 3px 3px rgb(18 58 39 / 0.4);
-  border-color: #539174;
-  border-radius: 5px;
-  padding: 10px;
-  max-width: 200px;
+  // border-color: #539174;
+  border-radius: 10px;
   border: none;
-`;
-
-const ChatRoomWrapper = styled.div<{ isActive: boolean }>`
-  display: flex;
-  background-color: ${(props) => (props.isActive ? '#b61616' : '#ffffff')};
-  width: 100%;
-  margin: 10px 0;
-  justify-content: flex-start;
 `;
 const ChatName = styled.h1`
   display: flex;
   align-items: center;
 
-  ${theme.font.displaySmall}
+  ${theme.font.displayXL}
 `;
 
 const ChatMessages = styled.div`
@@ -354,6 +423,7 @@ const ChatMessages = styled.div`
 
 const MessageBlockWrapper = styled.div<{ self: boolean }>`
   display: flex;
+  background-color: red;
   justify-content: ${(props) => (props.self ? 'end' : '')};
   width: 100%;
   margin: 10px 0;
@@ -370,21 +440,29 @@ const MessageBlock = styled.div`
   margin: 0 10px;
   background-color: #ffffff;
 `;
-
-const Avatar = styled.div`
-  display: flex;
-  color: #c5c752;
-  ${theme.screen.small} {
-    width: 100%;
-  }
+const Input = styled.input<{ userType: string }>`
+  flex-grow: 1;
+  margin-top: 3px;
+  margin-bottom: 3 px;
+  box-shadow: 0 3px 3px rgb(18 58 39 / 0.4);
+  border-color: #539174;
+  border-radius: 15px;
+  ${theme.font.body}
 `;
-const AvatarSelf = styled.div`
-  display: flex;
-  color: #52a782;
-  ${theme.screen.small} {
-    width: 100%;
-  }
-`;
+// const Avatar = styled.div`
+//   display: flex;
+//   color: #c5c752;
+//   ${theme.screen.small} {
+//     width: 100%;
+//   }
+// `;
+// const AvatarSelf = styled.div`
+//   display: flex;
+//   color: #52a782;
+//   ${theme.screen.small} {
+//     width: 100%;
+//   }
+// `;
 const MessageData = styled.li`
   display: flex;
   max-width: fit-content;
@@ -392,10 +470,10 @@ const MessageData = styled.li`
   border-radius: 10px;
   background-color: whitesmoke;
 `;
-
 const SendMessage = styled.div`
   width: 75%;
   display: flex;
+  background-color: red;
 `;
 const SendButton = styled.button`
   border: none;
@@ -403,7 +481,7 @@ const SendButton = styled.button`
   background: #b61616;
   color: #ffff;
   font-weight: bold;
-  width: 400px;
+  width: 100px;
   border-radius: 30px;
   margin-left: 5px;
   cursor: pointer;
@@ -411,6 +489,7 @@ const SendButton = styled.button`
     width: 100%;
   }
 `;
+
 const LastMessage = styled.div`
   ${theme.screen.small} {
     width: 100%;
@@ -421,4 +500,4 @@ const ChatHeader = styled.h1`
   margin-left: 20px;
   ${theme.font.heading}
 `;
-export default Inbox;
+export default Chat;
