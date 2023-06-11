@@ -25,9 +25,15 @@ export const getGuidebookContent = async (
  * @returns A promise for an array of guidebook images
  */
 export const getGuidebookImages = async (
-  propId: string
+  propId: string,
+  dimensions?: { width: number; height: number }
 ): Promise<GuidebookImage[]> => {
-  const response = await fetch(`${server}/api/guidebook/${propId}/images`);
+  const response = await fetch(
+    `${server}/api/guidebook/${propId}/images${
+      dimensions ? `?dimensions=${dimensions.width}x${dimensions.height}` : ''
+    }`
+  );
+
   return await response.json();
 };
 

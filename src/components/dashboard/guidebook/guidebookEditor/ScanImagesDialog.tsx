@@ -31,6 +31,19 @@ const BOX_COLORS: BoxColor[] = [
 ];
 let colorIndex = -1;
 
+/*
+  these are the fixed heights on the dialog component
+  32px dialog padding-top
+  64px dialog title
+  16px img wrapper margin bottom
+  24px suggestions title
+  192px suggestion wrapper
+  20px dialog content padding bottom
+  52.5px dialog actions
+  32px dialog padding-bottom
+*/
+const DIALOG_HEIGHT = 32 + 64 + 16 + 24 + 192 + 20 + 52.5 + 32;
+
 export interface ScanImagesDialogProps {
   className?: string;
   existingAmenities: string[];
@@ -56,7 +69,9 @@ function ScanImagesDialog({
 
     (async function () {
       if (open && propId) {
-        const response = await getGuidebookImages(propId);
+        const height = window.innerHeight - DIALOG_HEIGHT;
+        const dimensions = { width: height, height };
+        const response = await getGuidebookImages(propId, dimensions);
         subscribed && setImages(response);
         subscribed && setSuggestions(response.map(() => []));
       }
@@ -80,11 +95,11 @@ function ScanImagesDialog({
     (async function () {
       if (!suggestions?.[index]?.length) {
         const response = await fetch(
-          `${server}/api/amenities?url=${images[imageIndex].url}`
+          `${server}/api/amenities?url=${images[index].url}`
         );
         const data = (await response.json()).data;
         const updatedSuggestions = [...suggestions];
-        updatedSuggestions[imageIndex] = data;
+        updatedSuggestions[index] = data;
         setSuggestions(updatedSuggestions);
       }
       setLoading(false);
@@ -135,12 +150,34 @@ function ScanImagesDialog({
               <DialogContent>
                 <ImageWrapper>
                   <div>
-                    <img
-                      src={images?.[imageIndex]?.url}
-                      // don't fetch suggestions until image has loaded;
-                      // image is slow and UI looks weird if suggestions appear before image
-                      onLoad={() => getSuggestions(imageIndex)}
-                    />
+                    {!suggestions.length ? (
+                      /*
+                        need to display loading if suggestions not initialized
+                        because sometimes the image loads before the useEffect triggered
+                        by 'open' runs, which means getSuggestions() will run before
+                        suggestions is initialized, and then will get overwritten when
+                        the useEffect runs afterward. This is a problem caused when the
+                        dialog is opened again after being closed
+                      */
+                      <Box
+                        sx={{
+                          width: '100%',
+                          height: '100%',
+                          display: 'flex',
+                          justifyContent: 'center',
+                          alignItems: 'center'
+                        }}
+                      >
+                        <CircularProgress />
+                      </Box>
+                    ) : (
+                      <img
+                        src={images?.[imageIndex]?.url}
+                        // don't fetch suggestions until image has loaded;
+                        // image is slow and UI looks weird if suggestions appear before image
+                        onLoad={() => getSuggestions(imageIndex)}
+                      />
+                    )}
                     {suggestions?.[imageIndex]?.map(({ name, boxes }) => {
                       return boxes.map((box, i) => {
                         colorIndex = (colorIndex + 1) % BOX_COLORS.length;
@@ -253,20 +290,8 @@ function ScanImagesDialog({
 const ImageWrapper = styled.div`
   display: flex;
   justify-content: center;
-  /*
-    these are the fixed heights on the dialog component
-    32px dialog padding-top
-    64px dialog title
-    16px img wrapper margin bottom
-    24px suggestions title
-    192px suggestion wrapper
-    20px dialog content padding bottom
-    52.5px dialog actions
-    32px dialog padding-bottom
-  */
-  --remaining-space: calc(
-    100vh - 32px - 64px - 16px - 24px - 192px - 20px - 52.5px - 32px
-  );
+  --dialog-height: ${`${DIALOG_HEIGHT}px`};
+  --remaining-space: calc(100vh - var(--dialog-height));
   max-height: var(--remaining-space);
   width: 100%;
   aspect-ratio: 1/1;
