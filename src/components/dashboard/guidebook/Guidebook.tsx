@@ -30,7 +30,10 @@ function Guidebook({ className, propertyId }: GuidebookProps) {
     if (propID) {
       (async function () {
         subscribed && setGuidebookInfo(await getGuidebookContent(propID));
-        subscribed && setGuidebookImages(await getGuidebookImages(propID));
+        subscribed &&
+          setGuidebookImages(
+            (await getGuidebookImages(propID)).map((i) => i.url)
+          );
       })();
     }
     return () => {

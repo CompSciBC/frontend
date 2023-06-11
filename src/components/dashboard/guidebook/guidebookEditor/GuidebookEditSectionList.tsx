@@ -9,7 +9,7 @@ import {
   TextField,
   Tooltip
 } from '@mui/material';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import ConfirmCancelDialog from '../../../stuff/ConfirmCancelDialog';
 import GuidebookEditSectionKeyValue from './GuidebookEditSectionKeyValue';
 import { KeyValue } from '../../../../utils/dtos';
@@ -39,6 +39,17 @@ function GuidebookEditSectionList({
 }: GuidebookEditSectionListProps) {
   const [order, setOrder] = useState(content);
   const [deleteItemIndex, setDeleteItemIndex] = useState(-1);
+
+  // update order
+  useEffect(() => {
+    let subscribed = true;
+
+    subscribed && setOrder(content);
+
+    return () => {
+      subscribed = false;
+    };
+  }, [content]);
 
   // gets all the inputs' state to use in each action (moveDown, add, and delete).
   // This is necessary because I don't want to save the inputs' values as a state variable

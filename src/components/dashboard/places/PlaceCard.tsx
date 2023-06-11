@@ -1,77 +1,41 @@
 import styled from '@emotion/styled';
 import { theme } from '../../../utils/styles';
-import { Fragment } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { paramRoute, routes } from '../../..';
-import { Restaurant } from '../../../utils/dtos';
-import Star from './Star';
+import { Place } from '../../../utils/dtos';
 
-export interface RestaurantCardProps {
+export interface PlaceCardProps {
   className?: string;
-  restaurant: Restaurant;
+  place: Place;
 }
 
-function RestaurantCard({ className, restaurant }: RestaurantCardProps) {
+function PlaceCard({ className, place }: PlaceCardProps) {
   const { resId } = useParams();
   const navigate = useNavigate();
-  const {
-    name,
-    imageUrl,
-    isOpen,
-    url,
-    categories,
-    rating,
-    numReviews,
-    transactions,
-    price,
-    distance
-  } = restaurant;
-
-  const distanceInMiles = `${(0.000621371 * distance).toFixed(2)} mi`;
-  const stars = Array.from({ length: rating }, (_, i) => <Star key={i} />);
-
-  // if price = 0, display 1 $
-  const dollars = Array.from({ length: Math.max(price, 1) }, (_, i) => (
-    <Fragment key={i}>$</Fragment>
-  ));
+  const { name, openNow, rating, types, photo } = place;
 
   return (
-    <Container className={className} href={url} target="/">
+    <Container className={className}>
       <CardHeader>
         <ImageWrapper>
-          <img src={imageUrl || '/images/no-image-available.jpeg'} />
-          <IsOpen>{isOpen ? 'Open Now' : 'Closed'}</IsOpen>
-          <Distance>{distanceInMiles}</Distance>
+          <img src={photo} />
+          <IsOpen>{openNow ? 'Open Now' : 'Closed'}</IsOpen>
         </ImageWrapper>
         <Stars>
-          <div>{stars}</div>
-          {`${numReviews.toLocaleString()} Reviews`}
+          <div>{rating}</div>
         </Stars>
       </CardHeader>
       <CardBody>
         <h3>{name}</h3>
         <TagContainer>
-          {categories.map((c) => (
-            <CategoryTag key={c}>{c}</CategoryTag>
-          ))}
-          {transactions.map((t) => (
-            <CategoryTag key={t}>{t}</CategoryTag>
+          {types.map((ty) => (
+            <CategoryTag key={ty}>{ty}</CategoryTag>
           ))}
         </TagContainer>
       </CardBody>
       <CardFooter>
         <div>
-          {dollars}
           <div>
-            {/* links cannot be children of links, so these are buttons as a workaround */}
-            <FooterButton
-              type="button"
-              onClick={(event) => {
-                event.preventDefault();
-              }}
-            >
-              Order
-            </FooterButton>
             <FooterButton
               type="button"
               onClick={(event) => {
@@ -88,7 +52,7 @@ function RestaurantCard({ className, restaurant }: RestaurantCardProps) {
   );
 }
 
-const Container = styled.a`
+const Container = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -142,11 +106,6 @@ const IsOpen = styled(ImageTag)`
   border-radius: 8px 0 0 0;
 `;
 
-const Distance = styled(ImageTag)`
-  right: 0;
-  border-radius: 0 8px 0 0;
-`;
-
 const Stars = styled.div`
   display: flex;
   align-items: center;
@@ -190,7 +149,6 @@ const CategoryTag = styled.div`
 `;
 
 const CardFooter = styled.div`
-  float: right;
   flex-grow: 1;
   display: flex;
   align-items: end;
@@ -211,6 +169,7 @@ const CardFooter = styled.div`
 
 const FooterButton = styled.button`
   float: right;
+  align-items: right;
   padding: 4px 8px;
   border: 1px solid ${theme.color.lightGray};
   border-radius: 4px;
@@ -224,4 +183,4 @@ const FooterButton = styled.button`
   }
 `;
 
-export default RestaurantCard;
+export default PlaceCard;
