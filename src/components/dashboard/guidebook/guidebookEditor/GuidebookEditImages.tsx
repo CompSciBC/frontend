@@ -46,7 +46,13 @@ function GuidebookEditImages({ className, propId }: GuidebookEditImagesProps) {
 
     if (propId) {
       (async function () {
-        subscribed && setGuidebookImages(await getGuidebookImages(propId));
+        subscribed &&
+          setGuidebookImages(
+            await getGuidebookImages(propId, {
+              width: 300,
+              height: 300
+            })
+          );
       })();
     }
 
