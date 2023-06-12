@@ -55,7 +55,7 @@ function About() {
           <Box color="gray">
             <Typography variant="body1">
               {' '}
-              BeMyGuest, offers a more personalized vacation rental experience, 
+              BeMyGuest offers a more personalized vacation rental experience, 
               with online check-in, seamless communication between rental host 
               and reservation party, as well as essential information about the property.
             </Typography>
@@ -76,7 +76,7 @@ function About() {
           <Box color="gray">
             <Typography variant="body1">
               {' '}
-              We focus on guests who book on platforms - such as airbnb, expedia, vrbo,
+              We focus on guests who book on platforms - such as airbnb, expedia, vrbo
               - and offer them a central application and UI where they can view essential
               information relevant to their stay. 
             </Typography>
@@ -113,7 +113,7 @@ function About() {
             <Typography variant="body1">
               {' '}
               Core values of BeMyGuest can be attributed to our parent partner in industry, Expedia, whose aim and mission to be a Global
-              Leader in the the Travel and Hospitality field reaches wide. 
+              Leader in the the Travel and Hospitality field reaches a wide audience. 
             </Typography>
           </Box>
         </Grid>
