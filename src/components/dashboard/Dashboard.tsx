@@ -68,7 +68,9 @@ function Dashboard() {
   const eventCell = <PlacesCell n={2} cell={event} />;
   const chatCell = <ChatCell cell={chat} />;
   const chatPreviewCell = <ChatPreview n={3} cell={chat} />;
-  const mapCell = <MapCell cell={map} />;
+  const getMapCell = (interactive: boolean, zoom: number) => (
+    <MapCell cell={map} interactive={interactive} zoom={zoom} />
+  );
   const reviewCell = <ReviewCell cell={review} />;
 
   const [width, setWidth] = useState(window.innerWidth);
@@ -106,7 +108,7 @@ function Dashboard() {
           {guideCell}
           {chatCell}
           {checkCell}
-          {mapCell}
+          {getMapCell(false, 8)}
           {weatherCell}
           {restCell}
           {eventCell}
@@ -122,7 +124,7 @@ function Dashboard() {
           {inviteCell}
           {weatherCell}
           {chatPreviewCell}
-          {mapCell}
+          {getMapCell(true, 12)}
           {restCell}
           {eventCell}
           {reviewCell}
@@ -142,7 +144,7 @@ function Dashboard() {
           </div>
           <div>
             {chatPreviewCell}
-            {mapCell}
+            {getMapCell(true, 12)}
             {reviewCell}
           </div>
         </LargeScreenContainer>

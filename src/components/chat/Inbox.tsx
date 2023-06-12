@@ -175,9 +175,14 @@ function Inbox() {
         ? chatName.split('_')[0]
         : chatName;
       try {
-        if (chatName.includes('_')) {
+        if (chatName.includes('_') && user?.role === 'guest') {
           propertyName =
             'Host ' + reservationsMap.get(reservationId)!.property.name;
+        } else if (chatName.includes('_') && user?.role === 'host') {
+          propertyName =
+            chatName.split('_')[1] +
+            ' ' +
+            reservationsMap.get(reservationId)!.property.name;
         } else {
           propertyName =
             'Group ' + reservationsMap.get(reservationId)!.property.name;
@@ -185,7 +190,6 @@ function Inbox() {
       } catch (Error) {
         console.log(Error);
       }
-
       console.log('chatTitle', propertyName);
       chatTitlesMap.set(chatName, propertyName);
       reservationIdLinksMap.set(propertyName, reservationId);
@@ -224,7 +228,10 @@ function Inbox() {
                   : '';
                 setTab(chatTitleKey);
               }}
-              sx={{ mt: 1 }}
+              sx={{
+                mt: 1,
+                backgroundColor: tab === chatTitleKey ? '#FFD95A' : '#ffffff'
+              }}
             >
               {chatTitlesMap.get(chatTitleKey)}
             </Button>
@@ -369,7 +376,7 @@ const ChatRoom = styled.button`
 
 const ChatRoomWrapper = styled.div<{ isActive: boolean }>`
   display: flex;
-  background-color: ${(props) => (props.isActive ? '#b61616' : '#ffffff')};
+  background-color: ${(props) => (props.isActive ? '#FFD95A' : '#ffffff')};
   width: 100%;
   margin: 10px 0;
   justify-content: flex-start;
