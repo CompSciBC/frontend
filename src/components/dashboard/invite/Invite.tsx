@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
 import styled from '@emotion/styled';
 import { theme } from '../../../utils/styles';
 import { useEffect, useState, useContext } from 'react';
