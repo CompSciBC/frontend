@@ -36,14 +36,24 @@ export default function PropertyCard({ property }: PropertyCardProps) {
           alt={property.name}
         />
         <CardContent sx={{ height: 150 }}>
-          <Typography gutterBottom variant="h6" component="div">
+          <Typography
+            gutterBottom
+            variant="h6"
+            component="div"
+            sx={{
+              display: '-webkit-box',
+              overflow: 'hidden',
+              WebkitBoxOrient: 'vertical',
+              WebkitLineClamp: 2
+            }}
+          >
             {property.name}
           </Typography>
           <Typography variant="body2" color="text.secondary">
             {property.address.line1}
             {property.address.line2 ? `, ${property.address.line2}` : ''}
           </Typography>
-          <Typography variant="body2" color="text.secondary">
+          <Typography variant="body2" color="text.secondary" noWrap>
             {property.address.city}, {property.address.stateProvince},{' '}
             {property.address.country}, {property.address.postalCode}
           </Typography>

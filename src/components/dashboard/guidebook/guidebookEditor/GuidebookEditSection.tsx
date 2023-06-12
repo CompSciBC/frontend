@@ -175,7 +175,7 @@ function GuidebookEditSection({
             }}
             sx={{ visibility: changed ? 'visible' : 'hidden' }}
           >
-            <SaveOutlined />
+            <SaveOutlined sx={{ color: theme.color.BMGteal }} />
           </HeaderButton>
         </Tooltip>
       );
@@ -195,7 +195,7 @@ function GuidebookEditSection({
           }}
           sx={{ visibility: onDelete ? 'visible' : 'hidden' }}
         >
-          <DeleteOutlined />
+          <DeleteOutlined sx={{ color: theme.color.BMGteal }} />
         </HeaderButton>
       </Tooltip>
     );
@@ -220,7 +220,7 @@ function GuidebookEditSection({
 
   return (
     <div className={className}>
-      <Accordion expanded={expanded}>
+      <StyledAccordion expanded={expanded}>
         <AccordionSummary
           expandIcon={<ExpandMore />}
           onClick={() => setExpanded(!expanded)}
@@ -233,13 +233,12 @@ function GuidebookEditSection({
                     event.stopPropagation();
                     onMoveDown?.(sectionId);
                   }}
-                  color="primary"
                   sx={{
                     padding: '4px',
                     visibility: onMoveDown ? 'visible' : 'hidden'
                   }}
                 >
-                  <MoveDown />
+                  <MoveDown sx={{ color: theme.color.BMGteal }} />
                 </IconButton>
               </Tooltip>
               {editTitle ? (
@@ -253,13 +252,12 @@ function GuidebookEditSection({
                   <Tooltip title="Save" arrow disableInteractive>
                     <IconButton
                       size="small"
-                      color="primary"
                       onClick={(event) => {
                         event.stopPropagation();
                         handleChangeTitle();
                       }}
                     >
-                      <SaveOutlined />
+                      <SaveOutlined sx={{ color: theme.color.BMGteal }} />
                     </IconButton>
                   </Tooltip>
                 </>
@@ -269,13 +267,15 @@ function GuidebookEditSection({
                   <Tooltip title="Edit title" arrow disableInteractive>
                     <IconButton
                       size="small"
-                      color="primary"
                       onClick={(event) => {
                         event.stopPropagation();
                         setEditTitle(true);
                       }}
                     >
-                      <EditOutlined fontSize="small" />
+                      <EditOutlined
+                        fontSize="small"
+                        sx={{ color: theme.color.BMGteal }}
+                      />
                     </IconButton>
                   </Tooltip>
                 </>
@@ -299,7 +299,7 @@ function GuidebookEditSection({
           </HeaderButtonContainer>
           {input}
         </AccordionDetails>
-      </Accordion>
+      </StyledAccordion>
       <ConfirmCancelDialog
         open={deleteConfirmOpen}
         onClose={() => setDeleteConfirmOpen(false)}
@@ -332,6 +332,11 @@ function GuidebookEditSection({
   );
 }
 
+const StyledAccordion = styled(Accordion)`
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+  background-color: ${theme.color.lightGray};
+`;
+
 const AccordionSummaryContent = styled.div`
   display: flex;
   justify-content: space-between;
@@ -346,6 +351,8 @@ const TitleContainer = styled.div`
 
   h5 {
     margin: 0;
+    ${theme.font.body}
+    font-size: 18px;
   }
 `;
 

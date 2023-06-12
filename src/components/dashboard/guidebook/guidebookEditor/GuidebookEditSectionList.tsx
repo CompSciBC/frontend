@@ -13,6 +13,8 @@ import { useEffect, useState } from 'react';
 import ConfirmCancelDialog from '../../../stuff/ConfirmCancelDialog';
 import GuidebookEditSectionKeyValue from './GuidebookEditSectionKeyValue';
 import { KeyValue } from '../../../../utils/dtos';
+import { theme } from '../../../../utils/styles';
+import styled from '@emotion/styled';
 
 export interface GuidebookEditSectionListProps {
   className?: string;
@@ -179,14 +181,10 @@ function GuidebookEditSectionList({
           );
         })}
         <ListItem sx={{ justifyContent: 'center' }}>
-          <Button
-            sx={{ justifyContent: 'center', gap: '8px' }}
-            variant="outlined"
-            onClick={addItem}
-          >
+          <AddButton variant="contained" onClick={addItem}>
             <Add />
             Add Item
-          </Button>
+          </AddButton>
         </ListItem>
       </List>
       <ConfirmCancelDialog
@@ -205,5 +203,17 @@ function GuidebookEditSectionList({
     </div>
   );
 }
+
+const AddButton = styled(Button)`
+  background-color: ${theme.color.BMGnavyblue};
+  color: white;
+  gap: 8px;
+  ${theme.font.caption}
+
+  :hover {
+    background-color: white;
+    color: ${theme.color.BMGnavyblue};
+  }
+`;
 
 export default GuidebookEditSectionList;

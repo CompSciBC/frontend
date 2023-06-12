@@ -148,6 +148,7 @@ const Container = styled.div`
 
   h6 {
     margin: 0;
+    ${theme.font.body}
   }
 `;
 
@@ -155,6 +156,7 @@ const SectionBorder = styled.div`
   padding: 8px;
   border-radius: 4px;
   border: 1px solid rgba(0, 0, 0, 0.25);
+  color: ${theme.color.BMGdarkblue};
 `;
 
 const ColumnContainer = styled.div`
