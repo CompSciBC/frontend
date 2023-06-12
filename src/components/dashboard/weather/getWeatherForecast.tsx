@@ -22,7 +22,6 @@ export default async function getWeatherForecast(
 
   const forecast = (number: number): Forecast => {
     const detailedForecast = body[number].detailedForecast.toLowerCase();
-    console.log(detailedForecast);
     let weatherType = '';
     if (
       detailedForecast.includes('rain') &&
@@ -69,12 +68,14 @@ export default async function getWeatherForecast(
       }
     }
 
-    console.log(weatherType);
     return {
       weather: weatherType,
       temp: body[number].temperature,
       number,
       name: body[number].name,
+      shortName: body[number].name
+        .replace('day', '')
+        .replace('This Afternoon', 'Noon'),
       detailedForecast: body[number].detailedForecast,
       shortForecast: body[number].shortForecast
     };

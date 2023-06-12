@@ -9,10 +9,18 @@ import { DashboardCellLink } from '../DashboardCellClickable';
 import getWeatherForecast from './getWeatherForecast';
 import WeatherForecastTile from './WeatherForecastTile';
 import DashboardCellWrapper from '../DashboardCellWrapper';
+import { theme } from '../../../utils/styles';
+
+const SMALL_SCREEN_WIDTH = Number(
+  theme.screen.small.match(/max-width:\s(\d+)px/)?.[1]
+);
 
 function WeatherCell({ className, cell }: DashboardCellProps) {
   const { reservation } = useContext(AppContext);
   const [forecast, setForecast] = useState<Forecast[]>([]);
+  const [displayShortName, setDisplayShortName] = useState(
+    window.innerWidth <= SMALL_SCREEN_WIDTH
+  );
 
   useEffect(() => {
     let subscribed = true;
@@ -31,6 +39,20 @@ function WeatherCell({ className, cell }: DashboardCellProps) {
     };
   }, [reservation]);
 
+  // update name when viewport width changes
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth <= SMALL_SCREEN_WIDTH) setDisplayShortName(true);
+      else setDisplayShortName(false);
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
   return (
     <Container
       className={className}
@@ -40,7 +62,7 @@ function WeatherCell({ className, cell }: DashboardCellProps) {
           {forecast.map((f) => (
             <WeatherForecastTile
               key={f.number}
-              time={f.name}
+              time={displayShortName ? f.shortName ?? '' : f.name}
               weather={f.weather}
               temp={f.temp}
             />
