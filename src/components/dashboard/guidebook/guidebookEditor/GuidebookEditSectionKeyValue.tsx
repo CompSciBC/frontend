@@ -34,7 +34,6 @@ function GuidebookEditSectionKeyValue({
     <Container className={className}>
       <TextField
         id={`${idPrefix}key`}
-        label="Key"
         fullWidth
         multiline
         size="small"
@@ -46,7 +45,6 @@ function GuidebookEditSectionKeyValue({
       />
       <TextField
         id={`${idPrefix}value`}
-        label="Value"
         fullWidth
         multiline
         size="small"
