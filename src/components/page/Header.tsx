@@ -64,17 +64,6 @@ function Header({
     setAnchorElUser(null);
   };
   return (
-    // <NavParentFrame className={className}>
-    //   <NavFrame>
-    //     <IconHomeLinkFrame>
-    //       <Logo to={routes.home}>
-    //         <img src={logo} alt="logo" />
-    //       </Logo>
-    //       <StyledHamburgerMenu size={40} navLinks={navLinks} />
-    //     </IconHomeLinkFrame>
-    //     <NavLinksFrame>{navLinks && <Nav navLinks={navLinks} />}</NavLinksFrame>
-    //   </NavFrame>
-    // </NavParentFrame>
     <AppBar
       position="static"
       style={{
