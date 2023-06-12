@@ -88,7 +88,6 @@ function Reservations() {
           onClick={() => setAddFormOpen(true)}
         />
       </Header>
-      {getCards('upcoming')}
       <ListContainer>
         <StyledAccordionDropdown
           label="Current"
