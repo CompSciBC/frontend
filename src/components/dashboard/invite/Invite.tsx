@@ -5,6 +5,7 @@ import AppContext from '../../../context/AppContext';
 import Modal from '../../Modal';
 import SendInviteForm from './SendInviteForm';
 import { server } from '../../../index';
+import { Box, CircularProgress } from '@mui/material';
 
 export interface InviteProps {
   className?: string;
@@ -21,6 +22,7 @@ export interface InviteProps {
 function Invite({ className }: InviteProps) {
   const { user, reservation } = useContext(AppContext);
   const [qrCodeUrl, setQrCodeUrl] = useState('');
+  const [loaded, setLoaded] = useState(false);
   const [emailFormOpen, setEmailFormOpen] = useState(false);
 
   useEffect(() => {
@@ -45,7 +47,22 @@ function Invite({ className }: InviteProps) {
   return (
     <Container className={className}>
       <Title>Invite Others</Title>
-      <QRCode src={qrCodeUrl} />
+      <QRCodeWrapper>
+        <img src={qrCodeUrl} onLoad={() => setLoaded(true)} />
+        {!loaded && (
+          <Box
+            sx={{
+              width: '100%',
+              height: '100%',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center'
+            }}
+          >
+            <CircularProgress />
+          </Box>
+        )}
+      </QRCodeWrapper>
       <ButtonContainer>
         <TextCode>
           <div>Invite Code</div>
@@ -96,8 +113,13 @@ const Title = styled.h1`
   margin: 20px 0px 0px;
 `;
 
-const QRCode = styled.img`
+const QRCodeWrapper = styled.div`
   width: 384px;
+  height: 384px;
+
+  img {
+    width: 100%;
+  }
 `;
 
 const TextCode = styled.div`
