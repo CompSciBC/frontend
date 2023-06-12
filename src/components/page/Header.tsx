@@ -82,7 +82,7 @@ function Header({
         fontFamily: 'Helvetica'
       }}
     >
-      <Toolbar disableGutters sx={{ mx: 10 }}>
+      <Toolbar disableGutters sx={{ mx: 2 }}>
         <Logo to={routes.home}>
           <img src={logo} alt="logo" />
         </Logo>
