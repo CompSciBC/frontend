@@ -12,6 +12,8 @@ import {
 } from '@mui/material';
 import { useState } from 'react';
 import { GuidebookSection, GuidebookSectionType } from '../../../../utils/dtos';
+import { theme } from '../../../../utils/styles';
+import styled from '@emotion/styled';
 
 const guidebookSectionTypes = [
   {
@@ -65,15 +67,14 @@ function AddSectionDialog({ className, onSubmit }: AddSectionDialogProps) {
 
   return (
     <div className={className}>
-      <Button
-        variant="outlined"
-        color="primary"
+      <AddSectionButton
+        variant="contained"
         size="small"
         startIcon={<Add />}
         onClick={() => setOpen(true)}
       >
         <Typography variant="button">Add Section</Typography>
-      </Button>
+      </AddSectionButton>
       <Dialog className={className} open={open}>
         <DialogTitle>New Section</DialogTitle>
         <DialogContent>
@@ -130,5 +131,15 @@ function AddSectionDialog({ className, onSubmit }: AddSectionDialogProps) {
     </div>
   );
 }
+
+const AddSectionButton = styled(Button)`
+  background-color: ${theme.color.teal};
+  color: white;
+
+  :hover {
+    background-color: white;
+    color: ${theme.color.teal};
+  }
+`;
 
 export default AddSectionDialog;

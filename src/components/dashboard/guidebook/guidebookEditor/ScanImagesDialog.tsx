@@ -19,6 +19,7 @@ import { useParams } from 'react-router-dom';
 import styled from '@emotion/styled';
 import { server } from '../../../..';
 import AmenityBoundingBox, { BoxColor } from './AmenityBoundingBox';
+import { theme } from '../../../../utils/styles';
 
 interface SelectedSuggestions {
   [key: string]: boolean;
@@ -120,14 +121,14 @@ function ScanImagesDialog({
 
   return (
     <div className={className}>
-      <Button
-        variant="outlined"
+      <ScanButton
+        variant="contained"
         size="small"
         startIcon={<DocumentScannerOutlined />}
         onClick={() => setOpen(true)}
       >
         Scan Photos
-      </Button>
+      </ScanButton>
       {open && (
         <Dialog open={true}>
           <DialogTitle>Scan Photos for Amenities</DialogTitle>
@@ -250,6 +251,17 @@ function ScanImagesDialog({
     </div>
   );
 }
+
+const ScanButton = styled(Button)`
+  background-color: ${theme.color.BMGnavyblue};
+  color: white;
+  ${theme.font.caption}
+
+  :hover {
+    background-color: white;
+    color: ${theme.color.BMGnavyblue};
+  }
+`;
 
 const ImageWrapper = styled.div`
   display: flex;

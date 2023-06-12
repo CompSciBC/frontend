@@ -18,6 +18,8 @@ import { GuidebookImage, GuidebookImageFiles } from '../../../../utils/dtos';
 import ConfirmCancelDialog from '../../../stuff/ConfirmCancelDialog';
 import AlertPopup from '../../../stuff/AlertPopup';
 import GuidebookEditImage from './GuidebookEditImage';
+import styled from '@emotion/styled';
+import { theme } from '../../../../utils/styles';
 
 export interface GuidebookEditImagesProps {
   className?: string;
@@ -106,20 +108,20 @@ function GuidebookEditImages({ className, propId }: GuidebookEditImagesProps) {
             sx={{
               display: 'flex',
               justifyContent: 'space-between',
-              alignItems: 'center'
+              alignItems: 'center',
+              paddingRight: '0',
+              marginBottom: '8px'
             }}
           >
-            Images
-            <Button
-              variant="outlined"
-              color="primary"
+            <Typography variant="h6">Images</Typography>
+            <AddButton
+              variant="contained"
               size="small"
               startIcon={<AddPhotoAlternateOutlined />}
               onClick={() => setAddImagesOpen(true)}
-              sx={{ height: 'max-content' }}
             >
               <Typography variant="button">Add Photos</Typography>
-            </Button>
+            </AddButton>
             {addImagesOpen && (
               <AddImageDialog
                 onClose={() => setAddImagesOpen(false)}
@@ -155,5 +157,15 @@ function GuidebookEditImages({ className, propId }: GuidebookEditImagesProps) {
     </>
   );
 }
+
+const AddButton = styled(Button)`
+  background-color: ${theme.color.BMGteal};
+  color: white;
+
+  :hover {
+    background-color: white;
+    color: ${theme.color.BMGteal};
+  }
+`;
 
 export default GuidebookEditImages;

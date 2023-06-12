@@ -105,7 +105,7 @@ const Header = styled.div`
   padding: 8px;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   color: ${theme.color.white};
-  background-color: ${theme.color.orange};
+  background-color: ${theme.color.BMGyellow2};
 `;
 
 const GoToChatButton = styled(Link)`
