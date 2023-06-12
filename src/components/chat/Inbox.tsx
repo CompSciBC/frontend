@@ -174,22 +174,22 @@ function Inbox() {
       const reservationId = chatName.includes('_')
         ? chatName.split('_')[0]
         : chatName;
-        try {
-
+      try {
         if (chatName.includes('_') && user?.role === 'guest') {
           propertyName =
             'Host ' + reservationsMap.get(reservationId)!.property.name;
         } else if (chatName.includes('_') && user?.role === 'host') {
-          propertyName = chatName.split('_')[1] + ' ' + reservationsMap.get(reservationId)!.property.name;
-        }
-        else {
+          propertyName =
+            chatName.split('_')[1] +
+            ' ' +
+            reservationsMap.get(reservationId)!.property.name;
+        } else {
           propertyName =
             'Group ' + reservationsMap.get(reservationId)!.property.name;
         }
-        }
-        catch (Error) {
-          console.log(Error);
-        }  
+      } catch (Error) {
+        console.log(Error);
+      }
       console.log('chatTitle', propertyName);
       chatTitlesMap.set(chatName, propertyName);
       reservationIdLinksMap.set(propertyName, reservationId);
@@ -217,8 +217,7 @@ function Inbox() {
       <Grid container spacing={2}>
         <Grid item xs={3}>
           <Typography variant="h6">Inbox</Typography>
-          {Array.from(chatTitlesMap.keys()).map((chatTitleKey, index) =>           
-             
+          {Array.from(chatTitlesMap.keys()).map((chatTitleKey, index) => (
             <Button
               key={index}
               fullWidth
@@ -229,11 +228,14 @@ function Inbox() {
                   : '';
                 setTab(chatTitleKey);
               }}
-              sx={{ mt: 1 , backgroundColor: tab === chatTitleKey ? '#FFD95A' : '#ffffff'}}
+              sx={{
+                mt: 1,
+                backgroundColor: tab === chatTitleKey ? '#FFD95A' : '#ffffff'
+              }}
             >
               {chatTitlesMap.get(chatTitleKey)}
-            </Button>            
-            )}
+            </Button>
+          ))}
         </Grid>
         <Grid item xs={9}>
           {tab !== '' && inboxChats.has(tab) ? (
