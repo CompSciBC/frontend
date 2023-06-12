@@ -25,7 +25,7 @@ function AccordionDropdown({
 }: AccordionDropdownProps) {
   const [open, setOpen] = useState<boolean>(isOpen);
   return (
-    <div className={className} style={{ paddingTop: '20px' }}>
+    <div className={className}>
       <Header
         type="button"
         onClick={() => {
@@ -39,6 +39,7 @@ function AccordionDropdown({
           <ChevronDown />
         </ChevronWrapper>
       </Header>
+      <DropdownContent open={open}>{content}</DropdownContent>
       <DropdownContent open={open}>{content}</DropdownContent>
     </div>
   );
@@ -54,7 +55,7 @@ const Header = styled.button`
   background-color: transparent;
   cursor: pointer;
   font: inherit;
-
+  padding-top: 20px;
   :hover {
     background-color: whitesmoke;
   }
