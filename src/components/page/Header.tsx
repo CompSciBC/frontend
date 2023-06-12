@@ -81,26 +81,29 @@ function Header({
     >
       <Container maxWidth="xl">
         <Toolbar disableGutters>
+          <Link to={'/'}>
           <Logo to={routes.home}>
             <img src={logo} alt="logo" />
           </Logo>
-          <Typography
-            variant="h6"
+          </Link>
+          {/* <Typography
+            // variant="h5"
             noWrap
             component="a"
+            textAlign="center"
             href="/"
             sx={{
               mr: 2,
               display: { xs: 'none', md: 'flex' },
-              fontFamily: 'monospace',
+              fontFamily: "Roboto",
               fontWeight: 700,
-              letterSpacing: '.3rem',
+              letterSpacing: '.1rem',
               color: 'black',
               textDecoration: 'none'
             }}
           >
             BeMyGuest
-          </Typography>
+          </Typography> */}
 
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
             <IconButton
@@ -143,24 +146,25 @@ function Header({
               ))}
             </Menu>
           </Box>
-          <Typography
-            variant="h5"
+          {/* <Typography
+            // variant="h5"
             noWrap
             component="a"
+            textAlign="center"
             href="/"
             sx={{
               mr: 2,
               display: { xs: 'flex', md: 'none' },
               flexGrow: 1,
-              fontFamily: 'monospace',
+              fontFamily: 'Arial',
               fontWeight: 700,
-              letterSpacing: '.3rem',
+              letterSpacing: '.2rem',
               color: 'black',
               textDecoration: 'none'
             }}
           >
             BeMyGuest
-          </Typography>
+          </Typography> */}
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {navLinks!.map((link) => (
               <Button
@@ -268,9 +272,9 @@ const NavFrame = styled.div`
 `;
 
 const Logo = styled(Link)`
-  ${theme.screen.small} {
+  /* ${theme.screen.small} {
     display: none;
-  }
+  } */
 
   img {
     height: 40px;
