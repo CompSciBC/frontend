@@ -73,7 +73,9 @@ export default async function getWeatherForecast(
       temp: body[number].temperature,
       number,
       name: body[number].name,
-      shortName: body[number].name.replace('day', '').replace('Night', 'PM'),
+      shortName: body[number].name
+        .replace('day', '')
+        .replace('This Afternoon', 'Noon'),
       detailedForecast: body[number].detailedForecast,
       shortForecast: body[number].shortForecast
     };
