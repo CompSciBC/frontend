@@ -45,7 +45,9 @@ function Invite({ className }: InviteProps) {
   return (
     <Container className={className}>
       <Title>Invite Others</Title>
-      <QRCode src={qrCodeUrl} />
+      <QRCodeWrapper>
+        <img src={qrCodeUrl} />
+      </QRCodeWrapper>
       <ButtonContainer>
         <TextCode>
           <div>Invite Code</div>
@@ -96,8 +98,13 @@ const Title = styled.h1`
   margin: 20px 0px 0px;
 `;
 
-const QRCode = styled.img`
+const QRCodeWrapper = styled.div`
   width: 384px;
+  height: 384px;
+
+  img {
+    width: 100%;
+  }
 `;
 
 const TextCode = styled.div`
