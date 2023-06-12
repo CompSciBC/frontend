@@ -14,6 +14,14 @@ import {
 import AppContext from '../../../context/AppContext';
 import { getGuidebookContent, getGuidebookImages } from './guidebookData';
 
+const SMALL_SCREEN_WIDTH = Number(
+  theme.screen.small.match(/max-width:\s(\d+)px/)?.[1]
+);
+
+const MEDIUM_SCREEN_WIDTH = Number(
+  theme.screen.medium.match(/max-width:\s(\d+)px/)?.[1]
+);
+
 export interface GuidebookProps {
   className?: string;
   propertyId?: string;
@@ -29,10 +37,21 @@ function Guidebook({ className, propertyId }: GuidebookProps) {
 
     if (propID) {
       (async function () {
+        const width = window.innerWidth;
+        let dimensions;
+
+        if (width <= SMALL_SCREEN_WIDTH) {
+          dimensions = { width: 200, height: 200 };
+        } else if (width <= MEDIUM_SCREEN_WIDTH) {
+          dimensions = { width: 500, height: 500 };
+        } else {
+          dimensions = { width: 700, height: 700 };
+        }
+
         subscribed && setGuidebookInfo(await getGuidebookContent(propID));
         subscribed &&
           setGuidebookImages(
-            (await getGuidebookImages(propID)).map((i) => i.url)
+            (await getGuidebookImages(propID, dimensions)).map((i) => i.url)
           );
       })();
     }
