@@ -139,7 +139,7 @@ const Header = styled.div`
   min-width: 85vw;
   /* text-align: center; */
   height: 32px;
-  
+
   ${theme.screen.small} {
     width: 100%;
     min-width: auto;

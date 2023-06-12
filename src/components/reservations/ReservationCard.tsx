@@ -45,7 +45,6 @@ export default function ReservationCard({
     timeStyle: 'short'
   });
 
-
   const address = useMemo(() => {
     let addressString = '';
 
@@ -74,32 +73,48 @@ export default function ReservationCard({
     );
   }, []);
   return (
-    <Link to={paramRoute(routes.dashboard, id)} style={{textDecoration: 'none'}}>
-      <Card sx={{ width: '100%', height: '100%'}}>
-      <CardActionArea>
-        <CardMedia
-          component="img"
-          height="200"
-          image={propertyPhoto}
-          alt={property.id}
-        />
-        <CardContent>
-          <Typography variant="body1" color="text.secondary" sx={{ fontWeight: 'bold' }}>
-            {`${property.name}`}
-          </Typography>
-          <Typography variant="body2" color="text.secondary">
-            {`${address}`}
-          </Typography>
-          <Typography gutterBottom variant="h6" component="div" sx={{mt: 3, fontSize: '18px'}}>
-            {`Check In: ${checkInDate}, ${checkInTime}`}
-          </Typography>
-          <Typography gutterBottom variant="h6" component="div" sx={{fontSize: '18px'}}>
-            {`Check Out: ${checkOutDate}, ${checkOutTime}`}
-          </Typography>
-          
-        </CardContent>
-      </CardActionArea>
-    </Card>
+    <Link
+      to={paramRoute(routes.dashboard, id)}
+      style={{ textDecoration: 'none' }}
+    >
+      <Card sx={{ width: '100%', height: '100%' }}>
+        <CardActionArea>
+          <CardMedia
+            component="img"
+            height="200"
+            image={propertyPhoto}
+            alt={property.id}
+          />
+          <CardContent>
+            <Typography
+              variant="body1"
+              color="text.secondary"
+              sx={{ fontWeight: 'bold' }}
+            >
+              {`${property.name}`}
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              {`${address}`}
+            </Typography>
+            <Typography
+              gutterBottom
+              variant="h6"
+              component="div"
+              sx={{ mt: 3, fontSize: '18px' }}
+            >
+              {`Check In: ${checkInDate}, ${checkInTime}`}
+            </Typography>
+            <Typography
+              gutterBottom
+              variant="h6"
+              component="div"
+              sx={{ fontSize: '18px' }}
+            >
+              {`Check Out: ${checkOutDate}, ${checkOutTime}`}
+            </Typography>
+          </CardContent>
+        </CardActionArea>
+      </Card>
     </Link>
   );
 }
