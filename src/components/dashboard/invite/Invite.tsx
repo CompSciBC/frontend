@@ -16,6 +16,8 @@ export interface InviteProps {
  * @param props {@link InviteProps}
  * @returns A JSX element
  */
+
+/* @typescript-eslint/restrict-template-expressions */
 function Invite({ className }: InviteProps) {
   const { user, reservation } = useContext(AppContext);
   const [qrCodeUrl, setQrCodeUrl] = useState('');

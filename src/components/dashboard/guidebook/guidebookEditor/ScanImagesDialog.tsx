@@ -1,3 +1,4 @@
+/* @typescript-eslint/restrict-template-expressions */
 import { DocumentScannerOutlined } from '@mui/icons-material';
 import {
   Box,
