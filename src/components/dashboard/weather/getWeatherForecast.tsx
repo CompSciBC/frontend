@@ -74,7 +74,13 @@ export default async function getWeatherForecast(
       number,
       name: body[number].name,
       shortName: body[number].name
-        .replace('day', '')
+        .replace('Sunday', 'Sun')
+        .replace('Monday', 'Mon')
+        .replace('Tuesday', 'Tue')
+        .replace('Wednesday', 'Wed')
+        .replace('Thursday', 'Thu')
+        .replace('Friday', 'Fri')
+        .replace('Saturday', 'Sat')
         .replace('This Afternoon', 'Noon'),
       detailedForecast: body[number].detailedForecast,
       shortForecast: body[number].shortForecast

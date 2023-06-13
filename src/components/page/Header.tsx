@@ -71,70 +71,72 @@ function Header({
         fontFamily: 'Helvetica'
       }}
     >
-      <Toolbar disableGutters sx={{ mx: 10 }}>
-        <Logo to={routes.home}>
-          <img src={logo} alt="logo" />
-        </Logo>
-        <Typography
-          ml={1}
-          variant="h6"
-          noWrap
-          component="a"
-          href="/"
-          sx={{
-            mr: 2,
-            display: { xs: 'none', md: 'flex' },
-            fontWeight: 500,
-            letterSpacing: '.3rem',
-            color: 'white',
-            textDecoration: 'none'
-          }}
-        >
-          BeMyGuest
-        </Typography>
-
-        <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
-          <IconButton
-            size="large"
-            aria-label="account of current user"
-            aria-controls="menu-appbar"
-            aria-haspopup="true"
-            onClick={handleOpenNavMenu}
-            color="primary"
-          >
-            <MenuIcon />
-          </IconButton>
-          <Menu
-            id="menu-appbar"
-            anchorEl={anchorElNav}
-            anchorOrigin={{
-              vertical: 'bottom',
-              horizontal: 'left'
-            }}
-            keepMounted
-            transformOrigin={{
-              vertical: 'top',
-              horizontal: 'left'
-            }}
-            open={Boolean(anchorElNav)}
-            onClose={handleCloseNavMenu}
+      <Container maxWidth="xl">
+        <Toolbar disableGutters>
+            <Logo to={routes.home}>
+              <img src={logo} alt="logo" />
+            </Logo>
+          {/* <Typography
+            // variant="h5"
+            noWrap
+            component="a"
+            textAlign="center"
+            href="/"
             sx={{
-              display: { xs: 'block', md: 'none' }
+              mr: 2,
+              display: { xs: 'none', md: 'flex' },
+              fontFamily: "Roboto",
+              fontWeight: 700,
+              letterSpacing: '.1rem',
+              color: 'black',
+              textDecoration: 'none'
             }}
           >
-            {navLinks!.map((link) => (
-              <MenuItem
-                key={link.name}
-                onClick={() => navigateToPage(link.path)}
-              >
-                <Typography textAlign="center" sx={{ color: 'black' }}>
-                  {link.name}
-                </Typography>
-              </MenuItem>
-            ))}
-          </Menu>
-        </Box>
-        <Typography
+            BeMyGuest
+          </Typography> */}
+
+          <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+            <IconButton
+              size="large"
+              aria-label="account of current user"
+              aria-controls="menu-appbar"
+              aria-haspopup="true"
+              onClick={handleOpenNavMenu}
+              color="primary"
+            >
+              <MenuIcon />
+            </IconButton>
+            <Menu
+              id="menu-appbar"
+              anchorEl={anchorElNav}
+              anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'left'
+              }}
+              keepMounted
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'left'
+              }}
+              open={Boolean(anchorElNav)}
+              onClose={handleCloseNavMenu}
+              sx={{
+                display: { xs: 'block', md: 'none' }
+              }}
+            >
+              {navLinks!.map((link) => (
+                <MenuItem
+                  key={link.name}
+                  onClick={() => navigateToPage(link.path)}
+                >
+                  <Typography textAlign="center" sx={{ color: 'black' }}>
+                    {link.name}
+                  </Typography>
+                </MenuItem>
+              ))}
+            </Menu>
+          </Box>
+          {/* <Typography
           variant="h5"
           noWrap
           component="a"
@@ -151,63 +153,64 @@ function Header({
           }}
         >
           BeMyGuest
-        </Typography>
-        <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-          {navLinks!.map((link) => (
-            <Button
-              key={link.name}
-              onClick={() => navigateToPage(link.path)}
-              sx={{ my: 2, color: 'white', display: 'block' }}
-            >
-              {link.name}
-            </Button>
-          ))}
-        </Box>
-        {authenticated ? (
-          <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt={user} src="/static/images/avatar/2.jpg" />
-              </IconButton>
-            </Tooltip>
-            <Menu
-              sx={{ mt: '45px' }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right'
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right'
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
-            >
-              {avatarLinks!.map((link) => (
-                <MenuItem
-                  key={link.name}
-                  onClick={() => navigateToPage(link.path)}
-                >
-                  <Typography textAlign="center">{link.name}</Typography>
-                </MenuItem>
-              ))}
-            </Menu>
+        </Typography> */}
+          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+            {navLinks!.map((link) => (
+              <Button
+                key={link.name}
+                onClick={() => navigateToPage(link.path)}
+                sx={{ my: 2, color: 'white', display: 'block' }}
+              >
+                {link.name}
+              </Button>
+            ))}
           </Box>
-        ) : (
-          <></>
-        )}
-      </Toolbar>
+          {authenticated ? (
+            <Box sx={{ flexGrow: 0 }}>
+              <Tooltip title="Open settings">
+                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                  <Avatar alt={user} src="/static/images/avatar/2.jpg" />
+                </IconButton>
+              </Tooltip>
+              <Menu
+                sx={{ mt: '45px' }}
+                id="menu-appbar"
+                anchorEl={anchorElUser}
+                anchorOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right'
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right'
+                }}
+                open={Boolean(anchorElUser)}
+                onClose={handleCloseUserMenu}
+              >
+                {avatarLinks!.map((link) => (
+                  <MenuItem
+                    key={link.name}
+                    onClick={() => navigateToPage(link.path)}
+                  >
+                    <Typography textAlign="center">{link.name}</Typography>
+                  </MenuItem>
+                ))}
+              </Menu>
+            </Box>
+          ) : (
+            <></>
+          )}
+        </Toolbar>
+      </Container>
     </AppBar>
   );
 }
 
 const Logo = styled(Link)`
-  ${theme.screen.small} {
+  /* ${theme.screen.small} {
     display: none;
-  }
+  } */
 
   img {
     height: 40px;
