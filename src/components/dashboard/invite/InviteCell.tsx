@@ -20,7 +20,7 @@ function InviteCell({ className, cell }: DashboardCellProps) {
 }
 
 const Container = styled(DashboardCellClickable)`
-  background-color: ${theme.color.purple};
+  background-color: ${theme.color.BMGnavyblue};
 `;
 
 export default memo(InviteCell);

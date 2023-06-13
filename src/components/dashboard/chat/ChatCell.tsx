@@ -20,7 +20,7 @@ function ChatCell({ className, cell }: DashboardCellProps) {
 }
 
 const Container = styled(DashboardCellClickable)`
-  background-color: ${theme.color.orange};
+  background-color: ${theme.color.BMGyellow2};
   display: none;
 
   ${theme.screen.small} {

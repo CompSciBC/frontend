@@ -124,7 +124,7 @@ const guestNavLinks: NavbarLink[] = [
   {
     name: 'About',
     path: routes.about
-  },
+  }
 ];
 
 const hostNavLinks: NavbarLink[] = [
