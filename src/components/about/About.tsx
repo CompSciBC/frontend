@@ -71,20 +71,20 @@ function About() {
               marginBottom={5}
               textAlign={'center'}
             >
-              Our Focus{' '}
+              <b>Our Focus</b>{' '}
             </Typography>
           </Box>
           <Box color="gray">
             <Typography variant="body1">
               {' '}
-              We focus on guests who book on platforms - such as airbnb,
+              We focus on <b>Guests</b> who book on platforms - such as airbnb,
               expedia, and vrbo - and offer them a central web application where
               they can view information relevant to their stay.
             </Typography>
             <br />
             <Typography variant="body1">
               {' '}
-              In addition to guests, hosts are a critical component where we
+              In addition to guests, <b>Hosts</b> are a critical component where we
               provide an application for them to communicate and inform guests
               of details about their property. We also provide a means of
               submitting guest surveys that hosts may view in a dashboard to
@@ -102,13 +102,13 @@ function About() {
               textAlign={'center'}
             >
               {' '}
-              Our Mission
+              <b>Our Mission</b>
             </Typography>
           </Box>
           <Box color="gray">
             <Typography variant="body1">
               {' '}
-              The mission of the BeMyGuest team is to add value to the Guest
+              The <b>Mission </b>of the BeMyGuest team is to add value to the Guest
               Hospitality and Vacation Rental field by offering a product made
               with the guest experience in mind, in one full-stack web
               application.
@@ -116,7 +116,7 @@ function About() {
             <br />
             <Typography variant="body1">
               {' '}
-              Core values of BeMyGuest can be attributed to our parent company
+              <b>Core Values</b> of BeMyGuest can be attributed to our parent company
               in industry, Expedia, whose aim and mission to be a Global Leader
               in the Travel and Hospitality field reaches a wide audience.
             </Typography>
@@ -132,7 +132,7 @@ function About() {
               textAlign={'center'}
             >
               {' '}
-              Our Team{' '}
+              <b>Our Team</b>{' '}
             </Typography>
           </Box>
         </Grid>

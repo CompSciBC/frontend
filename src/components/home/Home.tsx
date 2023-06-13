@@ -36,13 +36,13 @@ function Home({ logo }: HomeProps) {
     <>
       {/* Hero banner example: https://mdbootstrap.com/docs/react/extended/hero/ */}
       <div
-        style={{ backgroundImage: "url('/images/downtown-apartment.jpg')", height: 400, width: '100%', font: theme.font.guidebookBody }}
+        style={{ backgroundImage: "url('/images/homeimage.jpg')", width: '100%', backgroundSize: 'cover', backgroundRepeat: 'no-repeat'}}
       >
-        <div className='mask' style={{ backgroundColor: 'rgba(0, 0, 0, 0.6)', height: 400  }}>
+        <div className='mask' style={{ backgroundColor: 'rgba(0, 0, 0, 0.6)', height: 500  }}>
           <div className='d-flex justify-content-center align-items-center h-100'>
             <div className='text-white'>
               <Typography variant="h1" fontSize={45} fontWeight={500} marginBottom={5} textAlign={'center'}>Welcome to BeMyGuest</Typography>
-              <Typography variant="h4" fontSize={30} fontWeight={500} marginBottom={5} textAlign={'center'}>Subheading Lorem ipsum....</Typography>
+              <Typography variant="h4" fontSize={30} fontWeight={500} marginBottom={5} textAlign={'center'}>A Full-Stack Web Application Made for Property Management Hosts and Guests</Typography>
             </div>
           </div>
         </div>
