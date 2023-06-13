@@ -40,7 +40,6 @@ function AccordionDropdown({
         </ChevronWrapper>
       </Header>
       <DropdownContent open={open}>{content}</DropdownContent>
-      <DropdownContent open={open}>{content}</DropdownContent>
     </div>
   );
 }
