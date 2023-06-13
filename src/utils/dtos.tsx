@@ -229,6 +229,7 @@ export interface Forecast {
   weather: WeatherType;
   number: number;
   name: string;
+  shortName?: string;
   temp: number;
   detailedForecast: string;
   shortForecast: string;

@@ -41,11 +41,11 @@ export default function ReservationCard({
   const [action, setAction] = useState<string>();
 
   useEffect(() => {
-    fetch(`${server}/api/guidebook/${propertyId}/images/featured`).then(
-      async (res) => {
-        setPropertyPhoto(await res.text());
-      }
-    );
+    fetch(
+      `${server}/api/guidebook/${propertyId}/images/featured?dimensions=300x300`
+    ).then(async (res) => {
+      setPropertyPhoto(await res.text());
+    });
   }, [propertyId]);
   const [primaryGuest, setPrimaryGuest] = useState<string>();
   useEffect(() => {
