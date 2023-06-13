@@ -28,7 +28,7 @@ export default function PropertyCard({ property }: PropertyCardProps) {
   const navigate = useNavigate();
   return (
     <Grid item xs={12} sm={4} md={3}>
-      <Card sx={{ maxWidth: 345 }}>
+      <Card sx={{ maxWidth: { xs: '100%', sm: 345 } }}>
         <CardMedia
           component="img"
           height="140"
