@@ -34,7 +34,7 @@ const content = [
 function About() {
   return (
     <Container>
-      <Grid container spacing={{xs: 0, md: 2} }>
+      <Grid container spacing={{ xs: 0, md: 2 }}>
         <RightPaddingGrid item mt={10} xs={12} md={6}>
           <img
             width="100%"
@@ -51,13 +51,14 @@ function About() {
               - one stay at a time.
             </Typography>
           </Box>
-          <br />
+          {/* <br /> */}
           <Box color="gray">
-            <Typography variant="body1">
+            <Typography variant="body1" paddingTop={{ xs: 1, md: 2}}>
               {' '}
-              BeMyGuest offers a more personalized vacation rental experience, 
-              with online check-in, seamless communication between rental host 
-              and reservation party, as well as essential information about the property.
+              <b>BeMyGuest</b> offers a personalized vacation rental experience,
+              with online check-in, seamless communication between rental host
+              and reservation party, as well as essential information about the
+              property.
             </Typography>
           </Box>
         </Grid>
@@ -76,17 +77,18 @@ function About() {
           <Box color="gray">
             <Typography variant="body1">
               {' '}
-              We focus on guests who book on platforms - such as airbnb, expedia, vrbo
-              - and offer them a central application and UI where they can view essential
-              information relevant to their stay. 
+              We focus on guests who book on platforms - such as airbnb,
+              expedia, and vrbo - and offer them a central web application where
+              they can view information relevant to their stay.
             </Typography>
             <br />
             <Typography variant="body1">
               {' '}
-              In addition to guests, hosts are a critical component where we provide an 
-              application for them to communicate and inform guests of details about their 
-              property. We also provide a means of submitting guest surveys that hosts
-              may view in a dashboard to understand trends in guest feedback. 
+              In addition to guests, hosts are a critical component where we
+              provide an application for them to communicate and inform guests
+              of details about their property. We also provide a means of
+              submitting guest surveys that hosts may view in a dashboard to
+              understand trends in guest feedback.
             </Typography>
           </Box>
         </Grid>
@@ -106,14 +108,16 @@ function About() {
           <Box color="gray">
             <Typography variant="body1">
               {' '}
-              The mission of the BeMyGuest team is to add value to the guest hospitality field by offering
-              a product that puts the guest experience first in one application. 
+              The mission of the BeMyGuest team is to add value to the Guest
+              Hospitality and Vacation Rental field by offering a product made with the guest
+              experience in mind, in one full-stack web application.
             </Typography>
             <br />
             <Typography variant="body1">
               {' '}
-              Core values of BeMyGuest can be attributed to our parent partner in industry, Expedia, whose aim and mission to be a Global
-              Leader in the the Travel and Hospitality field reaches a wide audience. 
+              Core values of BeMyGuest can be attributed to our parent company
+              in industry, Expedia, whose aim and mission to be a Global Leader
+              in the Travel and Hospitality field reaches a wide audience.
             </Typography>
           </Box>
         </Grid>

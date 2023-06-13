@@ -82,9 +82,9 @@ function Header({
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <Link to={'/'}>
-          <Logo to={routes.home}>
-            <img src={logo} alt="logo" />
-          </Logo>
+            <Logo to={routes.home}>
+              <img src={logo} alt="logo" />
+            </Logo>
           </Link>
           {/* <Typography
             // variant="h5"
