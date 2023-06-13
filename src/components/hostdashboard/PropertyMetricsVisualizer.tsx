@@ -27,12 +27,12 @@ export function PropertyMetricsVisualizer({
     
     setProperty(event.target.value);
     setPieChartData(pieChartDataList[event.target.value]);
-    // console.log('event.target.value');
-    // console.log(event.target.value);
-    // console.log('pieChartDataList');
-    // console.log(pieChartDataList);
-    // console.log('pieChartDataList[event.target.value]');
-    // console.log(pieChartDataList[event.target.value]);
+    console.log('event.target.value');
+    console.log(event.target.value);
+    console.log('pieChartDataList');
+    console.log(pieChartDataList);
+    console.log('pieChartDataList[event.target.value]');
+    console.log(pieChartDataList[event.target.value]);
   };
   // console.log(property);
   // console.log(pieChartDataList);
