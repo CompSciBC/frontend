@@ -84,11 +84,9 @@ function Header({
     >
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <Link to={'/'}>
             <Logo to={routes.home}>
               <img src={logo} alt="logo" />
             </Logo>
-          </Link>
           {/* <Typography
             // variant="h5"
             noWrap
@@ -116,40 +114,40 @@ function Header({
               aria-haspopup="true"
               onClick={handleOpenNavMenu}
               color="primary"
-          >
-            <MenuIcon />
-          </IconButton>
-          <Menu
-            id="menu-appbar"
-            anchorEl={anchorElNav}
-            anchorOrigin={{
-              vertical: 'bottom',
-              horizontal: 'left'
-            }}
-            keepMounted
-            transformOrigin={{
-              vertical: 'top',
-              horizontal: 'left'
-            }}
-            open={Boolean(anchorElNav)}
-            onClose={handleCloseNavMenu}
-            sx={{
-              display: { xs: 'block', md: 'none' }
-            }}
-          >
-            {navLinks!.map((link) => (
-              <MenuItem
-                key={link.name}
-                onClick={() => navigateToPage(link.path)}
-              >
-                <Typography textAlign="center" sx={{ color: 'black' }}>
-                  {link.name}
-                </Typography>
-              </MenuItem>
-            ))}
-          </Menu>
-        </Box>
-        {/* <Typography
+            >
+              <MenuIcon />
+            </IconButton>
+            <Menu
+              id="menu-appbar"
+              anchorEl={anchorElNav}
+              anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'left'
+              }}
+              keepMounted
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'left'
+              }}
+              open={Boolean(anchorElNav)}
+              onClose={handleCloseNavMenu}
+              sx={{
+                display: { xs: 'block', md: 'none' }
+              }}
+            >
+              {navLinks!.map((link) => (
+                <MenuItem
+                  key={link.name}
+                  onClick={() => navigateToPage(link.path)}
+                >
+                  <Typography textAlign="center" sx={{ color: 'black' }}>
+                    {link.name}
+                  </Typography>
+                </MenuItem>
+              ))}
+            </Menu>
+          </Box>
+          {/* <Typography
           variant="h5"
           noWrap
           component="a"
@@ -167,53 +165,53 @@ function Header({
         >
           BeMyGuest
         </Typography> */}
-        <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-          {navLinks!.map((link) => (
-            <Button
-              key={link.name}
-              onClick={() => navigateToPage(link.path)}
-              sx={{ my: 2, color: 'white', display: 'block' }}
-            >
-              {link.name}
-            </Button>
-          ))}
-        </Box>
-        {authenticated ? (
-          <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt={user} src="/static/images/avatar/2.jpg" />
-              </IconButton>
-            </Tooltip>
-            <Menu
-              sx={{ mt: '45px' }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right'
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right'
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
-            >
-              {avatarLinks!.map((link) => (
-                <MenuItem
-                  key={link.name}
-                  onClick={() => navigateToPage(link.path)}
-                >
-                  <Typography textAlign="center">{link.name}</Typography>
-                </MenuItem>
-              ))}
-            </Menu>
+          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+            {navLinks!.map((link) => (
+              <Button
+                key={link.name}
+                onClick={() => navigateToPage(link.path)}
+                sx={{ my: 2, color: 'white', display: 'block' }}
+              >
+                {link.name}
+              </Button>
+            ))}
           </Box>
-        ) : (
-          <></>
-        )}
+          {authenticated ? (
+            <Box sx={{ flexGrow: 0 }}>
+              <Tooltip title="Open settings">
+                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                  <Avatar alt={user} src="/static/images/avatar/2.jpg" />
+                </IconButton>
+              </Tooltip>
+              <Menu
+                sx={{ mt: '45px' }}
+                id="menu-appbar"
+                anchorEl={anchorElUser}
+                anchorOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right'
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right'
+                }}
+                open={Boolean(anchorElUser)}
+                onClose={handleCloseUserMenu}
+              >
+                {avatarLinks!.map((link) => (
+                  <MenuItem
+                    key={link.name}
+                    onClick={() => navigateToPage(link.path)}
+                  >
+                    <Typography textAlign="center">{link.name}</Typography>
+                  </MenuItem>
+                ))}
+              </Menu>
+            </Box>
+          ) : (
+            <></>
+          )}
         </Toolbar>
       </Container>
     </AppBar>

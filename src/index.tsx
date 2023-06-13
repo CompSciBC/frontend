@@ -147,7 +147,8 @@ const hostNavLinks: NavbarLink[] = [
   {
     name: 'About',
     path: routes.about
-  },{
+  },
+  {
     name: 'Reservations',
     path: routes.hostReservations
   }

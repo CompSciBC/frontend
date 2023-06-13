@@ -53,7 +53,7 @@ function About() {
           </Box>
           {/* <br /> */}
           <Box color="gray">
-            <Typography variant="body1" paddingTop={{ xs: 1, md: 2}}>
+            <Typography variant="body1" paddingTop={{ xs: 1, md: 2 }}>
               {' '}
               <b>BeMyGuest</b> offers a personalized vacation rental experience,
               with online check-in, seamless communication between rental host
@@ -109,8 +109,9 @@ function About() {
             <Typography variant="body1">
               {' '}
               The mission of the BeMyGuest team is to add value to the Guest
-              Hospitality and Vacation Rental field by offering a product made with the guest
-              experience in mind, in one full-stack web application.
+              Hospitality and Vacation Rental field by offering a product made
+              with the guest experience in mind, in one full-stack web
+              application.
             </Typography>
             <br />
             <Typography variant="body1">
