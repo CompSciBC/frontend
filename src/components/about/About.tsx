@@ -11,23 +11,23 @@ import {
 const content = [
   {
     name: 'Hieu Do',
-    desc: 'lorem ipsum',
+    desc: 'Likes: plants Favorite class: Cloud Computing',
     url: '/images/hieu.jpeg'
   },
   {
     name: 'Matthew Granger',
-    desc: 'lorem ipsum',
+    desc: 'Likes: tea and art. Favorite class: Computer Architecture',
     url: '/images/matthew.png'
   },
   {
     name: 'Elena Ochkina',
-    desc: 'lorem ipsum',
-    url: '/images/no-image-available.jpeg'
+    desc: 'Likes: cooking and traveling. Favorite class: Data Structures',
+    url: '/images/elena.png'
   },
   {
     name: 'Joe Prado',
-    desc: 'lorem ipsum',
-    url: '/images/no-image-available.jpeg'
+    desc: 'Likes: the color green. Favorite class: Capstone',
+    url: '/images/joe.png'
   }
 ];
 
@@ -71,22 +71,22 @@ function About() {
               marginBottom={5}
               textAlign={'center'}
             >
-              Our Focus{' '}
+              <b>Our Focus</b>{' '}
             </Typography>
           </Box>
           <Box color="gray">
             <Typography variant="body1">
               {' '}
-              We focus on guests who book on platforms - such as airbnb,
+              We focus on <b>Guests</b> who book on platforms - such as airbnb,
               expedia, and vrbo - and offer them a central web application where
               they can view information relevant to their stay.
             </Typography>
             <br />
             <Typography variant="body1">
               {' '}
-              In addition to guests, hosts are a critical component where we
-              provide an application for them to communicate and inform guests
-              of details about their property. We also provide a means of
+              In addition to guests, <b>Hosts</b> are a critical component where
+              we provide an application for them to communicate and inform
+              guests of details about their property. We also provide a means of
               submitting guest surveys that hosts may view in a dashboard to
               understand trends in guest feedback.
             </Typography>
@@ -102,23 +102,24 @@ function About() {
               textAlign={'center'}
             >
               {' '}
-              Our Mission
+              <b>Our Mission</b>
             </Typography>
           </Box>
           <Box color="gray">
             <Typography variant="body1">
               {' '}
-              The mission of the BeMyGuest team is to add value to the Guest
-              Hospitality and Vacation Rental field by offering a product made
-              with the guest experience in mind, in one full-stack web
+              The <b>Mission </b>of the BeMyGuest team is to add value to the
+              Guest Hospitality and Vacation Rental field by offering a product
+              made with the guest experience in mind, in one full-stack web
               application.
             </Typography>
             <br />
             <Typography variant="body1">
               {' '}
-              Core values of BeMyGuest can be attributed to our parent company
-              in industry, Expedia, whose aim and mission to be a Global Leader
-              in the Travel and Hospitality field reaches a wide audience.
+              <b>Core Values</b> of BeMyGuest can be attributed to our parent
+              company in industry, Expedia, whose aim and mission to be a Global
+              Leader in the Travel and Hospitality field reaches a wide
+              audience.
             </Typography>
           </Box>
         </Grid>
@@ -132,7 +133,7 @@ function About() {
               textAlign={'center'}
             >
               {' '}
-              Our Team{' '}
+              <b>Our Team</b>{' '}
             </Typography>
           </Box>
         </Grid>
