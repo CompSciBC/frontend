@@ -1,6 +1,13 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
-import { Box, CardContent, CardMedia, Container, Grid, Typography } from '@mui/material';
+import {
+  Box,
+  CardContent,
+  CardMedia,
+  Container,
+  Grid,
+  Typography
+} from '@mui/material';
 import { theme } from '../../utils/styles';
 import About from '../about/About';
 
@@ -36,25 +43,48 @@ function Home({ logo }: HomeProps) {
     <>
       {/* Hero banner example: https://mdbootstrap.com/docs/react/extended/hero/ */}
       <div
-        style={{ backgroundImage: "url('/images/homeimage.jpg')", width: '100%', backgroundSize: 'cover', backgroundRepeat: 'no-repeat'}}
+        style={{
+          backgroundImage: "url('/images/homeimage.jpg')",
+          width: '100%',
+          backgroundSize: 'cover',
+          backgroundRepeat: 'no-repeat'
+        }}
       >
-        <div className='mask' style={{ backgroundColor: 'rgba(0, 0, 0, 0.6)', height: 500  }}>
-          <div className='d-flex justify-content-center align-items-center h-100'>
-            <div className='text-white'>
-              <Typography variant="h1" fontSize={45} fontWeight={500} marginBottom={5} textAlign={'center'}>Welcome to BeMyGuest</Typography>
-              <Typography variant="h4" fontSize={30} fontWeight={500} marginBottom={5} textAlign={'center'}>A Full-Stack Web Application Made for Property Management Hosts and Guests</Typography>
+        <div
+          className="mask"
+          style={{ backgroundColor: 'rgba(0, 0, 0, 0.6)', height: 500 }}
+        >
+          <div className="d-flex justify-content-center align-items-center h-100">
+            <div className="text-white">
+              <Typography
+                variant="h1"
+                fontSize={45}
+                fontWeight={500}
+                marginBottom={5}
+                textAlign={'center'}
+              >
+                Welcome to BeMyGuest
+              </Typography>
+              <Typography
+                variant="h4"
+                fontSize={30}
+                fontWeight={500}
+                marginBottom={5}
+                textAlign={'center'}
+              >
+                A Full-Stack Web Application Made for Property Management Hosts
+                and Guests
+              </Typography>
             </div>
           </div>
         </div>
       </div>
       <Box>
-        <About/>        
+        <About />
       </Box>
-      
     </>
     // <Container maxWidth= 'xl'>
-      
-      
+
     // </Container>
     // <Container>
     //   <h1>Welcome to</h1>
