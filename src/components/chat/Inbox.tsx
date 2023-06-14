@@ -230,7 +230,7 @@ function Inbox() {
               }}
               sx={{
                 mt: 1,
-                backgroundColor: tab === chatTitleKey ? '#FFD95A' : '#ffffff'
+                backgroundColor: tab === chatTitleKey ? '#bdd9ff' : '#ffffff'
               }}
             >
               {chatTitlesMap.get(chatTitleKey)}
