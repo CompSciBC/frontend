@@ -24,7 +24,6 @@ function AccordionDropdown({
   smallLineStyling
 }: AccordionDropdownProps) {
   const [open, setOpen] = useState<boolean>(isOpen);
-
   return (
     <div className={className}>
       <Header
@@ -55,7 +54,7 @@ const Header = styled.button`
   background-color: transparent;
   cursor: pointer;
   font: inherit;
-
+  padding-top: 20px;
   :hover {
     background-color: whitesmoke;
   }

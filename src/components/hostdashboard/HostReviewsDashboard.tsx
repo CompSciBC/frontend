@@ -212,6 +212,7 @@ function HostReviewsDashboard() {
   }, []);
   if (reviews !== undefined) {
     const rows = createRows(reviews.surveyResponses);
+    
     return (
       <Container maxWidth="xl">
         <Box sx={{ mt: 2 }}>

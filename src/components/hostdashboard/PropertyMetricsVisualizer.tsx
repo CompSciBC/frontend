@@ -24,10 +24,18 @@ export function PropertyMetricsVisualizer({
     pieChartDataList[property]
   );
   const handleChange = (event: SelectChangeEvent) => {
+    
     setProperty(event.target.value);
-    setPieChartData(pieChartDataList[property]);
+    setPieChartData(pieChartDataList[event.target.value]);
+    console.log('event.target.value');
+    console.log(event.target.value);
+    console.log('pieChartDataList');
+    console.log(pieChartDataList);
+    console.log('pieChartDataList[event.target.value]');
+    console.log(pieChartDataList[event.target.value]);
   };
-  // console.log(pieChartData);
+  // console.log(property);
+  // console.log(pieChartDataList);
 
   return (
     <Box sx={{ mt: 2 }}>

@@ -35,7 +35,7 @@ function App({
     <Page
       header={
         <Header
-          logo="/bmg-branding/BMG-favicon-refined.svg"
+          logo="/bmg-branding/BMG-favicon-refined-white.svg"
           navLinks={navLinks}
           authenticated={authenticated}
           avatarLinks={avatarLinks}

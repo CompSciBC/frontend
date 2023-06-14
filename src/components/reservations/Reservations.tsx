@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import styled from '@emotion/styled';
 import { useContext, useEffect, useState } from 'react';
 import AppContext from '../../context/AppContext';
@@ -12,6 +13,7 @@ import { server } from '../../index';
 import CloseX from '../page/CloseX';
 import Modal from '../Modal';
 import AddReservationForm from './AddReservationForm';
+import { Grid } from '@mui/material';
 
 function Reservations() {
   const { user } = useContext(AppContext);
@@ -67,11 +69,13 @@ function Reservations() {
   // maps the reservation/property objects into a list of reservation cards to be
   // rendered on the screen
   const getCards = (status: ReservationStatus) => (
-    <DropdownContent>
+    <Grid container spacing={5}>
       {resDetails?.[status].map((resProp) => (
-        <ReservationCard key={resProp.id} reservation={resProp} />
+        <Grid item key={resProp.id} xs={12} sm={12} md={4}>
+          <ReservationCard reservation={resProp} />
+        </Grid>
       ))}
-    </DropdownContent>
+    </Grid>
   );
 
   return (
@@ -129,9 +133,10 @@ const Container = styled.div`
 const Header = styled.div`
   position: relative;
   display: flex;
-  justify-content: center;
-  min-width: 512px;
-  text-align: center;
+  /* justify-content: center; */
+  padding-bottom: 20px;
+  min-width: 85vw;
+  /* text-align: center; */
   height: 32px;
 
   ${theme.screen.small} {
@@ -167,7 +172,7 @@ const ListContainer = styled.div`
   display: flex;
   flex-direction: column;
   row-gap: 10px;
-  min-width: 512px;
+  min-width: 80vw;
 
   ${theme.screen.small} {
     width: 100%;

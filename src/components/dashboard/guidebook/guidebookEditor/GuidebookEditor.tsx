@@ -4,7 +4,8 @@ import {
   Box,
   FormControlLabel,
   Stack,
-  Switch
+  Switch,
+  Typography
 } from '@mui/material';
 import { GuidebookDto, GuidebookSection } from '../../../../utils/dtos';
 import { useCallback, useEffect, useState } from 'react';
@@ -206,7 +207,17 @@ function GuidebookEditor({ className }: GuidebookEditorProps) {
       {propId && (
         <Container>
           <Header guestView={guestView}>
-            {!guestView && <AddSectionDialog onSubmit={handleAddSection} />}
+            {!guestView && (
+              <>
+                <AddSectionDialog onSubmit={handleAddSection} />
+                <Typography
+                  variant="h6"
+                  sx={{ display: { xs: 'none', sm: 'inline' } }}
+                >
+                  Guidebook Editor
+                </Typography>
+              </>
+            )}
             <FormControlLabel
               control={<Switch disableRipple />}
               label="View as Guest"
@@ -220,7 +231,7 @@ function GuidebookEditor({ className }: GuidebookEditorProps) {
             <EditorContainer className={className}>
               <Box sx={{ width: '100%' }}>
                 {guidebook && (
-                  <Stack>
+                  <Stack spacing={1.5} sx={{ marginBottom: '16px' }}>
                     {guidebook.sections?.map((sectionId, i) => {
                       return guidebook[sectionId] ? (
                         <GuidebookEditSection
@@ -264,6 +275,10 @@ function GuidebookEditor({ className }: GuidebookEditorProps) {
 const Container = styled.div`
   width: 100%;
   position: relative;
+
+  .MuiInputBase-root {
+    background-color: white;
+  }
 `;
 
 const Header = styled.div<{ guestView: boolean }>`
@@ -272,9 +287,11 @@ const Header = styled.div<{ guestView: boolean }>`
   z-index: 2;
   display: flex;
   justify-content: ${(props) => (props.guestView ? 'end' : 'space-between')};
+  align-items: center;
   width: 100%;
   padding: 8px 16px;
   background-color: ${theme.color.lightGray};
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
 
   /* the toggle switch's knob has a large shadow on hover, which is causing it to
   overflow the header container on the right; overflow hidden to prevent that */
@@ -286,7 +303,7 @@ const EditorContainer = styled.div`
   flex-direction: column;
   align-items: center;
   width: 100%;
-  padding: 0 32px 32px 32px;
+  padding: 32px 32px 32px 32px;
 `;
 
 export default GuidebookEditor;
