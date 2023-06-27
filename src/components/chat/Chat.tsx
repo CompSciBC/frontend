@@ -302,6 +302,16 @@ function Chat() {
                     {message.senderName}
                   </Typography>
                   <Typography variant="body1">{message.message}</Typography>
+                  <Typography variant="body1">
+                    {new Date(message.timestamp).toLocaleString( 'en-US', {
+                      weekday: 'long',
+                      month: 'long',
+                      day: 'numeric',
+                      hour: 'numeric',
+                      minute: 'numeric',
+                      hour12: true,
+                      }).replace('at', ',')}
+                  </Typography>
                 </Box>
               </Box>
             ))}
