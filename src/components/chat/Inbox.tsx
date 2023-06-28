@@ -212,6 +212,9 @@ function Inbox() {
     console.log(firstReservationIdLink + 'FirstResIdLink');
   };
 
+
+  
+
   return (
     <Container maxWidth="lg" sx={{ mt: 2 }}>
       <Grid container spacing={2}>
@@ -281,16 +284,21 @@ function Inbox() {
                         {message.senderName}
                       </Typography>
                       <Typography variant="body1">{message.message}</Typography>
-                      <Typography variant="body1">
-                    {new Date(message.timestamp).toLocaleString( 'en-US', {
-                      weekday: 'long',
-                      month: 'long',
-                      day: 'numeric',
-                      hour: 'numeric',
-                      minute: 'numeric',
-                      hour12: true,
-                      }).replace('at', ',')}
-                  </Typography>
+                      <Typography
+                        variant="body1"
+                        style={{ fontSize: '12px', color: '#636060' }}
+                      >
+                        {new Date(message.timestamp)
+                          .toLocaleString('en-US', {
+                            weekday: 'long',
+                            month: 'long',
+                            day: 'numeric',
+                            hour: 'numeric',
+                            minute: 'numeric',
+                            hour12: true
+                          })
+                          .replace('at', ',')}
+                      </Typography>
                     </Box>
                   </Box>
                 ))}
