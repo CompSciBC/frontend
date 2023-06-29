@@ -212,8 +212,68 @@ function Inbox() {
     console.log(firstReservationIdLink + 'FirstResIdLink');
   };
 
+  const isSameDay = (date1: any, date2: any) => {
+    return (
+      date1.getDate() === date2.getDate() &&
+      date1.getMonth() === date2.getMonth() &&
+      date1.getFullYear() === date2.getFullYear()
+    );
+  };
 
-  
+  const isSameWeek = (date1: any, date2: any) => {
+    const oneDay = 24 * 60 * 60 * 1000; // One day in milliseconds
+    const diffDays = Math.round(
+      Math.abs((date1.getTime() - date2.getTime()) / oneDay)
+    );
+    return diffDays <= 6;
+  };
+
+  const isSameYear = (date1: any, date2: any) => {
+    return date1.getFullYear() === date2.getFullYear();
+  };
+
+  const getMessageDateToDisplay = (timestamp: number) => {
+    const messageDate = new Date(timestamp);
+    const currentDate = new Date();
+
+    if (isSameDay(messageDate, currentDate)) {
+      return messageDate.toLocaleString('en-US', {
+        hour: 'numeric',
+        minute: 'numeric',
+        hour12: true
+      });
+    } else if (isSameWeek(messageDate, currentDate)) {
+      return messageDate
+        .toLocaleString('en-US', {
+          weekday: 'long',
+          hour: 'numeric',
+          minute: 'numeric',
+          hour12: true
+        })
+        .replace('at', ',');
+    } else if (isSameYear(messageDate, currentDate)) {
+      return messageDate
+        .toLocaleString('en-US', {
+          month: 'long',
+          day: 'numeric',
+          hour: 'numeric',
+          minute: 'numeric',
+          hour12: true
+        })
+        .replace('at', ',');
+    } else {
+      return messageDate
+        .toLocaleString('en-US', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+          hour: 'numeric',
+          minute: 'numeric',
+          hour12: true
+        })
+        .replace('at', ',');
+    }
+  };
 
   return (
     <Container maxWidth="lg" sx={{ mt: 2 }}>
@@ -286,18 +346,9 @@ function Inbox() {
                       <Typography variant="body1">{message.message}</Typography>
                       <Typography
                         variant="body1"
-                        style={{ fontSize: '12px', color: '#636060' }}
+                        style={{ fontSize: '12px', color: '#636060', textAlign: 'right' }}
                       >
-                        {new Date(message.timestamp)
-                          .toLocaleString('en-US', {
-                            weekday: 'long',
-                            month: 'long',
-                            day: 'numeric',
-                            hour: 'numeric',
-                            minute: 'numeric',
-                            hour12: true
-                          })
-                          .replace('at', ',')}
+                        {getMessageDateToDisplay(message.timestamp)}
                       </Typography>
                     </Box>
                   </Box>
