@@ -24,7 +24,6 @@ export function PropertyMetricsVisualizer({
     pieChartDataList[property]
   );
   const handleChange = (event: SelectChangeEvent) => {
-    
     setProperty(event.target.value);
     setPieChartData(pieChartDataList[event.target.value]);
     console.log('event.target.value');
